@@ -1,2 +1,2 @@
-# [Build](build.json)
+# [Build API](build.json)
 # [Pet Store API](petstore.json)
