@@ -1,4 +1,4 @@
-# [Build API](build.json)
+# [Build2 API](build.json)
 # [Chat API](chat.json)
 # [Core API](core.json)
 # [Dashboards API](dashboard.json)
