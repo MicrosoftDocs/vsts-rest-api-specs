@@ -1,0 +1,225 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "",
+        "version": "1.0.0",
+        "title": "Test",
+        "termsOfService": "",
+        "contact": {
+            "email": ""
+        },
+        "license": {
+            "name": "",
+            "url": ""
+        }
+    },
+    "host": "https://{account}.visualstudio.com",
+    "basePath": "",
+    "tags": [
+        {
+            "name": "change"
+        },
+        {
+            "name": "impact"
+        }
+    ],
+    "schemes": [
+        "http",
+        "https"
+    ],
+    "paths": {
+        "{project}/_apis/test/change": {
+            "post": {
+                "tags": [
+                    "change"
+                ],
+                "summary": "PublishTestImpactBuildData",
+                "description": "[Preview API] ",
+                "operationId": "publishTestImpactBuildData",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "",
+                        "required": true,
+                        "type": "TestImpactBuildData"
+                    },
+                    {
+                        "in": "path",
+                        "name": "project",
+                        "description": "Project ID or project name",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "buildId",
+                        "description": "",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                ]
+            }
+        },
+        "{project}/_apis/test/impact": {
+            "get": {
+                "tags": [
+                    "impact"
+                ],
+                "summary": "QueryImpactedTests",
+                "description": "[Preview API] ",
+                "operationId": "queryImpactedTests",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "project",
+                        "description": "Project ID or project name",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "currentBuildId",
+                        "description": "",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "in": "query",
+                        "name": "baseLineBuildId",
+                        "description": "",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "in": "query",
+                        "name": "currentTestRunId",
+                        "description": "",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "in": "query",
+                        "name": "typesToInclude",
+                        "description": "",
+                        "required": false,
+                        "type": "TestInclusionOptions"
+                    }
+                ]
+            }
+        }
+    },
+    "definitions": {
+        "CodeChange": {
+            "type": "object",
+            "properties": {
+                "assemblyName": {
+                    "description": "Gets or sets the name of the assembly containing the change.",
+                    "type": "string"
+                },
+                "codeSignature": {
+                    "description": "Gets or sets the signature of the code that changed.",
+                    "type": "string"
+                },
+                "fileName": {
+                    "description": "Gets or sets the file name containing the code change.",
+                    "type": "string"
+                },
+                "name": {
+                    "description": "Gets or sets the name of the code that changed.",
+                    "type": "string"
+                },
+                "signatureType": {
+                    "description": "Gets or sets the signature type of the code that changed.",
+                    "type": "SignatureType",
+                    "enum": [
+                        "method",
+                        "file",
+                        "assembly"
+                    ]
+                }
+            }
+        },
+        "ImpactedTests": {
+            "type": "object",
+            "properties": {
+                "areAllTestsImpacted": {
+                    "type": "boolean"
+                },
+                "tests": {
+                    "type": "array",
+                    "items": {
+                        "type": "Test"
+                    }
+                }
+            }
+        },
+        "Signature": {
+            "type": "object",
+            "properties": {
+                "codeSignature": {
+                    "description": "Code Signature",
+                    "type": "string"
+                },
+                "signatureType": {
+                    "description": "Type of signature method/file/assembly",
+                    "type": "SignatureType",
+                    "enum": [
+                        "method",
+                        "file",
+                        "assembly"
+                    ]
+                }
+            }
+        },
+        "Test": {
+            "type": "object",
+            "properties": {
+                "automatedTestId": {
+                    "description": "Gets the automated test identifier.",
+                    "type": "Guid"
+                },
+                "testCaseId": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "testName": {
+                    "description": "Gets or sets the name of the test.",
+                    "type": "string"
+                }
+            }
+        },
+        "TestImpactBuildData": {
+            "type": "object",
+            "properties": {
+                "codeChanges": {
+                    "type": "array",
+                    "items": {
+                        "type": "CodeChange"
+                    }
+                },
+                "rebaseLimit": {
+                    "type": "integer",
+                    "format": "int32"
+                }
+            }
+        }
+    },
+    "externalDocs": {
+        "description": "Find out more about Swagger",
+        "url": "http://swagger.io"
+    }
+}

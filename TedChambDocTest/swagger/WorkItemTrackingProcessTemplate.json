@@ -1,0 +1,203 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "",
+        "version": "1.0.0",
+        "title": "WorkItemTracking",
+        "termsOfService": "",
+        "contact": {
+            "email": ""
+        },
+        "license": {
+            "name": "",
+            "url": ""
+        }
+    },
+    "host": "https://{account}.visualstudio.com",
+    "basePath": "",
+    "tags": [
+        {
+            "name": "processes"
+        }
+    ],
+    "schemes": [
+        "http",
+        "https"
+    ],
+    "paths": {
+        "_apis/work/processadmin/processes/{action}/{id}": {
+            "get": {
+                "tags": [
+                    "processes"
+                ],
+                "summary": "ExportProcessTemplate",
+                "description": "[Preview API] Returns requested process template",
+                "operationId": "exportProcessTemplate",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "id",
+                        "description": "",
+                        "required": true,
+                        "type": "Guid"
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "processes"
+                ],
+                "summary": "ImportProcessTemplate",
+                "description": "[Preview API] Records supplied process template and triggers promote",
+                "operationId": "importProcessTemplate",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "Stream to upload",
+                        "required": true,
+                        "type": "Stream"
+                    },
+                    {
+                        "in": "query",
+                        "name": "ignoreWarnings",
+                        "description": "",
+                        "required": false,
+                        "type": "boolean"
+                    }
+                ]
+            },
+            "get": {
+                "tags": [
+                    "processes"
+                ],
+                "summary": "ImportProcessTemplateStatus",
+                "description": "[Preview API] Whether promote has completed for the specified promote job id",
+                "operationId": "importProcessTemplateStatus",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "id",
+                        "description": "",
+                        "required": true,
+                        "type": "Guid"
+                    }
+                ]
+            }
+        }
+    },
+    "definitions": {
+        "ProcessExportResult": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "Guid"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "ProcessImportResult": {
+            "type": "object",
+            "properties": {
+                "helpUrl": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "Guid"
+                },
+                "promoteJobId": {
+                    "type": "Guid"
+                },
+                "validationResults": {
+                    "type": "array",
+                    "items": {
+                        "type": "ValidationIssue"
+                    }
+                }
+            }
+        },
+        "ProcessPromoteStatus": {
+            "type": "object",
+            "properties": {
+                "complete": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "id": {
+                    "type": "Guid"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "pending": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "remainingRetries": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "successful": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "ProcessTemplateModel": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "Guid"
+                },
+                "ignoreWarnings": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "ValidationIssue": {
+            "type": "object",
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "file": {
+                    "type": "string"
+                },
+                "issueType": {
+                    "type": "ValidationIssueType",
+                    "enum": [
+                        "warning",
+                        "error"
+                    ]
+                },
+                "line": {
+                    "type": "integer",
+                    "format": "int32"
+                }
+            }
+        }
+    },
+    "externalDocs": {
+        "description": "Find out more about Swagger",
+        "url": "http://swagger.io"
+    }
+}
