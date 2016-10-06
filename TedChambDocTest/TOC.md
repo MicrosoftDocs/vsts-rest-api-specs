@@ -1,2 +1,2 @@
 # [Index](index.md)
-# [API](swagger/index)
+# [API](swagger/index.md)
