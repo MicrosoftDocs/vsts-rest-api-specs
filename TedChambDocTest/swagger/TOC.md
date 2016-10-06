@@ -4,6 +4,7 @@
 # [Core API](core.json)
 # [Dashboards API](dashboard.json)
 # [Favorites API](favorite.json)
+# [Gallery API](gallery.json)
 # [Git API](git.json)
 # [Policy API](policy.json)
 # [Reporting API](reporting.json)
