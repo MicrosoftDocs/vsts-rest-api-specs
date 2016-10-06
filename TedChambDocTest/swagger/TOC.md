@@ -18,5 +18,4 @@
 # [Work Item Tracking Process API](workitemtrackingprocess.json)
 # [Work Item Tracking Process Definitions API](workitemtrackingprocessdefinitions.json)
 # [Work Item Tracking Process Templates API](workitemtrackingprocesstemplate.json)
-#
 # [Pet Store API](petstore.json)
