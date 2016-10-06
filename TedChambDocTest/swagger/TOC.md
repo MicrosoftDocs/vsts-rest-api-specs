@@ -3,6 +3,7 @@
 # [Chat API](chat.json)
 # [Core API](core.json)
 # [Dashboards API](dashboard.json)
+# [Extension Management API](extensionmanagement.json)
 # [Favorites API](favorite.json)
 # [Gallery API](gallery.json)
 # [Git API](git.json)
