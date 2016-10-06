@@ -1,5 +1,6 @@
+# [Index](index.md)
 # [Build API](build.json)
-# [Chat2 API](chat.json)
+# [Chat API](chat.json)
 # [Core API](core.json)
 # [Dashboards API](dashboard.json)
 # [Favorites API](favorite.json)
