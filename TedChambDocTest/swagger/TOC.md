@@ -14,7 +14,7 @@
 # [File Container API](filecontainer.json)
 # [Identity API](identitiesidentity.json)
 # [Import API](import.json)
-# [Locations API](locationslocation.json)
+# [Location API](locationslocation.json)
 # [Gallery API](gallery.json)
 # [Git API](git.json)
 # [Name Resolution API](nameresolution.json)
