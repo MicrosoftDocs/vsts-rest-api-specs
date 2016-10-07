@@ -1,0 +1,258 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "",
+        "version": "1.0.0",
+        "title": "UserManagement",
+        "termsOfService": "",
+        "contact": {
+            "email": "tedchamb@microsoft.com"
+        },
+        "license": {
+            "name": "MICROSOFT SOFTWARE LICENSE TERMS",
+            "url": "https://go.microsoft.com/fwlink/?LinkId=329770"
+        }
+    },
+    "host": "https://{account}.visualstudio.com",
+    "basePath": "",
+    "tags": [
+        {
+            "name": "userManagementUIData"
+        },
+        {
+            "name": "users"
+        }
+    ],
+    "schemes": [
+        "http",
+        "https"
+    ],
+    "paths": {
+        "_apis/usermanagement/usermanagementuidata": {
+            "get": {
+                "tags": [
+                    "userManagementUIData"
+                ],
+                "summary": "GetAddUserUIData",
+                "description": "",
+                "operationId": "getAddUserUIData",
+                "produces": [
+                    "application/json"
+                ]
+            }
+        },
+        "_apis/usermanagement/users": {
+            "post": {
+                "tags": [
+                    "users"
+                ],
+                "summary": "AddUsers",
+                "description": "Used to add users to a project in an account. It adds them to groups, assigns licenses, and assigns extensions.",
+                "operationId": "addUsers",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "",
+                        "required": true,
+                        "type": "array",
+                        "items": {
+                            "type": "User"
+                        }
+                    }
+                ]
+            },
+            "get": {
+                "tags": [
+                    "users"
+                ],
+                "summary": "GetUsers",
+                "description": "Used to get user information in an account or team",
+                "operationId": "getUsers",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "teamId",
+                        "description": "",
+                        "required": false,
+                        "type": "Guid"
+                    },
+                    {
+                        "in": "query",
+                        "name": "continuationToken",
+                        "description": "",
+                        "required": false,
+                        "type": "string"
+                    }
+                ]
+            }
+        }
+    },
+    "definitions": {
+        "AccessLevel": {
+            "type": "object",
+            "properties": {
+                "licenseDisplayName": {
+                    "type": "string"
+                },
+                "licenseStatusMessage": {
+                    "type": "string"
+                },
+                "licensingSource": {
+                    "type": "LicensingSource"
+                }
+            }
+        },
+        "AddUsersResponse": {
+            "type": "object",
+            "properties": {
+                "errorMessage": {
+                    "type": "string"
+                },
+                "failedAddedUsers": {
+                    "type": "array",
+                    "items": {
+                        "type": "UserErrorModel"
+                    }
+                },
+                "hasErrors": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "AddUserUIData": {
+            "type": "object",
+            "properties": {
+                "extensions": {
+                    "type": "array",
+                    "items": {
+                        "type": "Extension"
+                    }
+                },
+                "projects": {
+                    "type": "array",
+                    "items": {
+                        "type": "Project"
+                    }
+                }
+            }
+        },
+        "Extension": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "Project": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "Guid"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "roles": {
+                    "type": "array",
+                    "items": {
+                        "type": "Role"
+                    }
+                }
+            }
+        },
+        "Role": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "roleType": {
+                    "type": "RoleType",
+                    "enum": [
+                        "stakeholder",
+                        "reader",
+                        "contributor",
+                        "projectAdministrator"
+                    ]
+                }
+            }
+        },
+        "User": {
+            "type": "object",
+            "properties": {
+                "collection": {
+                    "description": "Collection-level user attributes",
+                    "$ref": "#/definitions/UserCollectionContext"
+                },
+                "displayName": {
+                    "type": "string"
+                },
+                "extensionIds": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "id": {
+                    "type": "Guid"
+                },
+                "projectId": {
+                    "type": "Guid"
+                },
+                "providerEmail": {
+                    "type": "string"
+                },
+                "roleType": {
+                    "type": "RoleType",
+                    "enum": [
+                        "stakeholder",
+                        "reader",
+                        "contributor",
+                        "projectAdministrator"
+                    ]
+                }
+            }
+        },
+        "UserCollectionContext": {
+            "type": "object",
+            "properties": {
+                "accessLevel": {
+                    "$ref": "#/definitions/AccessLevel"
+                },
+                "lastAccessedDate": {
+                    "type": "string",
+                    "format": "date-time"
+                }
+            }
+        },
+        "UserErrorModel": {
+            "type": "object",
+            "properties": {
+                "errorMessage": {
+                    "type": "string"
+                },
+                "user": {
+                    "$ref": "#/definitions/User"
+                }
+            }
+        }
+    },
+    "externalDocs": {
+        "description": "Find out more about Swagger",
+        "url": "http://swagger.io"
+    }
+}
