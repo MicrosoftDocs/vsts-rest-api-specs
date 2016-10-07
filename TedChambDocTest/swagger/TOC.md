@@ -17,7 +17,7 @@
 # [Task Agent API](taskagent.json)
 # [Test API](test.json)
 # [Test Impact API](testimpact.json)
-# [User Agent API](useragent.json)
+# [User Management API](usermanagement.json)
 # [Utilization API](utilization.json)
 # [Version Control API](tfvc.json)
 # [Work API](work.json)
