@@ -25,7 +25,7 @@
 # [Partitioning API](partitioning.json)
 # [Policy API](policy.json)
 # [Profile API](profile.json)
-# [Recommendation API](reccomendation.json)
+# [Recommendation API](recommendation.json)
 # [Release API](release.json)
 # [Reporting API](reporting.json)
 # [Search API](search.json)
