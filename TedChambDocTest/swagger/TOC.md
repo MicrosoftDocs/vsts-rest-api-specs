@@ -13,6 +13,7 @@
 # [Organization Join API](organizationjoin.json)
 # [Policy API](policy.json)
 # [Reporting API](reporting.json)
+# [Search API](search.json)
 # [Task API](task.json)
 # [Task Agent API](taskagent.json)
 # [Test API](test.json)
