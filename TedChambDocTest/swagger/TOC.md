@@ -9,6 +9,7 @@
 # [Favorites API](favorite.json)
 # [Gallery API](gallery.json)
 # [Git API](git.json)
+# [Notification API](notification.json)
 # [Organization Join API](organizationjoin.json)
 # [Policy API](policy.json)
 # [Reporting API](reporting.json)
