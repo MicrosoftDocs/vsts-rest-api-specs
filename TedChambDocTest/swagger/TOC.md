@@ -19,6 +19,7 @@
 # [Git API](git.json)
 # [Name Resolution API](nameresolution.json)
 # [Notification API](notification.json)
+# [NuGet Package Manager API](npm.json)
 # [Operations API](operations.json)
 # [Organization Join API](organizationjoin.json)
 # [OSS API](oss.json)
