@@ -1,0 +1,1282 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "",
+        "version": "1.0.0",
+        "title": "Search",
+        "termsOfService": "",
+        "contact": {
+            "email": "tedchamb@microsoft.com"
+        },
+        "license": {
+            "name": "MICROSOFT SOFTWARE LICENSE TERMS",
+            "url": "https://go.microsoft.com/fwlink/?LinkId=329770"
+        }
+    },
+    "host": "https://{account}.visualstudio.com",
+    "basePath": "",
+    "tags": [
+        {
+            "name": "codeQueryResults"
+        },
+        {
+            "name": "customCode"
+        },
+        {
+            "name": "customProject"
+        },
+        {
+            "name": "customRepository"
+        },
+        {
+            "name": "customTenant"
+        },
+        {
+            "name": "preinstall"
+        },
+        {
+            "name": "projectQueryResults"
+        },
+        {
+            "name": "tenantCodeQueryResults"
+        },
+        {
+            "name": "userAccessibleRepositories"
+        },
+        {
+            "name": "workItemFields"
+        },
+        {
+            "name": "workItemQueryResults"
+        }
+    ],
+    "schemes": [
+        "http",
+        "https"
+    ],
+    "paths": {
+        "_apis/search/codequeryresults": {
+            "post": {
+                "tags": [
+                    "codeQueryResults"
+                ],
+                "summary": "PostCodeQuery",
+                "description": "Provides a set of results which match the posted query.",
+                "operationId": "postCodeQuery",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "The search query.",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/SearchQuery"
+                        }
+                    }
+                ]
+            }
+        },
+        "_apis/search/customcode": {
+            "post": {
+                "tags": [
+                    "customCode"
+                ],
+                "summary": "BulkCodeIndex",
+                "description": "Updates code search index with index/delete of files specified in the bulk index request.",
+                "operationId": "bulkCodeIndex",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "Bulk indexing request",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/BulkCodeIndexRequest"
+                        }
+                    }
+                ]
+            }
+        },
+        "_apis/search/customcode/{projectName}/{repositoryName}/{branchName}/{filePath}": {
+            "get": {
+                "tags": [
+                    "customCode"
+                ],
+                "summary": "GetFileContent",
+                "description": "Get file content given the details about the file that uniquely identifies it",
+                "operationId": "getFileContent",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "projectName",
+                        "description": "Project name",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "repositoryName",
+                        "description": "Repository name",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "branchName",
+                        "description": "Branch name",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "filePath",
+                        "description": "File path",
+                        "required": true,
+                        "type": "string"
+                    }
+                ]
+            }
+        },
+        "_apis/search/customcode/{projectName}/{repositoryName}": {
+            "post": {
+                "tags": [
+                    "customCode"
+                ],
+                "summary": "PostFilesMetadata",
+                "description": "Gets the list of files present in the repository along with its metadata.",
+                "operationId": "postFilesMetadata",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "Request to get files and its metadata.",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/FilesMetadataRequest"
+                        }
+                    },
+                    {
+                        "in": "path",
+                        "name": "projectName",
+                        "description": "The project name.",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "repositoryName",
+                        "description": "The repository name.",
+                        "required": true,
+                        "type": "string"
+                    }
+                ]
+            }
+        },
+        "_apis/search/customcode/{projectName}/{repositoryName}/{parentFolder}": {
+            "get": {
+                "tags": [
+                    "customCode"
+                ],
+                "summary": "GetFolderNames",
+                "description": "Gets the list of folders present in the path specified for the given project and repository.",
+                "operationId": "getFolderNames",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "projectName",
+                        "description": "The project name.",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "repositoryName",
+                        "description": "The repository name.",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "parentFolder",
+                        "description": "The parent folder path.",
+                        "required": true,
+                        "type": "string"
+                    }
+                ]
+            }
+        },
+        "_apis/search/customcode/{projectName}/{repositoryName}/{trackingId}": {
+            "get": {
+                "tags": [
+                    "customCode"
+                ],
+                "summary": "GetOperationStatus",
+                "description": "Gets the operation status represented by the specified tracking id",
+                "operationId": "getOperationStatus",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "projectName",
+                        "description": "Project name",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "repositoryName",
+                        "description": "Repository name",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "trackingId",
+                        "description": "Tracking Id",
+                        "required": true,
+                        "type": "string"
+                    }
+                ]
+            }
+        },
+        "_apis/search/customproject": {
+            "get": {
+                "tags": [
+                    "customProject"
+                ],
+                "summary": "GetProjects",
+                "description": "",
+                "operationId": "getProjects",
+                "produces": [
+                    "application/json"
+                ]
+            }
+        },
+        "_apis/search/customrepository/{projectName}": {
+            "get": {
+                "tags": [
+                    "customRepository"
+                ],
+                "summary": "GetRepositories",
+                "description": "Get custom repositories available in the given project",
+                "operationId": "getRepositories",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "projectName",
+                        "description": "Project name",
+                        "required": true,
+                        "type": "string"
+                    }
+                ]
+            }
+        },
+        "_apis/search/customrepository/{projectName}/{repositoryName}": {
+            "get": {
+                "tags": [
+                    "customRepository"
+                ],
+                "summary": "GetRepository",
+                "description": "Get custom repository represented by specified project and repository name",
+                "operationId": "getRepository",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "projectName",
+                        "description": "Project name",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "repositoryName",
+                        "description": "Repository name",
+                        "required": true,
+                        "type": "string"
+                    }
+                ]
+            }
+        },
+        "_apis/search/customrepository": {
+            "post": {
+                "tags": [
+                    "customRepository"
+                ],
+                "summary": "RegisterRepository",
+                "description": "Registers the custom repository (from third-party version control system) with VSO Search Service",
+                "operationId": "registerRepository",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "Repository details",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/CustomRepository"
+                        }
+                    }
+                ]
+            }
+        },
+        "_apis/search/customtenant/{tenantName}": {
+            "get": {
+                "tags": [
+                    "customTenant"
+                ],
+                "summary": "GetTenantCollectionNames",
+                "description": "Gets the collection names participating in the specified tenant",
+                "operationId": "getTenantCollectionNames",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "tenantName",
+                        "description": "Tenant name",
+                        "required": true,
+                        "type": "string"
+                    }
+                ]
+            }
+        },
+        "_apis/search/customtenant": {
+            "post": {
+                "tags": [
+                    "customTenant"
+                ],
+                "summary": "RegisterTenant",
+                "description": "Registers the custom tenant",
+                "operationId": "registerTenant",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "Tenant details",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/CustomTenant"
+                        }
+                    }
+                ]
+            }
+        },
+        "_apis/public/search/ExtensionEvents/preinstall": {
+            "post": {
+                "tags": [
+                    "preinstall"
+                ],
+                "summary": "PreInstall",
+                "description": "",
+                "operationId": "preInstall",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "",
+                        "required": true,
+                        "type": "ExtensionEventCallbackData"
+                    }
+                ]
+            }
+        },
+        "_apis/search/projectqueryresults": {
+            "post": {
+                "tags": [
+                    "projectQueryResults"
+                ],
+                "summary": "PostProjectQuery",
+                "description": "Provides a set of results which match the posted query.",
+                "operationId": "postProjectQuery",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "The project search query.",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/ProjectSearchQuery"
+                        }
+                    }
+                ]
+            }
+        },
+        "_apis/search/tenantcodequeryresults": {
+            "post": {
+                "tags": [
+                    "tenantCodeQueryResults"
+                ],
+                "summary": "PostTenantCodeQuery",
+                "description": "Provides a set of results which match the posted query.",
+                "operationId": "postTenantCodeQuery",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "The search query.",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/SearchQuery"
+                        }
+                    }
+                ]
+            }
+        },
+        "_apis/search/useraccessiblerepositories": {
+            "get": {
+                "tags": [
+                    "userAccessibleRepositories"
+                ],
+                "summary": "GetUserAccessibleRepositories",
+                "description": "Provides a list of repositories accessible to the user making the call under the specified project. If no project identifier is provided, all accessible repositories under the collection are returned.",
+                "operationId": "getUserAccessibleRepositories",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "projectIdentifier",
+                        "description": "Project name or ID.",
+                        "required": false,
+                        "type": "string"
+                    }
+                ]
+            }
+        },
+        "_apis/search/workitemfields": {
+            "get": {
+                "tags": [
+                    "workItemFields"
+                ],
+                "summary": "WorkItemFields",
+                "description": "",
+                "operationId": "workItemFields",
+                "produces": [
+                    "application/json"
+                ]
+            }
+        },
+        "_apis/search/workitemqueryresults": {
+            "post": {
+                "tags": [
+                    "workItemQueryResults"
+                ],
+                "summary": "PostWorkItemQuery",
+                "description": "Provides a set of results which match the posted query.",
+                "operationId": "postWorkItemQuery",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "The search query.",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/WorkItemSearchRequest"
+                        }
+                    }
+                ]
+            }
+        }
+    },
+    "definitions": {
+        "BulkCodeIndexRequest": {
+            "type": "object",
+            "properties": {
+                "branchName": {
+                    "description": "Branch name",
+                    "type": "string"
+                },
+                "fileDetail": {
+                    "description": "File detail",
+                    "type": "array",
+                    "items": {
+                        "type": "FileDetail"
+                    }
+                },
+                "project": {
+                    "description": "Project name",
+                    "type": "string"
+                },
+                "repository": {
+                    "description": "Repository name",
+                    "type": "string"
+                }
+            }
+        },
+        "BulkCodeIndexResponse": {
+            "type": "object",
+            "properties": {
+                "accepted": {
+                    "description": "Flag that determines whether the request was accepted or not",
+                    "type": "boolean"
+                },
+                "errors": {
+                    "description": "List of errors (if any) that needs to be sent to the client",
+                    "type": "array",
+                    "items": {
+                        "type": "ErrorData"
+                    }
+                },
+                "trackingId": {
+                    "description": "Tracking id to check the progress of the operation later",
+                    "type": "string"
+                }
+            }
+        },
+        "CodeQueryResponse": {
+            "type": "EntitySearchResponse",
+            "properties": {
+                "query": {
+                    "$ref": "#/definitions/SearchQuery"
+                },
+                "results": {
+                    "$ref": "#/definitions/CodeResults"
+                }
+            }
+        },
+        "CodeResult": {
+            "type": "object",
+            "properties": {
+                "branch": {
+                    "description": "Branch of the result file. TODO : [hapahuja] - This field is deprecated.",
+                    "type": "string"
+                },
+                "changeId": {
+                    "description": "ChangeId is the Id of last change in the result file.",
+                    "type": "string"
+                },
+                "collection": {
+                    "description": "Collection of the result file.",
+                    "type": "string"
+                },
+                "contentId": {
+                    "description": "ContentId of the resultId.",
+                    "type": "string"
+                },
+                "fileName": {
+                    "description": "Name of the result file.",
+                    "type": "string"
+                },
+                "hitCount": {
+                    "description": "TODO : [hapahuja] - This field is deprecated. Number of hits in the result file.",
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "hits": {
+                    "description": "TODO : [hapahuja] -This field is deprecated. List of hit offsets in the result file.",
+                    "type": "array",
+                    "items": {
+                        "type": "Hit"
+                    }
+                },
+                "matches": {
+                    "description": "Dictionary of field to hit offsets in the result file. key identifies the area in which hit's were found, for ex: file content/file name etc. In subsequent sprints, Hits defined above will be a member of this.",
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "array"
+                    }
+                },
+                "path": {
+                    "description": "Path at which result file is present.",
+                    "type": "string"
+                },
+                "project": {
+                    "description": "Project of the result file.",
+                    "type": "string"
+                },
+                "repository": {
+                    "description": "Repository of the result file.",
+                    "type": "string"
+                },
+                "repositoryId": {
+                    "description": "Repository ID of the result file. If not accessible or of type TFVC it is null",
+                    "type": "string"
+                },
+                "vcType": {
+                    "description": "Version Control type of the result file. It returns 'Git' or 'Tfvc' type.",
+                    "type": "VersionControlType",
+                    "enum": [
+                        "git",
+                        "tfvc",
+                        "custom"
+                    ]
+                },
+                "versions": {
+                    "description": "Branches of the result file.",
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "CodeResults": {
+            "type": "object",
+            "properties": {
+                "count": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "values": {
+                    "type": "array",
+                    "items": {
+                        "type": "CodeResult"
+                    }
+                }
+            }
+        },
+        "CollectionDetail": {
+            "type": "object",
+            "properties": {
+                "collectionId": {
+                    "description": "Collection Id",
+                    "type": "string"
+                },
+                "collectionName": {
+                    "description": "Collection name",
+                    "type": "string"
+                }
+            }
+        },
+        "CustomRepository": {
+            "type": "object",
+            "properties": {
+                "projectName": {
+                    "description": "Project name",
+                    "type": "string"
+                },
+                "properties": {
+                    "description": "Repository properties",
+                    "$ref": "#/definitions/CustomRepositoryProperties"
+                },
+                "repositoryId": {
+                    "description": "Repository id",
+                    "type": "Guid"
+                },
+                "repositoryName": {
+                    "description": "Repository name",
+                    "type": "string"
+                }
+            }
+        },
+        "CustomRepositoryProperties": {
+            "type": "object",
+            "properties": {
+                "propertiesType": {
+                    "description": "Custom repository properties type",
+                    "type": "CustomRepositoryPropertiesType",
+                    "enum": [
+                        "sourceDepot"
+                    ]
+                }
+            }
+        },
+        "CustomTenant": {
+            "type": "object",
+            "properties": {
+                "collections": {
+                    "description": "List of collections detail participating in the given tenant",
+                    "type": "array",
+                    "items": {
+                        "type": "CollectionDetail"
+                    }
+                },
+                "name": {
+                    "description": "Tenant name",
+                    "type": "string"
+                }
+            }
+        },
+        "EntitySearchQuery": {
+            "type": "object",
+            "properties": {
+                "filters": {
+                    "description": "Filters to be passed with query. Set it to null if there are no filters to be applied.",
+                    "type": "array",
+                    "items": {
+                        "type": "SearchFilter"
+                    }
+                },
+                "searchFilters": {
+                    "description": "Filters to be passed with query. Set it to null if there are no filters to be applied.",
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "array"
+                    }
+                },
+                "searchText": {
+                    "description": "Search Text for which Search is performed.",
+                    "type": "string"
+                },
+                "skipResults": {
+                    "description": "For supporting pagination. SkipResults tells the number of results to be skipped.",
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "takeResults": {
+                    "description": "For supporting pagination. TakeResults tells the number of results to be returned.",
+                    "type": "integer",
+                    "format": "int32"
+                }
+            }
+        },
+        "EntitySearchResponse": {
+            "type": "object",
+            "properties": {
+                "errors": {
+                    "description": "List of errors (if any) that needs to be sent to the client",
+                    "type": "array",
+                    "items": {
+                        "type": "ErrorData"
+                    }
+                },
+                "filterCategories": {
+                    "description": "Filter Categories (if any) sent in the response",
+                    "type": "array",
+                    "items": {
+                        "type": "FilterCategory"
+                    }
+                }
+            }
+        },
+        "ErrorData": {
+            "type": "object",
+            "properties": {
+                "errorCode": {
+                    "description": "Error code",
+                    "type": "string"
+                },
+                "errorMessage": {
+                    "description": "Error message",
+                    "type": "string"
+                },
+                "errorType": {
+                    "description": "Error type",
+                    "type": "ErrorType",
+                    "enum": [
+                        "warning",
+                        "error"
+                    ]
+                }
+            }
+        },
+        "FileDetail": {
+            "type": "object",
+            "properties": {
+                "content": {
+                    "description": "File content",
+                    "type": "string"
+                },
+                "operation": {
+                    "description": "Operation type that needs to be performed",
+                    "type": "FileOperation",
+                    "enum": [
+                        "index",
+                        "delete"
+                    ]
+                },
+                "path": {
+                    "description": "File path where the file is present",
+                    "type": "string"
+                }
+            }
+        },
+        "FilesMetadataRequest": {
+            "type": "object",
+            "properties": {
+                "paginationInfo": {
+                    "description": "Pagination information required to fetch the metadata from Search Service.",
+                    "$ref": "#/definitions/PaginationDetails"
+                },
+                "requiredMetadata": {
+                    "description": "List of metadata that is required.",
+                    "type": "array",
+                    "items": {
+                        "type": "MetadataType"
+                    }
+                }
+            }
+        },
+        "FilesMetadataResponse": {
+            "type": "object",
+            "properties": {
+                "filesmetadata": {
+                    "type": "array",
+                    "items": {
+                        "type": "object"
+                    }
+                },
+                "paginationInfo": {
+                    "description": "Pagination information required to fetch the metadata from Search Service.",
+                    "$ref": "#/definitions/PaginationDetails"
+                }
+            }
+        },
+        "Filter": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "resultCount": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "selected": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "FilterCategory": {
+            "type": "object",
+            "properties": {
+                "filters": {
+                    "type": "array",
+                    "items": {
+                        "type": "Filter"
+                    }
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "GitRepositoryData": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "Guid"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "projectId": {
+                    "type": "Guid"
+                },
+                "projectName": {
+                    "type": "string"
+                }
+            }
+        },
+        "Highlight": {
+            "type": "object",
+            "properties": {
+                "field": {
+                    "description": "Name of the field higlighted.",
+                    "type": "string"
+                },
+                "highlights": {
+                    "description": "Highlights on the field.",
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "Hit": {
+            "type": "object",
+            "properties": {
+                "charOffset": {
+                    "description": "Gets or sets the start character offset of a piece of text.",
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "length": {
+                    "description": "Gets or sets the length of a piece of text.",
+                    "type": "integer",
+                    "format": "int32"
+                }
+            }
+        },
+        "OptInRequest": {
+            "type": "object",
+            "properties": {
+                "accountName": {
+                    "description": "Gets or sets the Account name of a request",
+                    "type": "string"
+                },
+                "accountUrl": {
+                    "description": "Gets or sets the Account url of a request",
+                    "type": "string"
+                },
+                "hostId": {
+                    "description": "Gets or sets the hostId of a request",
+                    "type": "Guid"
+                },
+                "requestorId": {
+                    "description": "Gets or sets the requestor id of a request",
+                    "type": "Guid"
+                }
+            }
+        },
+        "OptInRequestStatus": {
+            "type": "object",
+            "properties": {
+                "accountName": {
+                    "description": "Gets or sets the name of the account for which the status is got.",
+                    "type": "string"
+                },
+                "accountUrl": {
+                    "description": "Gets or sets the url of the account for which the status is got.",
+                    "type": "string"
+                },
+                "hostId": {
+                    "description": "Gets or sets the hostId of the account for which the status is got.",
+                    "type": "Guid"
+                },
+                "requestorId": {
+                    "description": "Gets or sets the requestor id of the account for which the status is got.",
+                    "type": "Guid"
+                },
+                "requestStatus": {
+                    "description": "Gets or sets the status of the optin request of the account.",
+                    "type": "integer",
+                    "format": "int16"
+                }
+            }
+        },
+        "PaginationDetails": {
+            "type": "object",
+            "properties": {
+                "pageId": {
+                    "description": "In context of FileMetaDataRequest: Keeps Id of the page to be fetched. In context of FileMetaDataResponse: Keeps Id of the next page to be fetched.",
+                    "type": "string"
+                }
+            }
+        },
+        "ProjectSearchQuery": {
+            "type": "EntitySearchQuery",
+            "properties": {
+            }
+        },
+        "ProjectSearchResponse": {
+            "type": "EntitySearchResponse",
+            "properties": {
+                "query": {
+                    "description": "ProjectSearchQuery object sent as query.",
+                    "$ref": "#/definitions/ProjectSearchQuery"
+                },
+                "results": {
+                    "description": "ProjectSearchResults returned as part of the response.",
+                    "$ref": "#/definitions/ProjectSearchResults"
+                }
+            }
+        },
+        "ProjectSearchResult": {
+            "type": "object",
+            "properties": {
+                "account": {
+                    "description": "Account Name for the project.",
+                    "type": "string"
+                },
+                "collection": {
+                    "description": "Collection name for the project.",
+                    "type": "string"
+                },
+                "description": {
+                    "description": "Description of the Project/Repository.",
+                    "type": "string"
+                },
+                "hits": {
+                    "description": "Hit Offsets for highlighting in the description field.",
+                    "type": "array",
+                    "items": {
+                        "type": "Highlight"
+                    }
+                },
+                "id": {
+                    "description": "Id of the Project/Repository.",
+                    "type": "string"
+                },
+                "name": {
+                    "description": "Name of the Project/Repository.",
+                    "type": "string"
+                },
+                "parentProjectName": {
+                    "description": "Name of Parent Project, useful in case of a type 'Repository'.",
+                    "type": "string"
+                },
+                "type": {
+                    "description": "Flag which tells if this entity is a 'Project' or 'Repository'.",
+                    "type": "string"
+                }
+            }
+        },
+        "ProjectSearchResults": {
+            "type": "object",
+            "properties": {
+                "count": {
+                    "description": "Number of matched results in response to Project Search.",
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "values": {
+                    "description": "Array of ProjectSearchResult objects for matched documents.",
+                    "type": "array",
+                    "items": {
+                        "type": "ProjectSearchResult"
+                    }
+                }
+            }
+        },
+        "SDMappingDetail": {
+            "type": "object",
+            "properties": {
+                "depot": {
+                    "description": "Optional: Depot name in case of mapping type 'Folder'",
+                    "type": "string"
+                },
+                "folderPath": {
+                    "description": "Optional: Folder path in case of mapping type 'Folder'",
+                    "type": "string"
+                },
+                "mappingType": {
+                    "description": "Mapping Type",
+                    "type": "SDMappingType",
+                    "enum": [
+                        "root",
+                        "folder"
+                    ]
+                },
+                "sdServerName": {
+                    "description": "SD Server Name",
+                    "type": "string"
+                },
+                "sdServerPortNumber": {
+                    "description": "SD Server Port Number",
+                    "type": "string"
+                }
+            }
+        },
+        "SDRepositoryProperties": {
+            "type": "CustomRepositoryProperties",
+            "properties": {
+                "mappingDetails": {
+                    "description": "SD Mapping details",
+                    "type": "array",
+                    "items": {
+                        "type": "SDMappingDetail"
+                    }
+                }
+            }
+        },
+        "SearchFilter": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "values": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "SearchQuery": {
+            "type": "EntitySearchQuery",
+            "properties": {
+            }
+        },
+        "WorkItemField": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "referenceName": {
+                    "type": "string"
+                },
+                "value": {
+                    "type": "string"
+                }
+            }
+        },
+        "WorkItemFieldMetadata": {
+            "type": "object",
+            "properties": {
+                "alternateNames": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "name": {
+                    "type": "string"
+                },
+                "referenceName": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "WorkItemFieldType",
+                    "enum": [
+                        "string",
+                        "integer",
+                        "dateTime",
+                        "plainText",
+                        "html",
+                        "treePath",
+                        "history",
+                        "double",
+                        "guid",
+                        "boolean",
+                        "identity"
+                    ]
+                }
+            }
+        },
+        "WorkItemHit": {
+            "type": "object",
+            "properties": {
+                "fieldName": {
+                    "description": "Display name of the field higlighted.",
+                    "type": "string"
+                },
+                "fieldReferenceName": {
+                    "description": "Reference name of the field highlighted.",
+                    "type": "string"
+                },
+                "highlights": {
+                    "description": "Highlighted snippets of the field.",
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "WorkItemResult": {
+            "type": "object",
+            "properties": {
+                "fields": {
+                    "type": "array",
+                    "items": {
+                        "type": "WorkItemField"
+                    }
+                },
+                "hits": {
+                    "description": "Highlighted snippets of fields that match the search request.",
+                    "type": "array",
+                    "items": {
+                        "type": "WorkItemHit"
+                    }
+                },
+                "project": {
+                    "type": "string"
+                },
+                "projectId": {
+                    "type": "string"
+                }
+            }
+        },
+        "WorkItemResults": {
+            "type": "object",
+            "properties": {
+                "count": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "values": {
+                    "type": "array",
+                    "items": {
+                        "type": "WorkItemResult"
+                    }
+                }
+            }
+        },
+        "WorkItemSearchRequest": {
+            "type": "EntitySearchQuery",
+            "properties": {
+            }
+        },
+        "WorkItemSearchResponse": {
+            "type": "EntitySearchResponse",
+            "properties": {
+                "query": {
+                    "$ref": "#/definitions/WorkItemSearchRequest"
+                },
+                "results": {
+                    "$ref": "#/definitions/WorkItemResults"
+                }
+            }
+        }
+    },
+    "externalDocs": {
+        "description": "Find out more about Swagger",
+        "url": "http://swagger.io"
+    }
+}
