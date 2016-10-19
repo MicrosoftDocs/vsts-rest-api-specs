@@ -30,6 +30,9 @@
             "name": "follows"
         },
         {
+            "name": "statisticsQuery"
+        },
+        {
             "name": "subscriptionQuery"
         },
         {
@@ -294,6 +297,44 @@
                 "responses": {
                     "200": {
                         "description": "successful operation"
+                    }
+                }
+            }
+        },
+        "_apis/notification/statisticsquery": {
+            "post": {
+                "tags": [
+                    "statisticsQuery"
+                ],
+                "summary": "StatisticsQuery",
+                "description": "",
+                "operationId": "statisticsQuery",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/NotificationStatisticsQuery"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/NotificationStatistic"
+                            }
+                        }
                     }
                 }
             }
@@ -838,6 +879,79 @@
                 "name": {
                     "description": "Gets or sets the friendly name of this category.",
                     "type": "string"
+                }
+            }
+        },
+        "NotificationStatistic": {
+            "type": "object",
+            "properties": {
+                "date": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "hitCount": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "path": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "NotificationStatisticType",
+                    "enum": [
+                        "notificationBySubscription",
+                        "eventsByEventType",
+                        "notificationByEventType",
+                        "eventsByEventTypePerUser",
+                        "notificationByEventTypePerUser",
+                        "events",
+                        "notifications"
+                    ]
+                },
+                "user": {
+                    "type": "IdentityRef"
+                }
+            }
+        },
+        "NotificationStatisticsQuery": {
+            "type": "object",
+            "properties": {
+                "conditions": {
+                    "type": "array",
+                    "items": {
+                        "type": "NotificationStatisticsQueryConditions"
+                    }
+                }
+            }
+        },
+        "NotificationStatisticsQueryConditions": {
+            "type": "object",
+            "properties": {
+                "date": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "hitCountMinimum": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "path": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "NotificationStatisticType",
+                    "enum": [
+                        "notificationBySubscription",
+                        "eventsByEventType",
+                        "notificationByEventType",
+                        "eventsByEventTypePerUser",
+                        "notificationByEventTypePerUser",
+                        "events",
+                        "notifications"
+                    ]
+                },
+                "user": {
+                    "type": "IdentityRef"
                 }
             }
         },
