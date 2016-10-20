@@ -18,6 +18,9 @@
     "basePath": "",
     "tags": [
         {
+            "name": "editUserExtensionsBootstrap"
+        },
+        {
             "name": "inviteUsersBootstrap"
         },
         {
@@ -29,6 +32,30 @@
         "https"
     ],
     "paths": {
+        "_apis/usermanagement/edituserextensionsbootstrap": {
+            "get": {
+                "tags": [
+                    "editUserExtensionsBootstrap"
+                ],
+                "summary": "GetEditUserExtensionsBootstrapData",
+                "description": "",
+                "operationId": "getEditUserExtensionsBootstrapData",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Extension"
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "_apis/usermanagement/inviteusersbootstrap": {
             "get": {
                 "tags": [
@@ -117,6 +144,34 @@
                 "tags": [
                     "users"
                 ],
+                "summary": "GetUser",
+                "description": "Used to get a single user information in an account or team",
+                "operationId": "getUser",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "userId",
+                        "description": "",
+                        "required": true,
+                        "type": "Guid"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/User"
+                        }
+                    }
+                }
+            },
+            "get": {
+                "tags": [
+                    "users"
+                ],
                 "summary": "GetUsers",
                 "description": "",
                 "operationId": "getUsers",
@@ -132,6 +187,35 @@
                                 "$ref": "#/definitions/User"
                             }
                         }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "users"
+                ],
+                "summary": "RemoveUserFromProject",
+                "description": "",
+                "operationId": "removeUserFromProject",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "userId",
+                        "description": "",
+                        "required": true,
+                        "type": "Guid"
+                    },
+                    {
+                        "in": "query",
+                        "name": "projectId",
+                        "description": "",
+                        "required": true,
+                        "type": "Guid"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
                     }
                 }
             }
@@ -184,8 +268,15 @@
                 "id": {
                     "type": "string"
                 },
+                "minimumLicenseRequired": {
+                    "type": "MinimumRequiredServiceLevel"
+                },
                 "name": {
                     "type": "string"
+                },
+                "quantity": {
+                    "type": "integer",
+                    "format": "int32"
                 }
             }
         },
@@ -250,12 +341,6 @@
                 "displayName": {
                     "type": "string"
                 },
-                "extensionIds": {
-                    "type": "array",
-                    "items": {
-                        "type": "string"
-                    }
-                },
                 "id": {
                     "type": "Guid"
                 },
@@ -273,6 +358,18 @@
                         "contributor",
                         "projectAdministrator"
                     ]
+                },
+                "userExtensions": {
+                    "type": "array",
+                    "items": {
+                        "type": "UserExtension"
+                    }
+                },
+                "userProjects": {
+                    "type": "array",
+                    "items": {
+                        "type": "UserProject"
+                    }
                 }
             }
         },
@@ -296,6 +393,28 @@
                 },
                 "user": {
                     "$ref": "#/definitions/User"
+                }
+            }
+        },
+        "UserExtension": {
+            "type": "object",
+            "properties": {
+                "extensionId": {
+                    "type": "string"
+                },
+                "isAssigned": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "UserProject": {
+            "type": "object",
+            "properties": {
+                "isMember": {
+                    "type": "boolean"
+                },
+                "project": {
+                    "$ref": "#/definitions/Project"
                 }
             }
         }
