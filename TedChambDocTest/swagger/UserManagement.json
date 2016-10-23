@@ -80,47 +80,14 @@
                 }
             }
         },
-        "_apis/usermanagement/usermanagementsummary/{collectionId}": {
-            "get": {
-                "tags": [
-                    "userManagementSummary"
-                ],
-                "summary": "GetExtensionSummaryData",
-                "description": "",
-                "operationId": "getExtensionSummaryData",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "collectionId",
-                        "description": "",
-                        "required": true,
-                        "type": "Guid"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/ExtensionSummaryData"
-                            }
-                        }
-                    }
-                }
-            }
-        },
         "_apis/usermanagement/usermanagementsummary": {
             "get": {
                 "tags": [
                     "userManagementSummary"
                 ],
-                "summary": "GetLicenseSummaryData",
+                "summary": "GetUsersSummary",
                 "description": "",
-                "operationId": "getLicenseSummaryData",
+                "operationId": "getUsersSummary",
                 "produces": [
                     "application/json"
                 ],
@@ -128,10 +95,7 @@
                     "200": {
                         "description": "successful operation",
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/LicenseSummaryData"
-                            }
+                            "$ref": "#/definitions/UsersSummary"
                         }
                     }
                 }
@@ -291,9 +255,6 @@
                 "licenseDisplayName": {
                     "type": "string"
                 },
-                "licenseStatusMessage": {
-                    "type": "string"
-                },
                 "licensingSource": {
                     "type": "LicensingSource"
                 }
@@ -439,18 +400,39 @@
         "User": {
             "type": "object",
             "properties": {
-                "collection": {
-                    "description": "Collection-level user attributes",
-                    "$ref": "#/definitions/UserCollectionContext"
+                "accessLevel": {
+                    "description": "User access level Collection-level context Not required in PUT/POST/PATCH requests",
+                    "$ref": "#/definitions/AccessLevel"
                 },
                 "displayName": {
+                    "description": "User display name All-level contexts",
                     "type": "string"
                 },
+                "extensions": {
+                    "description": "User extensions Collection-level context Not required in PUT/POST/PATCH requests",
+                    "type": "array",
+                    "items": {
+                        "type": "UserExtension"
+                    }
+                },
                 "id": {
+                    "description": "User ID All-level contexts",
                     "type": "Guid"
+                },
+                "lastAccessedDate": {
+                    "description": "User last accessed date Collection-level context Not required in PUT/POST/PATCH requests",
+                    "type": "string",
+                    "format": "date-time"
                 },
                 "projectId": {
                     "type": "Guid"
+                },
+                "projects": {
+                    "description": "User projects Collection-level context Not required in PUT/POST/PATCH requests",
+                    "type": "array",
+                    "items": {
+                        "type": "UserProject"
+                    }
                 },
                 "providerEmail": {
                     "type": "string"
@@ -463,30 +445,6 @@
                         "contributor",
                         "projectAdministrator"
                     ]
-                },
-                "userExtensions": {
-                    "type": "array",
-                    "items": {
-                        "type": "UserExtension"
-                    }
-                },
-                "userProjects": {
-                    "type": "array",
-                    "items": {
-                        "type": "UserProject"
-                    }
-                }
-            }
-        },
-        "UserCollectionContext": {
-            "type": "object",
-            "properties": {
-                "accessLevel": {
-                    "$ref": "#/definitions/AccessLevel"
-                },
-                "lastAccessedDate": {
-                    "type": "string",
-                    "format": "date-time"
                 }
             }
         },
@@ -520,6 +478,23 @@
                 },
                 "project": {
                     "$ref": "#/definitions/Project"
+                }
+            }
+        },
+        "UsersSummary": {
+            "type": "object",
+            "properties": {
+                "extensions": {
+                    "type": "array",
+                    "items": {
+                        "type": "ExtensionSummaryData"
+                    }
+                },
+                "licenses": {
+                    "type": "array",
+                    "items": {
+                        "type": "LicenseSummaryData"
+                    }
                 }
             }
         }
