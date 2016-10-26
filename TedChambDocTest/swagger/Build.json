@@ -80,14 +80,118 @@
         "https"
     ],
     "paths": {
-        "{project}/_apis/build/builds/{buildId}/artifacts": {
-            "post": {
+        "_apis/build/controllers": {
+            "get": {
                 "tags": [
-                    "artifacts"
+                    "controllers"
                 ],
-                "summary": "CreateArtifact",
-                "description": "Associates an artifact with a build",
-                "operationId": "createArtifact",
+                "summary": "GetBuildControllers",
+                "description": "Gets controller, optionally filtered by name",
+                "operationId": "getBuildControllers",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "name",
+                        "description": "",
+                        "required": false,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/BuildController"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "_apis/build/controllers/{controllerId}": {
+            "get": {
+                "tags": [
+                    "controllers"
+                ],
+                "summary": "GetBuildController",
+                "description": "Gets a controller",
+                "operationId": "getBuildController",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "controllerId",
+                        "description": "",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/BuildController"
+                        }
+                    }
+                }
+            }
+        },
+        "_apis/build/resourceusage": {
+            "get": {
+                "tags": [
+                    "resourceUsage"
+                ],
+                "summary": "GetResourceUsage",
+                "description": "",
+                "operationId": "getResourceUsage",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/BuildResourceUsage"
+                        }
+                    }
+                }
+            }
+        },
+        "_apis/build/settings": {
+            "get": {
+                "tags": [
+                    "settings"
+                ],
+                "summary": "GetBuildSettings",
+                "description": "",
+                "operationId": "getBuildSettings",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/BuildSettings"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "tags": [
+                    "settings"
+                ],
+                "summary": "UpdateBuildSettings",
+                "description": "Updates the build settings",
+                "operationId": "updateBuildSettings",
                 "consumes": [
                     "application/json"
                 ],
@@ -101,115 +205,15 @@
                         "description": "",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/BuildArtifact"
+                            "$ref": "#/definitions/BuildSettings"
                         }
-                    },
-                    {
-                        "in": "path",
-                        "name": "buildId",
-                        "description": "",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": false,
-                        "type": "string"
                     }
                 ],
                 "responses": {
                     "200": {
                         "description": "successful operation",
                         "schema": {
-                            "$ref": "#/definitions/BuildArtifact"
-                        }
-                    }
-                }
-            },
-            "get": {
-                "tags": [
-                    "artifacts"
-                ],
-                "summary": "GetArtifacts",
-                "description": "Gets all artifacts for a build",
-                "operationId": "getArtifacts",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "buildId",
-                        "description": "",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": false,
-                        "type": "string"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/BuildArtifact"
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "{project}/_apis/build/builds/{buildId}/artifacts/{artifactName}": {
-            "get": {
-                "tags": [
-                    "artifacts"
-                ],
-                "summary": "GetArtifact",
-                "description": "Gets a specific artifact for a build",
-                "operationId": "getArtifact",
-                "produces": [
-                    "application/zip",
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "buildId",
-                        "description": "",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "query",
-                        "name": "artifactName",
-                        "description": "",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": false,
-                        "type": "string"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "$ref": "#/definitions/BuildArtifact"
+                            "$ref": "#/definitions/BuildSettings"
                         }
                     }
                 }
@@ -255,180 +259,6 @@
                         "description": "successful operation",
                         "schema": {
                             "type": "string"
-                        }
-                    }
-                }
-            }
-        },
-        "{project}/_apis/build/repos/{repoType}/badge": {
-            "get": {
-                "tags": [
-                    "buildbadge"
-                ],
-                "summary": "GetBuildBadge",
-                "description": "",
-                "operationId": "getBuildBadge",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
-                        "name": "repoType",
-                        "description": "",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "query",
-                        "name": "repoId",
-                        "description": "",
-                        "required": false,
-                        "type": "string"
-                    },
-                    {
-                        "in": "query",
-                        "name": "branchName",
-                        "description": "",
-                        "required": false,
-                        "type": "string"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "$ref": "#/definitions/BuildBadge"
-                        }
-                    }
-                }
-            }
-        },
-        "{project}/_apis/build/builds/{buildId}": {
-            "delete": {
-                "tags": [
-                    "builds"
-                ],
-                "summary": "DeleteBuild",
-                "description": "Deletes a build",
-                "operationId": "deleteBuild",
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "buildId",
-                        "description": "",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": false,
-                        "type": "string"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation"
-                    }
-                }
-            },
-            "get": {
-                "tags": [
-                    "builds"
-                ],
-                "summary": "GetBuild",
-                "description": "Gets a build",
-                "operationId": "getBuild",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "buildId",
-                        "description": "",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": false,
-                        "type": "string"
-                    },
-                    {
-                        "in": "query",
-                        "name": "propertyFilters",
-                        "description": "A comma-delimited list of properties to include in the results",
-                        "required": false,
-                        "type": "string"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "$ref": "#/definitions/Build"
-                        }
-                    }
-                }
-            },
-            "patch": {
-                "tags": [
-                    "builds"
-                ],
-                "summary": "UpdateBuild",
-                "description": "Updates a build",
-                "operationId": "updateBuild",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "body",
-                        "name": "body",
-                        "description": "",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/Build"
-                        }
-                    },
-                    {
-                        "in": "path",
-                        "name": "buildId",
-                        "description": "",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": false,
-                        "type": "string"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "$ref": "#/definitions/Build"
                         }
                     }
                 }
@@ -724,6 +554,264 @@
                 }
             }
         },
+        "{project}/_apis/build/builds/{buildId}": {
+            "delete": {
+                "tags": [
+                    "builds"
+                ],
+                "summary": "DeleteBuild",
+                "description": "Deletes a build",
+                "operationId": "deleteBuild",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "buildId",
+                        "description": "",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "in": "path",
+                        "name": "project",
+                        "description": "Project ID or project name",
+                        "required": false,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    }
+                }
+            },
+            "get": {
+                "tags": [
+                    "builds"
+                ],
+                "summary": "GetBuild",
+                "description": "Gets a build",
+                "operationId": "getBuild",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "buildId",
+                        "description": "",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "in": "path",
+                        "name": "project",
+                        "description": "Project ID or project name",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "propertyFilters",
+                        "description": "A comma-delimited list of properties to include in the results",
+                        "required": false,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/Build"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "tags": [
+                    "builds"
+                ],
+                "summary": "UpdateBuild",
+                "description": "Updates a build",
+                "operationId": "updateBuild",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Build"
+                        }
+                    },
+                    {
+                        "in": "path",
+                        "name": "buildId",
+                        "description": "",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "in": "path",
+                        "name": "project",
+                        "description": "Project ID or project name",
+                        "required": false,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/Build"
+                        }
+                    }
+                }
+            }
+        },
+        "{project}/_apis/build/builds/{buildId}/artifacts": {
+            "post": {
+                "tags": [
+                    "artifacts"
+                ],
+                "summary": "CreateArtifact",
+                "description": "Associates an artifact with a build",
+                "operationId": "createArtifact",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/BuildArtifact"
+                        }
+                    },
+                    {
+                        "in": "path",
+                        "name": "buildId",
+                        "description": "",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "in": "path",
+                        "name": "project",
+                        "description": "Project ID or project name",
+                        "required": false,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/BuildArtifact"
+                        }
+                    }
+                }
+            },
+            "get": {
+                "tags": [
+                    "artifacts"
+                ],
+                "summary": "GetArtifacts",
+                "description": "Gets all artifacts for a build",
+                "operationId": "getArtifacts",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "buildId",
+                        "description": "",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "in": "path",
+                        "name": "project",
+                        "description": "Project ID or project name",
+                        "required": false,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/BuildArtifact"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "{project}/_apis/build/builds/{buildId}/artifacts/{artifactName}": {
+            "get": {
+                "tags": [
+                    "artifacts"
+                ],
+                "summary": "GetArtifact",
+                "description": "Gets a specific artifact for a build",
+                "operationId": "getArtifact",
+                "produces": [
+                    "application/zip",
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "buildId",
+                        "description": "",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "in": "query",
+                        "name": "artifactName",
+                        "description": "",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "project",
+                        "description": "Project ID or project name",
+                        "required": false,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/BuildArtifact"
+                        }
+                    }
+                }
+            }
+        },
         "{project}/_apis/build/builds/{buildId}/changes": {
             "get": {
                 "tags": [
@@ -787,6 +875,513 @@
                 }
             }
         },
+        "{project}/_apis/build/builds/{buildId}/logs": {
+            "get": {
+                "tags": [
+                    "logs"
+                ],
+                "summary": "GetBuildLogs",
+                "description": "Gets logs for a build",
+                "operationId": "getBuildLogs",
+                "produces": [
+                    "application/zip",
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "project",
+                        "description": "Project ID or project name",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "buildId",
+                        "description": "",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/BuildLog"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "{project}/_apis/build/builds/{buildId}/logs/{logId}": {
+            "get": {
+                "tags": [
+                    "logs"
+                ],
+                "summary": "GetBuildLog",
+                "description": "Gets a log",
+                "operationId": "getBuildLog",
+                "produces": [
+                    "application/json",
+                    "text/plain"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "project",
+                        "description": "Project ID or project name",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "buildId",
+                        "description": "",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "in": "path",
+                        "name": "logId",
+                        "description": "",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "in": "query",
+                        "name": "startLine",
+                        "description": "",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    {
+                        "in": "query",
+                        "name": "endLine",
+                        "description": "",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int64"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "type": "Stream"
+                        }
+                    }
+                }
+            }
+        },
+        "{project}/_apis/build/builds/{buildId}/report": {
+            "get": {
+                "tags": [
+                    "report"
+                ],
+                "summary": "GetBuildReport",
+                "description": "Gets report for a build",
+                "operationId": "getBuildReport",
+                "produces": [
+                    "text/html",
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "project",
+                        "description": "Project ID or project name",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "buildId",
+                        "description": "",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "in": "query",
+                        "name": "type",
+                        "description": "",
+                        "required": false,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/BuildReportMetadata"
+                        }
+                    }
+                }
+            }
+        },
+        "{project}/_apis/build/builds/{buildId}/tags": {
+            "post": {
+                "tags": [
+                    "tags"
+                ],
+                "summary": "AddBuildTags",
+                "description": "Adds tag to a build",
+                "operationId": "addBuildTags",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "",
+                        "required": true,
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "path",
+                        "name": "project",
+                        "description": "Project ID or project name",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "buildId",
+                        "description": "",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            },
+            "get": {
+                "tags": [
+                    "tags"
+                ],
+                "summary": "GetBuildTags",
+                "description": "Gets the tags for a build",
+                "operationId": "getBuildTags",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "project",
+                        "description": "Project ID or project name",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "buildId",
+                        "description": "",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "{project}/_apis/build/builds/{buildId}/tags/{tag}": {
+            "put": {
+                "tags": [
+                    "tags"
+                ],
+                "summary": "AddBuildTag",
+                "description": "Adds a tag to a build",
+                "operationId": "addBuildTag",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "project",
+                        "description": "Project ID or project name",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "buildId",
+                        "description": "",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "in": "path",
+                        "name": "tag",
+                        "description": "",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "tags"
+                ],
+                "summary": "DeleteBuildTag",
+                "description": "Deletes a tag from a build",
+                "operationId": "deleteBuildTag",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "project",
+                        "description": "Project ID or project name",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "buildId",
+                        "description": "",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "in": "path",
+                        "name": "tag",
+                        "description": "",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "{project}/_apis/build/builds/{buildId}/timeline/{timelineId}": {
+            "get": {
+                "tags": [
+                    "timeline"
+                ],
+                "summary": "GetBuildTimeline",
+                "description": "Gets details for a build",
+                "operationId": "getBuildTimeline",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "project",
+                        "description": "Project ID or project name",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "buildId",
+                        "description": "",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "in": "path",
+                        "name": "timelineId",
+                        "description": "",
+                        "required": false,
+                        "type": "Guid"
+                    },
+                    {
+                        "in": "query",
+                        "name": "changeId",
+                        "description": "",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "in": "query",
+                        "name": "planId",
+                        "description": "",
+                        "required": false,
+                        "type": "Guid"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/Timeline"
+                        }
+                    }
+                }
+            }
+        },
+        "{project}/_apis/build/builds/{buildId}/workitems": {
+            "get": {
+                "tags": [
+                    "workitems"
+                ],
+                "summary": "GetBuildWorkItemsRefs",
+                "description": "Gets the work item ids associated with a build",
+                "operationId": "getBuildWorkItemsRefs",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "project",
+                        "description": "Project ID or project name",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "buildId",
+                        "description": "",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "in": "query",
+                        "name": "top",
+                        "description": "The maximum number of workitems to return",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "ResourceRef"
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "workitems"
+                ],
+                "summary": "GetBuildWorkItemsRefsFromCommits",
+                "description": "Gets the work item ids associated with build commits",
+                "operationId": "getBuildWorkItemsRefsFromCommits",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "",
+                        "required": true,
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "path",
+                        "name": "project",
+                        "description": "Project ID or project name",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "buildId",
+                        "description": "",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "in": "query",
+                        "name": "top",
+                        "description": "The maximum number of workitems to return, also number of commits to consider if commitids are not sent",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "ResourceRef"
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "{project}/_apis/build/changes": {
             "get": {
                 "tags": [
@@ -838,70 +1433,6 @@
                             "type": "array",
                             "items": {
                                 "$ref": "#/definitions/Change"
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "_apis/build/controllers/{controllerId}": {
-            "get": {
-                "tags": [
-                    "controllers"
-                ],
-                "summary": "GetBuildController",
-                "description": "Gets a controller",
-                "operationId": "getBuildController",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "controllerId",
-                        "description": "",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int32"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "$ref": "#/definitions/BuildController"
-                        }
-                    }
-                }
-            }
-        },
-        "_apis/build/controllers": {
-            "get": {
-                "tags": [
-                    "controllers"
-                ],
-                "summary": "GetBuildControllers",
-                "description": "Gets controller, optionally filtered by name",
-                "operationId": "getBuildControllers",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "query",
-                        "name": "name",
-                        "description": "",
-                        "required": false,
-                        "type": "string"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/BuildController"
                             }
                         }
                     }
@@ -1246,6 +1777,289 @@
                 }
             }
         },
+        "{project}/_apis/build/definitions/{definitionId}/metrics": {
+            "get": {
+                "tags": [
+                    "metrics"
+                ],
+                "summary": "GetDefinitionMetrics",
+                "description": "Gets metrics of a definition",
+                "operationId": "getDefinitionMetrics",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "project",
+                        "description": "Project ID or project name",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "definitionId",
+                        "description": "",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "in": "query",
+                        "name": "minMetricsTime",
+                        "description": "",
+                        "required": false,
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/BuildMetric"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "{project}/_apis/build/definitions/{definitionId}/revisions": {
+            "get": {
+                "tags": [
+                    "revisions"
+                ],
+                "summary": "GetDefinitionRevisions",
+                "description": "Gets revisions of a definition",
+                "operationId": "getDefinitionRevisions",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "project",
+                        "description": "Project ID or project name",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "definitionId",
+                        "description": "",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/BuildDefinitionRevision"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "{project}/_apis/build/definitions/templates": {
+            "get": {
+                "tags": [
+                    "templates"
+                ],
+                "summary": "GetTemplates",
+                "description": "",
+                "operationId": "getTemplates",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "project",
+                        "description": "Project ID or project name",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/BuildDefinitionTemplate"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "{project}/_apis/build/definitions/templates/{templateId}": {
+            "delete": {
+                "tags": [
+                    "templates"
+                ],
+                "summary": "DeleteTemplate",
+                "description": "Deletes a definition template",
+                "operationId": "deleteTemplate",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "project",
+                        "description": "Project ID or project name",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "templateId",
+                        "description": "",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    }
+                }
+            },
+            "get": {
+                "tags": [
+                    "templates"
+                ],
+                "summary": "GetTemplate",
+                "description": "Gets definition template filtered by id",
+                "operationId": "getTemplate",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "project",
+                        "description": "Project ID or project name",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "templateId",
+                        "description": "",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/BuildDefinitionTemplate"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "templates"
+                ],
+                "summary": "SaveTemplate",
+                "description": "Saves a definition template",
+                "operationId": "saveTemplate",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/BuildDefinitionTemplate"
+                        }
+                    },
+                    {
+                        "in": "path",
+                        "name": "project",
+                        "description": "Project ID or project name",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "templateId",
+                        "description": "",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/BuildDefinitionTemplate"
+                        }
+                    }
+                }
+            }
+        },
+        "{project}/_apis/build/folders/{*path}": {
+            "get": {
+                "tags": [
+                    "folders"
+                ],
+                "summary": "GetFolders",
+                "description": "Gets folders",
+                "operationId": "getFolders",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "project",
+                        "description": "Project ID or project name",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "path",
+                        "description": "",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "queryOrder",
+                        "description": "",
+                        "required": false,
+                        "type": "FolderQueryOrder"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Folder"
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "{project}/_apis/build/folders/{path}": {
             "put": {
                 "tags": [
@@ -1371,207 +2185,6 @@
                 }
             }
         },
-        "{project}/_apis/build/folders/{*path}": {
-            "get": {
-                "tags": [
-                    "folders"
-                ],
-                "summary": "GetFolders",
-                "description": "Gets folders",
-                "operationId": "getFolders",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
-                        "name": "path",
-                        "description": "",
-                        "required": false,
-                        "type": "string"
-                    },
-                    {
-                        "in": "query",
-                        "name": "queryOrder",
-                        "description": "",
-                        "required": false,
-                        "type": "FolderQueryOrder"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/Folder"
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "{project}/_apis/build/builds/{buildId}/logs/{logId}": {
-            "get": {
-                "tags": [
-                    "logs"
-                ],
-                "summary": "GetBuildLog",
-                "description": "Gets a log",
-                "operationId": "getBuildLog",
-                "produces": [
-                    "application/json",
-                    "text/plain"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
-                        "name": "buildId",
-                        "description": "",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "path",
-                        "name": "logId",
-                        "description": "",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "query",
-                        "name": "startLine",
-                        "description": "",
-                        "required": false,
-                        "type": "integer",
-                        "format": "int64"
-                    },
-                    {
-                        "in": "query",
-                        "name": "endLine",
-                        "description": "",
-                        "required": false,
-                        "type": "integer",
-                        "format": "int64"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "type": "Stream"
-                        }
-                    }
-                }
-            }
-        },
-        "{project}/_apis/build/builds/{buildId}/logs": {
-            "get": {
-                "tags": [
-                    "logs"
-                ],
-                "summary": "GetBuildLogs",
-                "description": "Gets logs for a build",
-                "operationId": "getBuildLogs",
-                "produces": [
-                    "application/zip",
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
-                        "name": "buildId",
-                        "description": "",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int32"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/BuildLog"
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "{project}/_apis/build/definitions/{definitionId}/metrics": {
-            "get": {
-                "tags": [
-                    "metrics"
-                ],
-                "summary": "GetDefinitionMetrics",
-                "description": "Gets metrics of a definition",
-                "operationId": "getDefinitionMetrics",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
-                        "name": "definitionId",
-                        "description": "",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "query",
-                        "name": "minMetricsTime",
-                        "description": "",
-                        "required": false,
-                        "type": "string",
-                        "format": "date-time"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/BuildMetric"
-                            }
-                        }
-                    }
-                }
-            }
-        },
         "{project}/_apis/build/options": {
             "get": {
                 "tags": [
@@ -1605,16 +2218,15 @@
                 }
             }
         },
-        "{project}/_apis/build/builds/{buildId}/report": {
+        "{project}/_apis/build/repos/{repoType}/badge": {
             "get": {
                 "tags": [
-                    "report"
+                    "buildbadge"
                 ],
-                "summary": "GetBuildReport",
-                "description": "Gets report for a build",
-                "operationId": "getBuildReport",
+                "summary": "GetBuildBadge",
+                "description": "",
+                "operationId": "getBuildBadge",
                 "produces": [
-                    "text/html",
                     "application/json"
                 ],
                 "parameters": [
@@ -1627,15 +2239,21 @@
                     },
                     {
                         "in": "path",
-                        "name": "buildId",
+                        "name": "repoType",
                         "description": "",
                         "required": true,
-                        "type": "integer",
-                        "format": "int32"
+                        "type": "string"
                     },
                     {
                         "in": "query",
-                        "name": "type",
+                        "name": "repoId",
+                        "description": "",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "branchName",
                         "description": "",
                         "required": false,
                         "type": "string"
@@ -1645,310 +2263,7 @@
                     "200": {
                         "description": "successful operation",
                         "schema": {
-                            "$ref": "#/definitions/BuildReportMetadata"
-                        }
-                    }
-                }
-            }
-        },
-        "_apis/build/resourceusage": {
-            "get": {
-                "tags": [
-                    "resourceUsage"
-                ],
-                "summary": "GetResourceUsage",
-                "description": "",
-                "operationId": "getResourceUsage",
-                "produces": [
-                    "application/json"
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "$ref": "#/definitions/BuildResourceUsage"
-                        }
-                    }
-                }
-            }
-        },
-        "{project}/_apis/build/definitions/{definitionId}/revisions": {
-            "get": {
-                "tags": [
-                    "revisions"
-                ],
-                "summary": "GetDefinitionRevisions",
-                "description": "Gets revisions of a definition",
-                "operationId": "getDefinitionRevisions",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
-                        "name": "definitionId",
-                        "description": "",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int32"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/BuildDefinitionRevision"
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "_apis/build/settings": {
-            "get": {
-                "tags": [
-                    "settings"
-                ],
-                "summary": "GetBuildSettings",
-                "description": "",
-                "operationId": "getBuildSettings",
-                "produces": [
-                    "application/json"
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "$ref": "#/definitions/BuildSettings"
-                        }
-                    }
-                }
-            },
-            "patch": {
-                "tags": [
-                    "settings"
-                ],
-                "summary": "UpdateBuildSettings",
-                "description": "Updates the build settings",
-                "operationId": "updateBuildSettings",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "body",
-                        "name": "body",
-                        "description": "",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/BuildSettings"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "$ref": "#/definitions/BuildSettings"
-                        }
-                    }
-                }
-            }
-        },
-        "{project}/_apis/build/builds/{buildId}/tags/{tag}": {
-            "put": {
-                "tags": [
-                    "tags"
-                ],
-                "summary": "AddBuildTag",
-                "description": "Adds a tag to a build",
-                "operationId": "addBuildTag",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
-                        "name": "buildId",
-                        "description": "",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "path",
-                        "name": "tag",
-                        "description": "",
-                        "required": true,
-                        "type": "string"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            }
-                        }
-                    }
-                }
-            },
-            "delete": {
-                "tags": [
-                    "tags"
-                ],
-                "summary": "DeleteBuildTag",
-                "description": "Deletes a tag from a build",
-                "operationId": "deleteBuildTag",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
-                        "name": "buildId",
-                        "description": "",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "path",
-                        "name": "tag",
-                        "description": "",
-                        "required": true,
-                        "type": "string"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "{project}/_apis/build/builds/{buildId}/tags": {
-            "post": {
-                "tags": [
-                    "tags"
-                ],
-                "summary": "AddBuildTags",
-                "description": "Adds tag to a build",
-                "operationId": "addBuildTags",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "body",
-                        "name": "body",
-                        "description": "",
-                        "required": true,
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
-                        "name": "buildId",
-                        "description": "",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int32"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            }
-                        }
-                    }
-                }
-            },
-            "get": {
-                "tags": [
-                    "tags"
-                ],
-                "summary": "GetBuildTags",
-                "description": "Gets the tags for a build",
-                "operationId": "getBuildTags",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
-                        "name": "buildId",
-                        "description": "",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int32"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            }
+                            "$ref": "#/definitions/BuildBadge"
                         }
                     }
                 }
@@ -1981,321 +2296,6 @@
                             "type": "array",
                             "items": {
                                 "type": "string"
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "{project}/_apis/build/definitions/templates/{templateId}": {
-            "delete": {
-                "tags": [
-                    "templates"
-                ],
-                "summary": "DeleteTemplate",
-                "description": "Deletes a definition template",
-                "operationId": "deleteTemplate",
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
-                        "name": "templateId",
-                        "description": "",
-                        "required": true,
-                        "type": "string"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation"
-                    }
-                }
-            },
-            "get": {
-                "tags": [
-                    "templates"
-                ],
-                "summary": "GetTemplate",
-                "description": "Gets definition template filtered by id",
-                "operationId": "getTemplate",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
-                        "name": "templateId",
-                        "description": "",
-                        "required": true,
-                        "type": "string"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "$ref": "#/definitions/BuildDefinitionTemplate"
-                        }
-                    }
-                }
-            },
-            "put": {
-                "tags": [
-                    "templates"
-                ],
-                "summary": "SaveTemplate",
-                "description": "Saves a definition template",
-                "operationId": "saveTemplate",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "body",
-                        "name": "body",
-                        "description": "",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/BuildDefinitionTemplate"
-                        }
-                    },
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
-                        "name": "templateId",
-                        "description": "",
-                        "required": true,
-                        "type": "string"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "$ref": "#/definitions/BuildDefinitionTemplate"
-                        }
-                    }
-                }
-            }
-        },
-        "{project}/_apis/build/definitions/templates": {
-            "get": {
-                "tags": [
-                    "templates"
-                ],
-                "summary": "GetTemplates",
-                "description": "",
-                "operationId": "getTemplates",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": true,
-                        "type": "string"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/BuildDefinitionTemplate"
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "{project}/_apis/build/builds/{buildId}/timeline/{timelineId}": {
-            "get": {
-                "tags": [
-                    "timeline"
-                ],
-                "summary": "GetBuildTimeline",
-                "description": "Gets details for a build",
-                "operationId": "getBuildTimeline",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
-                        "name": "buildId",
-                        "description": "",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "path",
-                        "name": "timelineId",
-                        "description": "",
-                        "required": false,
-                        "type": "Guid"
-                    },
-                    {
-                        "in": "query",
-                        "name": "changeId",
-                        "description": "",
-                        "required": false,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "query",
-                        "name": "planId",
-                        "description": "",
-                        "required": false,
-                        "type": "Guid"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "$ref": "#/definitions/Timeline"
-                        }
-                    }
-                }
-            }
-        },
-        "{project}/_apis/build/builds/{buildId}/workitems": {
-            "get": {
-                "tags": [
-                    "workitems"
-                ],
-                "summary": "GetBuildWorkItemsRefs",
-                "description": "Gets the work item ids associated with a build",
-                "operationId": "getBuildWorkItemsRefs",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
-                        "name": "buildId",
-                        "description": "",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "query",
-                        "name": "top",
-                        "description": "The maximum number of workitems to return",
-                        "required": false,
-                        "type": "integer",
-                        "format": "int32"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "type": "ResourceRef"
-                            }
-                        }
-                    }
-                }
-            },
-            "post": {
-                "tags": [
-                    "workitems"
-                ],
-                "summary": "GetBuildWorkItemsRefsFromCommits",
-                "description": "Gets the work item ids associated with build commits",
-                "operationId": "getBuildWorkItemsRefsFromCommits",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "body",
-                        "name": "body",
-                        "description": "",
-                        "required": true,
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
-                        "name": "buildId",
-                        "description": "",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "query",
-                        "name": "top",
-                        "description": "The maximum number of workitems to return, also number of commits to consider if commitids are not sent",
-                        "required": false,
-                        "type": "integer",
-                        "format": "int32"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "type": "ResourceRef"
                             }
                         }
                     }

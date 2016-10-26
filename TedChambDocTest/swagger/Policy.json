@@ -35,6 +35,39 @@
         "https"
     ],
     "paths": {
+        "{project}/_apis/policy/configurations": {
+            "get": {
+                "tags": [
+                    "configurations"
+                ],
+                "summary": "GetPolicyConfigurations",
+                "description": "",
+                "operationId": "getPolicyConfigurations",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "project",
+                        "description": "Project ID or project name",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/PolicyConfiguration"
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "{project}/_apis/policy/configurations/{configurationId}": {
             "post": {
                 "tags": [
@@ -199,14 +232,14 @@
                 }
             }
         },
-        "{project}/_apis/policy/configurations": {
+        "{project}/_apis/policy/configurations/{configurationId}/revisions": {
             "get": {
                 "tags": [
-                    "configurations"
+                    "revisions"
                 ],
-                "summary": "GetPolicyConfigurations",
+                "summary": "GetPolicyConfigurationRevisions",
                 "description": "",
-                "operationId": "getPolicyConfigurations",
+                "operationId": "getPolicyConfigurationRevisions",
                 "produces": [
                     "application/json"
                 ],
@@ -217,6 +250,30 @@
                         "description": "Project ID or project name",
                         "required": true,
                         "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "configurationId",
+                        "description": "",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "in": "query",
+                        "name": "top",
+                        "description": "",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "in": "query",
+                        "name": "skip",
+                        "description": "",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int32"
                     }
                 ],
                 "responses": {
@@ -226,6 +283,115 @@
                             "type": "array",
                             "items": {
                                 "$ref": "#/definitions/PolicyConfiguration"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "{project}/_apis/policy/configurations/{configurationId}/revisions/{revisionId}": {
+            "get": {
+                "tags": [
+                    "revisions"
+                ],
+                "summary": "GetPolicyConfigurationRevision",
+                "description": "",
+                "operationId": "getPolicyConfigurationRevision",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "project",
+                        "description": "Project ID or project name",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "configurationId",
+                        "description": "",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "in": "path",
+                        "name": "revisionId",
+                        "description": "",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/PolicyConfiguration"
+                        }
+                    }
+                }
+            }
+        },
+        "{project}/_apis/policy/evaluations": {
+            "get": {
+                "tags": [
+                    "evaluations"
+                ],
+                "summary": "GetPolicyEvaluations",
+                "description": "",
+                "operationId": "getPolicyEvaluations",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "project",
+                        "description": "Project ID or project name",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "artifactId",
+                        "description": "",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "includeNotApplicable",
+                        "description": "",
+                        "required": false,
+                        "type": "boolean"
+                    },
+                    {
+                        "in": "query",
+                        "name": "top",
+                        "description": "",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "in": "query",
+                        "name": "skip",
+                        "description": "",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/PolicyEvaluationRecord"
                             }
                         }
                     }
@@ -304,14 +470,14 @@
                 }
             }
         },
-        "{project}/_apis/policy/evaluations": {
+        "{project}/_apis/policy/types": {
             "get": {
                 "tags": [
-                    "evaluations"
+                    "types"
                 ],
-                "summary": "GetPolicyEvaluations",
+                "summary": "GetPolicyTypes",
                 "description": "",
-                "operationId": "getPolicyEvaluations",
+                "operationId": "getPolicyTypes",
                 "produces": [
                     "application/json"
                 ],
@@ -322,36 +488,6 @@
                         "description": "Project ID or project name",
                         "required": true,
                         "type": "string"
-                    },
-                    {
-                        "in": "query",
-                        "name": "artifactId",
-                        "description": "",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "query",
-                        "name": "includeNotApplicable",
-                        "description": "",
-                        "required": false,
-                        "type": "boolean"
-                    },
-                    {
-                        "in": "query",
-                        "name": "top",
-                        "description": "",
-                        "required": false,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "query",
-                        "name": "skip",
-                        "description": "",
-                        "required": false,
-                        "type": "integer",
-                        "format": "int32"
                     }
                 ],
                 "responses": {
@@ -360,110 +496,7 @@
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/PolicyEvaluationRecord"
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "{project}/_apis/policy/configurations/{configurationId}/revisions/{revisionId}": {
-            "get": {
-                "tags": [
-                    "revisions"
-                ],
-                "summary": "GetPolicyConfigurationRevision",
-                "description": "",
-                "operationId": "getPolicyConfigurationRevision",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
-                        "name": "configurationId",
-                        "description": "",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "path",
-                        "name": "revisionId",
-                        "description": "",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int32"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "$ref": "#/definitions/PolicyConfiguration"
-                        }
-                    }
-                }
-            }
-        },
-        "{project}/_apis/policy/configurations/{configurationId}/revisions": {
-            "get": {
-                "tags": [
-                    "revisions"
-                ],
-                "summary": "GetPolicyConfigurationRevisions",
-                "description": "",
-                "operationId": "getPolicyConfigurationRevisions",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
-                        "name": "configurationId",
-                        "description": "",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "query",
-                        "name": "top",
-                        "description": "",
-                        "required": false,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "query",
-                        "name": "skip",
-                        "description": "",
-                        "required": false,
-                        "type": "integer",
-                        "format": "int32"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/PolicyConfiguration"
+                                "$ref": "#/definitions/PolicyType"
                             }
                         }
                     }
@@ -502,39 +535,6 @@
                         "description": "successful operation",
                         "schema": {
                             "$ref": "#/definitions/PolicyType"
-                        }
-                    }
-                }
-            }
-        },
-        "{project}/_apis/policy/types": {
-            "get": {
-                "tags": [
-                    "types"
-                ],
-                "summary": "GetPolicyTypes",
-                "description": "",
-                "operationId": "getPolicyTypes",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": true,
-                        "type": "string"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/PolicyType"
-                            }
                         }
                     }
                 }

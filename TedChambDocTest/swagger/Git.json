@@ -119,17 +119,416 @@
         "https"
     ],
     "paths": {
-        "{project}/_apis/git/repositories/{repositoryId}/blobs/{sha1}": {
+        "_apis/git/pullrequests/{pullRequestId}": {
             "get": {
                 "tags": [
-                    "blobs"
+                    "pullRequests"
                 ],
-                "summary": "GetBlob",
-                "description": "Gets a single blob.",
-                "operationId": "getBlob",
+                "summary": "GetPullRequestById",
+                "description": "Get a pull request using it's ID",
+                "operationId": "getPullRequestById",
                 "produces": [
-                    "application/octet-stream",
-                    "application/zip",
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "pullRequestId",
+                        "description": "the Id of the pull request",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/GitPullRequest"
+                        }
+                    }
+                }
+            }
+        },
+        "{project}/_apis/git/deletedrepositories": {
+            "get": {
+                "tags": [
+                    "deletedRepositories"
+                ],
+                "summary": "GetDeletedRepositories",
+                "description": "Retrieve deleted git repositories.",
+                "operationId": "getDeletedRepositories",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "project",
+                        "description": "Project ID or project name",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/GitDeletedRepository"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "{project}/_apis/git/favorites/refs": {
+            "post": {
+                "tags": [
+                    "refsFavorites"
+                ],
+                "summary": "CreateFavorite",
+                "description": "Creates a ref favorite",
+                "operationId": "createFavorite",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/GitRefFavorite"
+                        }
+                    },
+                    {
+                        "in": "path",
+                        "name": "project",
+                        "description": "Project ID or project name",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/GitRefFavorite"
+                        }
+                    }
+                }
+            },
+            "get": {
+                "tags": [
+                    "refsFavorites"
+                ],
+                "summary": "GetRefFavorites",
+                "description": "Gets the refs favorites for a repo and an identity.",
+                "operationId": "getRefFavorites",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "project",
+                        "description": "Project ID or project name",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "repositoryId",
+                        "description": "The id of the repository.",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "identityId",
+                        "description": "The id of the identity whose favorites are to be retrieved. If null, the requesting identity is used.",
+                        "required": false,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/GitRefFavorite"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "{project}/_apis/git/favorites/refs/{favoriteId}": {
+            "delete": {
+                "tags": [
+                    "refsFavorites"
+                ],
+                "summary": "DeleteRefFavorite",
+                "description": "",
+                "operationId": "deleteRefFavorite",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "project",
+                        "description": "Project ID or project name",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "favoriteId",
+                        "description": "",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    }
+                }
+            },
+            "get": {
+                "tags": [
+                    "refsFavorites"
+                ],
+                "summary": "GetRefFavorite",
+                "description": "",
+                "operationId": "getRefFavorite",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "project",
+                        "description": "Project ID or project name",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "favoriteId",
+                        "description": "",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/GitRefFavorite"
+                        }
+                    }
+                }
+            }
+        },
+        "{project}/_apis/git/pullrequests": {
+            "get": {
+                "tags": [
+                    "pullRequests"
+                ],
+                "summary": "GetPullRequestsByProject",
+                "description": "Query pull requests by project",
+                "operationId": "getPullRequestsByProject",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "project",
+                        "description": "Project ID or project name",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "searchCriteria",
+                        "description": "",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/GitPullRequestSearchCriteria"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "maxCommentLength",
+                        "description": "",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "in": "query",
+                        "name": "skip",
+                        "description": "",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "in": "query",
+                        "name": "top",
+                        "description": "",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/GitPullRequest"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "{project}/_apis/git/repositories": {
+            "post": {
+                "tags": [
+                    "repositories"
+                ],
+                "summary": "CreateRepository",
+                "description": "Create a git repository",
+                "operationId": "createRepository",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/GitRepository"
+                        }
+                    },
+                    {
+                        "in": "path",
+                        "name": "project",
+                        "description": "Project ID or project name",
+                        "required": false,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/GitRepository"
+                        }
+                    }
+                }
+            },
+            "get": {
+                "tags": [
+                    "repositories"
+                ],
+                "summary": "GetRepositories",
+                "description": "Retrieve git repositories.",
+                "operationId": "getRepositories",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "project",
+                        "description": "Project ID or project name",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "includeLinks",
+                        "description": "",
+                        "required": false,
+                        "type": "boolean"
+                    },
+                    {
+                        "in": "query",
+                        "name": "includeAllUrls",
+                        "description": "",
+                        "required": false,
+                        "type": "boolean"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/GitRepository"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "{project}/_apis/git/repositories/{repositoryId}": {
+            "delete": {
+                "tags": [
+                    "repositories"
+                ],
+                "summary": "DeleteRepository",
+                "description": "Delete a git repository",
+                "operationId": "deleteRepository",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "repositoryId",
+                        "description": "",
+                        "required": true,
+                        "type": "Guid"
+                    },
+                    {
+                        "in": "path",
+                        "name": "project",
+                        "description": "Project ID or project name",
+                        "required": false,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    }
+                }
+            },
+            "get": {
+                "tags": [
+                    "repositories"
+                ],
+                "summary": "GetRepository",
+                "description": "",
+                "operationId": "getRepository",
+                "produces": [
                     "application/json"
                 ],
                 "parameters": [
@@ -142,29 +541,8 @@
                     },
                     {
                         "in": "path",
-                        "name": "sha1",
-                        "description": "",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
                         "name": "project",
                         "description": "Project ID or project name",
-                        "required": false,
-                        "type": "string"
-                    },
-                    {
-                        "in": "query",
-                        "name": "download",
-                        "description": "",
-                        "required": false,
-                        "type": "boolean"
-                    },
-                    {
-                        "in": "query",
-                        "name": "fileName",
-                        "description": "",
                         "required": false,
                         "type": "string"
                     }
@@ -173,7 +551,54 @@
                     "200": {
                         "description": "successful operation",
                         "schema": {
-                            "$ref": "#/definitions/GitBlobRef"
+                            "$ref": "#/definitions/GitRepository"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "tags": [
+                    "repositories"
+                ],
+                "summary": "UpdateRepository",
+                "description": "Updates the Git repository with the single populated change in the specified repository information.",
+                "operationId": "updateRepository",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/GitRepository"
+                        }
+                    },
+                    {
+                        "in": "path",
+                        "name": "repositoryId",
+                        "description": "",
+                        "required": true,
+                        "type": "Guid"
+                    },
+                    {
+                        "in": "path",
+                        "name": "project",
+                        "description": "Project ID or project name",
+                        "required": false,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/GitRepository"
                         }
                     }
                 }
@@ -236,132 +661,31 @@
                 }
             }
         },
-        "{project}/_apis/git/repositories/{repositoryId}/stats/branches": {
+        "{project}/_apis/git/repositories/{repositoryId}/blobs/{sha1}": {
             "get": {
                 "tags": [
-                    "branchStats"
+                    "blobs"
                 ],
-                "summary": "GetBranch",
-                "description": "Retrieve statistics about a single branch.",
-                "operationId": "getBranch",
+                "summary": "GetBlob",
+                "description": "Gets a single blob.",
+                "operationId": "getBlob",
                 "produces": [
+                    "application/octet-stream",
+                    "application/zip",
                     "application/json"
                 ],
                 "parameters": [
                     {
                         "in": "path",
                         "name": "repositoryId",
-                        "description": "Friendly name or guid of repository",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "query",
-                        "name": "name",
-                        "description": "Name of the branch",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": false,
-                        "type": "string"
-                    },
-                    {
-                        "in": "query",
-                        "name": "baseVersionDescriptor",
-                        "description": "",
-                        "required": false,
-                        "schema": {
-                            "$ref": "#/definitions/GitVersionDescriptor"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "$ref": "#/definitions/GitBranchStats"
-                        }
-                    }
-                }
-            },
-            "post": {
-                "tags": [
-                    "branchStats"
-                ],
-                "summary": "GetBranchStatsBatch",
-                "description": "Retrieve statistics for multiple commits",
-                "operationId": "getBranchStatsBatch",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "body",
-                        "name": "body",
                         "description": "",
                         "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/GitQueryBranchStatsCriteria"
-                        }
-                    },
-                    {
-                        "in": "path",
-                        "name": "repositoryId",
-                        "description": "Friendly name or guid of repository",
-                        "required": true,
                         "type": "string"
                     },
                     {
                         "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": false,
-                        "type": "string"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/GitBranchStats"
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "{project}/_apis/git/repositories/{repositoryId}/commits/{commitId}/changes": {
-            "get": {
-                "tags": [
-                    "changes"
-                ],
-                "summary": "GetChanges",
-                "description": "Retrieve changes for a particular commit.",
-                "operationId": "getChanges",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "commitId",
-                        "description": "The id of the commit.",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
-                        "name": "repositoryId",
-                        "description": "The id or friendly name of the repository. To use the friendly name, projectId must also be specified.",
+                        "name": "sha1",
+                        "description": "",
                         "required": true,
                         "type": "string"
                     },
@@ -374,26 +698,24 @@
                     },
                     {
                         "in": "query",
-                        "name": "top",
-                        "description": "The maximum number of changes to return.",
+                        "name": "download",
+                        "description": "",
                         "required": false,
-                        "type": "integer",
-                        "format": "int32"
+                        "type": "boolean"
                     },
                     {
                         "in": "query",
-                        "name": "skip",
-                        "description": "The number of changes to skip.",
+                        "name": "fileName",
+                        "description": "",
                         "required": false,
-                        "type": "integer",
-                        "format": "int32"
+                        "type": "string"
                     }
                 ],
                 "responses": {
                     "200": {
                         "description": "successful operation",
                         "schema": {
-                            "$ref": "#/definitions/GitCommitChanges"
+                            "$ref": "#/definitions/GitBlobRef"
                         }
                     }
                 }
@@ -535,136 +857,6 @@
                 }
             }
         },
-        "{project}/_apis/git/repositories/{repositoryId}/diffs/commits": {
-            "get": {
-                "tags": [
-                    "commitDiffs"
-                ],
-                "summary": "GetCommitDiffs",
-                "description": "Get differences in committed items between two commits.",
-                "operationId": "getCommitDiffs",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "repositoryId",
-                        "description": "Friendly name or guid of repository",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": false,
-                        "type": "string"
-                    },
-                    {
-                        "in": "query",
-                        "name": "diffCommonCommit",
-                        "description": "",
-                        "required": false,
-                        "type": "boolean"
-                    },
-                    {
-                        "in": "query",
-                        "name": "top",
-                        "description": "Maximum number of changes to return",
-                        "required": false,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "query",
-                        "name": "skip",
-                        "description": "Number of changes to skip",
-                        "required": false,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "query",
-                        "name": "baseVersionDescriptor",
-                        "description": "",
-                        "required": false,
-                        "schema": {
-                            "$ref": "#/definitions/GitBaseVersionDescriptor"
-                        }
-                    },
-                    {
-                        "in": "query",
-                        "name": "targetVersionDescriptor",
-                        "description": "",
-                        "required": false,
-                        "schema": {
-                            "$ref": "#/definitions/GitTargetVersionDescriptor"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "$ref": "#/definitions/GitCommitDiffs"
-                        }
-                    }
-                }
-            }
-        },
-        "{project}/_apis/git/repositories/{repositoryId}/commits/{commitId}": {
-            "get": {
-                "tags": [
-                    "commits"
-                ],
-                "summary": "GetCommit",
-                "description": "Retrieve a particular commit.",
-                "operationId": "getCommit",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "commitId",
-                        "description": "The id of the commit.",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
-                        "name": "repositoryId",
-                        "description": "The id or friendly name of the repository. To use the friendly name, projectId must also be specified.",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": false,
-                        "type": "string"
-                    },
-                    {
-                        "in": "query",
-                        "name": "changeCount",
-                        "description": "The number of changes to include in the result.",
-                        "required": false,
-                        "type": "integer",
-                        "format": "int32"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "$ref": "#/definitions/GitCommit"
-                        }
-                    }
-                }
-            }
-        },
         "{project}/_apis/git/repositories/{repositoryId}/commits": {
             "get": {
                 "tags": [
@@ -724,6 +916,242 @@
                             "type": "array",
                             "items": {
                                 "$ref": "#/definitions/GitCommitRef"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "{project}/_apis/git/repositories/{repositoryId}/commits/{commitId}": {
+            "get": {
+                "tags": [
+                    "commits"
+                ],
+                "summary": "GetCommit",
+                "description": "Retrieve a particular commit.",
+                "operationId": "getCommit",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "commitId",
+                        "description": "The id of the commit.",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "repositoryId",
+                        "description": "The id or friendly name of the repository. To use the friendly name, projectId must also be specified.",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "project",
+                        "description": "Project ID or project name",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "changeCount",
+                        "description": "The number of changes to include in the result.",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/GitCommit"
+                        }
+                    }
+                }
+            }
+        },
+        "{project}/_apis/git/repositories/{repositoryId}/commits/{commitId}/changes": {
+            "get": {
+                "tags": [
+                    "changes"
+                ],
+                "summary": "GetChanges",
+                "description": "Retrieve changes for a particular commit.",
+                "operationId": "getChanges",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "commitId",
+                        "description": "The id of the commit.",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "repositoryId",
+                        "description": "The id or friendly name of the repository. To use the friendly name, projectId must also be specified.",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "project",
+                        "description": "Project ID or project name",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "top",
+                        "description": "The maximum number of changes to return.",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "in": "query",
+                        "name": "skip",
+                        "description": "The number of changes to skip.",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/GitCommitChanges"
+                        }
+                    }
+                }
+            }
+        },
+        "{project}/_apis/git/repositories/{repositoryId}/commits/{commitId}/statuses": {
+            "post": {
+                "tags": [
+                    "statuses"
+                ],
+                "summary": "CreateCommitStatus",
+                "description": "",
+                "operationId": "createCommitStatus",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/GitStatus"
+                        }
+                    },
+                    {
+                        "in": "path",
+                        "name": "commitId",
+                        "description": "",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "repositoryId",
+                        "description": "",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "project",
+                        "description": "Project ID or project name",
+                        "required": false,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/GitStatus"
+                        }
+                    }
+                }
+            },
+            "get": {
+                "tags": [
+                    "statuses"
+                ],
+                "summary": "GetStatuses",
+                "description": "",
+                "operationId": "getStatuses",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "commitId",
+                        "description": "",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "repositoryId",
+                        "description": "",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "project",
+                        "description": "Project ID or project name",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "top",
+                        "description": "",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "in": "query",
+                        "name": "skip",
+                        "description": "",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "in": "query",
+                        "name": "latestOnly",
+                        "description": "",
+                        "required": false,
+                        "type": "boolean"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/GitStatus"
                             }
                         }
                     }
@@ -805,38 +1233,85 @@
                 }
             }
         },
-        "{project}/_apis/git/deletedrepositories": {
+        "{project}/_apis/git/repositories/{repositoryId}/diffs/commits": {
             "get": {
                 "tags": [
-                    "deletedRepositories"
+                    "commitDiffs"
                 ],
-                "summary": "GetDeletedRepositories",
-                "description": "Retrieve deleted git repositories.",
-                "operationId": "getDeletedRepositories",
+                "summary": "GetCommitDiffs",
+                "description": "Get differences in committed items between two commits.",
+                "operationId": "getCommitDiffs",
                 "produces": [
                     "application/json"
                 ],
                 "parameters": [
                     {
                         "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
+                        "name": "repositoryId",
+                        "description": "Friendly name or guid of repository",
                         "required": true,
                         "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "project",
+                        "description": "Project ID or project name",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "diffCommonCommit",
+                        "description": "",
+                        "required": false,
+                        "type": "boolean"
+                    },
+                    {
+                        "in": "query",
+                        "name": "top",
+                        "description": "Maximum number of changes to return",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "in": "query",
+                        "name": "skip",
+                        "description": "Number of changes to skip",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "in": "query",
+                        "name": "baseVersionDescriptor",
+                        "description": "",
+                        "required": false,
+                        "schema": {
+                            "$ref": "#/definitions/GitBaseVersionDescriptor"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "targetVersionDescriptor",
+                        "description": "",
+                        "required": false,
+                        "schema": {
+                            "$ref": "#/definitions/GitTargetVersionDescriptor"
+                        }
                     }
                 ],
                 "responses": {
                     "200": {
                         "description": "successful operation",
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/GitDeletedRepository"
-                            }
+                            "$ref": "#/definitions/GitCommitDiffs"
                         }
                     }
                 }
             }
+        },
+        "{project}/_apis/git/repositories/{repositoryId}/diffs/trees": {
         },
         "{project}/_apis/git/repositories/{repositoryId}/importRequests": {
             "post": {
@@ -1039,97 +1514,6 @@
                 }
             }
         },
-        "{project}/_apis/git/repositories/{repositoryId}/items/{path}": {
-            "get": {
-                "tags": [
-                    "items"
-                ],
-                "summary": "GetItem",
-                "description": "Get Item Metadata and/or Content for a single item. The download parameter is to indicate whether the content should be available as a download or just sent as a stream in the response. Doesn't apply to zipped content which is always returned as a download.",
-                "operationId": "getItem",
-                "produces": [
-                    "application/octet-stream",
-                    "text/plain",
-                    "application/zip",
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "repositoryId",
-                        "description": "",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "query",
-                        "name": "path",
-                        "description": "",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": false,
-                        "type": "string"
-                    },
-                    {
-                        "in": "query",
-                        "name": "scopePath",
-                        "description": "",
-                        "required": false,
-                        "type": "string"
-                    },
-                    {
-                        "in": "query",
-                        "name": "recursionLevel",
-                        "description": "",
-                        "required": false,
-                        "type": "VersionControlRecursionType"
-                    },
-                    {
-                        "in": "query",
-                        "name": "includeContentMetadata",
-                        "description": "",
-                        "required": false,
-                        "type": "boolean"
-                    },
-                    {
-                        "in": "query",
-                        "name": "latestProcessedChange",
-                        "description": "",
-                        "required": false,
-                        "type": "boolean"
-                    },
-                    {
-                        "in": "query",
-                        "name": "download",
-                        "description": "",
-                        "required": false,
-                        "type": "boolean"
-                    },
-                    {
-                        "in": "query",
-                        "name": "versionDescriptor",
-                        "description": "",
-                        "required": false,
-                        "schema": {
-                            "$ref": "#/definitions/GitVersionDescriptor"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "$ref": "#/definitions/GitItem"
-                        }
-                    }
-                }
-            }
-        },
         "{project}/_apis/git/repositories/{repositoryId}/items": {
             "get": {
                 "tags": [
@@ -1221,6 +1605,97 @@
                 }
             }
         },
+        "{project}/_apis/git/repositories/{repositoryId}/items/{path}": {
+            "get": {
+                "tags": [
+                    "items"
+                ],
+                "summary": "GetItem",
+                "description": "Get Item Metadata and/or Content for a single item. The download parameter is to indicate whether the content should be available as a download or just sent as a stream in the response. Doesn't apply to zipped content which is always returned as a download.",
+                "operationId": "getItem",
+                "produces": [
+                    "application/octet-stream",
+                    "text/plain",
+                    "application/zip",
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "repositoryId",
+                        "description": "",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "path",
+                        "description": "",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "project",
+                        "description": "Project ID or project name",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "scopePath",
+                        "description": "",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "recursionLevel",
+                        "description": "",
+                        "required": false,
+                        "type": "VersionControlRecursionType"
+                    },
+                    {
+                        "in": "query",
+                        "name": "includeContentMetadata",
+                        "description": "",
+                        "required": false,
+                        "type": "boolean"
+                    },
+                    {
+                        "in": "query",
+                        "name": "latestProcessedChange",
+                        "description": "",
+                        "required": false,
+                        "type": "boolean"
+                    },
+                    {
+                        "in": "query",
+                        "name": "download",
+                        "description": "",
+                        "required": false,
+                        "type": "boolean"
+                    },
+                    {
+                        "in": "query",
+                        "name": "versionDescriptor",
+                        "description": "",
+                        "required": false,
+                        "schema": {
+                            "$ref": "#/definitions/GitVersionDescriptor"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/GitItem"
+                        }
+                    }
+                }
+            }
+        },
         "{project}/_apis/git/repositories/{repositoryId}/itemsbatch": {
             "post": {
                 "tags": [
@@ -1273,482 +1748,6 @@
                 }
             }
         },
-        "{project}/_apis/git/repositories/{repositoryId}/pullRequests/{pullRequestId}/iterations/{iterationId}/commits": {
-            "get": {
-                "tags": [
-                    "pullRequestCommits"
-                ],
-                "summary": "GetPullRequestIterationCommits",
-                "description": "Get the commits for an iteration.",
-                "operationId": "getPullRequestIterationCommits",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "repositoryId",
-                        "description": "",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
-                        "name": "pullRequestId",
-                        "description": "",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "path",
-                        "name": "iterationId",
-                        "description": "Iteration to retrieve commits for",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": false,
-                        "type": "string"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/GitCommitRef"
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "{project}/_apis/git/repositories/{repositoryId}/pullRequests/{pullRequestId}/commits": {
-            "get": {
-                "tags": [
-                    "pullRequestCommits"
-                ],
-                "summary": "GetPullRequestCommits",
-                "description": "Retrieve pull request's commits",
-                "operationId": "getPullRequestCommits",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "repositoryId",
-                        "description": "",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
-                        "name": "pullRequestId",
-                        "description": "",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": false,
-                        "type": "string"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/GitCommitRef"
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "{project}/_apis/git/repositories/{repositoryId}/pullRequests/{pullRequestId}/conflicts/{conflictId}": {
-            "get": {
-                "tags": [
-                    "pullRequestConflicts"
-                ],
-                "summary": "GetPullRequestConflict",
-                "description": "Retrieve one conflict for a pull request by ID",
-                "operationId": "getPullRequestConflict",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "repositoryId",
-                        "description": "",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
-                        "name": "pullRequestId",
-                        "description": "",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "path",
-                        "name": "conflictId",
-                        "description": "",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": false,
-                        "type": "string"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "$ref": "#/definitions/GitConflict"
-                        }
-                    }
-                }
-            },
-            "patch": {
-                "tags": [
-                    "pullRequestConflicts"
-                ],
-                "summary": "UpdatePullRequestConflict",
-                "description": "Update merge conflict resolution",
-                "operationId": "updatePullRequestConflict",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "body",
-                        "name": "body",
-                        "description": "",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/GitConflict"
-                        }
-                    },
-                    {
-                        "in": "path",
-                        "name": "repositoryId",
-                        "description": "",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
-                        "name": "pullRequestId",
-                        "description": "",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "path",
-                        "name": "conflictId",
-                        "description": "",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": false,
-                        "type": "string"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "$ref": "#/definitions/GitConflict"
-                        }
-                    }
-                }
-            }
-        },
-        "{project}/_apis/git/repositories/{repositoryId}/pullRequests/{pullRequestId}/conflicts": {
-            "get": {
-                "tags": [
-                    "pullRequestConflicts"
-                ],
-                "summary": "GetPullRequestConflicts",
-                "description": "Retrieve all conflicts for a pull request",
-                "operationId": "getPullRequestConflicts",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "repositoryId",
-                        "description": "",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
-                        "name": "pullRequestId",
-                        "description": "",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": false,
-                        "type": "string"
-                    },
-                    {
-                        "in": "query",
-                        "name": "skip",
-                        "description": "",
-                        "required": false,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "query",
-                        "name": "top",
-                        "description": "",
-                        "required": false,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "query",
-                        "name": "includeObsolete",
-                        "description": "",
-                        "required": false,
-                        "type": "boolean"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/GitConflict"
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "{project}/_apis/git/repositories/{repositoryId}/pullRequests/{pullRequestId}/iterations/{iterationId}/changes": {
-            "get": {
-                "tags": [
-                    "pullRequestIterationChanges"
-                ],
-                "summary": "GetPullRequestIterationChanges",
-                "description": "",
-                "operationId": "getPullRequestIterationChanges",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "repositoryId",
-                        "description": "",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
-                        "name": "pullRequestId",
-                        "description": "",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "path",
-                        "name": "iterationId",
-                        "description": "",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": false,
-                        "type": "string"
-                    },
-                    {
-                        "in": "query",
-                        "name": "top",
-                        "description": "",
-                        "required": false,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "query",
-                        "name": "skip",
-                        "description": "",
-                        "required": false,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "query",
-                        "name": "compareTo",
-                        "description": "",
-                        "required": false,
-                        "type": "integer",
-                        "format": "int32"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "$ref": "#/definitions/GitPullRequestIterationChanges"
-                        }
-                    }
-                }
-            }
-        },
-        "{project}/_apis/git/repositories/{repositoryId}/pullRequests/{pullRequestId}/iterations/{iterationId}": {
-            "get": {
-                "tags": [
-                    "pullRequestIterations"
-                ],
-                "summary": "GetPullRequestIteration",
-                "description": "",
-                "operationId": "getPullRequestIteration",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "repositoryId",
-                        "description": "",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
-                        "name": "pullRequestId",
-                        "description": "",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "path",
-                        "name": "iterationId",
-                        "description": "",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": false,
-                        "type": "string"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "$ref": "#/definitions/GitPullRequestIteration"
-                        }
-                    }
-                }
-            }
-        },
-        "{project}/_apis/git/repositories/{repositoryId}/pullRequests/{pullRequestId}/iterations": {
-            "get": {
-                "tags": [
-                    "pullRequestIterations"
-                ],
-                "summary": "GetPullRequestIterations",
-                "description": "",
-                "operationId": "getPullRequestIterations",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "repositoryId",
-                        "description": "",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
-                        "name": "pullRequestId",
-                        "description": "",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": false,
-                        "type": "string"
-                    },
-                    {
-                        "in": "query",
-                        "name": "includeCommits",
-                        "description": "",
-                        "required": false,
-                        "type": "boolean"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/GitPullRequestIteration"
-                            }
-                        }
-                    }
-                }
-            }
-        },
         "{project}/_apis/git/repositories/{repositoryId}/pullrequestquery": {
             "post": {
                 "tags": [
@@ -1793,368 +1792,6 @@
                         "description": "successful operation",
                         "schema": {
                             "$ref": "#/definitions/GitPullRequestQuery"
-                        }
-                    }
-                }
-            }
-        },
-        "{project}/_apis/git/repositories/{repositoryId}/pullRequests/{pullRequestId}/reviewers/{reviewerId}": {
-            "put": {
-                "tags": [
-                    "pullRequestReviewers"
-                ],
-                "summary": "CreatePullRequestReviewer",
-                "description": "Adds a reviewer to a git pull request",
-                "operationId": "createPullRequestReviewer",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "body",
-                        "name": "body",
-                        "description": "",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/IdentityRefWithVote"
-                        }
-                    },
-                    {
-                        "in": "path",
-                        "name": "repositoryId",
-                        "description": "",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
-                        "name": "pullRequestId",
-                        "description": "",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "path",
-                        "name": "reviewerId",
-                        "description": "",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": false,
-                        "type": "string"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "$ref": "#/definitions/IdentityRefWithVote"
-                        }
-                    }
-                }
-            },
-            "delete": {
-                "tags": [
-                    "pullRequestReviewers"
-                ],
-                "summary": "DeletePullRequestReviewer",
-                "description": "Adds reviewers to a git pull request",
-                "operationId": "deletePullRequestReviewer",
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "repositoryId",
-                        "description": "",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
-                        "name": "pullRequestId",
-                        "description": "",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "path",
-                        "name": "reviewerId",
-                        "description": "",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": false,
-                        "type": "string"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation"
-                    }
-                }
-            },
-            "get": {
-                "tags": [
-                    "pullRequestReviewers"
-                ],
-                "summary": "GetPullRequestReviewer",
-                "description": "Retrieve a reviewer from a pull request",
-                "operationId": "getPullRequestReviewer",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "repositoryId",
-                        "description": "",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
-                        "name": "pullRequestId",
-                        "description": "",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "path",
-                        "name": "reviewerId",
-                        "description": "",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": false,
-                        "type": "string"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "$ref": "#/definitions/IdentityRefWithVote"
-                        }
-                    }
-                }
-            }
-        },
-        "{project}/_apis/git/repositories/{repositoryId}/pullRequests/{pullRequestId}/reviewers": {
-            "post": {
-                "tags": [
-                    "pullRequestReviewers"
-                ],
-                "summary": "CreatePullRequestReviewers",
-                "description": "Adds reviewers to a git pull request",
-                "operationId": "createPullRequestReviewers",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "body",
-                        "name": "body",
-                        "description": "",
-                        "required": true,
-                        "type": "array",
-                        "items": {
-                            "type": "IdentityRef"
-                        }
-                    },
-                    {
-                        "in": "path",
-                        "name": "repositoryId",
-                        "description": "",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
-                        "name": "pullRequestId",
-                        "description": "",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": false,
-                        "type": "string"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/IdentityRefWithVote"
-                            }
-                        }
-                    }
-                }
-            },
-            "get": {
-                "tags": [
-                    "pullRequestReviewers"
-                ],
-                "summary": "GetPullRequestReviewers",
-                "description": "Retrieve a pull request reviewers",
-                "operationId": "getPullRequestReviewers",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "repositoryId",
-                        "description": "",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
-                        "name": "pullRequestId",
-                        "description": "",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": false,
-                        "type": "string"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/IdentityRefWithVote"
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "_apis/git/pullrequests/{pullRequestId}": {
-            "get": {
-                "tags": [
-                    "pullRequests"
-                ],
-                "summary": "GetPullRequestById",
-                "description": "Get a pull request using it's ID",
-                "operationId": "getPullRequestById",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "pullRequestId",
-                        "description": "the Id of the pull request",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int32"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "$ref": "#/definitions/GitPullRequest"
-                        }
-                    }
-                }
-            }
-        },
-        "{project}/_apis/git/pullrequests": {
-            "get": {
-                "tags": [
-                    "pullRequests"
-                ],
-                "summary": "GetPullRequestsByProject",
-                "description": "Query pull requests by project",
-                "operationId": "getPullRequestsByProject",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "query",
-                        "name": "searchCriteria",
-                        "description": "",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/GitPullRequestSearchCriteria"
-                        }
-                    },
-                    {
-                        "in": "query",
-                        "name": "maxCommentLength",
-                        "description": "",
-                        "required": false,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "query",
-                        "name": "skip",
-                        "description": "",
-                        "required": false,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "query",
-                        "name": "top",
-                        "description": "",
-                        "required": false,
-                        "type": "integer",
-                        "format": "int32"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/GitPullRequest"
-                            }
                         }
                     }
                 }
@@ -2418,6 +2055,482 @@
                 }
             }
         },
+        "{project}/_apis/git/repositories/{repositoryId}/pullRequests/{pullRequestId}/commits": {
+            "get": {
+                "tags": [
+                    "pullRequestCommits"
+                ],
+                "summary": "GetPullRequestCommits",
+                "description": "Retrieve pull request's commits",
+                "operationId": "getPullRequestCommits",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "repositoryId",
+                        "description": "",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "pullRequestId",
+                        "description": "",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "in": "path",
+                        "name": "project",
+                        "description": "Project ID or project name",
+                        "required": false,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/GitCommitRef"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "{project}/_apis/git/repositories/{repositoryId}/pullRequests/{pullRequestId}/conflicts": {
+            "get": {
+                "tags": [
+                    "pullRequestConflicts"
+                ],
+                "summary": "GetPullRequestConflicts",
+                "description": "Retrieve all conflicts for a pull request",
+                "operationId": "getPullRequestConflicts",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "repositoryId",
+                        "description": "",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "pullRequestId",
+                        "description": "",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "in": "path",
+                        "name": "project",
+                        "description": "Project ID or project name",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "skip",
+                        "description": "",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "in": "query",
+                        "name": "top",
+                        "description": "",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "in": "query",
+                        "name": "includeObsolete",
+                        "description": "",
+                        "required": false,
+                        "type": "boolean"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/GitConflict"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "{project}/_apis/git/repositories/{repositoryId}/pullRequests/{pullRequestId}/conflicts/{conflictId}": {
+            "get": {
+                "tags": [
+                    "pullRequestConflicts"
+                ],
+                "summary": "GetPullRequestConflict",
+                "description": "Retrieve one conflict for a pull request by ID",
+                "operationId": "getPullRequestConflict",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "repositoryId",
+                        "description": "",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "pullRequestId",
+                        "description": "",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "in": "path",
+                        "name": "conflictId",
+                        "description": "",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "in": "path",
+                        "name": "project",
+                        "description": "Project ID or project name",
+                        "required": false,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/GitConflict"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "tags": [
+                    "pullRequestConflicts"
+                ],
+                "summary": "UpdatePullRequestConflict",
+                "description": "Update merge conflict resolution",
+                "operationId": "updatePullRequestConflict",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/GitConflict"
+                        }
+                    },
+                    {
+                        "in": "path",
+                        "name": "repositoryId",
+                        "description": "",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "pullRequestId",
+                        "description": "",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "in": "path",
+                        "name": "conflictId",
+                        "description": "",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "in": "path",
+                        "name": "project",
+                        "description": "Project ID or project name",
+                        "required": false,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/GitConflict"
+                        }
+                    }
+                }
+            }
+        },
+        "{project}/_apis/git/repositories/{repositoryId}/pullRequests/{pullRequestId}/iterations": {
+            "get": {
+                "tags": [
+                    "pullRequestIterations"
+                ],
+                "summary": "GetPullRequestIterations",
+                "description": "",
+                "operationId": "getPullRequestIterations",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "repositoryId",
+                        "description": "",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "pullRequestId",
+                        "description": "",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "in": "path",
+                        "name": "project",
+                        "description": "Project ID or project name",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "includeCommits",
+                        "description": "",
+                        "required": false,
+                        "type": "boolean"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/GitPullRequestIteration"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "{project}/_apis/git/repositories/{repositoryId}/pullRequests/{pullRequestId}/iterations/{iterationId}": {
+            "get": {
+                "tags": [
+                    "pullRequestIterations"
+                ],
+                "summary": "GetPullRequestIteration",
+                "description": "",
+                "operationId": "getPullRequestIteration",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "repositoryId",
+                        "description": "",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "pullRequestId",
+                        "description": "",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "in": "path",
+                        "name": "iterationId",
+                        "description": "",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "in": "path",
+                        "name": "project",
+                        "description": "Project ID or project name",
+                        "required": false,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/GitPullRequestIteration"
+                        }
+                    }
+                }
+            }
+        },
+        "{project}/_apis/git/repositories/{repositoryId}/pullRequests/{pullRequestId}/iterations/{iterationId}/changes": {
+            "get": {
+                "tags": [
+                    "pullRequestIterationChanges"
+                ],
+                "summary": "GetPullRequestIterationChanges",
+                "description": "",
+                "operationId": "getPullRequestIterationChanges",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "repositoryId",
+                        "description": "",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "pullRequestId",
+                        "description": "",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "in": "path",
+                        "name": "iterationId",
+                        "description": "",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "in": "path",
+                        "name": "project",
+                        "description": "Project ID or project name",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "top",
+                        "description": "",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "in": "query",
+                        "name": "skip",
+                        "description": "",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "in": "query",
+                        "name": "compareTo",
+                        "description": "",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/GitPullRequestIterationChanges"
+                        }
+                    }
+                }
+            }
+        },
+        "{project}/_apis/git/repositories/{repositoryId}/pullRequests/{pullRequestId}/iterations/{iterationId}/commits": {
+            "get": {
+                "tags": [
+                    "pullRequestCommits"
+                ],
+                "summary": "GetPullRequestIterationCommits",
+                "description": "Get the commits for an iteration.",
+                "operationId": "getPullRequestIterationCommits",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "repositoryId",
+                        "description": "",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "pullRequestId",
+                        "description": "",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "in": "path",
+                        "name": "iterationId",
+                        "description": "Iteration to retrieve commits for",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "in": "path",
+                        "name": "project",
+                        "description": "Project ID or project name",
+                        "required": false,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/GitCommitRef"
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "{project}/_apis/git/repositories/{repositoryId}/pullRequests/{pullRequestId}/iterations/{iterationId}/statuses": {
             "post": {
                 "tags": [
@@ -2598,6 +2711,271 @@
                 }
             }
         },
+        "{project}/_apis/git/repositories/{repositoryId}/pullRequests/{pullRequestId}/reviewers": {
+            "post": {
+                "tags": [
+                    "pullRequestReviewers"
+                ],
+                "summary": "CreatePullRequestReviewers",
+                "description": "Adds reviewers to a git pull request",
+                "operationId": "createPullRequestReviewers",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "",
+                        "required": true,
+                        "type": "array",
+                        "items": {
+                            "type": "IdentityRef"
+                        }
+                    },
+                    {
+                        "in": "path",
+                        "name": "repositoryId",
+                        "description": "",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "pullRequestId",
+                        "description": "",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "in": "path",
+                        "name": "project",
+                        "description": "Project ID or project name",
+                        "required": false,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/IdentityRefWithVote"
+                            }
+                        }
+                    }
+                }
+            },
+            "get": {
+                "tags": [
+                    "pullRequestReviewers"
+                ],
+                "summary": "GetPullRequestReviewers",
+                "description": "Retrieve a pull request reviewers",
+                "operationId": "getPullRequestReviewers",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "repositoryId",
+                        "description": "",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "pullRequestId",
+                        "description": "",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "in": "path",
+                        "name": "project",
+                        "description": "Project ID or project name",
+                        "required": false,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/IdentityRefWithVote"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "{project}/_apis/git/repositories/{repositoryId}/pullRequests/{pullRequestId}/reviewers/{reviewerId}": {
+            "put": {
+                "tags": [
+                    "pullRequestReviewers"
+                ],
+                "summary": "CreatePullRequestReviewer",
+                "description": "Adds a reviewer to a git pull request",
+                "operationId": "createPullRequestReviewer",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/IdentityRefWithVote"
+                        }
+                    },
+                    {
+                        "in": "path",
+                        "name": "repositoryId",
+                        "description": "",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "pullRequestId",
+                        "description": "",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "in": "path",
+                        "name": "reviewerId",
+                        "description": "",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "project",
+                        "description": "Project ID or project name",
+                        "required": false,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/IdentityRefWithVote"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "pullRequestReviewers"
+                ],
+                "summary": "DeletePullRequestReviewer",
+                "description": "Adds reviewers to a git pull request",
+                "operationId": "deletePullRequestReviewer",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "repositoryId",
+                        "description": "",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "pullRequestId",
+                        "description": "",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "in": "path",
+                        "name": "reviewerId",
+                        "description": "",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "project",
+                        "description": "Project ID or project name",
+                        "required": false,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    }
+                }
+            },
+            "get": {
+                "tags": [
+                    "pullRequestReviewers"
+                ],
+                "summary": "GetPullRequestReviewer",
+                "description": "Retrieve a reviewer from a pull request",
+                "operationId": "getPullRequestReviewer",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "repositoryId",
+                        "description": "",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "pullRequestId",
+                        "description": "",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "in": "path",
+                        "name": "reviewerId",
+                        "description": "",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "project",
+                        "description": "Project ID or project name",
+                        "required": false,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/IdentityRefWithVote"
+                        }
+                    }
+                }
+            }
+        },
         "{project}/_apis/git/repositories/{repositoryId}/pullRequests/{pullRequestId}/statuses": {
             "post": {
                 "tags": [
@@ -2749,6 +3127,257 @@
                         "description": "successful operation",
                         "schema": {
                             "$ref": "#/definitions/GitPullRequestStatus"
+                        }
+                    }
+                }
+            }
+        },
+        "{project}/_apis/git/repositories/{repositoryId}/pullRequests/{pullRequestId}/threads": {
+            "post": {
+                "tags": [
+                    "pullRequestThreads"
+                ],
+                "summary": "CreateThread",
+                "description": "Create a pull request review comment thread",
+                "operationId": "createThread",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/GitPullRequestCommentThread"
+                        }
+                    },
+                    {
+                        "in": "path",
+                        "name": "repositoryId",
+                        "description": "",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "pullRequestId",
+                        "description": "",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "in": "path",
+                        "name": "project",
+                        "description": "Project ID or project name",
+                        "required": false,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/GitPullRequestCommentThread"
+                        }
+                    }
+                }
+            },
+            "get": {
+                "tags": [
+                    "pullRequestThreads"
+                ],
+                "summary": "GetThreads",
+                "description": "Get all pull request comment threads.",
+                "operationId": "getThreads",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "repositoryId",
+                        "description": "",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "pullRequestId",
+                        "description": "",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "in": "path",
+                        "name": "project",
+                        "description": "Project ID or project name",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "iteration",
+                        "description": "",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "in": "query",
+                        "name": "baseIteration",
+                        "description": "",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/GitPullRequestCommentThread"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "{project}/_apis/git/repositories/{repositoryId}/pullRequests/{pullRequestId}/threads/{threadId}": {
+            "get": {
+                "tags": [
+                    "pullRequestThreads"
+                ],
+                "summary": "GetPullRequestThread",
+                "description": "Get a pull request comment thread by id for a pull request",
+                "operationId": "getPullRequestThread",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "repositoryId",
+                        "description": "",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "pullRequestId",
+                        "description": "",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "in": "path",
+                        "name": "threadId",
+                        "description": "",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "in": "path",
+                        "name": "project",
+                        "description": "Project ID or project name",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "iteration",
+                        "description": "",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "in": "query",
+                        "name": "baseIteration",
+                        "description": "",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/GitPullRequestCommentThread"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "tags": [
+                    "pullRequestThreads"
+                ],
+                "summary": "UpdateThread",
+                "description": "Update a pull request review comment thread",
+                "operationId": "updateThread",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/GitPullRequestCommentThread"
+                        }
+                    },
+                    {
+                        "in": "path",
+                        "name": "repositoryId",
+                        "description": "",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "pullRequestId",
+                        "description": "",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "in": "path",
+                        "name": "threadId",
+                        "description": "",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "in": "path",
+                        "name": "project",
+                        "description": "Project ID or project name",
+                        "required": false,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/GitPullRequestCommentThread"
                         }
                     }
                 }
@@ -3058,257 +3687,6 @@
                 }
             }
         },
-        "{project}/_apis/git/repositories/{repositoryId}/pullRequests/{pullRequestId}/threads": {
-            "post": {
-                "tags": [
-                    "pullRequestThreads"
-                ],
-                "summary": "CreateThread",
-                "description": "Create a pull request review comment thread",
-                "operationId": "createThread",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "body",
-                        "name": "body",
-                        "description": "",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/GitPullRequestCommentThread"
-                        }
-                    },
-                    {
-                        "in": "path",
-                        "name": "repositoryId",
-                        "description": "",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
-                        "name": "pullRequestId",
-                        "description": "",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": false,
-                        "type": "string"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "$ref": "#/definitions/GitPullRequestCommentThread"
-                        }
-                    }
-                }
-            },
-            "get": {
-                "tags": [
-                    "pullRequestThreads"
-                ],
-                "summary": "GetThreads",
-                "description": "Get all pull request comment threads.",
-                "operationId": "getThreads",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "repositoryId",
-                        "description": "",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
-                        "name": "pullRequestId",
-                        "description": "",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": false,
-                        "type": "string"
-                    },
-                    {
-                        "in": "query",
-                        "name": "iteration",
-                        "description": "",
-                        "required": false,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "query",
-                        "name": "baseIteration",
-                        "description": "",
-                        "required": false,
-                        "type": "integer",
-                        "format": "int32"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/GitPullRequestCommentThread"
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "{project}/_apis/git/repositories/{repositoryId}/pullRequests/{pullRequestId}/threads/{threadId}": {
-            "get": {
-                "tags": [
-                    "pullRequestThreads"
-                ],
-                "summary": "GetPullRequestThread",
-                "description": "Get a pull request comment thread by id for a pull request",
-                "operationId": "getPullRequestThread",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "repositoryId",
-                        "description": "",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
-                        "name": "pullRequestId",
-                        "description": "",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "path",
-                        "name": "threadId",
-                        "description": "",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": false,
-                        "type": "string"
-                    },
-                    {
-                        "in": "query",
-                        "name": "iteration",
-                        "description": "",
-                        "required": false,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "query",
-                        "name": "baseIteration",
-                        "description": "",
-                        "required": false,
-                        "type": "integer",
-                        "format": "int32"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "$ref": "#/definitions/GitPullRequestCommentThread"
-                        }
-                    }
-                }
-            },
-            "patch": {
-                "tags": [
-                    "pullRequestThreads"
-                ],
-                "summary": "UpdateThread",
-                "description": "Update a pull request review comment thread",
-                "operationId": "updateThread",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "body",
-                        "name": "body",
-                        "description": "",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/GitPullRequestCommentThread"
-                        }
-                    },
-                    {
-                        "in": "path",
-                        "name": "repositoryId",
-                        "description": "",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
-                        "name": "pullRequestId",
-                        "description": "",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "path",
-                        "name": "threadId",
-                        "description": "",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": false,
-                        "type": "string"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "$ref": "#/definitions/GitPullRequestCommentThread"
-                        }
-                    }
-                }
-            }
-        },
         "{project}/_apis/git/repositories/{repositoryId}/pullRequests/{pullRequestId}/workitems": {
             "get": {
                 "tags": [
@@ -3531,67 +3909,6 @@
         },
         "{project}/_apis/git/repositories/{repositoryId}/reflockrequest": {
         },
-        "{project}/_apis/git/repositories/{repositoryId}/refs/{*filter}": {
-            "get": {
-                "tags": [
-                    "refs"
-                ],
-                "summary": "GetRefs",
-                "description": "Queries the provided repository for its refs and returns them.",
-                "operationId": "getRefs",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "repositoryId",
-                        "description": "The id or friendly name of the repository. To use the friendly name, projectId must also be specified.",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": false,
-                        "type": "string"
-                    },
-                    {
-                        "in": "query",
-                        "name": "filter",
-                        "description": "[optional] A filter to apply to the refs.",
-                        "required": false,
-                        "type": "string"
-                    },
-                    {
-                        "in": "query",
-                        "name": "includeLinks",
-                        "description": "[optional] Specifies if referenceLinks should be included in the result. default is false.",
-                        "required": false,
-                        "type": "boolean"
-                    },
-                    {
-                        "in": "query",
-                        "name": "latestStatusesOnly",
-                        "description": "",
-                        "required": false,
-                        "type": "boolean"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/GitRef"
-                            }
-                        }
-                    }
-                }
-            }
-        },
         "{project}/_apis/git/repositories/{repositoryId}/refs": {
             "post": {
                 "tags": [
@@ -3652,230 +3969,49 @@
                 }
             }
         },
-        "{project}/_apis/git/favorites/refs": {
-            "post": {
-                "tags": [
-                    "refsFavorites"
-                ],
-                "summary": "CreateFavorite",
-                "description": "Creates a ref favorite",
-                "operationId": "createFavorite",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "body",
-                        "name": "body",
-                        "description": "",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/GitRefFavorite"
-                        }
-                    },
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": true,
-                        "type": "string"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "$ref": "#/definitions/GitRefFavorite"
-                        }
-                    }
-                }
-            },
+        "{project}/_apis/git/repositories/{repositoryId}/refs/{*filter}": {
             "get": {
                 "tags": [
-                    "refsFavorites"
+                    "refs"
                 ],
-                "summary": "GetRefFavorites",
-                "description": "Gets the refs favorites for a repo and an identity.",
-                "operationId": "getRefFavorites",
+                "summary": "GetRefs",
+                "description": "Queries the provided repository for its refs and returns them.",
+                "operationId": "getRefs",
                 "produces": [
                     "application/json"
                 ],
                 "parameters": [
                     {
                         "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "query",
                         "name": "repositoryId",
-                        "description": "The id of the repository.",
+                        "description": "The id or friendly name of the repository. To use the friendly name, projectId must also be specified.",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "project",
+                        "description": "Project ID or project name",
                         "required": false,
                         "type": "string"
                     },
                     {
                         "in": "query",
-                        "name": "identityId",
-                        "description": "The id of the identity whose favorites are to be retrieved. If null, the requesting identity is used.",
-                        "required": false,
-                        "type": "string"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/GitRefFavorite"
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "{project}/_apis/git/favorites/refs/{favoriteId}": {
-            "delete": {
-                "tags": [
-                    "refsFavorites"
-                ],
-                "summary": "DeleteRefFavorite",
-                "description": "",
-                "operationId": "deleteRefFavorite",
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
-                        "name": "favoriteId",
-                        "description": "",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int32"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation"
-                    }
-                }
-            },
-            "get": {
-                "tags": [
-                    "refsFavorites"
-                ],
-                "summary": "GetRefFavorite",
-                "description": "",
-                "operationId": "getRefFavorite",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
-                        "name": "favoriteId",
-                        "description": "",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int32"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "$ref": "#/definitions/GitRefFavorite"
-                        }
-                    }
-                }
-            }
-        },
-        "{project}/_apis/git/repositories": {
-            "post": {
-                "tags": [
-                    "repositories"
-                ],
-                "summary": "CreateRepository",
-                "description": "Create a git repository",
-                "operationId": "createRepository",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "body",
-                        "name": "body",
-                        "description": "",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/GitRepository"
-                        }
-                    },
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": false,
-                        "type": "string"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "$ref": "#/definitions/GitRepository"
-                        }
-                    }
-                }
-            },
-            "get": {
-                "tags": [
-                    "repositories"
-                ],
-                "summary": "GetRepositories",
-                "description": "Retrieve git repositories.",
-                "operationId": "getRepositories",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
+                        "name": "filter",
+                        "description": "[optional] A filter to apply to the refs.",
                         "required": false,
                         "type": "string"
                     },
                     {
                         "in": "query",
                         "name": "includeLinks",
-                        "description": "",
+                        "description": "[optional] Specifies if referenceLinks should be included in the result. default is false.",
                         "required": false,
                         "type": "boolean"
                     },
                     {
                         "in": "query",
-                        "name": "includeAllUrls",
+                        "name": "latestStatusesOnly",
                         "description": "",
                         "required": false,
                         "type": "boolean"
@@ -3887,121 +4023,8 @@
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/GitRepository"
+                                "$ref": "#/definitions/GitRef"
                             }
-                        }
-                    }
-                }
-            }
-        },
-        "{project}/_apis/git/repositories/{repositoryId}": {
-            "delete": {
-                "tags": [
-                    "repositories"
-                ],
-                "summary": "DeleteRepository",
-                "description": "Delete a git repository",
-                "operationId": "deleteRepository",
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "repositoryId",
-                        "description": "",
-                        "required": true,
-                        "type": "Guid"
-                    },
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": false,
-                        "type": "string"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation"
-                    }
-                }
-            },
-            "get": {
-                "tags": [
-                    "repositories"
-                ],
-                "summary": "GetRepository",
-                "description": "",
-                "operationId": "getRepository",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "repositoryId",
-                        "description": "",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": false,
-                        "type": "string"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "$ref": "#/definitions/GitRepository"
-                        }
-                    }
-                }
-            },
-            "patch": {
-                "tags": [
-                    "repositories"
-                ],
-                "summary": "UpdateRepository",
-                "description": "Updates the Git repository with the single populated change in the specified repository information.",
-                "operationId": "updateRepository",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "body",
-                        "name": "body",
-                        "description": "",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/GitRepository"
-                        }
-                    },
-                    {
-                        "in": "path",
-                        "name": "repositoryId",
-                        "description": "",
-                        "required": true,
-                        "type": "Guid"
-                    },
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": false,
-                        "type": "string"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "$ref": "#/definitions/GitRepository"
                         }
                     }
                 }
@@ -4143,14 +4166,65 @@
                 }
             }
         },
-        "{project}/_apis/git/repositories/{repositoryId}/commits/{commitId}/statuses": {
+        "{project}/_apis/git/repositories/{repositoryId}/stats/branches": {
+            "get": {
+                "tags": [
+                    "branchStats"
+                ],
+                "summary": "GetBranch",
+                "description": "Retrieve statistics about a single branch.",
+                "operationId": "getBranch",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "repositoryId",
+                        "description": "Friendly name or guid of repository",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "name",
+                        "description": "Name of the branch",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "project",
+                        "description": "Project ID or project name",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "baseVersionDescriptor",
+                        "description": "",
+                        "required": false,
+                        "schema": {
+                            "$ref": "#/definitions/GitVersionDescriptor"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/GitBranchStats"
+                        }
+                    }
+                }
+            },
             "post": {
                 "tags": [
-                    "statuses"
+                    "branchStats"
                 ],
-                "summary": "CreateCommitStatus",
-                "description": "",
-                "operationId": "createCommitStatus",
+                "summary": "GetBranchStatsBatch",
+                "description": "Retrieve statistics for multiple commits",
+                "operationId": "getBranchStatsBatch",
                 "consumes": [
                     "application/json"
                 ],
@@ -4164,20 +4238,13 @@
                         "description": "",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/GitStatus"
+                            "$ref": "#/definitions/GitQueryBranchStatsCriteria"
                         }
                     },
                     {
                         "in": "path",
-                        "name": "commitId",
-                        "description": "",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
                         "name": "repositoryId",
-                        "description": "",
+                        "description": "Friendly name or guid of repository",
                         "required": true,
                         "type": "string"
                     },
@@ -4187,71 +4254,6 @@
                         "description": "Project ID or project name",
                         "required": false,
                         "type": "string"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "$ref": "#/definitions/GitStatus"
-                        }
-                    }
-                }
-            },
-            "get": {
-                "tags": [
-                    "statuses"
-                ],
-                "summary": "GetStatuses",
-                "description": "",
-                "operationId": "getStatuses",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "commitId",
-                        "description": "",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
-                        "name": "repositoryId",
-                        "description": "",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": false,
-                        "type": "string"
-                    },
-                    {
-                        "in": "query",
-                        "name": "top",
-                        "description": "",
-                        "required": false,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "query",
-                        "name": "skip",
-                        "description": "",
-                        "required": false,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "query",
-                        "name": "latestOnly",
-                        "description": "",
-                        "required": false,
-                        "type": "boolean"
                     }
                 ],
                 "responses": {
@@ -4260,7 +4262,7 @@
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/GitStatus"
+                                "$ref": "#/definitions/GitBranchStats"
                             }
                         }
                     }
@@ -4306,8 +4308,6 @@
                     }
                 }
             }
-        },
-        "{project}/_apis/git/repositories/{repositoryId}/diffs/trees": {
         },
         "{project}/_apis/git/repositories/{repositoryId}/trees/{sha1}": {
             "get": {

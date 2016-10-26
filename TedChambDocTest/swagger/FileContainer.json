@@ -26,6 +26,87 @@
         "https"
     ],
     "paths": {
+        "_apis/containers/{container}/{*itemPath}": {
+            "get": {
+                "tags": [
+                    "containers"
+                ],
+                "summary": "BrowseItems",
+                "description": "Allow browsing of file ,the contentDisposition is inline and Content-Type is determined by FileExtension",
+                "operationId": "browseItems",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "container",
+                        "description": "",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    {
+                        "in": "query",
+                        "name": "itemPath",
+                        "description": "The path to the item of interest",
+                        "required": false,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/FileContainerItem"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "_apis/resources/containers": {
+            "get": {
+                "tags": [
+                    "containers"
+                ],
+                "summary": "GetContainers",
+                "description": "Gets containers filtered by a comma separated list of artifact uris within the same scope, if not specified returns all containers",
+                "operationId": "getContainers",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "scope",
+                        "description": "A guid representing the scope of the container. This is often the project id.",
+                        "required": false,
+                        "type": "Guid"
+                    },
+                    {
+                        "in": "query",
+                        "name": "artifactUris",
+                        "description": "",
+                        "required": false,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/FileContainer"
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "_apis/resources/containers/{containerId}": {
             "post": {
                 "tags": [
@@ -71,85 +152,6 @@
                             "type": "array",
                             "items": {
                                 "$ref": "#/definitions/FileContainerItem"
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "_apis/resources/containers/{containerId}/{itemPath}": {
-            "delete": {
-                "tags": [
-                    "containers"
-                ],
-                "summary": "DeleteItem",
-                "description": "Deletes the specified items in a container.",
-                "operationId": "deleteItem",
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "containerId",
-                        "description": "Container Id.",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int64"
-                    },
-                    {
-                        "in": "query",
-                        "name": "itemPath",
-                        "description": "Path to delete.",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "query",
-                        "name": "scope",
-                        "description": "A guid representing the scope of the container. This is often the project id.",
-                        "required": false,
-                        "type": "Guid"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation"
-                    }
-                }
-            }
-        },
-        "_apis/resources/containers": {
-            "get": {
-                "tags": [
-                    "containers"
-                ],
-                "summary": "GetContainers",
-                "description": "Gets containers filtered by a comma separated list of artifact uris within the same scope, if not specified returns all containers",
-                "operationId": "getContainers",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "query",
-                        "name": "scope",
-                        "description": "A guid representing the scope of the container. This is often the project id.",
-                        "required": false,
-                        "type": "Guid"
-                    },
-                    {
-                        "in": "query",
-                        "name": "artifactUris",
-                        "description": "",
-                        "required": false,
-                        "type": "string"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/FileContainer"
                             }
                         }
                     }
@@ -239,22 +241,19 @@
                 }
             }
         },
-        "_apis/containers/{container}/{*itemPath}": {
-            "get": {
+        "_apis/resources/containers/{containerId}/{itemPath}": {
+            "delete": {
                 "tags": [
                     "containers"
                 ],
-                "summary": "BrowseItems",
-                "description": "Allow browsing of file ,the contentDisposition is inline and Content-Type is determined by FileExtension",
-                "operationId": "browseItems",
-                "produces": [
-                    "application/json"
-                ],
+                "summary": "DeleteItem",
+                "description": "Deletes the specified items in a container.",
+                "operationId": "deleteItem",
                 "parameters": [
                     {
                         "in": "path",
-                        "name": "container",
-                        "description": "",
+                        "name": "containerId",
+                        "description": "Container Id.",
                         "required": true,
                         "type": "integer",
                         "format": "int64"
@@ -262,20 +261,21 @@
                     {
                         "in": "query",
                         "name": "itemPath",
-                        "description": "The path to the item of interest",
-                        "required": false,
+                        "description": "Path to delete.",
+                        "required": true,
                         "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "scope",
+                        "description": "A guid representing the scope of the container. This is often the project id.",
+                        "required": false,
+                        "type": "Guid"
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/FileContainerItem"
-                            }
-                        }
+                        "description": "successful operation"
                     }
                 }
             }

@@ -56,6 +56,39 @@
         "https"
     ],
     "paths": {
+        "_apis/public/search/ExtensionEvents/preinstall": {
+            "post": {
+                "tags": [
+                    "preinstall"
+                ],
+                "summary": "PreInstall",
+                "description": "",
+                "operationId": "preInstall",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "",
+                        "required": true,
+                        "type": "ExtensionEventCallbackData"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "type": "ExtensionEventCallbackResult"
+                        }
+                    }
+                }
+            }
+        },
         "_apis/search/codequeryresults": {
             "post": {
                 "tags": [
@@ -126,6 +159,55 @@
                 }
             }
         },
+        "_apis/search/customcode/{projectName}/{repositoryName}": {
+            "post": {
+                "tags": [
+                    "customCode"
+                ],
+                "summary": "PostFilesMetadata",
+                "description": "Gets the list of files present in the repository along with its metadata.",
+                "operationId": "postFilesMetadata",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "Request to get files and its metadata.",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/FilesMetadataRequest"
+                        }
+                    },
+                    {
+                        "in": "path",
+                        "name": "projectName",
+                        "description": "The project name.",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "repositoryName",
+                        "description": "The repository name.",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/FilesMetadataResponse"
+                        }
+                    }
+                }
+            }
+        },
         "_apis/search/customcode/{projectName}/{repositoryName}/{branchName}/{filePath}": {
             "get": {
                 "tags": [
@@ -172,55 +254,6 @@
                         "description": "successful operation",
                         "schema": {
                             "type": "string"
-                        }
-                    }
-                }
-            }
-        },
-        "_apis/search/customcode/{projectName}/{repositoryName}": {
-            "post": {
-                "tags": [
-                    "customCode"
-                ],
-                "summary": "PostFilesMetadata",
-                "description": "Gets the list of files present in the repository along with its metadata.",
-                "operationId": "postFilesMetadata",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "body",
-                        "name": "body",
-                        "description": "Request to get files and its metadata.",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/FilesMetadataRequest"
-                        }
-                    },
-                    {
-                        "in": "path",
-                        "name": "projectName",
-                        "description": "The project name.",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
-                        "name": "repositoryName",
-                        "description": "The repository name.",
-                        "required": true,
-                        "type": "string"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "$ref": "#/definitions/FilesMetadataResponse"
                         }
                     }
                 }
@@ -341,6 +374,41 @@
                 }
             }
         },
+        "_apis/search/customrepository": {
+            "post": {
+                "tags": [
+                    "customRepository"
+                ],
+                "summary": "RegisterRepository",
+                "description": "Registers the custom repository (from third-party version control system) with VSO Search Service",
+                "operationId": "registerRepository",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "Repository details",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/CustomRepository"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/CustomRepository"
+                        }
+                    }
+                }
+            }
+        },
         "_apis/search/customrepository/{projectName}": {
             "get": {
                 "tags": [
@@ -411,74 +479,6 @@
                 }
             }
         },
-        "_apis/search/customrepository": {
-            "post": {
-                "tags": [
-                    "customRepository"
-                ],
-                "summary": "RegisterRepository",
-                "description": "Registers the custom repository (from third-party version control system) with VSO Search Service",
-                "operationId": "registerRepository",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "body",
-                        "name": "body",
-                        "description": "Repository details",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/CustomRepository"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "$ref": "#/definitions/CustomRepository"
-                        }
-                    }
-                }
-            }
-        },
-        "_apis/search/customtenant/{tenantName}": {
-            "get": {
-                "tags": [
-                    "customTenant"
-                ],
-                "summary": "GetTenantCollectionNames",
-                "description": "Gets the collection names participating in the specified tenant",
-                "operationId": "getTenantCollectionNames",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "tenantName",
-                        "description": "Tenant name",
-                        "required": true,
-                        "type": "string"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            }
-                        }
-                    }
-                }
-            }
-        },
         "_apis/search/customtenant": {
             "post": {
                 "tags": [
@@ -514,34 +514,34 @@
                 }
             }
         },
-        "_apis/public/search/ExtensionEvents/preinstall": {
-            "post": {
+        "_apis/search/customtenant/{tenantName}": {
+            "get": {
                 "tags": [
-                    "preinstall"
+                    "customTenant"
                 ],
-                "summary": "PreInstall",
-                "description": "",
-                "operationId": "preInstall",
-                "consumes": [
-                    "application/json"
-                ],
+                "summary": "GetTenantCollectionNames",
+                "description": "Gets the collection names participating in the specified tenant",
+                "operationId": "getTenantCollectionNames",
                 "produces": [
                     "application/json"
                 ],
                 "parameters": [
                     {
-                        "in": "body",
-                        "name": "body",
-                        "description": "",
+                        "in": "path",
+                        "name": "tenantName",
+                        "description": "Tenant name",
                         "required": true,
-                        "type": "ExtensionEventCallbackData"
+                        "type": "string"
                     }
                 ],
                 "responses": {
                     "200": {
                         "description": "successful operation",
                         "schema": {
-                            "type": "ExtensionEventCallbackResult"
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
                         }
                     }
                 }

@@ -59,52 +59,293 @@
         "https"
     ],
     "paths": {
-        "{project}/_apis/tfvc/branches/{path}": {
+        "_apis/tfvc/changesets/{id}/changes": {
             "get": {
                 "tags": [
-                    "branches"
+                    "changesetChanges"
                 ],
-                "summary": "GetBranch",
-                "description": "Get a single branch hierarchy at the given path with parents or children (if specified)",
-                "operationId": "getBranch",
+                "summary": "GetChangesetChanges",
+                "description": "Retrieve Tfvc changes for a given changeset",
+                "operationId": "getChangesetChanges",
                 "produces": [
                     "application/json"
                 ],
                 "parameters": [
                     {
-                        "in": "query",
-                        "name": "path",
-                        "description": "",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
                         "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
+                        "name": "id",
+                        "description": "",
                         "required": false,
-                        "type": "string"
+                        "type": "integer",
+                        "format": "int32"
                     },
                     {
                         "in": "query",
-                        "name": "includeParent",
+                        "name": "skip",
                         "description": "",
                         "required": false,
-                        "type": "boolean"
+                        "type": "integer",
+                        "format": "int32"
                     },
                     {
                         "in": "query",
-                        "name": "includeChildren",
+                        "name": "top",
                         "description": "",
                         "required": false,
-                        "type": "boolean"
+                        "type": "integer",
+                        "format": "int32"
                     }
                 ],
                 "responses": {
                     "200": {
                         "description": "successful operation",
                         "schema": {
-                            "$ref": "#/definitions/TfvcBranch"
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/TfvcChange"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "_apis/tfvc/changesets/{id}/workItems": {
+            "get": {
+                "tags": [
+                    "changesetWorkItems"
+                ],
+                "summary": "GetChangesetWorkItems",
+                "description": "",
+                "operationId": "getChangesetWorkItems",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "description": "",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/AssociatedWorkItem"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "_apis/tfvc/changesetsbatch": {
+            "post": {
+                "tags": [
+                    "changesetsBatch"
+                ],
+                "summary": "GetBatchedChangesets",
+                "description": "",
+                "operationId": "getBatchedChangesets",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/TfvcChangesetsRequestData"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/TfvcChangesetRef"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "_apis/tfvc/labels/{labelId}/items": {
+            "get": {
+                "tags": [
+                    "labelItems"
+                ],
+                "summary": "GetLabelItems",
+                "description": "Get items under a label.",
+                "operationId": "getLabelItems",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "labelId",
+                        "description": "Unique identifier of label",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "top",
+                        "description": "Max number of items to return",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "in": "query",
+                        "name": "skip",
+                        "description": "Number of items to skip",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/TfvcItem"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "_apis/tfvc/shelvesets": {
+            "get": {
+                "tags": [
+                    "shelvesets"
+                ],
+                "summary": "GetShelveset",
+                "description": "Get a single deep shelveset.",
+                "operationId": "getShelveset",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "shelvesetId",
+                        "description": "Shelveset's unique ID",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "requestData",
+                        "description": "includeDetails, includeWorkItems, maxChangeCount, and maxCommentLength",
+                        "required": false,
+                        "schema": {
+                            "$ref": "#/definitions/TfvcShelvesetRequestData"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/TfvcShelveset"
+                        }
+                    }
+                }
+            }
+        },
+        "_apis/tfvc/shelvesets/changes": {
+            "get": {
+                "tags": [
+                    "shelvesetChanges"
+                ],
+                "summary": "GetShelvesetChanges",
+                "description": "Get changes included in a shelveset.",
+                "operationId": "getShelvesetChanges",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "shelvesetId",
+                        "description": "Shelveset's unique ID",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "top",
+                        "description": "Max number of changes to return",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "in": "query",
+                        "name": "skip",
+                        "description": "Number of changes to skip",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/TfvcChange"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "_apis/tfvc/shelvesets/workitems": {
+            "get": {
+                "tags": [
+                    "shelvesetWorkItems"
+                ],
+                "summary": "GetShelvesetWorkItems",
+                "description": "Get work items associated with a shelveset.",
+                "operationId": "getShelvesetWorkItems",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "shelvesetId",
+                        "description": "Shelveset's unique ID",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/AssociatedWorkItem"
+                            }
                         }
                     }
                 }
@@ -171,51 +412,52 @@
                 }
             }
         },
-        "_apis/tfvc/changesets/{id}/changes": {
+        "{project}/_apis/tfvc/branches/{path}": {
             "get": {
                 "tags": [
-                    "changesetChanges"
+                    "branches"
                 ],
-                "summary": "GetChangesetChanges",
-                "description": "Retrieve Tfvc changes for a given changeset",
-                "operationId": "getChangesetChanges",
+                "summary": "GetBranch",
+                "description": "Get a single branch hierarchy at the given path with parents or children (if specified)",
+                "operationId": "getBranch",
                 "produces": [
                     "application/json"
                 ],
                 "parameters": [
                     {
+                        "in": "query",
+                        "name": "path",
+                        "description": "",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
                         "in": "path",
-                        "name": "id",
-                        "description": "",
+                        "name": "project",
+                        "description": "Project ID or project name",
                         "required": false,
-                        "type": "integer",
-                        "format": "int32"
+                        "type": "string"
                     },
                     {
                         "in": "query",
-                        "name": "skip",
+                        "name": "includeParent",
                         "description": "",
                         "required": false,
-                        "type": "integer",
-                        "format": "int32"
+                        "type": "boolean"
                     },
                     {
                         "in": "query",
-                        "name": "top",
+                        "name": "includeChildren",
                         "description": "",
                         "required": false,
-                        "type": "integer",
-                        "format": "int32"
+                        "type": "boolean"
                     }
                 ],
                 "responses": {
                     "200": {
                         "description": "successful operation",
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/TfvcChange"
-                            }
+                            "$ref": "#/definitions/TfvcBranch"
                         }
                     }
                 }
@@ -441,78 +683,6 @@
                 }
             }
         },
-        "_apis/tfvc/changesetsbatch": {
-            "post": {
-                "tags": [
-                    "changesetsBatch"
-                ],
-                "summary": "GetBatchedChangesets",
-                "description": "",
-                "operationId": "getBatchedChangesets",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "body",
-                        "name": "body",
-                        "description": "",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/TfvcChangesetsRequestData"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/TfvcChangesetRef"
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "_apis/tfvc/changesets/{id}/workItems": {
-            "get": {
-                "tags": [
-                    "changesetWorkItems"
-                ],
-                "summary": "GetChangesetWorkItems",
-                "description": "",
-                "operationId": "getChangesetWorkItems",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "id",
-                        "description": "",
-                        "required": false,
-                        "type": "integer",
-                        "format": "int32"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/AssociatedWorkItem"
-                            }
-                        }
-                    }
-                }
-            }
-        },
         "{project}/_apis/tfvc/itembatch": {
             "post": {
                 "tags": [
@@ -553,6 +723,69 @@
                             "type": "array",
                             "items": {
                                 "type": "array"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "{project}/_apis/tfvc/items": {
+            "get": {
+                "tags": [
+                    "items"
+                ],
+                "summary": "GetItems",
+                "description": "Get a list of Tfvc items",
+                "operationId": "getItems",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "project",
+                        "description": "Project ID or project name",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "scopePath",
+                        "description": "",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "recursionLevel",
+                        "description": "",
+                        "required": false,
+                        "type": "VersionControlRecursionType"
+                    },
+                    {
+                        "in": "query",
+                        "name": "includeLinks",
+                        "description": "",
+                        "required": false,
+                        "type": "boolean"
+                    },
+                    {
+                        "in": "query",
+                        "name": "versionDescriptor",
+                        "description": "",
+                        "required": false,
+                        "schema": {
+                            "$ref": "#/definitions/TfvcVersionDescriptor"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/TfvcItem"
                             }
                         }
                     }
@@ -636,164 +869,6 @@
                 }
             }
         },
-        "{project}/_apis/tfvc/items": {
-            "get": {
-                "tags": [
-                    "items"
-                ],
-                "summary": "GetItems",
-                "description": "Get a list of Tfvc items",
-                "operationId": "getItems",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": false,
-                        "type": "string"
-                    },
-                    {
-                        "in": "query",
-                        "name": "scopePath",
-                        "description": "",
-                        "required": false,
-                        "type": "string"
-                    },
-                    {
-                        "in": "query",
-                        "name": "recursionLevel",
-                        "description": "",
-                        "required": false,
-                        "type": "VersionControlRecursionType"
-                    },
-                    {
-                        "in": "query",
-                        "name": "includeLinks",
-                        "description": "",
-                        "required": false,
-                        "type": "boolean"
-                    },
-                    {
-                        "in": "query",
-                        "name": "versionDescriptor",
-                        "description": "",
-                        "required": false,
-                        "schema": {
-                            "$ref": "#/definitions/TfvcVersionDescriptor"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/TfvcItem"
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "_apis/tfvc/labels/{labelId}/items": {
-            "get": {
-                "tags": [
-                    "labelItems"
-                ],
-                "summary": "GetLabelItems",
-                "description": "Get items under a label.",
-                "operationId": "getLabelItems",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "labelId",
-                        "description": "Unique identifier of label",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "query",
-                        "name": "top",
-                        "description": "Max number of items to return",
-                        "required": false,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "query",
-                        "name": "skip",
-                        "description": "Number of items to skip",
-                        "required": false,
-                        "type": "integer",
-                        "format": "int32"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/TfvcItem"
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "{project}/_apis/tfvc/labels/{labelId}": {
-            "get": {
-                "tags": [
-                    "labels"
-                ],
-                "summary": "GetLabel",
-                "description": "Get a single deep label.",
-                "operationId": "getLabel",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "labelId",
-                        "description": "Unique identifier of label",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "query",
-                        "name": "requestData",
-                        "description": "maxItemCount",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/TfvcLabelRequestData"
-                        }
-                    },
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": false,
-                        "type": "string"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "$ref": "#/definitions/TfvcLabel"
-                        }
-                    }
-                }
-            }
-        },
         "{project}/_apis/tfvc/labels": {
             "get": {
                 "tags": [
@@ -852,111 +927,39 @@
                 }
             }
         },
-        "_apis/tfvc/shelvesets/changes": {
+        "{project}/_apis/tfvc/labels/{labelId}": {
             "get": {
                 "tags": [
-                    "shelvesetChanges"
+                    "labels"
                 ],
-                "summary": "GetShelvesetChanges",
-                "description": "Get changes included in a shelveset.",
-                "operationId": "getShelvesetChanges",
+                "summary": "GetLabel",
+                "description": "Get a single deep label.",
+                "operationId": "getLabel",
                 "produces": [
                     "application/json"
                 ],
                 "parameters": [
                     {
-                        "in": "query",
-                        "name": "shelvesetId",
-                        "description": "Shelveset's unique ID",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "query",
-                        "name": "top",
-                        "description": "Max number of changes to return",
-                        "required": false,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "query",
-                        "name": "skip",
-                        "description": "Number of changes to skip",
-                        "required": false,
-                        "type": "integer",
-                        "format": "int32"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/TfvcChange"
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "_apis/tfvc/shelvesets": {
-            "get": {
-                "tags": [
-                    "shelvesets"
-                ],
-                "summary": "GetShelveset",
-                "description": "Get a single deep shelveset.",
-                "operationId": "getShelveset",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "query",
-                        "name": "shelvesetId",
-                        "description": "Shelveset's unique ID",
+                        "in": "path",
+                        "name": "labelId",
+                        "description": "Unique identifier of label",
                         "required": true,
                         "type": "string"
                     },
                     {
                         "in": "query",
                         "name": "requestData",
-                        "description": "includeDetails, includeWorkItems, maxChangeCount, and maxCommentLength",
-                        "required": false,
-                        "schema": {
-                            "$ref": "#/definitions/TfvcShelvesetRequestData"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "$ref": "#/definitions/TfvcShelveset"
-                        }
-                    }
-                }
-            }
-        },
-        "_apis/tfvc/shelvesets/workitems": {
-            "get": {
-                "tags": [
-                    "shelvesetWorkItems"
-                ],
-                "summary": "GetShelvesetWorkItems",
-                "description": "Get work items associated with a shelveset.",
-                "operationId": "getShelvesetWorkItems",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "query",
-                        "name": "shelvesetId",
-                        "description": "Shelveset's unique ID",
+                        "description": "maxItemCount",
                         "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/TfvcLabelRequestData"
+                        }
+                    },
+                    {
+                        "in": "path",
+                        "name": "project",
+                        "description": "Project ID or project name",
+                        "required": false,
                         "type": "string"
                     }
                 ],
@@ -964,10 +967,7 @@
                     "200": {
                         "description": "successful operation",
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/AssociatedWorkItem"
-                            }
+                            "$ref": "#/definitions/TfvcLabel"
                         }
                     }
                 }

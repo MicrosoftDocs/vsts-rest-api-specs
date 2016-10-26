@@ -41,6 +41,50 @@
         "https"
     ],
     "paths": {
+        "{scopeIdentifier}/_apis/distributedtask/hubs/{hubName}/plans/{planId}": {
+            "get": {
+                "tags": [
+                    "plans"
+                ],
+                "summary": "GetPlan",
+                "description": "",
+                "operationId": "getPlan",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "scopeIdentifier",
+                        "description": "The project GUID to scope the request",
+                        "required": true,
+                        "type": "Guid"
+                    },
+                    {
+                        "in": "path",
+                        "name": "hubName",
+                        "description": "The name of the server hub: \"build\" for the Build server or \"rm\" for the Release Management server",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "planId",
+                        "description": "",
+                        "required": true,
+                        "type": "Guid"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/TaskOrchestrationPlan"
+                        }
+                    }
+                }
+            }
+        },
         "{scopeIdentifier}/_apis/distributedtask/hubs/{hubName}/plans/{planId}/attachments/{type}": {
             "get": {
                 "tags": [
@@ -95,16 +139,16 @@
                 }
             }
         },
-        "{scopeIdentifier}/_apis/distributedtask/hubs/{hubName}/plans/{planId}/timelines/{timelineId}/records/{recordId}/attachments/{type}/{name}": {
-            "put": {
+        "{scopeIdentifier}/_apis/distributedtask/hubs/{hubName}/plans/{planId}/logs": {
+            "post": {
                 "tags": [
-                    "attachments"
+                    "logs"
                 ],
-                "summary": "CreateAttachment",
+                "summary": "CreateLog",
                 "description": "",
-                "operationId": "createAttachment",
+                "operationId": "createLog",
                 "consumes": [
-                    "application/octet-stream"
+                    "application/json"
                 ],
                 "produces": [
                     "application/json"
@@ -113,9 +157,11 @@
                     {
                         "in": "body",
                         "name": "body",
-                        "description": "Stream to upload",
+                        "description": "",
                         "required": true,
-                        "type": "Stream"
+                        "schema": {
+                            "$ref": "#/definitions/TaskLog"
+                        }
                     },
                     {
                         "in": "path",
@@ -137,125 +183,24 @@
                         "description": "",
                         "required": true,
                         "type": "Guid"
-                    },
-                    {
-                        "in": "path",
-                        "name": "timelineId",
-                        "description": "",
-                        "required": true,
-                        "type": "Guid"
-                    },
-                    {
-                        "in": "path",
-                        "name": "recordId",
-                        "description": "",
-                        "required": true,
-                        "type": "Guid"
-                    },
-                    {
-                        "in": "path",
-                        "name": "type",
-                        "description": "",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
-                        "name": "name",
-                        "description": "",
-                        "required": true,
-                        "type": "string"
                     }
                 ],
                 "responses": {
                     "200": {
                         "description": "successful operation",
                         "schema": {
-                            "$ref": "#/definitions/TaskAttachment"
+                            "$ref": "#/definitions/TaskLog"
                         }
                     }
                 }
             },
             "get": {
                 "tags": [
-                    "attachments"
+                    "logs"
                 ],
-                "summary": "GetAttachment",
+                "summary": "GetLogs",
                 "description": "",
-                "operationId": "getAttachment",
-                "produces": [
-                    "application/octet-stream",
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "scopeIdentifier",
-                        "description": "The project GUID to scope the request",
-                        "required": true,
-                        "type": "Guid"
-                    },
-                    {
-                        "in": "path",
-                        "name": "hubName",
-                        "description": "The name of the server hub: \"build\" for the Build server or \"rm\" for the Release Management server",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
-                        "name": "planId",
-                        "description": "",
-                        "required": true,
-                        "type": "Guid"
-                    },
-                    {
-                        "in": "path",
-                        "name": "timelineId",
-                        "description": "",
-                        "required": true,
-                        "type": "Guid"
-                    },
-                    {
-                        "in": "path",
-                        "name": "recordId",
-                        "description": "",
-                        "required": true,
-                        "type": "Guid"
-                    },
-                    {
-                        "in": "path",
-                        "name": "type",
-                        "description": "",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
-                        "name": "name",
-                        "description": "",
-                        "required": true,
-                        "type": "string"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "$ref": "#/definitions/TaskAttachment"
-                        }
-                    }
-                }
-            }
-        },
-        "{scopeIdentifier}/_apis/distributedtask/hubs/{hubName}/plans/{planId}/timelines/{timelineId}/records/{recordId}/attachments/{type}": {
-            "get": {
-                "tags": [
-                    "attachments"
-                ],
-                "summary": "GetAttachments",
-                "description": "",
-                "operationId": "getAttachments",
+                "operationId": "getLogs",
                 "produces": [
                     "application/json"
                 ],
@@ -280,27 +225,6 @@
                         "description": "",
                         "required": true,
                         "type": "Guid"
-                    },
-                    {
-                        "in": "path",
-                        "name": "timelineId",
-                        "description": "",
-                        "required": true,
-                        "type": "Guid"
-                    },
-                    {
-                        "in": "path",
-                        "name": "recordId",
-                        "description": "",
-                        "required": true,
-                        "type": "Guid"
-                    },
-                    {
-                        "in": "path",
-                        "name": "type",
-                        "description": "",
-                        "required": true,
-                        "type": "string"
                     }
                 ],
                 "responses": {
@@ -309,71 +233,9 @@
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/TaskAttachment"
+                                "$ref": "#/definitions/TaskLog"
                             }
                         }
-                    }
-                }
-            }
-        },
-        "{scopeIdentifier}/_apis/distributedtask/hubs/{hubName}/plans/{planId}/timelines/{timelineId}/records/{recordId}/feed": {
-            "post": {
-                "tags": [
-                    "feed"
-                ],
-                "summary": "AppendTimelineRecordFeed",
-                "description": "",
-                "operationId": "appendTimelineRecordFeed",
-                "consumes": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "body",
-                        "name": "body",
-                        "description": "",
-                        "required": true,
-                        "type": "Generic"
-                    },
-                    {
-                        "in": "path",
-                        "name": "scopeIdentifier",
-                        "description": "The project GUID to scope the request",
-                        "required": true,
-                        "type": "Guid"
-                    },
-                    {
-                        "in": "path",
-                        "name": "hubName",
-                        "description": "The name of the server hub: \"build\" for the Build server or \"rm\" for the Release Management server",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
-                        "name": "planId",
-                        "description": "",
-                        "required": true,
-                        "type": "Guid"
-                    },
-                    {
-                        "in": "path",
-                        "name": "timelineId",
-                        "description": "",
-                        "required": true,
-                        "type": "Guid"
-                    },
-                    {
-                        "in": "path",
-                        "name": "recordId",
-                        "description": "",
-                        "required": true,
-                        "type": "Guid"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation"
                     }
                 }
             }
@@ -503,275 +365,6 @@
                             "type": "array",
                             "items": {
                                 "type": "string"
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "{scopeIdentifier}/_apis/distributedtask/hubs/{hubName}/plans/{planId}/logs": {
-            "post": {
-                "tags": [
-                    "logs"
-                ],
-                "summary": "CreateLog",
-                "description": "",
-                "operationId": "createLog",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "body",
-                        "name": "body",
-                        "description": "",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/TaskLog"
-                        }
-                    },
-                    {
-                        "in": "path",
-                        "name": "scopeIdentifier",
-                        "description": "The project GUID to scope the request",
-                        "required": true,
-                        "type": "Guid"
-                    },
-                    {
-                        "in": "path",
-                        "name": "hubName",
-                        "description": "The name of the server hub: \"build\" for the Build server or \"rm\" for the Release Management server",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
-                        "name": "planId",
-                        "description": "",
-                        "required": true,
-                        "type": "Guid"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "$ref": "#/definitions/TaskLog"
-                        }
-                    }
-                }
-            },
-            "get": {
-                "tags": [
-                    "logs"
-                ],
-                "summary": "GetLogs",
-                "description": "",
-                "operationId": "getLogs",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "scopeIdentifier",
-                        "description": "The project GUID to scope the request",
-                        "required": true,
-                        "type": "Guid"
-                    },
-                    {
-                        "in": "path",
-                        "name": "hubName",
-                        "description": "The name of the server hub: \"build\" for the Build server or \"rm\" for the Release Management server",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
-                        "name": "planId",
-                        "description": "",
-                        "required": true,
-                        "type": "Guid"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/TaskLog"
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "{scopeIdentifier}/_apis/distributedtask/hubs/{hubName}/plans/{planId}": {
-            "get": {
-                "tags": [
-                    "plans"
-                ],
-                "summary": "GetPlan",
-                "description": "",
-                "operationId": "getPlan",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "scopeIdentifier",
-                        "description": "The project GUID to scope the request",
-                        "required": true,
-                        "type": "Guid"
-                    },
-                    {
-                        "in": "path",
-                        "name": "hubName",
-                        "description": "The name of the server hub: \"build\" for the Build server or \"rm\" for the Release Management server",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
-                        "name": "planId",
-                        "description": "",
-                        "required": true,
-                        "type": "Guid"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "$ref": "#/definitions/TaskOrchestrationPlan"
-                        }
-                    }
-                }
-            }
-        },
-        "{scopeIdentifier}/_apis/distributedtask/hubs/{hubName}/plans/{planId}/timelines/{timelineId}/records": {
-            "get": {
-                "tags": [
-                    "records"
-                ],
-                "summary": "GetRecords",
-                "description": "",
-                "operationId": "getRecords",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "scopeIdentifier",
-                        "description": "The project GUID to scope the request",
-                        "required": true,
-                        "type": "Guid"
-                    },
-                    {
-                        "in": "path",
-                        "name": "hubName",
-                        "description": "The name of the server hub: \"build\" for the Build server or \"rm\" for the Release Management server",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
-                        "name": "planId",
-                        "description": "",
-                        "required": true,
-                        "type": "Guid"
-                    },
-                    {
-                        "in": "path",
-                        "name": "timelineId",
-                        "description": "",
-                        "required": true,
-                        "type": "Guid"
-                    },
-                    {
-                        "in": "query",
-                        "name": "changeId",
-                        "description": "",
-                        "required": false,
-                        "type": "integer",
-                        "format": "int32"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/TimelineRecord"
-                            }
-                        }
-                    }
-                }
-            },
-            "patch": {
-                "tags": [
-                    "records"
-                ],
-                "summary": "UpdateRecords",
-                "description": "",
-                "operationId": "updateRecords",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "body",
-                        "name": "body",
-                        "description": "",
-                        "required": true,
-                        "type": "Generic"
-                    },
-                    {
-                        "in": "path",
-                        "name": "scopeIdentifier",
-                        "description": "The project GUID to scope the request",
-                        "required": true,
-                        "type": "Guid"
-                    },
-                    {
-                        "in": "path",
-                        "name": "hubName",
-                        "description": "The name of the server hub: \"build\" for the Build server or \"rm\" for the Release Management server",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
-                        "name": "planId",
-                        "description": "",
-                        "required": true,
-                        "type": "Guid"
-                    },
-                    {
-                        "in": "path",
-                        "name": "timelineId",
-                        "description": "",
-                        "required": true,
-                        "type": "Guid"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/TimelineRecord"
                             }
                         }
                     }
@@ -984,6 +577,413 @@
                         "schema": {
                             "$ref": "#/definitions/Timeline"
                         }
+                    }
+                }
+            }
+        },
+        "{scopeIdentifier}/_apis/distributedtask/hubs/{hubName}/plans/{planId}/timelines/{timelineId}/records": {
+            "get": {
+                "tags": [
+                    "records"
+                ],
+                "summary": "GetRecords",
+                "description": "",
+                "operationId": "getRecords",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "scopeIdentifier",
+                        "description": "The project GUID to scope the request",
+                        "required": true,
+                        "type": "Guid"
+                    },
+                    {
+                        "in": "path",
+                        "name": "hubName",
+                        "description": "The name of the server hub: \"build\" for the Build server or \"rm\" for the Release Management server",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "planId",
+                        "description": "",
+                        "required": true,
+                        "type": "Guid"
+                    },
+                    {
+                        "in": "path",
+                        "name": "timelineId",
+                        "description": "",
+                        "required": true,
+                        "type": "Guid"
+                    },
+                    {
+                        "in": "query",
+                        "name": "changeId",
+                        "description": "",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/TimelineRecord"
+                            }
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "tags": [
+                    "records"
+                ],
+                "summary": "UpdateRecords",
+                "description": "",
+                "operationId": "updateRecords",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "",
+                        "required": true,
+                        "type": "Generic"
+                    },
+                    {
+                        "in": "path",
+                        "name": "scopeIdentifier",
+                        "description": "The project GUID to scope the request",
+                        "required": true,
+                        "type": "Guid"
+                    },
+                    {
+                        "in": "path",
+                        "name": "hubName",
+                        "description": "The name of the server hub: \"build\" for the Build server or \"rm\" for the Release Management server",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "planId",
+                        "description": "",
+                        "required": true,
+                        "type": "Guid"
+                    },
+                    {
+                        "in": "path",
+                        "name": "timelineId",
+                        "description": "",
+                        "required": true,
+                        "type": "Guid"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/TimelineRecord"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "{scopeIdentifier}/_apis/distributedtask/hubs/{hubName}/plans/{planId}/timelines/{timelineId}/records/{recordId}/attachments/{type}": {
+            "get": {
+                "tags": [
+                    "attachments"
+                ],
+                "summary": "GetAttachments",
+                "description": "",
+                "operationId": "getAttachments",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "scopeIdentifier",
+                        "description": "The project GUID to scope the request",
+                        "required": true,
+                        "type": "Guid"
+                    },
+                    {
+                        "in": "path",
+                        "name": "hubName",
+                        "description": "The name of the server hub: \"build\" for the Build server or \"rm\" for the Release Management server",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "planId",
+                        "description": "",
+                        "required": true,
+                        "type": "Guid"
+                    },
+                    {
+                        "in": "path",
+                        "name": "timelineId",
+                        "description": "",
+                        "required": true,
+                        "type": "Guid"
+                    },
+                    {
+                        "in": "path",
+                        "name": "recordId",
+                        "description": "",
+                        "required": true,
+                        "type": "Guid"
+                    },
+                    {
+                        "in": "path",
+                        "name": "type",
+                        "description": "",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/TaskAttachment"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "{scopeIdentifier}/_apis/distributedtask/hubs/{hubName}/plans/{planId}/timelines/{timelineId}/records/{recordId}/attachments/{type}/{name}": {
+            "put": {
+                "tags": [
+                    "attachments"
+                ],
+                "summary": "CreateAttachment",
+                "description": "",
+                "operationId": "createAttachment",
+                "consumes": [
+                    "application/octet-stream"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "Stream to upload",
+                        "required": true,
+                        "type": "Stream"
+                    },
+                    {
+                        "in": "path",
+                        "name": "scopeIdentifier",
+                        "description": "The project GUID to scope the request",
+                        "required": true,
+                        "type": "Guid"
+                    },
+                    {
+                        "in": "path",
+                        "name": "hubName",
+                        "description": "The name of the server hub: \"build\" for the Build server or \"rm\" for the Release Management server",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "planId",
+                        "description": "",
+                        "required": true,
+                        "type": "Guid"
+                    },
+                    {
+                        "in": "path",
+                        "name": "timelineId",
+                        "description": "",
+                        "required": true,
+                        "type": "Guid"
+                    },
+                    {
+                        "in": "path",
+                        "name": "recordId",
+                        "description": "",
+                        "required": true,
+                        "type": "Guid"
+                    },
+                    {
+                        "in": "path",
+                        "name": "type",
+                        "description": "",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "name",
+                        "description": "",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/TaskAttachment"
+                        }
+                    }
+                }
+            },
+            "get": {
+                "tags": [
+                    "attachments"
+                ],
+                "summary": "GetAttachment",
+                "description": "",
+                "operationId": "getAttachment",
+                "produces": [
+                    "application/octet-stream",
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "scopeIdentifier",
+                        "description": "The project GUID to scope the request",
+                        "required": true,
+                        "type": "Guid"
+                    },
+                    {
+                        "in": "path",
+                        "name": "hubName",
+                        "description": "The name of the server hub: \"build\" for the Build server or \"rm\" for the Release Management server",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "planId",
+                        "description": "",
+                        "required": true,
+                        "type": "Guid"
+                    },
+                    {
+                        "in": "path",
+                        "name": "timelineId",
+                        "description": "",
+                        "required": true,
+                        "type": "Guid"
+                    },
+                    {
+                        "in": "path",
+                        "name": "recordId",
+                        "description": "",
+                        "required": true,
+                        "type": "Guid"
+                    },
+                    {
+                        "in": "path",
+                        "name": "type",
+                        "description": "",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "name",
+                        "description": "",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/TaskAttachment"
+                        }
+                    }
+                }
+            }
+        },
+        "{scopeIdentifier}/_apis/distributedtask/hubs/{hubName}/plans/{planId}/timelines/{timelineId}/records/{recordId}/feed": {
+            "post": {
+                "tags": [
+                    "feed"
+                ],
+                "summary": "AppendTimelineRecordFeed",
+                "description": "",
+                "operationId": "appendTimelineRecordFeed",
+                "consumes": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "",
+                        "required": true,
+                        "type": "Generic"
+                    },
+                    {
+                        "in": "path",
+                        "name": "scopeIdentifier",
+                        "description": "The project GUID to scope the request",
+                        "required": true,
+                        "type": "Guid"
+                    },
+                    {
+                        "in": "path",
+                        "name": "hubName",
+                        "description": "The name of the server hub: \"build\" for the Build server or \"rm\" for the Release Management server",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "planId",
+                        "description": "",
+                        "required": true,
+                        "type": "Guid"
+                    },
+                    {
+                        "in": "path",
+                        "name": "timelineId",
+                        "description": "",
+                        "required": true,
+                        "type": "Guid"
+                    },
+                    {
+                        "in": "path",
+                        "name": "recordId",
+                        "description": "",
+                        "required": true,
+                        "type": "Guid"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
                     }
                 }
             }

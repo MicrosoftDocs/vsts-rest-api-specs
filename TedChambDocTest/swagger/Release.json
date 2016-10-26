@@ -95,30 +95,70 @@
         "https"
     ],
     "paths": {
-        "{project}/_apis/release/releases/{releaseId}/agentartifacts": {
+        "_apis/release/projects": {
             "get": {
                 "tags": [
-                    "agentartifacts"
+                    "projects"
                 ],
-                "summary": "GetAgentArtifactDefinitions",
-                "description": "Returns the artifact details that automation agent requires",
-                "operationId": "getAgentArtifactDefinitions",
+                "summary": "GetReleaseProjects",
+                "description": "",
+                "operationId": "getReleaseProjects",
                 "produces": [
                     "application/json"
                 ],
                 "parameters": [
                     {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
+                        "in": "query",
+                        "name": "artifactType",
+                        "description": "",
                         "required": true,
                         "type": "string"
                     },
                     {
-                        "in": "path",
-                        "name": "releaseId",
+                        "in": "query",
+                        "name": "artifactSourceId",
                         "description": "",
                         "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/ProjectReference"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "_apis/release/throttlingqueue": {
+            "get": {
+                "tags": [
+                    "throttlingQueue"
+                ],
+                "summary": "GetQueuedReleases",
+                "description": "Returns throttled queue as per the task hub license of parallel releases",
+                "operationId": "getQueuedReleases",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "projectId",
+                        "description": "",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "releaseId",
+                        "description": "",
+                        "required": false,
                         "type": "integer",
                         "format": "int32"
                     }
@@ -129,139 +169,8 @@
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/AgentArtifactDefinition"
+                                "$ref": "#/definitions/QueuedReleaseData"
                             }
-                        }
-                    }
-                }
-            }
-        },
-        "{project}/_apis/release/approvals/{approvalStepId}/history": {
-            "get": {
-                "tags": [
-                    "approvals"
-                ],
-                "summary": "GetApprovalHistory",
-                "description": "",
-                "operationId": "getApprovalHistory",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
-                        "name": "approvalStepId",
-                        "description": "",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int32"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "$ref": "#/definitions/ReleaseApproval"
-                        }
-                    }
-                }
-            }
-        },
-        "{project}/_apis/release/approvals/{approvalId}": {
-            "get": {
-                "tags": [
-                    "approvals"
-                ],
-                "summary": "GetApproval",
-                "description": "",
-                "operationId": "getApproval",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
-                        "name": "approvalId",
-                        "description": "",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "query",
-                        "name": "includeHistory",
-                        "description": "",
-                        "required": false,
-                        "type": "boolean"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "$ref": "#/definitions/ReleaseApproval"
-                        }
-                    }
-                }
-            },
-            "patch": {
-                "tags": [
-                    "approvals"
-                ],
-                "summary": "UpdateReleaseApproval",
-                "description": "",
-                "operationId": "updateReleaseApproval",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "body",
-                        "name": "body",
-                        "description": "",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/ReleaseApproval"
-                        }
-                    },
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
-                        "name": "approvalId",
-                        "description": "",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int32"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "$ref": "#/definitions/ReleaseApproval"
                         }
                     }
                 }
@@ -361,14 +270,14 @@
                 }
             }
         },
-        "{project}/_apis/release/releases/{releaseId}/changes": {
+        "{project}/_apis/release/approvals/{approvalId}": {
             "get": {
                 "tags": [
-                    "changes"
+                    "approvals"
                 ],
-                "summary": "GetReleaseChanges",
+                "summary": "GetApproval",
                 "description": "",
-                "operationId": "getReleaseChanges",
+                "operationId": "getApproval",
                 "produces": [
                     "application/json"
                 ],
@@ -382,7 +291,7 @@
                     },
                     {
                         "in": "path",
-                        "name": "releaseId",
+                        "name": "approvalId",
                         "description": "",
                         "required": true,
                         "type": "integer",
@@ -390,17 +299,56 @@
                     },
                     {
                         "in": "query",
-                        "name": "baseReleaseId",
+                        "name": "includeHistory",
                         "description": "",
                         "required": false,
-                        "type": "integer",
-                        "format": "int32"
+                        "type": "boolean"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/ReleaseApproval"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "tags": [
+                    "approvals"
+                ],
+                "summary": "UpdateReleaseApproval",
+                "description": "",
+                "operationId": "updateReleaseApproval",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/ReleaseApproval"
+                        }
                     },
                     {
-                        "in": "query",
-                        "name": "top",
+                        "in": "path",
+                        "name": "project",
+                        "description": "Project ID or project name",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "approvalId",
                         "description": "",
-                        "required": false,
+                        "required": true,
                         "type": "integer",
                         "format": "int32"
                     }
@@ -409,10 +357,197 @@
                     "200": {
                         "description": "successful operation",
                         "schema": {
+                            "$ref": "#/definitions/ReleaseApproval"
+                        }
+                    }
+                }
+            }
+        },
+        "{project}/_apis/release/approvals/{approvalStepId}/history": {
+            "get": {
+                "tags": [
+                    "approvals"
+                ],
+                "summary": "GetApprovalHistory",
+                "description": "",
+                "operationId": "getApprovalHistory",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "project",
+                        "description": "Project ID or project name",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "approvalStepId",
+                        "description": "",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/ReleaseApproval"
+                        }
+                    }
+                }
+            }
+        },
+        "{project}/_apis/release/artifacts/inputvaluesquery": {
+            "post": {
+                "tags": [
+                    "inputvaluesquery"
+                ],
+                "summary": "GetInputValues",
+                "description": "",
+                "operationId": "getInputValues",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "",
+                        "required": true,
+                        "type": "InputValuesQuery"
+                    },
+                    {
+                        "in": "path",
+                        "name": "project",
+                        "description": "Project ID or project name",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "type": "InputValuesQuery"
+                        }
+                    }
+                }
+            }
+        },
+        "{project}/_apis/release/artifacts/types": {
+            "get": {
+                "tags": [
+                    "types"
+                ],
+                "summary": "GetArtifactTypeDefinitions",
+                "description": "",
+                "operationId": "getArtifactTypeDefinitions",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "project",
+                        "description": "Project ID or project name",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/Change"
+                                "$ref": "#/definitions/ArtifactTypeDefinition"
                             }
+                        }
+                    }
+                }
+            }
+        },
+        "{project}/_apis/release/artifacts/versions": {
+            "get": {
+                "tags": [
+                    "versions"
+                ],
+                "summary": "GetArtifactVersions",
+                "description": "",
+                "operationId": "getArtifactVersions",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "project",
+                        "description": "Project ID or project name",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "releaseDefinitionId",
+                        "description": "",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/ArtifactVersionQueryResult"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "versions"
+                ],
+                "summary": "GetArtifactVersionsForSources",
+                "description": "",
+                "operationId": "getArtifactVersionsForSources",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "",
+                        "required": true,
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/definitions/Artifact"
+                        }
+                    },
+                    {
+                        "in": "path",
+                        "name": "project",
+                        "description": "Project ID or project name",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/ArtifactVersionQueryResult"
                         }
                     }
                 }
@@ -656,6 +791,240 @@
                 }
             }
         },
+        "{project}/_apis/Release/definitions/{definitionId}/revisions": {
+            "get": {
+                "tags": [
+                    "revisions"
+                ],
+                "summary": "GetReleaseDefinitionHistory",
+                "description": "",
+                "operationId": "getReleaseDefinitionHistory",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "project",
+                        "description": "Project ID or project name",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "definitionId",
+                        "description": "",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/ReleaseDefinitionRevision"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "{project}/_apis/Release/definitions/{definitionId}/revisions/{revision}": {
+            "get": {
+                "tags": [
+                    "revisions"
+                ],
+                "summary": "GetDefinitionRevision",
+                "description": "",
+                "operationId": "getDefinitionRevision",
+                "produces": [
+                    "text/plain"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "project",
+                        "description": "Project ID or project name",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "definitionId",
+                        "description": "",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "in": "path",
+                        "name": "revision",
+                        "description": "",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "type": "Stream"
+                        }
+                    }
+                }
+            }
+        },
+        "{project}/_apis/release/definitions/{definitionId}/sourcebranches": {
+            "get": {
+                "tags": [
+                    "sourcebranches"
+                ],
+                "summary": "GetSourceBranches",
+                "description": "",
+                "operationId": "getSourceBranches",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "project",
+                        "description": "Project ID or project name",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "definitionId",
+                        "description": "",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "{project}/_apis/release/definitions/environmenttemplates": {
+            "post": {
+                "tags": [
+                    "environmenttemplates"
+                ],
+                "summary": "CreateDefinitionEnvironmentTemplate",
+                "description": "",
+                "operationId": "createDefinitionEnvironmentTemplate",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/ReleaseDefinitionEnvironmentTemplate"
+                        }
+                    },
+                    {
+                        "in": "path",
+                        "name": "project",
+                        "description": "Project ID or project name",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/ReleaseDefinitionEnvironmentTemplate"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "environmenttemplates"
+                ],
+                "summary": "DeleteDefinitionEnvironmentTemplate",
+                "description": "",
+                "operationId": "deleteDefinitionEnvironmentTemplate",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "project",
+                        "description": "Project ID or project name",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "templateId",
+                        "description": "",
+                        "required": true,
+                        "type": "Guid"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    }
+                }
+            },
+            "get": {
+                "tags": [
+                    "environmenttemplates"
+                ],
+                "summary": "GetDefinitionEnvironmentTemplate",
+                "description": "",
+                "operationId": "getDefinitionEnvironmentTemplate",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "project",
+                        "description": "Project ID or project name",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "templateId",
+                        "description": "",
+                        "required": true,
+                        "type": "Guid"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/ReleaseDefinitionEnvironmentTemplate"
+                        }
+                    }
+                }
+            }
+        },
         "{project}/_apis/release/deployments": {
             "get": {
                 "tags": [
@@ -815,214 +1184,6 @@
                 }
             }
         },
-        "{project}/_apis/Release/releases/{releaseId}/environments/{environmentId}": {
-            "get": {
-                "tags": [
-                    "environments"
-                ],
-                "summary": "GetReleaseEnvironment",
-                "description": "",
-                "operationId": "getReleaseEnvironment",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
-                        "name": "releaseId",
-                        "description": "",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "path",
-                        "name": "environmentId",
-                        "description": "",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int32"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "$ref": "#/definitions/ReleaseEnvironment"
-                        }
-                    }
-                }
-            },
-            "patch": {
-                "tags": [
-                    "environments"
-                ],
-                "summary": "UpdateReleaseEnvironment",
-                "description": "",
-                "operationId": "updateReleaseEnvironment",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "body",
-                        "name": "body",
-                        "description": "",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/ReleaseEnvironmentUpdateMetadata"
-                        }
-                    },
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
-                        "name": "releaseId",
-                        "description": "",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "path",
-                        "name": "environmentId",
-                        "description": "",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int32"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "$ref": "#/definitions/ReleaseEnvironment"
-                        }
-                    }
-                }
-            }
-        },
-        "{project}/_apis/release/definitions/environmenttemplates": {
-            "post": {
-                "tags": [
-                    "environmenttemplates"
-                ],
-                "summary": "CreateDefinitionEnvironmentTemplate",
-                "description": "",
-                "operationId": "createDefinitionEnvironmentTemplate",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "body",
-                        "name": "body",
-                        "description": "",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/ReleaseDefinitionEnvironmentTemplate"
-                        }
-                    },
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": true,
-                        "type": "string"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "$ref": "#/definitions/ReleaseDefinitionEnvironmentTemplate"
-                        }
-                    }
-                }
-            },
-            "delete": {
-                "tags": [
-                    "environmenttemplates"
-                ],
-                "summary": "DeleteDefinitionEnvironmentTemplate",
-                "description": "",
-                "operationId": "deleteDefinitionEnvironmentTemplate",
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "query",
-                        "name": "templateId",
-                        "description": "",
-                        "required": true,
-                        "type": "Guid"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation"
-                    }
-                }
-            },
-            "get": {
-                "tags": [
-                    "environmenttemplates"
-                ],
-                "summary": "GetDefinitionEnvironmentTemplate",
-                "description": "",
-                "operationId": "getDefinitionEnvironmentTemplate",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "query",
-                        "name": "templateId",
-                        "description": "",
-                        "required": true,
-                        "type": "Guid"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "$ref": "#/definitions/ReleaseDefinitionEnvironmentTemplate"
-                        }
-                    }
-                }
-            }
-        },
         "{project}/_apis/release/favorites/{scope}": {
             "post": {
                 "tags": [
@@ -1165,432 +1326,6 @@
                             "type": "array",
                             "items": {
                                 "$ref": "#/definitions/FavoriteItem"
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "{project}/_apis/Release/releases/{releaseId}/history": {
-            "get": {
-                "tags": [
-                    "history"
-                ],
-                "summary": "GetReleaseHistory",
-                "description": "",
-                "operationId": "getReleaseHistory",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
-                        "name": "releaseId",
-                        "description": "",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int32"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/ReleaseRevision"
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "{project}/_apis/release/artifacts/inputvaluesquery": {
-            "post": {
-                "tags": [
-                    "inputvaluesquery"
-                ],
-                "summary": "GetInputValues",
-                "description": "",
-                "operationId": "getInputValues",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "body",
-                        "name": "body",
-                        "description": "",
-                        "required": true,
-                        "type": "InputValuesQuery"
-                    },
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": true,
-                        "type": "string"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "type": "InputValuesQuery"
-                        }
-                    }
-                }
-            }
-        },
-        "{project}/_apis/release/releases/{releaseId}/environments/{environmentId}/tasks/{taskId}/logs": {
-            "get": {
-                "tags": [
-                    "logs"
-                ],
-                "summary": "GetLog",
-                "description": "",
-                "operationId": "getLog",
-                "produces": [
-                    "text/plain"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
-                        "name": "releaseId",
-                        "description": "",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "path",
-                        "name": "environmentId",
-                        "description": "",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "path",
-                        "name": "taskId",
-                        "description": "",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "query",
-                        "name": "attemptId",
-                        "description": "",
-                        "required": false,
-                        "type": "integer",
-                        "format": "int32"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "type": "Stream"
-                        }
-                    }
-                }
-            }
-        },
-        "{project}/_apis/release/releases/{releaseId}/logs": {
-            "get": {
-                "tags": [
-                    "logs"
-                ],
-                "summary": "GetLogs",
-                "description": "",
-                "operationId": "getLogs",
-                "produces": [
-                    "application/zip"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
-                        "name": "releaseId",
-                        "description": "",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int32"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "type": "Stream"
-                        }
-                    }
-                }
-            }
-        },
-        "{project}/_apis/release/releases/{releaseId}/environments/{environmentId}/deployPhases/{releaseDeployPhaseId}/tasks/{taskId}/logs": {
-            "get": {
-                "tags": [
-                    "logs"
-                ],
-                "summary": "GetTaskLog",
-                "description": "",
-                "operationId": "getTaskLog",
-                "produces": [
-                    "text/plain"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
-                        "name": "releaseId",
-                        "description": "",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "path",
-                        "name": "environmentId",
-                        "description": "",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "path",
-                        "name": "releaseDeployPhaseId",
-                        "description": "",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "path",
-                        "name": "taskId",
-                        "description": "",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int32"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "type": "Stream"
-                        }
-                    }
-                }
-            }
-        },
-        "{project}/_apis/Release/releases/{releaseId}/manualinterventions/{manualInterventionId}": {
-            "get": {
-                "tags": [
-                    "manualInterventions"
-                ],
-                "summary": "GetManualIntervention",
-                "description": "",
-                "operationId": "getManualIntervention",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
-                        "name": "releaseId",
-                        "description": "",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "path",
-                        "name": "manualInterventionId",
-                        "description": "",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int32"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "$ref": "#/definitions/ManualIntervention"
-                        }
-                    }
-                }
-            },
-            "patch": {
-                "tags": [
-                    "manualInterventions"
-                ],
-                "summary": "UpdateManualIntervention",
-                "description": "",
-                "operationId": "updateManualIntervention",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "body",
-                        "name": "body",
-                        "description": "",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/ManualInterventionUpdateMetadata"
-                        }
-                    },
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
-                        "name": "releaseId",
-                        "description": "",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "path",
-                        "name": "manualInterventionId",
-                        "description": "",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int32"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "$ref": "#/definitions/ManualIntervention"
-                        }
-                    }
-                }
-            }
-        },
-        "{project}/_apis/Release/releases/{releaseId}/manualinterventions": {
-            "get": {
-                "tags": [
-                    "manualInterventions"
-                ],
-                "summary": "GetManualInterventions",
-                "description": "",
-                "operationId": "getManualInterventions",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
-                        "name": "releaseId",
-                        "description": "",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int32"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/ManualIntervention"
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "_apis/release/projects": {
-            "get": {
-                "tags": [
-                    "projects"
-                ],
-                "summary": "GetReleaseProjects",
-                "description": "",
-                "operationId": "getReleaseProjects",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "query",
-                        "name": "artifactType",
-                        "description": "",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "query",
-                        "name": "artifactSourceId",
-                        "description": "",
-                        "required": true,
-                        "type": "string"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/ProjectReference"
                             }
                         }
                     }
@@ -1964,6 +1699,723 @@
                 }
             }
         },
+        "{project}/_apis/release/releases/{releaseId}/agentartifacts": {
+            "get": {
+                "tags": [
+                    "agentartifacts"
+                ],
+                "summary": "GetAgentArtifactDefinitions",
+                "description": "Returns the artifact details that automation agent requires",
+                "operationId": "getAgentArtifactDefinitions",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "project",
+                        "description": "Project ID or project name",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "releaseId",
+                        "description": "",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/AgentArtifactDefinition"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "{project}/_apis/release/releases/{releaseId}/changes": {
+            "get": {
+                "tags": [
+                    "changes"
+                ],
+                "summary": "GetReleaseChanges",
+                "description": "",
+                "operationId": "getReleaseChanges",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "project",
+                        "description": "Project ID or project name",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "releaseId",
+                        "description": "",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "in": "query",
+                        "name": "baseReleaseId",
+                        "description": "",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "in": "query",
+                        "name": "top",
+                        "description": "",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Change"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "{project}/_apis/Release/releases/{releaseId}/environments/{environmentId}": {
+            "get": {
+                "tags": [
+                    "environments"
+                ],
+                "summary": "GetReleaseEnvironment",
+                "description": "",
+                "operationId": "getReleaseEnvironment",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "project",
+                        "description": "Project ID or project name",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "releaseId",
+                        "description": "",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "in": "path",
+                        "name": "environmentId",
+                        "description": "",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/ReleaseEnvironment"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "tags": [
+                    "environments"
+                ],
+                "summary": "UpdateReleaseEnvironment",
+                "description": "",
+                "operationId": "updateReleaseEnvironment",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/ReleaseEnvironmentUpdateMetadata"
+                        }
+                    },
+                    {
+                        "in": "path",
+                        "name": "project",
+                        "description": "Project ID or project name",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "releaseId",
+                        "description": "",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "in": "path",
+                        "name": "environmentId",
+                        "description": "",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/ReleaseEnvironment"
+                        }
+                    }
+                }
+            }
+        },
+        "{project}/_apis/release/releases/{releaseId}/environments/{environmentId}/deployPhases/{releaseDeployPhaseId}/tasks": {
+            "get": {
+                "tags": [
+                    "tasks"
+                ],
+                "summary": "GetTasksForTaskGroup",
+                "description": "",
+                "operationId": "getTasksForTaskGroup",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "project",
+                        "description": "Project ID or project name",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "releaseId",
+                        "description": "",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "in": "path",
+                        "name": "environmentId",
+                        "description": "",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "in": "path",
+                        "name": "releaseDeployPhaseId",
+                        "description": "",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/ReleaseTask"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "{project}/_apis/release/releases/{releaseId}/environments/{environmentId}/deployPhases/{releaseDeployPhaseId}/tasks/{taskId}/logs": {
+            "get": {
+                "tags": [
+                    "logs"
+                ],
+                "summary": "GetTaskLog",
+                "description": "",
+                "operationId": "getTaskLog",
+                "produces": [
+                    "text/plain"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "project",
+                        "description": "Project ID or project name",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "releaseId",
+                        "description": "",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "in": "path",
+                        "name": "environmentId",
+                        "description": "",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "in": "path",
+                        "name": "releaseDeployPhaseId",
+                        "description": "",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "in": "path",
+                        "name": "taskId",
+                        "description": "",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "type": "Stream"
+                        }
+                    }
+                }
+            }
+        },
+        "{project}/_apis/release/releases/{releaseId}/environments/{environmentId}/tasks": {
+            "get": {
+                "tags": [
+                    "tasks"
+                ],
+                "summary": "GetTasks",
+                "description": "",
+                "operationId": "getTasks",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "project",
+                        "description": "Project ID or project name",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "releaseId",
+                        "description": "",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "in": "path",
+                        "name": "environmentId",
+                        "description": "",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "in": "query",
+                        "name": "attemptId",
+                        "description": "",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/ReleaseTask"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "{project}/_apis/release/releases/{releaseId}/environments/{environmentId}/tasks/{taskId}/logs": {
+            "get": {
+                "tags": [
+                    "logs"
+                ],
+                "summary": "GetLog",
+                "description": "",
+                "operationId": "getLog",
+                "produces": [
+                    "text/plain"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "project",
+                        "description": "Project ID or project name",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "releaseId",
+                        "description": "",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "in": "path",
+                        "name": "environmentId",
+                        "description": "",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "in": "path",
+                        "name": "taskId",
+                        "description": "",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "in": "query",
+                        "name": "attemptId",
+                        "description": "",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "type": "Stream"
+                        }
+                    }
+                }
+            }
+        },
+        "{project}/_apis/Release/releases/{releaseId}/history": {
+            "get": {
+                "tags": [
+                    "history"
+                ],
+                "summary": "GetReleaseHistory",
+                "description": "",
+                "operationId": "getReleaseHistory",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "project",
+                        "description": "Project ID or project name",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "releaseId",
+                        "description": "",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/ReleaseRevision"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "{project}/_apis/release/releases/{releaseId}/logs": {
+            "get": {
+                "tags": [
+                    "logs"
+                ],
+                "summary": "GetLogs",
+                "description": "",
+                "operationId": "getLogs",
+                "produces": [
+                    "application/zip"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "project",
+                        "description": "Project ID or project name",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "releaseId",
+                        "description": "",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "type": "Stream"
+                        }
+                    }
+                }
+            }
+        },
+        "{project}/_apis/Release/releases/{releaseId}/manualinterventions": {
+            "get": {
+                "tags": [
+                    "manualInterventions"
+                ],
+                "summary": "GetManualInterventions",
+                "description": "",
+                "operationId": "getManualInterventions",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "project",
+                        "description": "Project ID or project name",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "releaseId",
+                        "description": "",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/ManualIntervention"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "{project}/_apis/Release/releases/{releaseId}/manualinterventions/{manualInterventionId}": {
+            "get": {
+                "tags": [
+                    "manualInterventions"
+                ],
+                "summary": "GetManualIntervention",
+                "description": "",
+                "operationId": "getManualIntervention",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "project",
+                        "description": "Project ID or project name",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "releaseId",
+                        "description": "",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "in": "path",
+                        "name": "manualInterventionId",
+                        "description": "",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/ManualIntervention"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "tags": [
+                    "manualInterventions"
+                ],
+                "summary": "UpdateManualIntervention",
+                "description": "",
+                "operationId": "updateManualIntervention",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/ManualInterventionUpdateMetadata"
+                        }
+                    },
+                    {
+                        "in": "path",
+                        "name": "project",
+                        "description": "Project ID or project name",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "releaseId",
+                        "description": "",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "in": "path",
+                        "name": "manualInterventionId",
+                        "description": "",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/ManualIntervention"
+                        }
+                    }
+                }
+            }
+        },
+        "{project}/_apis/release/releases/{releaseId}/workitems": {
+            "get": {
+                "tags": [
+                    "workitems"
+                ],
+                "summary": "GetReleaseWorkItemsRefs",
+                "description": "",
+                "operationId": "getReleaseWorkItemsRefs",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "project",
+                        "description": "Project ID or project name",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "releaseId",
+                        "description": "",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "in": "query",
+                        "name": "baseReleaseId",
+                        "description": "",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "in": "query",
+                        "name": "top",
+                        "description": "",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/ReleaseWorkItemRef"
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "{project}/_apis/release/releasesettings": {
             "get": {
                 "tags": [
@@ -2029,93 +2481,6 @@
                         "description": "successful operation",
                         "schema": {
                             "$ref": "#/definitions/ReleaseSettings"
-                        }
-                    }
-                }
-            }
-        },
-        "{project}/_apis/Release/definitions/{definitionId}/revisions/{revision}": {
-            "get": {
-                "tags": [
-                    "revisions"
-                ],
-                "summary": "GetDefinitionRevision",
-                "description": "",
-                "operationId": "getDefinitionRevision",
-                "produces": [
-                    "text/plain"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
-                        "name": "definitionId",
-                        "description": "",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "path",
-                        "name": "revision",
-                        "description": "",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int32"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "type": "Stream"
-                        }
-                    }
-                }
-            }
-        },
-        "{project}/_apis/Release/definitions/{definitionId}/revisions": {
-            "get": {
-                "tags": [
-                    "revisions"
-                ],
-                "summary": "GetReleaseDefinitionHistory",
-                "description": "",
-                "operationId": "getReleaseDefinitionHistory",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
-                        "name": "definitionId",
-                        "description": "",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int32"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/ReleaseDefinitionRevision"
-                            }
                         }
                     }
                 }
@@ -2200,371 +2565,6 @@
                 "responses": {
                     "200": {
                         "description": "successful operation"
-                    }
-                }
-            }
-        },
-        "{project}/_apis/release/definitions/{definitionId}/sourcebranches": {
-            "get": {
-                "tags": [
-                    "sourcebranches"
-                ],
-                "summary": "GetSourceBranches",
-                "description": "",
-                "operationId": "getSourceBranches",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
-                        "name": "definitionId",
-                        "description": "",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int32"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "{project}/_apis/release/releases/{releaseId}/environments/{environmentId}/tasks": {
-            "get": {
-                "tags": [
-                    "tasks"
-                ],
-                "summary": "GetTasks",
-                "description": "",
-                "operationId": "getTasks",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
-                        "name": "releaseId",
-                        "description": "",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "path",
-                        "name": "environmentId",
-                        "description": "",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "query",
-                        "name": "attemptId",
-                        "description": "",
-                        "required": false,
-                        "type": "integer",
-                        "format": "int32"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/ReleaseTask"
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "{project}/_apis/release/releases/{releaseId}/environments/{environmentId}/deployPhases/{releaseDeployPhaseId}/tasks": {
-            "get": {
-                "tags": [
-                    "tasks"
-                ],
-                "summary": "GetTasksForTaskGroup",
-                "description": "",
-                "operationId": "getTasksForTaskGroup",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
-                        "name": "releaseId",
-                        "description": "",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "path",
-                        "name": "environmentId",
-                        "description": "",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "path",
-                        "name": "releaseDeployPhaseId",
-                        "description": "",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int32"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/ReleaseTask"
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "_apis/release/throttlingqueue": {
-            "get": {
-                "tags": [
-                    "throttlingQueue"
-                ],
-                "summary": "GetQueuedReleases",
-                "description": "Returns throttled queue as per the task hub license of parallel releases",
-                "operationId": "getQueuedReleases",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "query",
-                        "name": "projectId",
-                        "description": "",
-                        "required": false,
-                        "type": "string"
-                    },
-                    {
-                        "in": "query",
-                        "name": "releaseId",
-                        "description": "",
-                        "required": false,
-                        "type": "integer",
-                        "format": "int32"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/QueuedReleaseData"
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "{project}/_apis/release/artifacts/types": {
-            "get": {
-                "tags": [
-                    "types"
-                ],
-                "summary": "GetArtifactTypeDefinitions",
-                "description": "",
-                "operationId": "getArtifactTypeDefinitions",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": true,
-                        "type": "string"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/ArtifactTypeDefinition"
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "{project}/_apis/release/artifacts/versions": {
-            "get": {
-                "tags": [
-                    "versions"
-                ],
-                "summary": "GetArtifactVersions",
-                "description": "",
-                "operationId": "getArtifactVersions",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "query",
-                        "name": "releaseDefinitionId",
-                        "description": "",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int32"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "$ref": "#/definitions/ArtifactVersionQueryResult"
-                        }
-                    }
-                }
-            },
-            "post": {
-                "tags": [
-                    "versions"
-                ],
-                "summary": "GetArtifactVersionsForSources",
-                "description": "",
-                "operationId": "getArtifactVersionsForSources",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "body",
-                        "name": "body",
-                        "description": "",
-                        "required": true,
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/definitions/Artifact"
-                        }
-                    },
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": true,
-                        "type": "string"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "$ref": "#/definitions/ArtifactVersionQueryResult"
-                        }
-                    }
-                }
-            }
-        },
-        "{project}/_apis/release/releases/{releaseId}/workitems": {
-            "get": {
-                "tags": [
-                    "workitems"
-                ],
-                "summary": "GetReleaseWorkItemsRefs",
-                "description": "",
-                "operationId": "getReleaseWorkItemsRefs",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
-                        "name": "releaseId",
-                        "description": "",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "query",
-                        "name": "baseReleaseId",
-                        "description": "",
-                        "required": false,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "query",
-                        "name": "top",
-                        "description": "",
-                        "required": false,
-                        "type": "integer",
-                        "format": "int32"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/ReleaseWorkItemRef"
-                            }
-                        }
                     }
                 }
             }

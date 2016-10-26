@@ -92,9 +92,34 @@
         "https"
     ],
     "paths": {
-        "_apis/work/accountmywork": {
-        },
-        "_apis/work/accountmyworkrecentactivity": {
+        "_apis/wit/$ruleengine": {
+            "post": {
+                "tags": [
+                    "ruleEngine"
+                ],
+                "summary": "EvaluateRulesOnField",
+                "description": "Validates the fields values.",
+                "operationId": "evaluateRulesOnField",
+                "consumes": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/FieldsToEvaluate"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    }
+                }
+            }
         },
         "_apis/wit/attachments": {
             "post": {
@@ -180,6 +205,629 @@
                     }
                 }
             }
+        },
+        "_apis/wit/fields": {
+            "get": {
+                "tags": [
+                    "fields"
+                ],
+                "summary": "GetFields",
+                "description": "Returns information for all fields.",
+                "operationId": "getFields",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "expand",
+                        "description": "Use ExtensionFields to include extension fields, otherwise exclude them. Unless the feature flag for this parameter is enabled, extension fields are always included.",
+                        "required": false,
+                        "type": "GetFieldsExpand"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/WorkItemField"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "_apis/wit/fields/{field}": {
+            "get": {
+                "tags": [
+                    "fields"
+                ],
+                "summary": "GetField",
+                "description": "Gets information on a specific field.",
+                "operationId": "getField",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "field",
+                        "description": "Field name",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/WorkItemField"
+                        }
+                    }
+                }
+            }
+        },
+        "_apis/wit/workitemrelationtypes": {
+            "get": {
+                "tags": [
+                    "workItemRelationTypes"
+                ],
+                "summary": "GetRelationTypes",
+                "description": "",
+                "operationId": "getRelationTypes",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/WorkItemRelationType"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "_apis/wit/workitemrelationtypes/{relation}": {
+            "get": {
+                "tags": [
+                    "workItemRelationTypes"
+                ],
+                "summary": "GetRelationType",
+                "description": "Gets the work item relation types.",
+                "operationId": "getRelationType",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "relation",
+                        "description": "",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/WorkItemRelationType"
+                        }
+                    }
+                }
+            }
+        },
+        "_apis/wit/workitems": {
+            "get": {
+                "tags": [
+                    "workItems"
+                ],
+                "summary": "GetWorkItems",
+                "description": "Returns a list of work items",
+                "operationId": "getWorkItems",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "ids",
+                        "description": "",
+                        "required": true,
+                        "type": "array",
+                        "items": {
+                            "type": "int32"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "fields",
+                        "description": "",
+                        "required": false,
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "asOf",
+                        "description": "",
+                        "required": false,
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    {
+                        "in": "query",
+                        "name": "expand",
+                        "description": "",
+                        "required": false,
+                        "type": "WorkItemExpand"
+                    },
+                    {
+                        "in": "query",
+                        "name": "errorPolicy",
+                        "description": "",
+                        "required": false,
+                        "type": "WorkItemErrorPolicy"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/WorkItem"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "_apis/wit/workitems/{id}": {
+            "delete": {
+                "tags": [
+                    "workItems"
+                ],
+                "summary": "DeleteWorkItem",
+                "description": "",
+                "operationId": "deleteWorkItem",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "description": "",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "in": "query",
+                        "name": "destroy",
+                        "description": "",
+                        "required": false,
+                        "type": "boolean"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/WorkItemDelete"
+                        }
+                    }
+                }
+            },
+            "get": {
+                "tags": [
+                    "workItems"
+                ],
+                "summary": "GetWorkItem",
+                "description": "Returns a single work item",
+                "operationId": "getWorkItem",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "description": "",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "in": "query",
+                        "name": "fields",
+                        "description": "",
+                        "required": false,
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "asOf",
+                        "description": "",
+                        "required": false,
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    {
+                        "in": "query",
+                        "name": "expand",
+                        "description": "",
+                        "required": false,
+                        "type": "WorkItemExpand"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/WorkItem"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "tags": [
+                    "workItems"
+                ],
+                "summary": "UpdateWorkItem",
+                "description": "",
+                "operationId": "updateWorkItem",
+                "consumes": [
+                    "application/json-patch+json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "",
+                        "required": true,
+                        "type": "JsonPatchDocument"
+                    },
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "description": "",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "in": "query",
+                        "name": "validateOnly",
+                        "description": "",
+                        "required": false,
+                        "type": "boolean"
+                    },
+                    {
+                        "in": "query",
+                        "name": "bypassRules",
+                        "description": "",
+                        "required": false,
+                        "type": "boolean"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/WorkItem"
+                        }
+                    }
+                }
+            }
+        },
+        "_apis/wit/workItems/{id}/comments": {
+            "get": {
+                "tags": [
+                    "comments"
+                ],
+                "summary": "GetComments",
+                "description": "Returns specified number of comments for a work item from the specified revision",
+                "operationId": "getComments",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "description": "Work item id",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "in": "query",
+                        "name": "fromRevision",
+                        "description": "Revision from which comments are to be fetched",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "in": "query",
+                        "name": "top",
+                        "description": "The number of comments to return",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "in": "query",
+                        "name": "order",
+                        "description": "Ascending or descending by revision id",
+                        "required": false,
+                        "type": "CommentSortOrder"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/WorkItemComments"
+                        }
+                    }
+                }
+            }
+        },
+        "_apis/wit/workItems/{id}/comments/{revision}": {
+            "get": {
+                "tags": [
+                    "comments"
+                ],
+                "summary": "GetComment",
+                "description": "Returns comment for a work item at the specified revision",
+                "operationId": "getComment",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "description": "",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "in": "path",
+                        "name": "revision",
+                        "description": "",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/WorkItemComment"
+                        }
+                    }
+                }
+            }
+        },
+        "_apis/wit/workItems/{id}/revisions": {
+            "get": {
+                "tags": [
+                    "revisions"
+                ],
+                "summary": "GetRevisions",
+                "description": "Returns the list of fully hydrated work item revisions, paged.",
+                "operationId": "getRevisions",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "description": "",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "in": "query",
+                        "name": "top",
+                        "description": "",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "in": "query",
+                        "name": "skip",
+                        "description": "",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "in": "query",
+                        "name": "expand",
+                        "description": "",
+                        "required": false,
+                        "type": "WorkItemExpand"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/WorkItem"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "_apis/wit/workItems/{id}/revisions/{revisionNumber}": {
+            "get": {
+                "tags": [
+                    "revisions"
+                ],
+                "summary": "GetRevision",
+                "description": "Returns a fully hydrated work item for the requested revision",
+                "operationId": "getRevision",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "description": "",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "in": "path",
+                        "name": "revisionNumber",
+                        "description": "",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "in": "query",
+                        "name": "expand",
+                        "description": "",
+                        "required": false,
+                        "type": "WorkItemExpand"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/WorkItem"
+                        }
+                    }
+                }
+            }
+        },
+        "_apis/wit/workItems/{id}/updates": {
+            "get": {
+                "tags": [
+                    "updates"
+                ],
+                "summary": "GetUpdates",
+                "description": "Returns a the deltas between work item revisions",
+                "operationId": "getUpdates",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "description": "",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "in": "query",
+                        "name": "top",
+                        "description": "",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "in": "query",
+                        "name": "skip",
+                        "description": "",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/WorkItemUpdate"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "_apis/wit/workItems/{id}/updates/{updateNumber}": {
+            "get": {
+                "tags": [
+                    "updates"
+                ],
+                "summary": "GetUpdate",
+                "description": "Returns a single update for a work item",
+                "operationId": "getUpdate",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "description": "",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "in": "path",
+                        "name": "updateNumber",
+                        "description": "",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/WorkItemUpdate"
+                        }
+                    }
+                }
+            }
+        },
+        "_apis/work/accountmywork": {
+        },
+        "_apis/work/accountmyworkrecentactivity": {
+        },
+        "_apis/work/workitemstatecolor": {
+        },
+        "_apis/work/workitemtypecolor": {
         },
         "{project}/_apis/wit/classificationnodes": {
             "get": {
@@ -426,147 +1074,46 @@
                 }
             }
         },
-        "_apis/wit/workItems/{id}/comments/{revision}": {
+        "{project}/_apis/wit/queries": {
             "get": {
                 "tags": [
-                    "comments"
+                    "queries"
                 ],
-                "summary": "GetComment",
-                "description": "Returns comment for a work item at the specified revision",
-                "operationId": "getComment",
+                "summary": "GetQueries",
+                "description": "Retrieves all queries the user has access to in the current project",
+                "operationId": "getQueries",
                 "produces": [
                     "application/json"
                 ],
                 "parameters": [
                     {
                         "in": "path",
-                        "name": "id",
-                        "description": "",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "path",
-                        "name": "revision",
-                        "description": "",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int32"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "$ref": "#/definitions/WorkItemComment"
-                        }
-                    }
-                }
-            }
-        },
-        "_apis/wit/workItems/{id}/comments": {
-            "get": {
-                "tags": [
-                    "comments"
-                ],
-                "summary": "GetComments",
-                "description": "Returns specified number of comments for a work item from the specified revision",
-                "operationId": "getComments",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "id",
-                        "description": "Work item id",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "query",
-                        "name": "fromRevision",
-                        "description": "Revision from which comments are to be fetched",
-                        "required": false,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "query",
-                        "name": "top",
-                        "description": "The number of comments to return",
-                        "required": false,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "query",
-                        "name": "order",
-                        "description": "Ascending or descending by revision id",
-                        "required": false,
-                        "type": "CommentSortOrder"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "$ref": "#/definitions/WorkItemComments"
-                        }
-                    }
-                }
-            }
-        },
-        "_apis/wit/fields/{field}": {
-            "get": {
-                "tags": [
-                    "fields"
-                ],
-                "summary": "GetField",
-                "description": "Gets information on a specific field.",
-                "operationId": "getField",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "field",
-                        "description": "Field name",
+                        "name": "project",
+                        "description": "Project ID or project name",
                         "required": true,
                         "type": "string"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "$ref": "#/definitions/WorkItemField"
-                        }
-                    }
-                }
-            }
-        },
-        "_apis/wit/fields": {
-            "get": {
-                "tags": [
-                    "fields"
-                ],
-                "summary": "GetFields",
-                "description": "Returns information for all fields.",
-                "operationId": "getFields",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
+                    },
                     {
                         "in": "query",
                         "name": "expand",
-                        "description": "Use ExtensionFields to include extension fields, otherwise exclude them. Unless the feature flag for this parameter is enabled, extension fields are always included.",
+                        "description": "",
                         "required": false,
-                        "type": "GetFieldsExpand"
+                        "type": "QueryExpand"
+                    },
+                    {
+                        "in": "query",
+                        "name": "depth",
+                        "description": "",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "in": "query",
+                        "name": "includeDeleted",
+                        "description": "",
+                        "required": false,
+                        "type": "boolean"
                     }
                 ],
                 "responses": {
@@ -575,7 +1122,7 @@
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/WorkItemField"
+                                "$ref": "#/definitions/QueryHierarchyItem"
                             }
                         }
                     }
@@ -771,14 +1318,14 @@
                 }
             }
         },
-        "{project}/_apis/wit/queries": {
+        "{project}/_apis/wit/recyclebin": {
             "get": {
                 "tags": [
-                    "queries"
+                    "recyclebin"
                 ],
-                "summary": "GetQueries",
-                "description": "Retrieves all queries the user has access to in the current project",
-                "operationId": "getQueries",
+                "summary": "GetDeletedWorkItems",
+                "description": "",
+                "operationId": "getDeletedWorkItems",
                 "produces": [
                     "application/json"
                 ],
@@ -787,30 +1334,18 @@
                         "in": "path",
                         "name": "project",
                         "description": "Project ID or project name",
-                        "required": true,
+                        "required": false,
                         "type": "string"
                     },
                     {
                         "in": "query",
-                        "name": "expand",
+                        "name": "ids",
                         "description": "",
                         "required": false,
-                        "type": "QueryExpand"
-                    },
-                    {
-                        "in": "query",
-                        "name": "depth",
-                        "description": "",
-                        "required": false,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "query",
-                        "name": "includeDeleted",
-                        "description": "",
-                        "required": false,
-                        "type": "boolean"
+                        "type": "array",
+                        "items": {
+                            "type": "int32"
+                        }
                     }
                 ],
                 "responses": {
@@ -819,7 +1354,7 @@
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/QueryHierarchyItem"
+                                "$ref": "#/definitions/WorkItemDeleteReference"
                             }
                         }
                     }
@@ -942,14 +1477,14 @@
                 }
             }
         },
-        "{project}/_apis/wit/recyclebin": {
+        "{project}/_apis/wit/reporting/workitemlinks": {
             "get": {
                 "tags": [
-                    "recyclebin"
+                    "workItemLinks"
                 ],
-                "summary": "GetDeletedWorkItems",
-                "description": "",
-                "operationId": "getDeletedWorkItems",
+                "summary": "GetReportingLinks",
+                "description": "Get a batch of work item links",
+                "operationId": "getReportingLinks",
                 "produces": [
                     "application/json"
                 ],
@@ -963,55 +1498,301 @@
                     },
                     {
                         "in": "query",
-                        "name": "ids",
-                        "description": "",
+                        "name": "types",
+                        "description": "A list of types to filter the results to specific work item types. Omit this parameter to get work item links of all work item types.",
                         "required": false,
                         "type": "array",
                         "items": {
-                            "type": "int32"
+                            "type": "string"
                         }
+                    },
+                    {
+                        "in": "query",
+                        "name": "continuationToken",
+                        "description": "Specifies the continuationToken to start the batch from. Omit this parameter to get the first batch of links.",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "startDateTime",
+                        "description": "Date/time to use as a starting point for link changes. Only link changes that occurred after that date/time will be returned. Cannot be used in conjunction with 'watermark' parameter.",
+                        "required": false,
+                        "type": "string",
+                        "format": "date-time"
                     }
                 ],
                 "responses": {
                     "200": {
                         "description": "successful operation",
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/WorkItemDeleteReference"
-                            }
+                            "$ref": "#/definitions/ReportingWorkItemLinksBatch"
                         }
                     }
                 }
             }
         },
-        "_apis/wit/workItems/{id}/revisions/{revisionNumber}": {
+        "{project}/_apis/wit/reporting/workitemrevisions": {
             "get": {
                 "tags": [
-                    "revisions"
+                    "workItemRevisions"
                 ],
-                "summary": "GetRevision",
-                "description": "Returns a fully hydrated work item for the requested revision",
-                "operationId": "getRevision",
+                "summary": "ReadReportingRevisionsGet",
+                "description": "Get a batch of work item revisions with the option of including deleted items",
+                "operationId": "readReportingRevisionsGet",
                 "produces": [
                     "application/json"
                 ],
                 "parameters": [
                     {
                         "in": "path",
-                        "name": "id",
+                        "name": "project",
+                        "description": "Project ID or project name",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "fields",
+                        "description": "A list of fields to return in work item revisions. Omit this parameter to get all reportable fields.",
+                        "required": false,
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "types",
+                        "description": "A list of types to filter the results to specific work item types. Omit this parameter to get work item revisions of all work item types.",
+                        "required": false,
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "continuationToken",
+                        "description": "Specifies the watermark to start the batch from. Omit this parameter to get the first batch of revisions.",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "startDateTime",
+                        "description": "Date/time to use as a starting point for revisions, all revisions will occur after this date/time. Cannot be used in conjunction with 'watermark' parameter.",
+                        "required": false,
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    {
+                        "in": "query",
+                        "name": "includeIdentityRef",
+                        "description": "Return an identity reference instead of a string value for identity fields.",
+                        "required": false,
+                        "type": "boolean"
+                    },
+                    {
+                        "in": "query",
+                        "name": "includeDeleted",
+                        "description": "Specify if the deleted item should be returned.",
+                        "required": false,
+                        "type": "boolean"
+                    },
+                    {
+                        "in": "query",
+                        "name": "includeTagRef",
+                        "description": "Specify if the tag objects should be returned for System.Tags field.",
+                        "required": false,
+                        "type": "boolean"
+                    },
+                    {
+                        "in": "query",
+                        "name": "includeLatestOnly",
+                        "description": "Return only the latest revisions of work items, skipping all historical revisions",
+                        "required": false,
+                        "type": "boolean"
+                    },
+                    {
+                        "in": "query",
+                        "name": "expand",
                         "description": "",
+                        "required": false,
+                        "type": "ReportingRevisionsExpand"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/ReportingWorkItemRevisionsBatch"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "workItemRevisions"
+                ],
+                "summary": "ReadReportingRevisionsPost",
+                "description": "Get a batch of work item revisions",
+                "operationId": "readReportingRevisionsPost",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "An object that contains request settings: field filter, type filter, identity format",
                         "required": true,
-                        "type": "integer",
-                        "format": "int32"
+                        "schema": {
+                            "$ref": "#/definitions/ReportingWorkItemRevisionsFilter"
+                        }
                     },
                     {
                         "in": "path",
-                        "name": "revisionNumber",
+                        "name": "project",
+                        "description": "Project ID or project name",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "continuationToken",
+                        "description": "Specifies the watermark to start the batch from. Omit this parameter to get the first batch of revisions.",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "startDateTime",
+                        "description": "Date/time to use as a starting point for revisions, all revisions will occur after this date/time. Cannot be used in conjunction with 'watermark' parameter.",
+                        "required": false,
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    {
+                        "in": "query",
+                        "name": "expand",
+                        "description": "",
+                        "required": false,
+                        "type": "ReportingRevisionsExpand"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/ReportingWorkItemRevisionsBatch"
+                        }
+                    }
+                }
+            }
+        },
+        "{project}/_apis/wit/workitems/${type}": {
+            "post": {
+                "tags": [
+                    "workItems"
+                ],
+                "summary": "CreateWorkItem",
+                "description": "",
+                "operationId": "createWorkItem",
+                "consumes": [
+                    "application/json-patch+json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
                         "description": "",
                         "required": true,
-                        "type": "integer",
-                        "format": "int32"
+                        "type": "JsonPatchDocument"
+                    },
+                    {
+                        "in": "path",
+                        "name": "project",
+                        "description": "Project ID or project name",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "type",
+                        "description": "",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "validateOnly",
+                        "description": "",
+                        "required": false,
+                        "type": "boolean"
+                    },
+                    {
+                        "in": "query",
+                        "name": "bypassRules",
+                        "description": "",
+                        "required": false,
+                        "type": "boolean"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/WorkItem"
+                        }
+                    }
+                }
+            },
+            "get": {
+                "tags": [
+                    "workItems"
+                ],
+                "summary": "GetWorkItemTemplate",
+                "description": "Returns a single work item from a template",
+                "operationId": "getWorkItemTemplate",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "project",
+                        "description": "Project ID or project name",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "type",
+                        "description": "",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "fields",
+                        "description": "",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "asOf",
+                        "description": "",
+                        "required": false,
+                        "type": "string",
+                        "format": "date-time"
                     },
                     {
                         "in": "query",
@@ -1031,48 +1812,24 @@
                 }
             }
         },
-        "_apis/wit/workItems/{id}/revisions": {
+        "{project}/_apis/wit/workitemtypecategories": {
             "get": {
                 "tags": [
-                    "revisions"
+                    "workItemTypeCategories"
                 ],
-                "summary": "GetRevisions",
-                "description": "Returns the list of fully hydrated work item revisions, paged.",
-                "operationId": "getRevisions",
+                "summary": "GetWorkItemTypeCategories",
+                "description": "",
+                "operationId": "getWorkItemTypeCategories",
                 "produces": [
                     "application/json"
                 ],
                 "parameters": [
                     {
                         "in": "path",
-                        "name": "id",
-                        "description": "",
+                        "name": "project",
+                        "description": "Project ID or project name",
                         "required": true,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "query",
-                        "name": "top",
-                        "description": "",
-                        "required": false,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "query",
-                        "name": "skip",
-                        "description": "",
-                        "required": false,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "query",
-                        "name": "expand",
-                        "description": "",
-                        "required": false,
-                        "type": "WorkItemExpand"
+                        "type": "string"
                     }
                 ],
                 "responses": {
@@ -1081,22 +1838,176 @@
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/WorkItem"
+                                "$ref": "#/definitions/WorkItemTypeCategory"
                             }
                         }
                     }
                 }
             }
         },
-        "_apis/wit/$ruleengine": {
+        "{project}/_apis/wit/workitemtypecategories/{category}": {
+            "get": {
+                "tags": [
+                    "workItemTypeCategories"
+                ],
+                "summary": "GetWorkItemTypeCategory",
+                "description": "Returns a the deltas between work item revisions",
+                "operationId": "getWorkItemTypeCategory",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "project",
+                        "description": "Project ID or project name",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "category",
+                        "description": "",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/WorkItemTypeCategory"
+                        }
+                    }
+                }
+            }
+        },
+        "{project}/_apis/wit/workitemtypes": {
+            "get": {
+                "tags": [
+                    "workItemTypes"
+                ],
+                "summary": "GetWorkItemTypes",
+                "description": "",
+                "operationId": "getWorkItemTypes",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "project",
+                        "description": "Project ID or project name",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/WorkItemType"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "{project}/_apis/wit/workitemtypes/{type}": {
+            "get": {
+                "tags": [
+                    "workItemTypes"
+                ],
+                "summary": "GetWorkItemType",
+                "description": "Returns a the deltas between work item revisions",
+                "operationId": "getWorkItemType",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "project",
+                        "description": "Project ID or project name",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "type",
+                        "description": "",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/WorkItemType"
+                        }
+                    }
+                }
+            }
+        },
+        "{project}/_apis/wit/workitemtypes/{type}/fields/{field}": {
+            "get": {
+                "tags": [
+                    "workItemTypesField"
+                ],
+                "summary": "GetDependentFields",
+                "description": "Returns the dependent fields for the corresponding workitem type and fieldname",
+                "operationId": "getDependentFields",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "project",
+                        "description": "Project ID or project name",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "type",
+                        "description": "",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "field",
+                        "description": "",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/FieldDependentRule"
+                        }
+                    }
+                }
+            }
+        },
+        "{project}/_apis/wit/workitemtypetemplate": {
             "post": {
                 "tags": [
-                    "ruleEngine"
+                    "workItemTypeTemplate"
                 ],
-                "summary": "EvaluateRulesOnField",
-                "description": "Validates the fields values.",
-                "operationId": "evaluateRulesOnField",
+                "summary": "UpdateWorkItemTypeDefinition",
+                "description": "Add/updates a work item type",
+                "operationId": "updateWorkItemTypeDefinition",
                 "consumes": [
+                    "application/json"
+                ],
+                "produces": [
                     "application/json"
                 ],
                 "parameters": [
@@ -1106,13 +2017,67 @@
                         "description": "",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/FieldsToEvaluate"
+                            "$ref": "#/definitions/WorkItemTypeTemplateUpdateModel"
                         }
+                    },
+                    {
+                        "in": "path",
+                        "name": "project",
+                        "description": "Project ID or project name",
+                        "required": false,
+                        "type": "string"
                     }
                 ],
                 "responses": {
                     "200": {
-                        "description": "successful operation"
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/ProvisioningResult"
+                        }
+                    }
+                }
+            }
+        },
+        "{project}/_apis/wit/workitemtypetemplate/{type}": {
+            "get": {
+                "tags": [
+                    "workItemTypeTemplate"
+                ],
+                "summary": "ExportWorkItemTypeDefinition",
+                "description": "Export work item type",
+                "operationId": "exportWorkItemTypeDefinition",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "project",
+                        "description": "Project ID or project name",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "type",
+                        "description": "",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "exportGlobalLists",
+                        "description": "",
+                        "required": false,
+                        "type": "boolean"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/WorkItemTypeTemplate"
+                        }
                     }
                 }
             }
@@ -1345,95 +2310,6 @@
                 }
             }
         },
-        "_apis/wit/workItems/{id}/updates/{updateNumber}": {
-            "get": {
-                "tags": [
-                    "updates"
-                ],
-                "summary": "GetUpdate",
-                "description": "Returns a single update for a work item",
-                "operationId": "getUpdate",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "id",
-                        "description": "",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "path",
-                        "name": "updateNumber",
-                        "description": "",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int32"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "$ref": "#/definitions/WorkItemUpdate"
-                        }
-                    }
-                }
-            }
-        },
-        "_apis/wit/workItems/{id}/updates": {
-            "get": {
-                "tags": [
-                    "updates"
-                ],
-                "summary": "GetUpdates",
-                "description": "Returns a the deltas between work item revisions",
-                "operationId": "getUpdates",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "id",
-                        "description": "",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "query",
-                        "name": "top",
-                        "description": "",
-                        "required": false,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "query",
-                        "name": "skip",
-                        "description": "",
-                        "required": false,
-                        "type": "integer",
-                        "format": "int32"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/WorkItemUpdate"
-                            }
-                        }
-                    }
-                }
-            }
-        },
         "{project}/{team}/_apis/wit/wiql": {
             "post": {
                 "tags": [
@@ -1544,882 +2420,6 @@
                         "description": "successful operation",
                         "schema": {
                             "$ref": "#/definitions/WorkItemQueryResult"
-                        }
-                    }
-                }
-            }
-        },
-        "{project}/_apis/wit/reporting/workitemlinks": {
-            "get": {
-                "tags": [
-                    "workItemLinks"
-                ],
-                "summary": "GetReportingLinks",
-                "description": "Get a batch of work item links",
-                "operationId": "getReportingLinks",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": false,
-                        "type": "string"
-                    },
-                    {
-                        "in": "query",
-                        "name": "types",
-                        "description": "A list of types to filter the results to specific work item types. Omit this parameter to get work item links of all work item types.",
-                        "required": false,
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "in": "query",
-                        "name": "continuationToken",
-                        "description": "Specifies the continuationToken to start the batch from. Omit this parameter to get the first batch of links.",
-                        "required": false,
-                        "type": "string"
-                    },
-                    {
-                        "in": "query",
-                        "name": "startDateTime",
-                        "description": "Date/time to use as a starting point for link changes. Only link changes that occurred after that date/time will be returned. Cannot be used in conjunction with 'watermark' parameter.",
-                        "required": false,
-                        "type": "string",
-                        "format": "date-time"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "$ref": "#/definitions/ReportingWorkItemLinksBatch"
-                        }
-                    }
-                }
-            }
-        },
-        "_apis/wit/workitemrelationtypes/{relation}": {
-            "get": {
-                "tags": [
-                    "workItemRelationTypes"
-                ],
-                "summary": "GetRelationType",
-                "description": "Gets the work item relation types.",
-                "operationId": "getRelationType",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "relation",
-                        "description": "",
-                        "required": true,
-                        "type": "string"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "$ref": "#/definitions/WorkItemRelationType"
-                        }
-                    }
-                }
-            }
-        },
-        "_apis/wit/workitemrelationtypes": {
-            "get": {
-                "tags": [
-                    "workItemRelationTypes"
-                ],
-                "summary": "GetRelationTypes",
-                "description": "",
-                "operationId": "getRelationTypes",
-                "produces": [
-                    "application/json"
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/WorkItemRelationType"
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "{project}/_apis/wit/reporting/workitemrevisions": {
-            "get": {
-                "tags": [
-                    "workItemRevisions"
-                ],
-                "summary": "ReadReportingRevisionsGet",
-                "description": "Get a batch of work item revisions with the option of including deleted items",
-                "operationId": "readReportingRevisionsGet",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": false,
-                        "type": "string"
-                    },
-                    {
-                        "in": "query",
-                        "name": "fields",
-                        "description": "A list of fields to return in work item revisions. Omit this parameter to get all reportable fields.",
-                        "required": false,
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "in": "query",
-                        "name": "types",
-                        "description": "A list of types to filter the results to specific work item types. Omit this parameter to get work item revisions of all work item types.",
-                        "required": false,
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "in": "query",
-                        "name": "continuationToken",
-                        "description": "Specifies the watermark to start the batch from. Omit this parameter to get the first batch of revisions.",
-                        "required": false,
-                        "type": "string"
-                    },
-                    {
-                        "in": "query",
-                        "name": "startDateTime",
-                        "description": "Date/time to use as a starting point for revisions, all revisions will occur after this date/time. Cannot be used in conjunction with 'watermark' parameter.",
-                        "required": false,
-                        "type": "string",
-                        "format": "date-time"
-                    },
-                    {
-                        "in": "query",
-                        "name": "includeIdentityRef",
-                        "description": "Return an identity reference instead of a string value for identity fields.",
-                        "required": false,
-                        "type": "boolean"
-                    },
-                    {
-                        "in": "query",
-                        "name": "includeDeleted",
-                        "description": "Specify if the deleted item should be returned.",
-                        "required": false,
-                        "type": "boolean"
-                    },
-                    {
-                        "in": "query",
-                        "name": "includeTagRef",
-                        "description": "Specify if the tag objects should be returned for System.Tags field.",
-                        "required": false,
-                        "type": "boolean"
-                    },
-                    {
-                        "in": "query",
-                        "name": "includeLatestOnly",
-                        "description": "Return only the latest revisions of work items, skipping all historical revisions",
-                        "required": false,
-                        "type": "boolean"
-                    },
-                    {
-                        "in": "query",
-                        "name": "expand",
-                        "description": "",
-                        "required": false,
-                        "type": "ReportingRevisionsExpand"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "$ref": "#/definitions/ReportingWorkItemRevisionsBatch"
-                        }
-                    }
-                }
-            },
-            "post": {
-                "tags": [
-                    "workItemRevisions"
-                ],
-                "summary": "ReadReportingRevisionsPost",
-                "description": "Get a batch of work item revisions",
-                "operationId": "readReportingRevisionsPost",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "body",
-                        "name": "body",
-                        "description": "An object that contains request settings: field filter, type filter, identity format",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/ReportingWorkItemRevisionsFilter"
-                        }
-                    },
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": false,
-                        "type": "string"
-                    },
-                    {
-                        "in": "query",
-                        "name": "continuationToken",
-                        "description": "Specifies the watermark to start the batch from. Omit this parameter to get the first batch of revisions.",
-                        "required": false,
-                        "type": "string"
-                    },
-                    {
-                        "in": "query",
-                        "name": "startDateTime",
-                        "description": "Date/time to use as a starting point for revisions, all revisions will occur after this date/time. Cannot be used in conjunction with 'watermark' parameter.",
-                        "required": false,
-                        "type": "string",
-                        "format": "date-time"
-                    },
-                    {
-                        "in": "query",
-                        "name": "expand",
-                        "description": "",
-                        "required": false,
-                        "type": "ReportingRevisionsExpand"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "$ref": "#/definitions/ReportingWorkItemRevisionsBatch"
-                        }
-                    }
-                }
-            }
-        },
-        "_apis/wit/workitems/{id}": {
-            "delete": {
-                "tags": [
-                    "workItems"
-                ],
-                "summary": "DeleteWorkItem",
-                "description": "",
-                "operationId": "deleteWorkItem",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "id",
-                        "description": "",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "query",
-                        "name": "destroy",
-                        "description": "",
-                        "required": false,
-                        "type": "boolean"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "$ref": "#/definitions/WorkItemDelete"
-                        }
-                    }
-                }
-            },
-            "get": {
-                "tags": [
-                    "workItems"
-                ],
-                "summary": "GetWorkItem",
-                "description": "Returns a single work item",
-                "operationId": "getWorkItem",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "id",
-                        "description": "",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "query",
-                        "name": "fields",
-                        "description": "",
-                        "required": false,
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "in": "query",
-                        "name": "asOf",
-                        "description": "",
-                        "required": false,
-                        "type": "string",
-                        "format": "date-time"
-                    },
-                    {
-                        "in": "query",
-                        "name": "expand",
-                        "description": "",
-                        "required": false,
-                        "type": "WorkItemExpand"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "$ref": "#/definitions/WorkItem"
-                        }
-                    }
-                }
-            },
-            "patch": {
-                "tags": [
-                    "workItems"
-                ],
-                "summary": "UpdateWorkItem",
-                "description": "",
-                "operationId": "updateWorkItem",
-                "consumes": [
-                    "application/json-patch+json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "body",
-                        "name": "body",
-                        "description": "",
-                        "required": true,
-                        "type": "JsonPatchDocument"
-                    },
-                    {
-                        "in": "path",
-                        "name": "id",
-                        "description": "",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "query",
-                        "name": "validateOnly",
-                        "description": "",
-                        "required": false,
-                        "type": "boolean"
-                    },
-                    {
-                        "in": "query",
-                        "name": "bypassRules",
-                        "description": "",
-                        "required": false,
-                        "type": "boolean"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "$ref": "#/definitions/WorkItem"
-                        }
-                    }
-                }
-            }
-        },
-        "_apis/wit/workitems": {
-            "get": {
-                "tags": [
-                    "workItems"
-                ],
-                "summary": "GetWorkItems",
-                "description": "Returns a list of work items",
-                "operationId": "getWorkItems",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "query",
-                        "name": "ids",
-                        "description": "",
-                        "required": true,
-                        "type": "array",
-                        "items": {
-                            "type": "int32"
-                        }
-                    },
-                    {
-                        "in": "query",
-                        "name": "fields",
-                        "description": "",
-                        "required": false,
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "in": "query",
-                        "name": "asOf",
-                        "description": "",
-                        "required": false,
-                        "type": "string",
-                        "format": "date-time"
-                    },
-                    {
-                        "in": "query",
-                        "name": "expand",
-                        "description": "",
-                        "required": false,
-                        "type": "WorkItemExpand"
-                    },
-                    {
-                        "in": "query",
-                        "name": "errorPolicy",
-                        "description": "",
-                        "required": false,
-                        "type": "WorkItemErrorPolicy"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/WorkItem"
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "{project}/_apis/wit/workitems/${type}": {
-            "post": {
-                "tags": [
-                    "workItems"
-                ],
-                "summary": "CreateWorkItem",
-                "description": "",
-                "operationId": "createWorkItem",
-                "consumes": [
-                    "application/json-patch+json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "body",
-                        "name": "body",
-                        "description": "",
-                        "required": true,
-                        "type": "JsonPatchDocument"
-                    },
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
-                        "name": "type",
-                        "description": "",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "query",
-                        "name": "validateOnly",
-                        "description": "",
-                        "required": false,
-                        "type": "boolean"
-                    },
-                    {
-                        "in": "query",
-                        "name": "bypassRules",
-                        "description": "",
-                        "required": false,
-                        "type": "boolean"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "$ref": "#/definitions/WorkItem"
-                        }
-                    }
-                }
-            },
-            "get": {
-                "tags": [
-                    "workItems"
-                ],
-                "summary": "GetWorkItemTemplate",
-                "description": "Returns a single work item from a template",
-                "operationId": "getWorkItemTemplate",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
-                        "name": "type",
-                        "description": "",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "query",
-                        "name": "fields",
-                        "description": "",
-                        "required": false,
-                        "type": "string"
-                    },
-                    {
-                        "in": "query",
-                        "name": "asOf",
-                        "description": "",
-                        "required": false,
-                        "type": "string",
-                        "format": "date-time"
-                    },
-                    {
-                        "in": "query",
-                        "name": "expand",
-                        "description": "",
-                        "required": false,
-                        "type": "WorkItemExpand"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "$ref": "#/definitions/WorkItem"
-                        }
-                    }
-                }
-            }
-        },
-        "_apis/work/workitemstatecolor": {
-        },
-        "{project}/_apis/wit/workitemtypecategories": {
-            "get": {
-                "tags": [
-                    "workItemTypeCategories"
-                ],
-                "summary": "GetWorkItemTypeCategories",
-                "description": "",
-                "operationId": "getWorkItemTypeCategories",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": true,
-                        "type": "string"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/WorkItemTypeCategory"
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "{project}/_apis/wit/workitemtypecategories/{category}": {
-            "get": {
-                "tags": [
-                    "workItemTypeCategories"
-                ],
-                "summary": "GetWorkItemTypeCategory",
-                "description": "Returns a the deltas between work item revisions",
-                "operationId": "getWorkItemTypeCategory",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
-                        "name": "category",
-                        "description": "",
-                        "required": true,
-                        "type": "string"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "$ref": "#/definitions/WorkItemTypeCategory"
-                        }
-                    }
-                }
-            }
-        },
-        "_apis/work/workitemtypecolor": {
-        },
-        "{project}/_apis/wit/workitemtypes/{type}": {
-            "get": {
-                "tags": [
-                    "workItemTypes"
-                ],
-                "summary": "GetWorkItemType",
-                "description": "Returns a the deltas between work item revisions",
-                "operationId": "getWorkItemType",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
-                        "name": "type",
-                        "description": "",
-                        "required": true,
-                        "type": "string"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "$ref": "#/definitions/WorkItemType"
-                        }
-                    }
-                }
-            }
-        },
-        "{project}/_apis/wit/workitemtypes": {
-            "get": {
-                "tags": [
-                    "workItemTypes"
-                ],
-                "summary": "GetWorkItemTypes",
-                "description": "",
-                "operationId": "getWorkItemTypes",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": true,
-                        "type": "string"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/WorkItemType"
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "{project}/_apis/wit/workitemtypes/{type}/fields/{field}": {
-            "get": {
-                "tags": [
-                    "workItemTypesField"
-                ],
-                "summary": "GetDependentFields",
-                "description": "Returns the dependent fields for the corresponding workitem type and fieldname",
-                "operationId": "getDependentFields",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
-                        "name": "type",
-                        "description": "",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
-                        "name": "field",
-                        "description": "",
-                        "required": true,
-                        "type": "string"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "$ref": "#/definitions/FieldDependentRule"
-                        }
-                    }
-                }
-            }
-        },
-        "{project}/_apis/wit/workitemtypetemplate/{type}": {
-            "get": {
-                "tags": [
-                    "workItemTypeTemplate"
-                ],
-                "summary": "ExportWorkItemTypeDefinition",
-                "description": "Export work item type",
-                "operationId": "exportWorkItemTypeDefinition",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": false,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
-                        "name": "type",
-                        "description": "",
-                        "required": false,
-                        "type": "string"
-                    },
-                    {
-                        "in": "query",
-                        "name": "exportGlobalLists",
-                        "description": "",
-                        "required": false,
-                        "type": "boolean"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "$ref": "#/definitions/WorkItemTypeTemplate"
-                        }
-                    }
-                }
-            }
-        },
-        "{project}/_apis/wit/workitemtypetemplate": {
-            "post": {
-                "tags": [
-                    "workItemTypeTemplate"
-                ],
-                "summary": "UpdateWorkItemTypeDefinition",
-                "description": "Add/updates a work item type",
-                "operationId": "updateWorkItemTypeDefinition",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "body",
-                        "name": "body",
-                        "description": "",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/WorkItemTypeTemplateUpdateModel"
-                        }
-                    },
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": false,
-                        "type": "string"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "$ref": "#/definitions/ProvisioningResult"
                         }
                     }
                 }
