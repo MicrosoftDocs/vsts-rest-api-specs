@@ -50,7 +50,7 @@
         "https"
     ],
     "paths": {
-        "_apis/projects/{projectId}/connectedservices/{name}": {
+        "_apis/projects/{projectId}/connectedservices": {
             "post": {
                 "tags": [
                     "connectedServices"
@@ -95,41 +95,6 @@
                 "tags": [
                     "connectedServices"
                 ],
-                "summary": "GetConnectedServiceDetails",
-                "description": "",
-                "operationId": "getConnectedServiceDetails",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "projectId",
-                        "description": "",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
-                        "name": "name",
-                        "description": "",
-                        "required": true,
-                        "type": "string"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "$ref": "#/definitions/WebApiConnectedServiceDetails"
-                        }
-                    }
-                }
-            },
-            "get": {
-                "tags": [
-                    "connectedServices"
-                ],
                 "summary": "GetConnectedServices",
                 "description": "",
                 "operationId": "getConnectedServices",
@@ -160,6 +125,43 @@
                             "items": {
                                 "$ref": "#/definitions/WebApiConnectedService"
                             }
+                        }
+                    }
+                }
+            }
+        },
+        "_apis/projects/{projectId}/connectedservices/{name}": {
+            "get": {
+                "tags": [
+                    "connectedServices"
+                ],
+                "summary": "GetConnectedServiceDetails",
+                "description": "",
+                "operationId": "getConnectedServiceDetails",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "projectId",
+                        "description": "",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "name",
+                        "description": "",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/WebApiConnectedServiceDetails"
                         }
                     }
                 }
@@ -356,7 +358,7 @@
                 }
             }
         },
-        "_apis/process/processes/{*processId}": {
+        "_apis/process/processes/{processId}": {
             "get": {
                 "tags": [
                     "processes"
@@ -384,7 +386,9 @@
                         }
                     }
                 }
-            },
+            }
+        },
+        "_apis/process/processes": {
             "get": {
                 "tags": [
                     "processes"
@@ -436,7 +440,9 @@
                         }
                     }
                 }
-            },
+            }
+        },
+        "_apis/projectcollections": {
             "get": {
                 "tags": [
                     "projectCollections"
@@ -512,7 +518,7 @@
                 }
             }
         },
-        "_apis/projects/{*projectId}": {
+        "_apis/projects/{projectId}": {
             "get": {
                 "tags": [
                     "projects"
@@ -555,6 +561,76 @@
                     }
                 }
             },
+            "delete": {
+                "tags": [
+                    "projects"
+                ],
+                "summary": "QueueDeleteProject",
+                "description": "Queue a project deletion.",
+                "operationId": "queueDeleteProject",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "projectId",
+                        "description": "The project id of the project to delete.",
+                        "required": true,
+                        "type": "Guid"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "type": "OperationReference"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "tags": [
+                    "projects"
+                ],
+                "summary": "UpdateProject",
+                "description": "Update an existing project's name, abbreviation, or description.",
+                "operationId": "updateProject",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "The updates for the project.",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/TeamProject"
+                        }
+                    },
+                    {
+                        "in": "path",
+                        "name": "projectId",
+                        "description": "The project id of the project to update.",
+                        "required": true,
+                        "type": "Guid"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "type": "OperationReference"
+                        }
+                    }
+                }
+            }
+        },
+        "_apis/projects": {
             "get": {
                 "tags": [
                     "projects"
@@ -634,74 +710,6 @@
                         }
                     }
                 }
-            },
-            "delete": {
-                "tags": [
-                    "projects"
-                ],
-                "summary": "QueueDeleteProject",
-                "description": "Queue a project deletion.",
-                "operationId": "queueDeleteProject",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "projectId",
-                        "description": "The project id of the project to delete.",
-                        "required": true,
-                        "type": "Guid"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "type": "OperationReference"
-                        }
-                    }
-                }
-            },
-            "patch": {
-                "tags": [
-                    "projects"
-                ],
-                "summary": "UpdateProject",
-                "description": "Update an existing project's name, abbreviation, or description.",
-                "operationId": "updateProject",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "body",
-                        "name": "body",
-                        "description": "The updates for the project.",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/TeamProject"
-                        }
-                    },
-                    {
-                        "in": "path",
-                        "name": "projectId",
-                        "description": "The project id of the project to update.",
-                        "required": true,
-                        "type": "Guid"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "type": "OperationReference"
-                        }
-                    }
-                }
             }
         },
         "_apis/proxies": {
@@ -737,7 +745,7 @@
                 }
             }
         },
-        "_apis/projects/{projectId}/teams/{*teamId}": {
+        "_apis/projects/{projectId}/teams": {
             "post": {
                 "tags": [
                     "teams"
@@ -778,6 +786,55 @@
                     }
                 }
             },
+            "get": {
+                "tags": [
+                    "teams"
+                ],
+                "summary": "GetTeams",
+                "description": "",
+                "operationId": "getTeams",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "projectId",
+                        "description": "",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "top",
+                        "description": "",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "in": "query",
+                        "name": "skip",
+                        "description": "",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/WebApiTeam"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "_apis/projects/{projectId}/teams/{teamId}": {
             "delete": {
                 "tags": [
                     "teams"
@@ -838,53 +895,6 @@
                         "description": "successful operation",
                         "schema": {
                             "$ref": "#/definitions/WebApiTeam"
-                        }
-                    }
-                }
-            },
-            "get": {
-                "tags": [
-                    "teams"
-                ],
-                "summary": "GetTeams",
-                "description": "",
-                "operationId": "getTeams",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "projectId",
-                        "description": "",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "query",
-                        "name": "top",
-                        "description": "",
-                        "required": false,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "query",
-                        "name": "skip",
-                        "description": "",
-                        "required": false,
-                        "type": "integer",
-                        "format": "int32"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/WebApiTeam"
-                            }
                         }
                     }
                 }

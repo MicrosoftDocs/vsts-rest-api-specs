@@ -50,7 +50,7 @@
         "https"
     ],
     "paths": {
-        "_apis/commerce/commercepackage/{resourceName}": {
+        "_apis/commerce/commercepackage": {
             "get": {
                 "tags": [
                     "commercePackage"
@@ -106,7 +106,7 @@
                 }
             }
         },
-        "_apis/commerce/meters/{resourceName}": {
+        "_apis/commerce/meters": {
             "get": {
                 "tags": [
                     "meters"
@@ -138,6 +138,35 @@
                     }
                 }
             },
+            "patch": {
+                "tags": [
+                    "meters"
+                ],
+                "summary": "UpdateMeter",
+                "description": "Sets the maximum and included quantities for a resource",
+                "operationId": "updateMeter",
+                "consumes": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/SubscriptionResource"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    }
+                }
+            }
+        },
+        "_apis/commerce/meters/{resourceName}": {
             "get": {
                 "tags": [
                     "meters"
@@ -172,36 +201,9 @@
                         }
                     }
                 }
-            },
-            "patch": {
-                "tags": [
-                    "meters"
-                ],
-                "summary": "UpdateMeter",
-                "description": "Sets the maximum and included quantities for a resource",
-                "operationId": "updateMeter",
-                "consumes": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "body",
-                        "name": "body",
-                        "description": "",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/SubscriptionResource"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation"
-                    }
-                }
             }
         },
-        "_apis/commerce/offermeter/{resourceName}": {
+        "_apis/commerce/offermeter": {
             "post": {
                 "tags": [
                     "offerMeter"
@@ -233,6 +235,30 @@
                 "tags": [
                     "offerMeter"
                 ],
+                "summary": "GetOfferMeters",
+                "description": "",
+                "operationId": "getOfferMeters",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/OfferMeter"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "_apis/commerce/offermeter/{resourceName}": {
+            "get": {
+                "tags": [
+                    "offerMeter"
+                ],
                 "summary": "GetOfferMeter",
                 "description": "Returns resource information like status, committed quantity, included quantity, reset date, etc.",
                 "operationId": "getOfferMeter",
@@ -260,28 +286,6 @@
                         "description": "successful operation",
                         "schema": {
                             "$ref": "#/definitions/OfferMeter"
-                        }
-                    }
-                }
-            },
-            "get": {
-                "tags": [
-                    "offerMeter"
-                ],
-                "summary": "GetOfferMeters",
-                "description": "",
-                "operationId": "getOfferMeters",
-                "produces": [
-                    "application/json"
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/OfferMeter"
-                            }
                         }
                     }
                 }
@@ -357,7 +361,7 @@
                 }
             }
         },
-        "_apis/commerce/offermeterprice/{resourceName}": {
+        "_apis/commerce/offermeterprice": {
             "get": {
                 "tags": [
                     "offerMeterPrice"
@@ -390,7 +394,7 @@
                 }
             }
         },
-        "_apis/commerce/offersubscription/{resourceName}": {
+        "_apis/commerce/offersubscription": {
             "patch": {
                 "tags": [
                     "offerSubscription"
@@ -693,7 +697,7 @@
                 }
             }
         },
-        "_apis/commerce/regions/{resourceName}": {
+        "_apis/commerce/regions": {
             "get": {
                 "tags": [
                     "regions"
@@ -756,6 +760,181 @@
                     }
                 }
             },
+            "get": {
+                "tags": [
+                    "subscription"
+                ],
+                "summary": "GetAzureSubscriptionForPurchase",
+                "description": "Validates specified azure subscription for purchase. Rules such as msdn subscription, spending limit checks, etc are performed by this method.",
+                "operationId": "getAzureSubscriptionForPurchase",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "subscriptionId",
+                        "description": "Azure Subscription Id",
+                        "required": true,
+                        "type": "Guid"
+                    },
+                    {
+                        "in": "query",
+                        "name": "galleryItemId",
+                        "description": "Fully qualified gallery id",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "accountId",
+                        "description": "Account id",
+                        "required": false,
+                        "type": "Guid"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/ISubscriptionAccount"
+                        }
+                    }
+                }
+            },
+            "get": {
+                "tags": [
+                    "subscription"
+                ],
+                "summary": "GetAzureSubscriptionForUser",
+                "description": "Returns azure subscriptions across tenants.",
+                "operationId": "getAzureSubscriptionForUser",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "subscriptionId",
+                        "description": "Azure subscription id",
+                        "required": false,
+                        "type": "Guid"
+                    },
+                    {
+                        "in": "query",
+                        "name": "queryAcrossTenants",
+                        "description": "Query across multiple tenants if the logged in user is member of multiple tenants",
+                        "required": false,
+                        "type": "boolean"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/ISubscriptionAccount"
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "subscription"
+                ],
+                "summary": "LinkAccount",
+                "description": "Links the account to a subscription.",
+                "operationId": "linkAccount",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "subscriptionId",
+                        "description": "The subscription identifier.",
+                        "required": true,
+                        "type": "Guid"
+                    },
+                    {
+                        "in": "query",
+                        "name": "providerNamespaceId",
+                        "description": "The provider namespace identifier.",
+                        "required": true,
+                        "type": "AccountProviderNamespace"
+                    },
+                    {
+                        "in": "query",
+                        "name": "accountId",
+                        "description": "The account identifier.",
+                        "required": true,
+                        "type": "Guid"
+                    },
+                    {
+                        "in": "query",
+                        "name": "ownerId",
+                        "description": "The account owner identifier.",
+                        "required": true,
+                        "type": "Guid"
+                    },
+                    {
+                        "in": "query",
+                        "name": "hydrate",
+                        "description": "Whether or not the hydrate the account into ARM.",
+                        "required": false,
+                        "type": "boolean"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "subscription"
+                ],
+                "summary": "UnlinkAccount",
+                "description": "Unlinks an account from the subscription.",
+                "operationId": "unlinkAccount",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "subscriptionId",
+                        "description": "The subscription identifier.",
+                        "required": true,
+                        "type": "Guid"
+                    },
+                    {
+                        "in": "query",
+                        "name": "providerNamespaceId",
+                        "description": "The provider namespace identifier.",
+                        "required": true,
+                        "type": "AccountProviderNamespace"
+                    },
+                    {
+                        "in": "query",
+                        "name": "accountId",
+                        "description": "The account identifier.",
+                        "required": true,
+                        "type": "Guid"
+                    },
+                    {
+                        "in": "query",
+                        "name": "ownerId",
+                        "description": "The account owner identifier.",
+                        "required": true,
+                        "type": "Guid"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    }
+                }
+            }
+        },
+        "_apis/commerce/subscription": {
             "get": {
                 "tags": [
                     "subscription"
@@ -919,86 +1098,6 @@
                 "tags": [
                     "subscription"
                 ],
-                "summary": "GetAzureSubscriptionForPurchase",
-                "description": "Validates specified azure subscription for purchase. Rules such as msdn subscription, spending limit checks, etc are performed by this method.",
-                "operationId": "getAzureSubscriptionForPurchase",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "subscriptionId",
-                        "description": "Azure Subscription Id",
-                        "required": true,
-                        "type": "Guid"
-                    },
-                    {
-                        "in": "query",
-                        "name": "galleryItemId",
-                        "description": "Fully qualified gallery id",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "query",
-                        "name": "accountId",
-                        "description": "Account id",
-                        "required": false,
-                        "type": "Guid"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "$ref": "#/definitions/ISubscriptionAccount"
-                        }
-                    }
-                }
-            },
-            "get": {
-                "tags": [
-                    "subscription"
-                ],
-                "summary": "GetAzureSubscriptionForUser",
-                "description": "Returns azure subscriptions across tenants.",
-                "operationId": "getAzureSubscriptionForUser",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "subscriptionId",
-                        "description": "Azure subscription id",
-                        "required": false,
-                        "type": "Guid"
-                    },
-                    {
-                        "in": "query",
-                        "name": "queryAcrossTenants",
-                        "description": "Query across multiple tenants if the logged in user is member of multiple tenants",
-                        "required": false,
-                        "type": "boolean"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/ISubscriptionAccount"
-                            }
-                        }
-                    }
-                }
-            },
-            "get": {
-                "tags": [
-                    "subscription"
-                ],
                 "summary": "GetSubscriptionAccount",
                 "description": "Retrieves the subscription id associated to an account or null if no subscription is associated.",
                 "operationId": "getSubscriptionAccount",
@@ -1029,102 +1128,9 @@
                         }
                     }
                 }
-            },
-            "put": {
-                "tags": [
-                    "subscription"
-                ],
-                "summary": "LinkAccount",
-                "description": "Links the account to a subscription.",
-                "operationId": "linkAccount",
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "subscriptionId",
-                        "description": "The subscription identifier.",
-                        "required": true,
-                        "type": "Guid"
-                    },
-                    {
-                        "in": "query",
-                        "name": "providerNamespaceId",
-                        "description": "The provider namespace identifier.",
-                        "required": true,
-                        "type": "AccountProviderNamespace"
-                    },
-                    {
-                        "in": "query",
-                        "name": "accountId",
-                        "description": "The account identifier.",
-                        "required": true,
-                        "type": "Guid"
-                    },
-                    {
-                        "in": "query",
-                        "name": "ownerId",
-                        "description": "The account owner identifier.",
-                        "required": true,
-                        "type": "Guid"
-                    },
-                    {
-                        "in": "query",
-                        "name": "hydrate",
-                        "description": "Whether or not the hydrate the account into ARM.",
-                        "required": false,
-                        "type": "boolean"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation"
-                    }
-                }
-            },
-            "delete": {
-                "tags": [
-                    "subscription"
-                ],
-                "summary": "UnlinkAccount",
-                "description": "Unlinks an account from the subscription.",
-                "operationId": "unlinkAccount",
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "subscriptionId",
-                        "description": "The subscription identifier.",
-                        "required": true,
-                        "type": "Guid"
-                    },
-                    {
-                        "in": "query",
-                        "name": "providerNamespaceId",
-                        "description": "The provider namespace identifier.",
-                        "required": true,
-                        "type": "AccountProviderNamespace"
-                    },
-                    {
-                        "in": "query",
-                        "name": "accountId",
-                        "description": "The account identifier.",
-                        "required": true,
-                        "type": "Guid"
-                    },
-                    {
-                        "in": "query",
-                        "name": "ownerId",
-                        "description": "The account owner identifier.",
-                        "required": true,
-                        "type": "Guid"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation"
-                    }
-                }
             }
         },
-        "_apis/commerce/usageevents/{resourceName}": {
+        "_apis/commerce/usageevents": {
             "get": {
                 "tags": [
                     "usageEvents"

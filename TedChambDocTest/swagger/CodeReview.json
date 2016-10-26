@@ -68,7 +68,7 @@
         "https"
     ],
     "paths": {
-        "{project}/_apis/codereview/reviews/{reviewId}/attachments/{attachmentId}": {
+        "{project}/_apis/codereview/reviews/{reviewId}/attachments": {
             "post": {
                 "tags": [
                     "attachments"
@@ -117,6 +117,55 @@
                     }
                 }
             },
+            "get": {
+                "tags": [
+                    "attachments"
+                ],
+                "summary": "GetAttachments",
+                "description": "",
+                "operationId": "getAttachments",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "project",
+                        "description": "Project ID or project name",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "reviewId",
+                        "description": "",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "in": "query",
+                        "name": "modifiedSince",
+                        "description": "",
+                        "required": false,
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Attachment"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "{project}/_apis/codereview/reviews/{reviewId}/attachments/{attachmentId}": {
             "delete": {
                 "tags": [
                     "attachments"
@@ -198,56 +247,9 @@
                         }
                     }
                 }
-            },
-            "get": {
-                "tags": [
-                    "attachments"
-                ],
-                "summary": "GetAttachments",
-                "description": "",
-                "operationId": "getAttachments",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
-                        "name": "reviewId",
-                        "description": "",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "query",
-                        "name": "modifiedSince",
-                        "description": "",
-                        "required": false,
-                        "type": "string",
-                        "format": "date-time"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/Attachment"
-                            }
-                        }
-                    }
-                }
             }
         },
-        "{project}/_apis/codereview/reviews/{reviewId}/iterations/{iterationId}/changes/{changeId}/{fileTarget}": {
+        "{project}/_apis/codereview/reviews/{reviewId}/iterations/{iterationId}/changes": {
             "get": {
                 "tags": [
                     "changes"
@@ -315,7 +317,9 @@
                         }
                     }
                 }
-            },
+            }
+        },
+        "{project}/_apis/codereview/reviews/{reviewId}/iterations/{iterationId}/changes/{changeId}/{fileTarget}": {
             "get": {
                 "tags": [
                     "changes"
@@ -376,7 +380,7 @@
                 }
             }
         },
-        "{project}/_apis/codereview/reviews/{reviewId}/threads/{threadId}/comments/{commentId}": {
+        "{project}/_apis/codereview/reviews/{reviewId}/threads/{threadId}/comments": {
             "post": {
                 "tags": [
                     "comments"
@@ -431,6 +435,55 @@
                     }
                 }
             },
+            "get": {
+                "tags": [
+                    "comments"
+                ],
+                "summary": "GetComments",
+                "description": "Read all comments for a review comment thread by id for a review. GET /_apis/CodeReview/reviews/{id}/Threads/{threadId}/comments",
+                "operationId": "getComments",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "project",
+                        "description": "Project ID or project name",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "reviewId",
+                        "description": "",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "in": "path",
+                        "name": "threadId",
+                        "description": "",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "DiscussionComment"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "{project}/_apis/codereview/reviews/{reviewId}/threads/{threadId}/comments/{commentId}": {
             "delete": {
                 "tags": [
                     "comments"
@@ -525,53 +578,6 @@
                         "description": "successful operation",
                         "schema": {
                             "type": "DiscussionComment"
-                        }
-                    }
-                }
-            },
-            "get": {
-                "tags": [
-                    "comments"
-                ],
-                "summary": "GetComments",
-                "description": "Read all comments for a review comment thread by id for a review. GET /_apis/CodeReview/reviews/{id}/Threads/{threadId}/comments",
-                "operationId": "getComments",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
-                        "name": "reviewId",
-                        "description": "",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "path",
-                        "name": "threadId",
-                        "description": "",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int32"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "type": "DiscussionComment"
-                            }
                         }
                     }
                 }
@@ -892,7 +898,7 @@
                 }
             }
         },
-        "{project}/_apis/codereview/reviews/{reviewId}/iterations/{iterationId}": {
+        "{project}/_apis/codereview/reviews/{reviewId}/iterations": {
             "post": {
                 "tags": [
                     "iterations"
@@ -926,50 +932,6 @@
                     {
                         "in": "path",
                         "name": "reviewId",
-                        "description": "",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int32"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "$ref": "#/definitions/Iteration"
-                        }
-                    }
-                }
-            },
-            "get": {
-                "tags": [
-                    "iterations"
-                ],
-                "summary": "GetIteration",
-                "description": "",
-                "operationId": "getIteration",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
-                        "name": "reviewId",
-                        "description": "",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "path",
-                        "name": "iterationId",
                         "description": "",
                         "required": true,
                         "type": "integer",
@@ -1027,6 +989,52 @@
                             "items": {
                                 "$ref": "#/definitions/Iteration"
                             }
+                        }
+                    }
+                }
+            }
+        },
+        "{project}/_apis/codereview/reviews/{reviewId}/iterations/{iterationId}": {
+            "get": {
+                "tags": [
+                    "iterations"
+                ],
+                "summary": "GetIteration",
+                "description": "",
+                "operationId": "getIteration",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "project",
+                        "description": "Project ID or project name",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "reviewId",
+                        "description": "",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "in": "path",
+                        "name": "iterationId",
+                        "description": "",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/Iteration"
                         }
                     }
                 }
@@ -1088,7 +1096,7 @@
                 }
             }
         },
-        "{project}/_apis/codereview/reviews/{reviewId}/threads/{threadId}/comments/{commentId}/likes/{userId}": {
+        "{project}/_apis/codereview/reviews/{reviewId}/threads/{threadId}/comments/{commentId}/likes": {
             "post": {
                 "tags": [
                     "likes"
@@ -1154,59 +1162,6 @@
                     }
                 }
             },
-            "delete": {
-                "tags": [
-                    "likes"
-                ],
-                "summary": "DeleteLike",
-                "description": "Withdraw like of a comment in a thread for a review. DELETE /_apis/CodeReview/reviews/{id}/threads/{id}/comments/{commentId}/likes/{userId}",
-                "operationId": "deleteLike",
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
-                        "name": "reviewId",
-                        "description": "",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "path",
-                        "name": "threadId",
-                        "description": "",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "path",
-                        "name": "commentId",
-                        "description": "",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int16"
-                    },
-                    {
-                        "in": "path",
-                        "name": "userId",
-                        "description": "",
-                        "required": true,
-                        "type": "Guid"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation"
-                    }
-                }
-            },
             "get": {
                 "tags": [
                     "likes"
@@ -1259,6 +1214,61 @@
                                 "type": "IdentityRef"
                             }
                         }
+                    }
+                }
+            }
+        },
+        "{project}/_apis/codereview/reviews/{reviewId}/threads/{threadId}/comments/{commentId}/likes/{userId}": {
+            "delete": {
+                "tags": [
+                    "likes"
+                ],
+                "summary": "DeleteLike",
+                "description": "Withdraw like of a comment in a thread for a review. DELETE /_apis/CodeReview/reviews/{id}/threads/{id}/comments/{commentId}/likes/{userId}",
+                "operationId": "deleteLike",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "project",
+                        "description": "Project ID or project name",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "reviewId",
+                        "description": "",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "in": "path",
+                        "name": "threadId",
+                        "description": "",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "in": "path",
+                        "name": "commentId",
+                        "description": "",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int16"
+                    },
+                    {
+                        "in": "path",
+                        "name": "userId",
+                        "description": "",
+                        "required": true,
+                        "type": "Guid"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
                     }
                 }
             }
@@ -1447,7 +1457,7 @@
                 }
             }
         },
-        "{project}/_apis/codereview/reviews/{reviewId}/reviewers/{reviewerId}": {
+        "{project}/_apis/codereview/reviews/{reviewId}/reviewers": {
             "post": {
                 "tags": [
                     "reviewers"
@@ -1500,43 +1510,6 @@
                     }
                 }
             },
-            "delete": {
-                "tags": [
-                    "reviewers"
-                ],
-                "summary": "DeleteReviewer",
-                "description": "",
-                "operationId": "deleteReviewer",
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
-                        "name": "reviewId",
-                        "description": "",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "path",
-                        "name": "reviewerId",
-                        "description": "",
-                        "required": true,
-                        "type": "Guid"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation"
-                    }
-                }
-            },
             "get": {
                 "tags": [
                     "reviewers"
@@ -1573,6 +1546,45 @@
                                 "$ref": "#/definitions/Reviewer"
                             }
                         }
+                    }
+                }
+            }
+        },
+        "{project}/_apis/codereview/reviews/{reviewId}/reviewers/{reviewerId}": {
+            "delete": {
+                "tags": [
+                    "reviewers"
+                ],
+                "summary": "DeleteReviewer",
+                "description": "",
+                "operationId": "deleteReviewer",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "project",
+                        "description": "Project ID or project name",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "reviewId",
+                        "description": "",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "in": "path",
+                        "name": "reviewerId",
+                        "description": "",
+                        "required": true,
+                        "type": "Guid"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
                     }
                 }
             },
@@ -1687,9 +1699,7 @@
                         }
                     }
                 }
-            }
-        },
-        "{project}/_apis/codereview/reviews/{reviewId}": {
+            },
             "post": {
                 "tags": [
                     "reviews"
@@ -1729,7 +1739,9 @@
                         }
                     }
                 }
-            },
+            }
+        },
+        "{project}/_apis/codereview/reviews/{reviewId}": {
             "delete": {
                 "tags": [
                     "reviews"
@@ -2122,7 +2134,7 @@
                 }
             }
         },
-        "{project}/_apis/codereview/reviews/{reviewId}/iterations/{iterationId}/statuses/{statusId}": {
+        "{project}/_apis/codereview/reviews/{reviewId}/iterations/{iterationId}/statuses": {
             "post": {
                 "tags": [
                     "statuses"
@@ -2183,6 +2195,55 @@
                 "tags": [
                     "statuses"
                 ],
+                "summary": "GetIterationStatuses",
+                "description": "Get all the statuses associated with an iteration. GET /_apis/codereview/reviews/{reviewId}/iterations/{iterationId}/statuses",
+                "operationId": "getIterationStatuses",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "project",
+                        "description": "Project ID or project name",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "reviewId",
+                        "description": "",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "in": "path",
+                        "name": "iterationId",
+                        "description": "",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Status"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "{project}/_apis/codereview/reviews/{reviewId}/iterations/{iterationId}/statuses/{statusId}": {
+            "get": {
+                "tags": [
+                    "statuses"
+                ],
                 "summary": "GetIterationStatus",
                 "description": "Get the specific iteration status. GET /_apis/codereview/reviews/{reviewId}/iterations/{iterationId}/statuses/{statusId}",
                 "operationId": "getIterationStatus",
@@ -2227,53 +2288,6 @@
                         "description": "successful operation",
                         "schema": {
                             "$ref": "#/definitions/Status"
-                        }
-                    }
-                }
-            },
-            "get": {
-                "tags": [
-                    "statuses"
-                ],
-                "summary": "GetIterationStatuses",
-                "description": "Get all the statuses associated with an iteration. GET /_apis/codereview/reviews/{reviewId}/iterations/{iterationId}/statuses",
-                "operationId": "getIterationStatuses",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
-                        "name": "reviewId",
-                        "description": "",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "path",
-                        "name": "iterationId",
-                        "description": "",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int32"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/Status"
-                            }
                         }
                     }
                 }
@@ -2343,7 +2357,7 @@
                 }
             }
         },
-        "{project}/_apis/codereview/reviews/{reviewId}/statuses/{statusId}": {
+        "{project}/_apis/codereview/reviews/{reviewId}/statuses": {
             "post": {
                 "tags": [
                     "statuses"
@@ -2396,6 +2410,47 @@
                 "tags": [
                     "statuses"
                 ],
+                "summary": "GetReviewStatuses",
+                "description": "Get all the statuses associated with a review. GET /_apis/codereview/reviews/{reviewId}/statuses",
+                "operationId": "getReviewStatuses",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "project",
+                        "description": "Project ID or project name",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "reviewId",
+                        "description": "",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Status"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "{project}/_apis/codereview/reviews/{reviewId}/statuses/{statusId}": {
+            "get": {
+                "tags": [
+                    "statuses"
+                ],
                 "summary": "GetReviewStatus",
                 "description": "Get the specific review status. GET /_apis/codereview/reviews/{reviewId}/statuses/{statusId}",
                 "operationId": "getReviewStatus",
@@ -2432,45 +2487,6 @@
                         "description": "successful operation",
                         "schema": {
                             "$ref": "#/definitions/Status"
-                        }
-                    }
-                }
-            },
-            "get": {
-                "tags": [
-                    "statuses"
-                ],
-                "summary": "GetReviewStatuses",
-                "description": "Get all the statuses associated with a review. GET /_apis/codereview/reviews/{reviewId}/statuses",
-                "operationId": "getReviewStatuses",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
-                        "name": "reviewId",
-                        "description": "",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int32"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/Status"
-                            }
                         }
                     }
                 }
@@ -2532,7 +2548,7 @@
                 }
             }
         },
-        "{project}/_apis/codereview/reviews/{reviewId}/threads/{threadId}": {
+        "{project}/_apis/codereview/reviews/{reviewId}/threads": {
             "post": {
                 "tags": [
                     "threads"
@@ -2570,66 +2586,6 @@
                         "required": true,
                         "type": "integer",
                         "format": "int32"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "$ref": "#/definitions/CommentThread"
-                        }
-                    }
-                }
-            },
-            "get": {
-                "tags": [
-                    "threads"
-                ],
-                "summary": "GetThread",
-                "description": "Get a review comment thread by id for a review. Return 304 if comment thread hasn't modified based on ifModifiedSince header. GET /_apis/CodeReview/reviews/{id}/Threads/{threadId}",
-                "operationId": "getThread",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
-                        "name": "reviewId",
-                        "description": "",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "path",
-                        "name": "threadId",
-                        "description": "",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "query",
-                        "name": "trackingCriteria",
-                        "description": "",
-                        "required": false,
-                        "schema": {
-                            "$ref": "#/definitions/CommentTrackingCriteria"
-                        }
-                    },
-                    {
-                        "in": "header",
-                        "name": "ifModifiedSince",
-                        "description": "Fetch latest comment data if it was modified after IfModifiedSince timestamp.",
-                        "required": false,
-                        "type": "DateTimeOffset"
                     }
                 ],
                 "responses": {
@@ -2693,6 +2649,68 @@
                             "items": {
                                 "$ref": "#/definitions/CommentThread"
                             }
+                        }
+                    }
+                }
+            }
+        },
+        "{project}/_apis/codereview/reviews/{reviewId}/threads/{threadId}": {
+            "get": {
+                "tags": [
+                    "threads"
+                ],
+                "summary": "GetThread",
+                "description": "Get a review comment thread by id for a review. Return 304 if comment thread hasn't modified based on ifModifiedSince header. GET /_apis/CodeReview/reviews/{id}/Threads/{threadId}",
+                "operationId": "getThread",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "project",
+                        "description": "Project ID or project name",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "reviewId",
+                        "description": "",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "in": "path",
+                        "name": "threadId",
+                        "description": "",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "in": "query",
+                        "name": "trackingCriteria",
+                        "description": "",
+                        "required": false,
+                        "schema": {
+                            "$ref": "#/definitions/CommentTrackingCriteria"
+                        }
+                    },
+                    {
+                        "in": "header",
+                        "name": "ifModifiedSince",
+                        "description": "Fetch latest comment data if it was modified after IfModifiedSince timestamp.",
+                        "required": false,
+                        "type": "DateTimeOffset"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/CommentThread"
                         }
                     }
                 }

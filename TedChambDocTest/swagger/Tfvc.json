@@ -59,7 +59,7 @@
         "https"
     ],
     "paths": {
-        "{project}/_apis/tfvc/branches/{*path}": {
+        "{project}/_apis/tfvc/branches/{path}": {
             "get": {
                 "tags": [
                     "branches"
@@ -108,7 +108,9 @@
                         }
                     }
                 }
-            },
+            }
+        },
+        "{project}/_apis/tfvc/branches": {
             "get": {
                 "tags": [
                     "branches"
@@ -271,7 +273,7 @@
                 }
             }
         },
-        "{project}/_apis/tfvc/changesets/{id}": {
+        "{project}/_apis/tfvc/changesets": {
             "post": {
                 "tags": [
                     "changesets"
@@ -312,6 +314,79 @@
                     }
                 }
             },
+            "get": {
+                "tags": [
+                    "changesets"
+                ],
+                "summary": "GetChangesets",
+                "description": "Retrieve Tfvc changesets",
+                "operationId": "getChangesets",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "project",
+                        "description": "Project ID or project name",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "maxCommentLength",
+                        "description": "",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "in": "query",
+                        "name": "skip",
+                        "description": "",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "in": "query",
+                        "name": "top",
+                        "description": "",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "in": "query",
+                        "name": "orderby",
+                        "description": "",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "searchCriteria",
+                        "description": "",
+                        "required": false,
+                        "schema": {
+                            "$ref": "#/definitions/TfvcChangesetSearchCriteria"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/TfvcChangesetRef"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "{project}/_apis/tfvc/changesets/{id}": {
             "get": {
                 "tags": [
                     "changesets"
@@ -413,77 +488,6 @@
                         "description": "successful operation",
                         "schema": {
                             "$ref": "#/definitions/TfvcChangeset"
-                        }
-                    }
-                }
-            },
-            "get": {
-                "tags": [
-                    "changesets"
-                ],
-                "summary": "GetChangesets",
-                "description": "Retrieve Tfvc changesets",
-                "operationId": "getChangesets",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": false,
-                        "type": "string"
-                    },
-                    {
-                        "in": "query",
-                        "name": "maxCommentLength",
-                        "description": "",
-                        "required": false,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "query",
-                        "name": "skip",
-                        "description": "",
-                        "required": false,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "query",
-                        "name": "top",
-                        "description": "",
-                        "required": false,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "query",
-                        "name": "orderby",
-                        "description": "",
-                        "required": false,
-                        "type": "string"
-                    },
-                    {
-                        "in": "query",
-                        "name": "searchCriteria",
-                        "description": "",
-                        "required": false,
-                        "schema": {
-                            "$ref": "#/definitions/TfvcChangesetSearchCriteria"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/TfvcChangesetRef"
-                            }
                         }
                     }
                 }
@@ -646,7 +650,7 @@
                 }
             }
         },
-        "{project}/_apis/tfvc/items/{*path}": {
+        "{project}/_apis/tfvc/items/{path}": {
             "get": {
                 "tags": [
                     "items"
@@ -787,67 +791,6 @@
                         "description": "successful operation",
                         "schema": {
                             "type": "Stream"
-                        }
-                    }
-                }
-            },
-            "get": {
-                "tags": [
-                    "items"
-                ],
-                "summary": "GetItems",
-                "description": "Get a list of Tfvc items",
-                "operationId": "getItems",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": false,
-                        "type": "string"
-                    },
-                    {
-                        "in": "query",
-                        "name": "scopePath",
-                        "description": "",
-                        "required": false,
-                        "type": "string"
-                    },
-                    {
-                        "in": "query",
-                        "name": "recursionLevel",
-                        "description": "",
-                        "required": false,
-                        "type": "VersionControlRecursionType"
-                    },
-                    {
-                        "in": "query",
-                        "name": "includeLinks",
-                        "description": "",
-                        "required": false,
-                        "type": "boolean"
-                    },
-                    {
-                        "in": "query",
-                        "name": "versionDescriptor",
-                        "description": "",
-                        "required": false,
-                        "schema": {
-                            "$ref": "#/definitions/TfvcVersionDescriptor"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/TfvcItem"
-                            }
                         }
                     }
                 }
@@ -997,6 +940,69 @@
                 }
             }
         },
+        "{project}/_apis/tfvc/items": {
+            "get": {
+                "tags": [
+                    "items"
+                ],
+                "summary": "GetItems",
+                "description": "Get a list of Tfvc items",
+                "operationId": "getItems",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "project",
+                        "description": "Project ID or project name",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "scopePath",
+                        "description": "",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "recursionLevel",
+                        "description": "",
+                        "required": false,
+                        "type": "VersionControlRecursionType"
+                    },
+                    {
+                        "in": "query",
+                        "name": "includeLinks",
+                        "description": "",
+                        "required": false,
+                        "type": "boolean"
+                    },
+                    {
+                        "in": "query",
+                        "name": "versionDescriptor",
+                        "description": "",
+                        "required": false,
+                        "schema": {
+                            "$ref": "#/definitions/TfvcVersionDescriptor"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/TfvcItem"
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "_apis/tfvc/labels/{labelId}/items": {
             "get": {
                 "tags": [
@@ -1090,7 +1096,9 @@
                         }
                     }
                 }
-            },
+            }
+        },
+        "{project}/_apis/tfvc/labels": {
             "get": {
                 "tags": [
                     "labels"

@@ -86,7 +86,7 @@
         "https"
     ],
     "paths": {
-        "_apis/distributedtask/pools/{poolId}/agents/{agentId}": {
+        "_apis/distributedtask/pools/{poolId}/agents": {
             "post": {
                 "tags": [
                     "agents"
@@ -128,6 +128,81 @@
                     }
                 }
             },
+            "get": {
+                "tags": [
+                    "agents"
+                ],
+                "summary": "GetAgents",
+                "description": "",
+                "operationId": "getAgents",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "poolId",
+                        "description": "",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "in": "query",
+                        "name": "agentName",
+                        "description": "",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "includeCapabilities",
+                        "description": "",
+                        "required": false,
+                        "type": "boolean"
+                    },
+                    {
+                        "in": "query",
+                        "name": "includeAssignedRequest",
+                        "description": "",
+                        "required": false,
+                        "type": "boolean"
+                    },
+                    {
+                        "in": "query",
+                        "name": "propertyFilters",
+                        "description": "",
+                        "required": false,
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "demands",
+                        "description": "",
+                        "required": false,
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/TaskAgent"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "_apis/distributedtask/pools/{poolId}/agents/{agentId}": {
             "delete": {
                 "tags": [
                     "agents"
@@ -216,79 +291,6 @@
                         "description": "successful operation",
                         "schema": {
                             "$ref": "#/definitions/TaskAgent"
-                        }
-                    }
-                }
-            },
-            "get": {
-                "tags": [
-                    "agents"
-                ],
-                "summary": "GetAgents",
-                "description": "",
-                "operationId": "getAgents",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "poolId",
-                        "description": "",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "query",
-                        "name": "agentName",
-                        "description": "",
-                        "required": false,
-                        "type": "string"
-                    },
-                    {
-                        "in": "query",
-                        "name": "includeCapabilities",
-                        "description": "",
-                        "required": false,
-                        "type": "boolean"
-                    },
-                    {
-                        "in": "query",
-                        "name": "includeAssignedRequest",
-                        "description": "",
-                        "required": false,
-                        "type": "boolean"
-                    },
-                    {
-                        "in": "query",
-                        "name": "propertyFilters",
-                        "description": "",
-                        "required": false,
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "in": "query",
-                        "name": "demands",
-                        "description": "",
-                        "required": false,
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/TaskAgent"
-                            }
                         }
                     }
                 }
@@ -641,6 +643,64 @@
                     }
                 }
             },
+            "patch": {
+                "tags": [
+                    "jobrequests"
+                ],
+                "summary": "UpdateAgentRequest",
+                "description": "",
+                "operationId": "updateAgentRequest",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/TaskAgentJobRequest"
+                        }
+                    },
+                    {
+                        "in": "path",
+                        "name": "poolId",
+                        "description": "",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "in": "path",
+                        "name": "requestId",
+                        "description": "",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    {
+                        "in": "query",
+                        "name": "lockToken",
+                        "description": "",
+                        "required": true,
+                        "type": "Guid"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/TaskAgentJobRequest"
+                        }
+                    }
+                }
+            }
+        },
+        "_apis/distributedtask/pools/{poolId}/jobrequests": {
             "get": {
                 "tags": [
                     "jobrequests"
@@ -825,65 +885,9 @@
                         }
                     }
                 }
-            },
-            "patch": {
-                "tags": [
-                    "jobrequests"
-                ],
-                "summary": "UpdateAgentRequest",
-                "description": "",
-                "operationId": "updateAgentRequest",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "body",
-                        "name": "body",
-                        "description": "",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/TaskAgentJobRequest"
-                        }
-                    },
-                    {
-                        "in": "path",
-                        "name": "poolId",
-                        "description": "",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "path",
-                        "name": "requestId",
-                        "description": "",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int64"
-                    },
-                    {
-                        "in": "query",
-                        "name": "lockToken",
-                        "description": "",
-                        "required": true,
-                        "type": "Guid"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "$ref": "#/definitions/TaskAgentJobRequest"
-                        }
-                    }
-                }
             }
         },
-        "{project}/_apis/distributedtask/machinegroups/{machineGroupId}": {
+        "{project}/_apis/distributedtask/machinegroups": {
             "post": {
                 "tags": [
                     "machinegroups"
@@ -924,6 +928,53 @@
                     }
                 }
             },
+            "get": {
+                "tags": [
+                    "machinegroups"
+                ],
+                "summary": "GetDeploymentMachineGroups",
+                "description": "",
+                "operationId": "getDeploymentMachineGroups",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "project",
+                        "description": "Project ID or project name",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "machineGroupName",
+                        "description": "",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "actionFilter",
+                        "description": "",
+                        "required": false,
+                        "type": "MachineGroupActionFilter"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/DeploymentMachineGroup"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "{project}/_apis/distributedtask/machinegroups/{machineGroupId}": {
             "delete": {
                 "tags": [
                     "machinegroups"
@@ -993,51 +1044,6 @@
                         "description": "successful operation",
                         "schema": {
                             "$ref": "#/definitions/DeploymentMachineGroup"
-                        }
-                    }
-                }
-            },
-            "get": {
-                "tags": [
-                    "machinegroups"
-                ],
-                "summary": "GetDeploymentMachineGroups",
-                "description": "",
-                "operationId": "getDeploymentMachineGroups",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "query",
-                        "name": "machineGroupName",
-                        "description": "",
-                        "required": false,
-                        "type": "string"
-                    },
-                    {
-                        "in": "query",
-                        "name": "actionFilter",
-                        "description": "",
-                        "required": false,
-                        "type": "MachineGroupActionFilter"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/DeploymentMachineGroup"
-                            }
                         }
                     }
                 }
@@ -1232,7 +1238,9 @@
                         "description": "successful operation"
                     }
                 }
-            },
+            }
+        },
+        "_apis/distributedtask/pools/{poolId}/messages": {
             "get": {
                 "tags": [
                     "messages"
@@ -1417,7 +1425,9 @@
                         }
                     }
                 }
-            },
+            }
+        },
+        "_apis/distributedtask/packages/{packageType}/{platform}": {
             "get": {
                 "tags": [
                     "packages"
@@ -1499,7 +1509,7 @@
                 }
             }
         },
-        "_apis/distributedtask/pools/{poolId}": {
+        "_apis/distributedtask/pools": {
             "post": {
                 "tags": [
                     "pools"
@@ -1533,6 +1543,63 @@
                     }
                 }
             },
+            "get": {
+                "tags": [
+                    "pools"
+                ],
+                "summary": "GetAgentPools",
+                "description": "",
+                "operationId": "getAgentPools",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "poolName",
+                        "description": "",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "properties",
+                        "description": "",
+                        "required": false,
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "poolType",
+                        "description": "",
+                        "required": false,
+                        "type": "TaskAgentPoolType"
+                    },
+                    {
+                        "in": "query",
+                        "name": "actionFilter",
+                        "description": "",
+                        "required": false,
+                        "type": "TaskAgentPoolActionFilter"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/TaskAgentPool"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "_apis/distributedtask/pools/{poolId}": {
             "delete": {
                 "tags": [
                     "pools"
@@ -1598,61 +1665,6 @@
                         "description": "successful operation",
                         "schema": {
                             "$ref": "#/definitions/TaskAgentPool"
-                        }
-                    }
-                }
-            },
-            "get": {
-                "tags": [
-                    "pools"
-                ],
-                "summary": "GetAgentPools",
-                "description": "",
-                "operationId": "getAgentPools",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "query",
-                        "name": "poolName",
-                        "description": "",
-                        "required": false,
-                        "type": "string"
-                    },
-                    {
-                        "in": "query",
-                        "name": "properties",
-                        "description": "",
-                        "required": false,
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "in": "query",
-                        "name": "poolType",
-                        "description": "",
-                        "required": false,
-                        "type": "TaskAgentPoolType"
-                    },
-                    {
-                        "in": "query",
-                        "name": "actionFilter",
-                        "description": "",
-                        "required": false,
-                        "type": "TaskAgentPoolActionFilter"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/TaskAgentPool"
-                            }
                         }
                     }
                 }
@@ -1733,7 +1745,7 @@
                 }
             }
         },
-        "{project}/_apis/distributedtask/queues/{queueId}": {
+        "{project}/_apis/distributedtask/queues": {
             "post": {
                 "tags": [
                     "queues"
@@ -1796,6 +1808,53 @@
                     }
                 }
             },
+            "get": {
+                "tags": [
+                    "queues"
+                ],
+                "summary": "GetAgentQueues",
+                "description": "",
+                "operationId": "getAgentQueues",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "project",
+                        "description": "Project ID or project name",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "queueName",
+                        "description": "",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "actionFilter",
+                        "description": "",
+                        "required": false,
+                        "type": "TaskAgentQueueActionFilter"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/TaskAgentQueue"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "{project}/_apis/distributedtask/queues/{queueId}": {
             "delete": {
                 "tags": [
                     "queues"
@@ -1865,51 +1924,6 @@
                         "description": "successful operation",
                         "schema": {
                             "$ref": "#/definitions/TaskAgentQueue"
-                        }
-                    }
-                }
-            },
-            "get": {
-                "tags": [
-                    "queues"
-                ],
-                "summary": "GetAgentQueues",
-                "description": "",
-                "operationId": "getAgentQueues",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": false,
-                        "type": "string"
-                    },
-                    {
-                        "in": "query",
-                        "name": "queueName",
-                        "description": "",
-                        "required": false,
-                        "type": "string"
-                    },
-                    {
-                        "in": "query",
-                        "name": "actionFilter",
-                        "description": "",
-                        "required": false,
-                        "type": "TaskAgentQueueActionFilter"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/TaskAgentQueue"
-                            }
                         }
                     }
                 }
@@ -2008,7 +2022,7 @@
                 }
             }
         },
-        "{project}/_apis/distributedtask/serviceendpoints/{endpointId}": {
+        "{project}/_apis/distributedtask/serviceendpoints": {
             "post": {
                 "tags": [
                     "serviceendpoints"
@@ -2038,70 +2052,6 @@
                         "description": "Project ID or project name",
                         "required": true,
                         "type": "string"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "$ref": "#/definitions/ServiceEndpoint"
-                        }
-                    }
-                }
-            },
-            "delete": {
-                "tags": [
-                    "serviceendpoints"
-                ],
-                "summary": "DeleteServiceEndpoint",
-                "description": "",
-                "operationId": "deleteServiceEndpoint",
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
-                        "name": "endpointId",
-                        "description": "",
-                        "required": true,
-                        "type": "Guid"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation"
-                    }
-                }
-            },
-            "get": {
-                "tags": [
-                    "serviceendpoints"
-                ],
-                "summary": "GetServiceEndpointDetails",
-                "description": "",
-                "operationId": "getServiceEndpointDetails",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
-                        "name": "endpointId",
-                        "description": "",
-                        "required": true,
-                        "type": "Guid"
                     }
                 ],
                 "responses": {
@@ -2174,6 +2124,72 @@
                             "items": {
                                 "$ref": "#/definitions/ServiceEndpoint"
                             }
+                        }
+                    }
+                }
+            }
+        },
+        "{project}/_apis/distributedtask/serviceendpoints/{endpointId}": {
+            "delete": {
+                "tags": [
+                    "serviceendpoints"
+                ],
+                "summary": "DeleteServiceEndpoint",
+                "description": "",
+                "operationId": "deleteServiceEndpoint",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "project",
+                        "description": "Project ID or project name",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "endpointId",
+                        "description": "",
+                        "required": true,
+                        "type": "Guid"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    }
+                }
+            },
+            "get": {
+                "tags": [
+                    "serviceendpoints"
+                ],
+                "summary": "GetServiceEndpointDetails",
+                "description": "",
+                "operationId": "getServiceEndpointDetails",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "project",
+                        "description": "Project ID or project name",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "endpointId",
+                        "description": "",
+                        "required": true,
+                        "type": "Guid"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/ServiceEndpoint"
                         }
                     }
                 }
@@ -2266,7 +2282,7 @@
                 }
             }
         },
-        "_apis/distributedtask/pools/{poolId}/sessions/{sessionId}": {
+        "_apis/distributedtask/pools/{poolId}/sessions": {
             "post": {
                 "tags": [
                     "sessions"
@@ -2307,7 +2323,9 @@
                         }
                     }
                 }
-            },
+            }
+        },
+        "_apis/distributedtask/pools/{poolId}/sessions/{sessionId}": {
             "delete": {
                 "tags": [
                     "sessions"
@@ -2339,7 +2357,7 @@
                 }
             }
         },
-        "{project}/_apis/distributedtask/taskgroups/{taskGroupId}": {
+        "{project}/_apis/distributedtask/taskgroups": {
             "post": {
                 "tags": [
                     "taskgroups"
@@ -2380,6 +2398,48 @@
                     }
                 }
             },
+            "put": {
+                "tags": [
+                    "taskgroups"
+                ],
+                "summary": "UpdateTaskGroup",
+                "description": "",
+                "operationId": "updateTaskGroup",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/TaskGroup"
+                        }
+                    },
+                    {
+                        "in": "path",
+                        "name": "project",
+                        "description": "Project ID or project name",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/TaskGroup"
+                        }
+                    }
+                }
+            }
+        },
+        "{project}/_apis/distributedtask/taskgroups/{taskGroupId}": {
             "delete": {
                 "tags": [
                     "taskgroups"
@@ -2453,49 +2513,9 @@
                         }
                     }
                 }
-            },
-            "put": {
-                "tags": [
-                    "taskgroups"
-                ],
-                "summary": "UpdateTaskGroup",
-                "description": "",
-                "operationId": "updateTaskGroup",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "body",
-                        "name": "body",
-                        "description": "",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/TaskGroup"
-                        }
-                    },
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": true,
-                        "type": "string"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "$ref": "#/definitions/TaskGroup"
-                        }
-                    }
-                }
             }
         },
-        "_apis/distributedtask/tasks/{taskId}/{versionString}": {
+        "_apis/distributedtask/tasks/{taskId}": {
             "delete": {
                 "tags": [
                     "tasks"
@@ -2518,6 +2538,56 @@
                     }
                 }
             },
+            "get": {
+                "tags": [
+                    "tasks"
+                ],
+                "summary": "GetTaskDefinitions",
+                "description": "",
+                "operationId": "getTaskDefinitions",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "taskId",
+                        "description": "",
+                        "required": false,
+                        "type": "Guid"
+                    },
+                    {
+                        "in": "query",
+                        "name": "visibility",
+                        "description": "",
+                        "required": false,
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "scopeLocal",
+                        "description": "",
+                        "required": false,
+                        "type": "boolean"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/TaskDefinition"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "_apis/distributedtask/tasks/{taskId}/{versionString}": {
             "get": {
                 "tags": [
                     "tasks"
@@ -2618,54 +2688,6 @@
                         "description": "successful operation",
                         "schema": {
                             "$ref": "#/definitions/TaskDefinition"
-                        }
-                    }
-                }
-            },
-            "get": {
-                "tags": [
-                    "tasks"
-                ],
-                "summary": "GetTaskDefinitions",
-                "description": "",
-                "operationId": "getTaskDefinitions",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "taskId",
-                        "description": "",
-                        "required": false,
-                        "type": "Guid"
-                    },
-                    {
-                        "in": "query",
-                        "name": "visibility",
-                        "description": "",
-                        "required": false,
-                        "type": "array",
-                        "items": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "in": "query",
-                        "name": "scopeLocal",
-                        "description": "",
-                        "required": false,
-                        "type": "boolean"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/TaskDefinition"
-                            }
                         }
                     }
                 }
