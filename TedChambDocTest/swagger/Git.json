@@ -128,6 +128,8 @@
                 "description": "Gets a single blob.",
                 "operationId": "getBlob",
                 "produces": [
+                    "application/octet-stream",
+                    "application/zip",
                     "application/json"
                 ],
                 "parameters": [
@@ -175,118 +177,6 @@
                         }
                     }
                 }
-            },
-            "get": {
-                "tags": [
-                    "blobs"
-                ],
-                "summary": "GetBlobContent",
-                "description": "Gets a single blob.",
-                "operationId": "getBlobContent",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "repositoryId",
-                        "description": "",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
-                        "name": "sha1",
-                        "description": "",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": false,
-                        "type": "string"
-                    },
-                    {
-                        "in": "query",
-                        "name": "download",
-                        "description": "",
-                        "required": false,
-                        "type": "boolean"
-                    },
-                    {
-                        "in": "query",
-                        "name": "fileName",
-                        "description": "",
-                        "required": false,
-                        "type": "string"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "type": "Stream"
-                        }
-                    }
-                }
-            },
-            "get": {
-                "tags": [
-                    "blobs"
-                ],
-                "summary": "GetBlobZip",
-                "description": "Gets a single blob.",
-                "operationId": "getBlobZip",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "repositoryId",
-                        "description": "",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
-                        "name": "sha1",
-                        "description": "",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": false,
-                        "type": "string"
-                    },
-                    {
-                        "in": "query",
-                        "name": "download",
-                        "description": "",
-                        "required": false,
-                        "type": "boolean"
-                    },
-                    {
-                        "in": "query",
-                        "name": "fileName",
-                        "description": "",
-                        "required": false,
-                        "type": "string"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "type": "Stream"
-                        }
-                    }
-                }
             }
         },
         "{project}/_apis/git/repositories/{repositoryId}/blobs": {
@@ -301,7 +191,7 @@
                     "application/json"
                 ],
                 "produces": [
-                    "application/json"
+                    "application/zip"
                 ],
                 "parameters": [
                     {
@@ -394,53 +284,6 @@
                         "description": "successful operation",
                         "schema": {
                             "$ref": "#/definitions/GitBranchStats"
-                        }
-                    }
-                }
-            },
-            "get": {
-                "tags": [
-                    "branchStats"
-                ],
-                "summary": "GetBranches",
-                "description": "Retrieve statistics about all branches within a repository.",
-                "operationId": "getBranches",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "repositoryId",
-                        "description": "Friendly name or guid of repository",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": false,
-                        "type": "string"
-                    },
-                    {
-                        "in": "query",
-                        "name": "baseVersionDescriptor",
-                        "description": "",
-                        "required": false,
-                        "schema": {
-                            "$ref": "#/definitions/GitVersionDescriptor"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/GitBranchStats"
-                            }
                         }
                     }
                 }
@@ -885,75 +728,6 @@
                         }
                     }
                 }
-            },
-            "get": {
-                "tags": [
-                    "commits"
-                ],
-                "summary": "GetPushCommits",
-                "description": "Retrieve a list of commits associated with a particular push.",
-                "operationId": "getPushCommits",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "repositoryId",
-                        "description": "The id or friendly name of the repository. To use the friendly name, projectId must also be specified.",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "query",
-                        "name": "pushId",
-                        "description": "The id of the push.",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": false,
-                        "type": "string"
-                    },
-                    {
-                        "in": "query",
-                        "name": "top",
-                        "description": "The maximum number of commits to return (\"get the top x commits\").",
-                        "required": false,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "query",
-                        "name": "skip",
-                        "description": "The number of commits to skip.",
-                        "required": false,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "query",
-                        "name": "includeLinks",
-                        "description": "",
-                        "required": false,
-                        "type": "boolean"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/GitCommitRef"
-                            }
-                        }
-                    }
-                }
             }
         },
         "{project}/_apis/git/repositories/{repositoryId}/commitsbatch": {
@@ -1274,6 +1048,9 @@
                 "description": "Get Item Metadata and/or Content for a single item. The download parameter is to indicate whether the content should be available as a download or just sent as a stream in the response. Doesn't apply to zipped content which is always returned as a download.",
                 "operationId": "getItem",
                 "produces": [
+                    "application/octet-stream",
+                    "text/plain",
+                    "application/zip",
                     "application/json"
                 ],
                 "parameters": [
@@ -1348,264 +1125,6 @@
                         "description": "successful operation",
                         "schema": {
                             "$ref": "#/definitions/GitItem"
-                        }
-                    }
-                }
-            },
-            "get": {
-                "tags": [
-                    "items"
-                ],
-                "summary": "GetItemContent",
-                "description": "Get Item Metadata and/or Content for a single item. The download parameter is to indicate whether the content should be available as a download or just sent as a stream in the response. Doesn't apply to zipped content which is always returned as a download.",
-                "operationId": "getItemContent",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "repositoryId",
-                        "description": "",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "query",
-                        "name": "path",
-                        "description": "",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": false,
-                        "type": "string"
-                    },
-                    {
-                        "in": "query",
-                        "name": "scopePath",
-                        "description": "",
-                        "required": false,
-                        "type": "string"
-                    },
-                    {
-                        "in": "query",
-                        "name": "recursionLevel",
-                        "description": "",
-                        "required": false,
-                        "type": "VersionControlRecursionType"
-                    },
-                    {
-                        "in": "query",
-                        "name": "includeContentMetadata",
-                        "description": "",
-                        "required": false,
-                        "type": "boolean"
-                    },
-                    {
-                        "in": "query",
-                        "name": "latestProcessedChange",
-                        "description": "",
-                        "required": false,
-                        "type": "boolean"
-                    },
-                    {
-                        "in": "query",
-                        "name": "download",
-                        "description": "",
-                        "required": false,
-                        "type": "boolean"
-                    },
-                    {
-                        "in": "query",
-                        "name": "versionDescriptor",
-                        "description": "",
-                        "required": false,
-                        "schema": {
-                            "$ref": "#/definitions/GitVersionDescriptor"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "type": "Stream"
-                        }
-                    }
-                }
-            },
-            "get": {
-                "tags": [
-                    "items"
-                ],
-                "summary": "GetItemText",
-                "description": "Get Item Metadata and/or Content for a single item. The download parameter is to indicate whether the content should be available as a download or just sent as a stream in the response. Doesn't apply to zipped content which is always returned as a download.",
-                "operationId": "getItemText",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "repositoryId",
-                        "description": "",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "query",
-                        "name": "path",
-                        "description": "",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": false,
-                        "type": "string"
-                    },
-                    {
-                        "in": "query",
-                        "name": "scopePath",
-                        "description": "",
-                        "required": false,
-                        "type": "string"
-                    },
-                    {
-                        "in": "query",
-                        "name": "recursionLevel",
-                        "description": "",
-                        "required": false,
-                        "type": "VersionControlRecursionType"
-                    },
-                    {
-                        "in": "query",
-                        "name": "includeContentMetadata",
-                        "description": "",
-                        "required": false,
-                        "type": "boolean"
-                    },
-                    {
-                        "in": "query",
-                        "name": "latestProcessedChange",
-                        "description": "",
-                        "required": false,
-                        "type": "boolean"
-                    },
-                    {
-                        "in": "query",
-                        "name": "download",
-                        "description": "",
-                        "required": false,
-                        "type": "boolean"
-                    },
-                    {
-                        "in": "query",
-                        "name": "versionDescriptor",
-                        "description": "",
-                        "required": false,
-                        "schema": {
-                            "$ref": "#/definitions/GitVersionDescriptor"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "type": "Stream"
-                        }
-                    }
-                }
-            },
-            "get": {
-                "tags": [
-                    "items"
-                ],
-                "summary": "GetItemZip",
-                "description": "Get Item Metadata and/or Content for a single item. The download parameter is to indicate whether the content should be available as a download or just sent as a stream in the response. Doesn't apply to zipped content which is always returned as a download.",
-                "operationId": "getItemZip",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "repositoryId",
-                        "description": "",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "query",
-                        "name": "path",
-                        "description": "",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": false,
-                        "type": "string"
-                    },
-                    {
-                        "in": "query",
-                        "name": "scopePath",
-                        "description": "",
-                        "required": false,
-                        "type": "string"
-                    },
-                    {
-                        "in": "query",
-                        "name": "recursionLevel",
-                        "description": "",
-                        "required": false,
-                        "type": "VersionControlRecursionType"
-                    },
-                    {
-                        "in": "query",
-                        "name": "includeContentMetadata",
-                        "description": "",
-                        "required": false,
-                        "type": "boolean"
-                    },
-                    {
-                        "in": "query",
-                        "name": "latestProcessedChange",
-                        "description": "",
-                        "required": false,
-                        "type": "boolean"
-                    },
-                    {
-                        "in": "query",
-                        "name": "download",
-                        "description": "",
-                        "required": false,
-                        "type": "boolean"
-                    },
-                    {
-                        "in": "query",
-                        "name": "versionDescriptor",
-                        "description": "",
-                        "required": false,
-                        "schema": {
-                            "$ref": "#/definitions/GitVersionDescriptor"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "type": "Stream"
                         }
                     }
                 }
@@ -4799,6 +4318,7 @@
                 "description": "",
                 "operationId": "getTree",
                 "produces": [
+                    "application/zip",
                     "application/json"
                 ],
                 "parameters": [
@@ -4850,69 +4370,6 @@
                         "description": "successful operation",
                         "schema": {
                             "$ref": "#/definitions/GitTreeRef"
-                        }
-                    }
-                }
-            },
-            "get": {
-                "tags": [
-                    "trees"
-                ],
-                "summary": "GetTreeZip",
-                "description": "",
-                "operationId": "getTreeZip",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "repositoryId",
-                        "description": "",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
-                        "name": "sha1",
-                        "description": "",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": false,
-                        "type": "string"
-                    },
-                    {
-                        "in": "query",
-                        "name": "projectId",
-                        "description": "",
-                        "required": false,
-                        "type": "string"
-                    },
-                    {
-                        "in": "query",
-                        "name": "recursive",
-                        "description": "",
-                        "required": false,
-                        "type": "boolean"
-                    },
-                    {
-                        "in": "query",
-                        "name": "fileName",
-                        "description": "",
-                        "required": false,
-                        "type": "string"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "type": "Stream"
                         }
                     }
                 }

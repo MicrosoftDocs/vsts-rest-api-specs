@@ -169,58 +169,6 @@
                         }
                     }
                 }
-            },
-            "get": {
-                "tags": [
-                    "branches"
-                ],
-                "summary": "GetBranchRefs",
-                "description": "Get branch hierarchies below the specified scopePath",
-                "operationId": "getBranchRefs",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "query",
-                        "name": "scopePath",
-                        "description": "",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": false,
-                        "type": "string"
-                    },
-                    {
-                        "in": "query",
-                        "name": "includeDeleted",
-                        "description": "",
-                        "required": false,
-                        "type": "boolean"
-                    },
-                    {
-                        "in": "query",
-                        "name": "includeLinks",
-                        "description": "",
-                        "required": false,
-                        "type": "boolean"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/TfvcBranchRef"
-                            }
-                        }
-                    }
-                }
             }
         },
         "_apis/tfvc/changesets/{id}/changes": {
@@ -577,6 +525,7 @@
                     "application/json"
                 ],
                 "produces": [
+                    "application/zip",
                     "application/json"
                 ],
                 "parameters": [
@@ -608,46 +557,6 @@
                         }
                     }
                 }
-            },
-            "post": {
-                "tags": [
-                    "itemBatch"
-                ],
-                "summary": "GetItemsBatchZip",
-                "description": "Post for retrieving a set of items given a list of paths or a long path. Allows for specifying the recursionLevel and version descriptors for each path.",
-                "operationId": "getItemsBatchZip",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "body",
-                        "name": "body",
-                        "description": "",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/TfvcItemRequestData"
-                        }
-                    },
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": false,
-                        "type": "string"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "type": "Stream"
-                        }
-                    }
-                }
             }
         },
         "{project}/_apis/tfvc/items/{path}": {
@@ -659,6 +568,9 @@
                 "description": "Get Item Metadata and/or Content. The download parameter is to indicate whether the content should be available as a download or just sent as a stream in the response. Doesn't apply to zipped content which is always returned as a download.",
                 "operationId": "getItem",
                 "produces": [
+                    "application/octet-stream",
+                    "text/plain",
+                    "application/zip",
                     "application/json"
                 ],
                 "parameters": [
@@ -719,222 +631,6 @@
                         "description": "successful operation",
                         "schema": {
                             "$ref": "#/definitions/TfvcItem"
-                        }
-                    }
-                }
-            },
-            "get": {
-                "tags": [
-                    "items"
-                ],
-                "summary": "GetItemContent",
-                "description": "Get Item Metadata and/or Content. The download parameter is to indicate whether the content should be available as a download or just sent as a stream in the response. Doesn't apply to zipped content which is always returned as a download.",
-                "operationId": "getItemContent",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "query",
-                        "name": "path",
-                        "description": "",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": false,
-                        "type": "string"
-                    },
-                    {
-                        "in": "query",
-                        "name": "fileName",
-                        "description": "",
-                        "required": false,
-                        "type": "string"
-                    },
-                    {
-                        "in": "query",
-                        "name": "download",
-                        "description": "",
-                        "required": false,
-                        "type": "boolean"
-                    },
-                    {
-                        "in": "query",
-                        "name": "scopePath",
-                        "description": "",
-                        "required": false,
-                        "type": "string"
-                    },
-                    {
-                        "in": "query",
-                        "name": "recursionLevel",
-                        "description": "",
-                        "required": false,
-                        "type": "VersionControlRecursionType"
-                    },
-                    {
-                        "in": "query",
-                        "name": "versionDescriptor",
-                        "description": "",
-                        "required": false,
-                        "schema": {
-                            "$ref": "#/definitions/TfvcVersionDescriptor"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "type": "Stream"
-                        }
-                    }
-                }
-            },
-            "get": {
-                "tags": [
-                    "items"
-                ],
-                "summary": "GetItemText",
-                "description": "Get Item Metadata and/or Content. The download parameter is to indicate whether the content should be available as a download or just sent as a stream in the response. Doesn't apply to zipped content which is always returned as a download.",
-                "operationId": "getItemText",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "query",
-                        "name": "path",
-                        "description": "",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": false,
-                        "type": "string"
-                    },
-                    {
-                        "in": "query",
-                        "name": "fileName",
-                        "description": "",
-                        "required": false,
-                        "type": "string"
-                    },
-                    {
-                        "in": "query",
-                        "name": "download",
-                        "description": "",
-                        "required": false,
-                        "type": "boolean"
-                    },
-                    {
-                        "in": "query",
-                        "name": "scopePath",
-                        "description": "",
-                        "required": false,
-                        "type": "string"
-                    },
-                    {
-                        "in": "query",
-                        "name": "recursionLevel",
-                        "description": "",
-                        "required": false,
-                        "type": "VersionControlRecursionType"
-                    },
-                    {
-                        "in": "query",
-                        "name": "versionDescriptor",
-                        "description": "",
-                        "required": false,
-                        "schema": {
-                            "$ref": "#/definitions/TfvcVersionDescriptor"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "type": "Stream"
-                        }
-                    }
-                }
-            },
-            "get": {
-                "tags": [
-                    "items"
-                ],
-                "summary": "GetItemZip",
-                "description": "Get Item Metadata and/or Content. The download parameter is to indicate whether the content should be available as a download or just sent as a stream in the response. Doesn't apply to zipped content which is always returned as a download.",
-                "operationId": "getItemZip",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "query",
-                        "name": "path",
-                        "description": "",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": false,
-                        "type": "string"
-                    },
-                    {
-                        "in": "query",
-                        "name": "fileName",
-                        "description": "",
-                        "required": false,
-                        "type": "string"
-                    },
-                    {
-                        "in": "query",
-                        "name": "download",
-                        "description": "",
-                        "required": false,
-                        "type": "boolean"
-                    },
-                    {
-                        "in": "query",
-                        "name": "scopePath",
-                        "description": "",
-                        "required": false,
-                        "type": "string"
-                    },
-                    {
-                        "in": "query",
-                        "name": "recursionLevel",
-                        "description": "",
-                        "required": false,
-                        "type": "VersionControlRecursionType"
-                    },
-                    {
-                        "in": "query",
-                        "name": "versionDescriptor",
-                        "description": "",
-                        "required": false,
-                        "schema": {
-                            "$ref": "#/definitions/TfvcVersionDescriptor"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "type": "Stream"
                         }
                     }
                 }
@@ -1239,55 +935,6 @@
                         "description": "successful operation",
                         "schema": {
                             "$ref": "#/definitions/TfvcShelveset"
-                        }
-                    }
-                }
-            },
-            "get": {
-                "tags": [
-                    "shelvesets"
-                ],
-                "summary": "GetShelvesets",
-                "description": "Return a collection of shallow shelveset references.",
-                "operationId": "getShelvesets",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "query",
-                        "name": "requestData",
-                        "description": "name, owner, and maxCommentLength",
-                        "required": false,
-                        "schema": {
-                            "$ref": "#/definitions/TfvcShelvesetRequestData"
-                        }
-                    },
-                    {
-                        "in": "query",
-                        "name": "top",
-                        "description": "Max number of shelvesets to return",
-                        "required": false,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "query",
-                        "name": "skip",
-                        "description": "Number of shelvesets to skip",
-                        "required": false,
-                        "type": "integer",
-                        "format": "int32"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/TfvcShelvesetRef"
-                            }
                         }
                     }
                 }
