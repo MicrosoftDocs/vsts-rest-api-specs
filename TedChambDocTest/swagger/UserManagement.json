@@ -24,6 +24,9 @@
             "name": "inviteUsersBootstrap"
         },
         {
+            "name": "licenseCheck"
+        },
+        {
             "name": "userManagementSummary"
         },
         {
@@ -75,6 +78,45 @@
                         "description": "successful operation",
                         "schema": {
                             "$ref": "#/definitions/InviteFlowBootstrapData"
+                        }
+                    }
+                }
+            }
+        },
+        "_apis/usermanagement/licensecheck": {
+            "post": {
+                "tags": [
+                    "licenseCheck"
+                ],
+                "summary": "GetUsersNeedingLicenseUpgrade",
+                "description": "Gets the users who will get their license upgraded if added to a project with a role other than Stakeholder",
+                "operationId": "getUsersNeedingLicenseUpgrade",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "",
+                        "required": true,
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/definitions/User"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/User"
+                            }
                         }
                     }
                 }
@@ -132,6 +174,39 @@
                         "description": "successful operation",
                         "schema": {
                             "$ref": "#/definitions/AddUsersResponse"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "users"
+                ],
+                "summary": "EditUser",
+                "description": "Used to assign license, extensions are projects.",
+                "operationId": "editUser",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/User"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/EditUserResponse"
                         }
                     }
                 }
@@ -215,35 +290,6 @@
                         }
                     }
                 }
-            },
-            "put": {
-                "tags": [
-                    "users"
-                ],
-                "summary": "RemoveUserFromProject",
-                "description": "",
-                "operationId": "removeUserFromProject",
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "userId",
-                        "description": "",
-                        "required": true,
-                        "type": "Guid"
-                    },
-                    {
-                        "in": "query",
-                        "name": "projectId",
-                        "description": "",
-                        "required": true,
-                        "type": "Guid"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation"
-                    }
-                }
             }
         }
     },
@@ -282,6 +328,26 @@
                 },
                 "hasErrors": {
                     "type": "boolean"
+                },
+                "warningMessage": {
+                    "type": "string"
+                }
+            }
+        },
+        "EditUserResponse": {
+            "type": "object",
+            "properties": {
+                "editUser": {
+                    "$ref": "#/definitions/User"
+                },
+                "errorMessage": {
+                    "type": "string"
+                },
+                "failedEditUser": {
+                    "$ref": "#/definitions/UserErrorModel"
+                },
+                "hasErrors": {
+                    "type": "boolean"
                 }
             }
         },
@@ -304,16 +370,13 @@
             }
         },
         "ExtensionSummaryData": {
-            "type": "object",
+            "type": "SummaryData",
             "properties": {
                 "extensionId": {
-                    "type": "Guid"
+                    "type": "string"
                 },
                 "extensionName": {
                     "type": "string"
-                },
-                "licenseData": {
-                    "$ref": "#/definitions/LicenseSummaryData"
                 }
             }
         },
@@ -323,7 +386,7 @@
                 "extensions": {
                     "type": "array",
                     "items": {
-                        "type": "Extension"
+                        "type": "ExtensionSummaryData"
                     }
                 },
                 "projects": {
@@ -335,16 +398,8 @@
             }
         },
         "LicenseSummaryData": {
-            "type": "object",
+            "type": "SummaryData",
             "properties": {
-                "assigned": {
-                    "type": "integer",
-                    "format": "int32"
-                },
-                "available": {
-                    "type": "integer",
-                    "format": "int32"
-                },
                 "licenseName": {
                     "type": "string"
                 },
@@ -356,12 +411,8 @@
                         "paid",
                         "stakeholder",
                         "vSEnterprise",
-                        "vSProfesional"
+                        "vSProfessional"
                     ]
-                },
-                "total": {
-                    "type": "integer",
-                    "format": "int32"
                 }
             }
         },
@@ -385,6 +436,9 @@
         "Role": {
             "type": "object",
             "properties": {
+                "groupName": {
+                    "type": "string"
+                },
                 "name": {
                     "type": "string"
                 },
@@ -396,6 +450,23 @@
                         "contributor",
                         "projectAdministrator"
                     ]
+                }
+            }
+        },
+        "SummaryData": {
+            "type": "object",
+            "properties": {
+                "assigned": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "available": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "total": {
+                    "type": "integer",
+                    "format": "int32"
                 }
             }
         },
