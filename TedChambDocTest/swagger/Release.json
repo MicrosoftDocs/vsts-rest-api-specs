@@ -670,6 +670,28 @@
                         "description": "",
                         "required": false,
                         "type": "ReleaseDefinitionExpands"
+                    },
+                    {
+                        "in": "query",
+                        "name": "top",
+                        "description": "",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "in": "query",
+                        "name": "continuationToken",
+                        "description": "",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "queryOrder",
+                        "description": "",
+                        "required": false,
+                        "type": "ReleaseDefinitionQueryOrder"
                     }
                 ],
                 "responses": {
@@ -2660,7 +2682,7 @@
             "type": "DeploymentInput",
             "properties": {
                 "parallelExecution": {
-                    "$ref": "#/definitions/ParallelExecutionInput"
+                    "$ref": "#/definitions/ExecutionInput"
                 }
             }
         },
@@ -3627,6 +3649,19 @@
                 }
             }
         },
+        "ExecutionInput": {
+            "type": "object",
+            "properties": {
+                "parallelExecutionType": {
+                    "type": "ParallelExecutionTypes",
+                    "enum": [
+                        "none",
+                        "multiConfiguration",
+                        "multiMachine"
+                    ]
+                }
+            }
+        },
         "FavoriteItem": {
             "type": "object",
             "properties": {
@@ -3821,7 +3856,7 @@
             }
         },
         "MultiConfigInput": {
-            "type": "ParallelExecutionInput",
+            "type": "ParallelExecutionInputBase",
             "properties": {
                 "multipliers": {
                     "type": "string"
@@ -3829,12 +3864,12 @@
             }
         },
         "MultiMachineInput": {
-            "type": "ParallelExecutionInput",
+            "type": "ParallelExecutionInputBase",
             "properties": {
             }
         },
-        "ParallelExecutionInput": {
-            "type": "object",
+        "ParallelExecutionInputBase": {
+            "type": "ExecutionInput",
             "properties": {
                 "continueOnError": {
                     "type": "boolean"
@@ -3842,13 +3877,6 @@
                 "maxNumberOfAgents": {
                     "type": "integer",
                     "format": "int32"
-                },
-                "parallelExecutionType": {
-                    "type": "ParallelExecutionTypes",
-                    "enum": [
-                        "multiConfiguration",
-                        "multiMachine"
-                    ]
                 }
             }
         },
