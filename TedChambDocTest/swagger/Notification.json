@@ -19,7 +19,7 @@
     "basePath": "/",
     "tags": [
         {
-            "name": "eventNotifications"
+            "name": "batchNotificationOperations"
         },
         {
             "name": "events"
@@ -61,14 +61,14 @@
         }
     ], 
     "paths": {
-        "/_apis/notification/eventnotifications": {
+        "/_apis/notification/batchnotificationoperations": {
             "post": {
                 "tags": [
-                    "eventNotifications"
+                    "batchNotificationOperations"
                 ],
-                "summary": "SuspendNotifications",
+                "summary": "PerformBatchNotificationOperations",
                 "description": "",
-                "operationId": "suspendNotifications",
+                "operationId": "performBatchNotificationOperations",
                 "consumes": [
                     "application/json"
                 ],
@@ -79,10 +79,7 @@
                         "description": "",
                         "required": true,
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/SuspendNotificationKey"
-                            }
+                            "$ref": "#/definitions/BatchNotificationOperation"
                         }
                     }
                 ],
@@ -604,6 +601,23 @@
                 }
             }
         },
+        "BatchNotificationOperation": {
+            "type": "object",
+            "properties": {
+                "notificationOperation": {
+                    "enum": [
+                        "none",
+                        "suspendUnprocessed"
+                    ]
+                },
+                "notificationQueryConditions": {
+                    "type": "array",
+                    "items": {
+                        "type": "NotificationQueryCondition"
+                    }
+                }
+            }
+        },
         "ChatRoomSubscriptionChannel": {
             "type": "SubscriptionChannelWithAddress",
             "properties": {
@@ -956,6 +970,25 @@
                 },
                 "name": {
                     "description": "Gets or sets the friendly name of this category.",
+                    "type": "string"
+                }
+            }
+        },
+        "NotificationQueryCondition": {
+            "type": "object",
+            "properties": {
+                "eventInitiator": {
+                    "type": "string",
+                    "format": "uuid"
+                },
+                "eventType": {
+                    "type": "string"
+                },
+                "subscriber": {
+                    "type": "string",
+                    "format": "uuid"
+                },
+                "subscriptionId": {
                     "type": "string"
                 }
             }
@@ -1362,25 +1395,6 @@
             "properties": {
                 "enabled": {
                     "type": "boolean"
-                }
-            }
-        },
-        "SuspendNotificationKey": {
-            "type": "object",
-            "properties": {
-                "eventInitiator": {
-                    "type": "string",
-                    "format": "uuid"
-                },
-                "eventTypeName": {
-                    "type": "string"
-                },
-                "notificationSource": {
-                    "type": "string"
-                },
-                "subscriberId": {
-                    "type": "string",
-                    "format": "uuid"
                 }
             }
         },
