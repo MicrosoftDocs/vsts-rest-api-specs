@@ -51,6 +51,9 @@
             "name": "itemsBatch"
         },
         {
+            "name": "pullRequestAttachments"
+        },
+        {
             "name": "pullRequestCommits"
         },
         {
@@ -2050,6 +2053,211 @@
                         "description": "successful operation",
                         "schema": {
                             "$ref": "#/definitions/GitPullRequest"
+                        }
+                    }
+                }
+            }
+        },
+        "{project}/_apis/git/repositories/{repositoryId}/pullRequests/{pullRequestId}/attachments": {
+            "get": {
+                "tags": [
+                    "pullRequestAttachments"
+                ],
+                "summary": "GetAttachments",
+                "description": "",
+                "operationId": "getAttachments",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "repositoryId",
+                        "description": "",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "pullRequestId",
+                        "description": "",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "in": "path",
+                        "name": "project",
+                        "description": "Project ID or project name",
+                        "required": false,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Attachment"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "{project}/_apis/git/repositories/{repositoryId}/pullRequests/{pullRequestId}/attachments/{fileName}": {
+            "post": {
+                "tags": [
+                    "pullRequestAttachments"
+                ],
+                "summary": "CreateAttachment",
+                "description": "Create a new attachment",
+                "operationId": "createAttachment",
+                "consumes": [
+                    "application/octet-stream"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "Stream to upload",
+                        "required": true,
+                        "type": "Stream"
+                    },
+                    {
+                        "in": "path",
+                        "name": "fileName",
+                        "description": "",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "repositoryId",
+                        "description": "",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "pullRequestId",
+                        "description": "",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "in": "path",
+                        "name": "project",
+                        "description": "Project ID or project name",
+                        "required": false,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/Attachment"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "pullRequestAttachments"
+                ],
+                "summary": "DeleteAttachment",
+                "description": "",
+                "operationId": "deleteAttachment",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "fileName",
+                        "description": "",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "repositoryId",
+                        "description": "",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "pullRequestId",
+                        "description": "",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "in": "path",
+                        "name": "project",
+                        "description": "Project ID or project name",
+                        "required": false,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    }
+                }
+            },
+            "get": {
+                "tags": [
+                    "pullRequestAttachments"
+                ],
+                "summary": "GetAttachmentContent",
+                "description": "",
+                "operationId": "getAttachmentContent",
+                "produces": [
+                    "application/zip",
+                    "application/octet-stream"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "fileName",
+                        "description": "",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "repositoryId",
+                        "description": "",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "pullRequestId",
+                        "description": "",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "in": "path",
+                        "name": "project",
+                        "description": "Project ID or project name",
+                        "required": false,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "type": "Stream"
                         }
                     }
                 }
@@ -4446,6 +4654,47 @@
                 "progress": {
                     "type": "number",
                     "format": "double"
+                }
+            }
+        },
+        "Attachment": {
+            "type": "object",
+            "properties": {
+                "_links": {
+                    "type": "ReferenceLinks"
+                },
+                "author": {
+                    "description": "The person that uploaded this attachment",
+                    "type": "IdentityRef"
+                },
+                "contentHash": {
+                    "description": "Content hash of on-disk representation of file content. Its calculated by the server by using SHA1 hash function.",
+                    "type": "string"
+                },
+                "createdDate": {
+                    "description": "The time the attachment was uploaded",
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "description": {
+                    "description": "The description of the attachment, can be null.",
+                    "type": "string"
+                },
+                "displayName": {
+                    "description": "The display name of the attachment, can't be null or empty.",
+                    "type": "string"
+                },
+                "id": {
+                    "description": "Id of the code review attachment",
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "properties": {
+                    "type": "PropertiesCollection"
+                },
+                "url": {
+                    "description": "The url to download the content of the attachment",
+                    "type": "string"
                 }
             }
         },
