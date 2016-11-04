@@ -96,8 +96,7 @@
                     "200": {
                         "description": "successful operation",
                         "schema": {
-                            "type": "string",
-                            "format": "nameResolutionEntry"
+                            "$ref": "#/definitions/nameResolutionEntry"
                         }
                     }
                 }
@@ -119,8 +118,7 @@
                         "description": "",
                         "required": true,
                         "schema": {
-                            "type": "string",
-                            "format": "nameResolutionEntry"
+                            "$ref": "#/definitions/nameResolutionEntry"
                         }
                     },
                     {
@@ -170,8 +168,7 @@
                     "description": "The identity objectIds that the user intends to add",
                     "type": "array",
                     "items": {
-                        "type": "string",
-                        "format": "valueType"
+                        "$ref": "#/definitions/valueType"
                     }
                 }
             }
@@ -201,8 +198,11 @@
             "type": "object",
             "properties": {
                 "searchKind": {
-                    "type": "string",
-                    "format": "accountSearchKind"
+                    "enum": [
+                        "unknown",
+                        "byId",
+                        "byName"
+                    ]
                 },
                 "searchValue": {
                     "type": "string"
@@ -222,12 +222,22 @@
                 }
             }
         },
-        "dataspaceHashRange": {
+        "coreProfileAttribute": {
             "type": "object",
             "allOf": [
                 {
                     "type": "string",
-                    "format": "valueType"
+                    "format": "generic"
+                }
+            ],
+            "properties": {
+            }
+        },
+        "dataspaceHashRange": {
+            "type": "object",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/valueType"
                 }
             ],
             "properties": {
@@ -269,8 +279,7 @@
             "type": "object",
             "allOf": [
                 {
-                    "type": "string",
-                    "format": "valueType"
+                    "$ref": "#/definitions/valueType"
                 }
             ],
             "properties": {
@@ -279,6 +288,25 @@
                     "format": "uuid"
                 },
                 "partitionKey": {
+                    "type": "string"
+                }
+            }
+        },
+        "directoryEntityResult": {
+            "type": "object",
+            "properties": {
+                "entity": {
+                    "type": "string",
+                    "format": "iDirectoryEntity"
+                },
+                "entityState": {
+                    "type": "string"
+                },
+                "exception": {
+                    "type": "string",
+                    "format": "exception"
+                },
+                "status": {
                     "type": "string"
                 }
             }
@@ -311,8 +339,11 @@
                     "$ref": "#/definitions/serviceInstance"
                 },
                 "status": {
-                    "type": "string",
-                    "format": "serviceStatus"
+                    "enum": [
+                        "assigned",
+                        "active",
+                        "moving"
+                    ]
                 },
                 "uri": {
                     "type": "string"
@@ -555,18 +586,27 @@
                 }
             }
         },
+        "identityDescriptor": {
+            "type": "object",
+            "properties": {
+                "identifier": {
+                    "type": "string"
+                },
+                "identityType": {
+                    "type": "string"
+                }
+            }
+        },
         "identityDirectoryEntityResult": {
             "type": "object",
             "allOf": [
                 {
-                    "type": "string",
-                    "format": "directoryEntityResult"
+                    "$ref": "#/definitions/directoryEntityResult"
                 }
             ],
             "properties": {
                 "identity": {
-                    "type": "string",
-                    "format": "tIdentity"
+                    "$ref": "#/definitions/tIdentity"
                 }
             }
         },
@@ -574,8 +614,7 @@
             "type": "object",
             "properties": {
                 "descriptor": {
-                    "type": "string",
-                    "format": "identityDescriptor"
+                    "$ref": "#/definitions/identityDescriptor"
                 },
                 "id": {
                     "type": "string",
@@ -727,11 +766,39 @@
                     }
                 },
                 "coreProfile": {
-                    "type": "string",
-                    "format": "profile"
+                    "$ref": "#/definitions/profile"
                 },
                 "migratingAvatar": {
                     "$ref": "#/definitions/migratingAvatar"
+                }
+            }
+        },
+        "nameResolutionEntry": {
+            "type": "object",
+            "properties": {
+                "isEnabled": {
+                    "type": "boolean"
+                },
+                "isPrimary": {
+                    "type": "boolean"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "namespace": {
+                    "type": "string"
+                },
+                "revision": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "tTL": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "value": {
+                    "type": "string",
+                    "format": "uuid"
                 }
             }
         },
@@ -757,11 +824,81 @@
                     "type": "boolean"
                 },
                 "searchKind": {
-                    "type": "string",
-                    "format": "organizationSearchKind"
+                    "enum": [
+                        "unknown",
+                        "byId",
+                        "byName",
+                        "byTenantId"
+                    ]
                 },
                 "searchValue": {
                     "type": "string"
+                }
+            }
+        },
+        "profile": {
+            "type": "object",
+            "properties": {
+                "applicationContainer": {
+                    "type": "string",
+                    "format": "attributesContainer"
+                },
+                "coreAttributes": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "$ref": "#/definitions/coreProfileAttribute"
+                    }
+                },
+                "coreRevision": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "id": {
+                    "type": "string",
+                    "format": "uuid"
+                },
+                "revision": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "timeStamp": {
+                    "type": "string",
+                    "format": "date-time"
+                }
+            }
+        },
+        "profileAttribute": {
+            "type": "object",
+            "allOf": [
+                {
+                    "type": "string",
+                    "format": "generic"
+                }
+            ],
+            "properties": {
+            }
+        },
+        "propertiesCollection": {
+            "type": "object",
+            "properties": {
+                "count": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "item": {
+                    "type": "object"
+                },
+                "keys": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "values": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
                 }
             }
         },
@@ -770,8 +907,7 @@
             "properties": {
                 "properties": {
                     "description": "Property collection",
-                    "type": "string",
-                    "format": "propertiesCollection"
+                    "$ref": "#/definitions/propertiesCollection"
                 }
             }
         },
@@ -802,8 +938,7 @@
             "type": "object",
             "allOf": [
                 {
-                    "type": "string",
-                    "format": "valueType"
+                    "$ref": "#/definitions/valueType"
                 }
             ],
             "properties": {
@@ -847,8 +982,7 @@
             "type": "object",
             "properties": {
                 "m_regionWeights": {
-                    "type": "string",
-                    "format": "propertiesCollection"
+                    "$ref": "#/definitions/propertiesCollection"
                 }
             }
         },
@@ -1103,6 +1237,11 @@
                 }
             }
         },
+        "tIdentity": {
+            "type": "object",
+            "properties": {
+            }
+        },
         "traceDefinition": {
             "type": "object",
             "properties": {
@@ -1116,8 +1255,13 @@
                     "type": "string"
                 },
                 "level": {
-                    "type": "string",
-                    "format": "traceLevel"
+                    "enum": [
+                        "off",
+                        "error",
+                        "warning",
+                        "info",
+                        "verbose"
+                    ]
                 },
                 "method": {
                     "type": "string"
@@ -1156,6 +1300,11 @@
                 "userLogin": {
                     "type": "string"
                 }
+            }
+        },
+        "valueType": {
+            "type": "object",
+            "properties": {
             }
         }
     },
