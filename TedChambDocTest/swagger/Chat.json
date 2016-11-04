@@ -63,7 +63,7 @@
                         "description": "Information to create the room",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/RoomData"
+                            "$ref": "#/definitions/roomData"
                         }
                     }
                 ],
@@ -71,7 +71,7 @@
                     "200": {
                         "description": "successful operation",
                         "schema": {
-                            "$ref": "#/definitions/Room"
+                            "$ref": "#/definitions/room"
                         }
                     }
                 }
@@ -90,7 +90,7 @@
                     "200": {
                         "description": "successful operation",
                         "schema": {
-                            "$ref": "#/definitions/RoomCollection"
+                            "$ref": "#/definitions/roomCollection"
                         }
                     }
                 }
@@ -144,7 +144,7 @@
                     "200": {
                         "description": "successful operation",
                         "schema": {
-                            "$ref": "#/definitions/Room"
+                            "$ref": "#/definitions/room"
                         }
                     }
                 }
@@ -169,7 +169,7 @@
                         "description": "Room information",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/RoomData"
+                            "$ref": "#/definitions/roomData"
                         }
                     },
                     {
@@ -185,7 +185,7 @@
                     "200": {
                         "description": "successful operation",
                         "schema": {
-                            "$ref": "#/definitions/Room"
+                            "$ref": "#/definitions/room"
                         }
                     }
                 }
@@ -218,7 +218,7 @@
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/Message"
+                                "$ref": "#/definitions/message"
                             }
                         }
                     }
@@ -244,7 +244,7 @@
                         "description": "Content of the message to post",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/MessageData"
+                            "$ref": "#/definitions/messageData"
                         }
                     },
                     {
@@ -260,7 +260,7 @@
                     "200": {
                         "description": "successful operation",
                         "schema": {
-                            "$ref": "#/definitions/Message"
+                            "$ref": "#/definitions/message"
                         }
                     }
                 }
@@ -330,7 +330,7 @@
                     "200": {
                         "description": "successful operation",
                         "schema": {
-                            "$ref": "#/definitions/Message"
+                            "$ref": "#/definitions/message"
                         }
                     }
                 }
@@ -355,7 +355,7 @@
                         "description": "New message content",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/MessageData"
+                            "$ref": "#/definitions/messageData"
                         }
                     },
                     {
@@ -379,7 +379,7 @@
                     "200": {
                         "description": "successful operation",
                         "schema": {
-                            "$ref": "#/definitions/Message"
+                            "$ref": "#/definitions/message"
                         }
                     }
                 }
@@ -410,7 +410,7 @@
                     "200": {
                         "description": "successful operation",
                         "schema": {
-                            "$ref": "#/definitions/UserCollection"
+                            "$ref": "#/definitions/userCollection"
                         }
                     }
                 }
@@ -449,7 +449,7 @@
                     "200": {
                         "description": "successful operation",
                         "schema": {
-                            "$ref": "#/definitions/User"
+                            "$ref": "#/definitions/user"
                         }
                     }
                 }
@@ -471,7 +471,7 @@
                         "description": "user model information",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/UserData"
+                            "$ref": "#/definitions/userData"
                         }
                     },
                     {
@@ -531,7 +531,7 @@
         }
     },
     "definitions": {
-        "Message": {
+        "message": {
             "type": "object",
             "properties": {
                 "content": {
@@ -554,7 +554,8 @@
                 },
                 "postedBy": {
                     "description": "User who posted the message. May be null if message came from a system account",
-                    "type": "IdentityRef"
+                    "type": "string",
+                    "format": "identityRef"
                 },
                 "postedRoomId": {
                     "description": "Id of the room in which message is posted",
@@ -568,7 +569,7 @@
                 }
             }
         },
-        "MessageData": {
+        "messageData": {
             "type": "object",
             "properties": {
                 "content": {
@@ -576,12 +577,13 @@
                 }
             }
         },
-        "Room": {
+        "room": {
             "type": "object",
             "properties": {
                 "createdBy": {
                     "description": "Room creator user",
-                    "type": "IdentityRef"
+                    "type": "string",
+                    "format": "identityRef"
                 },
                 "createdDate": {
                     "description": "Room creation date",
@@ -616,12 +618,17 @@
                 }
             }
         },
-        "RoomCollection": {
-            "type": "array",
+        "roomCollection": {
+            "type": "object",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/array"
+                }
+            ],
             "properties": {
             }
         },
-        "RoomData": {
+        "roomData": {
             "type": "object",
             "properties": {
                 "description": {
@@ -634,7 +641,7 @@
                 }
             }
         },
-        "User": {
+        "user": {
             "type": "object",
             "properties": {
                 "isOnline": {
@@ -658,22 +665,37 @@
                 },
                 "user": {
                     "description": "The shallow reference for the user",
-                    "type": "IdentityRef"
+                    "type": "string",
+                    "format": "identityRef"
                 }
             }
         },
-        "UserCollection": {
-            "type": "array",
+        "userCollection": {
+            "type": "object",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/array"
+                }
+            ],
             "properties": {
             }
         },
-        "UserData": {
+        "userData": {
             "type": "object",
             "properties": {
                 "userId": {
                     "type": "string"
                 }
             }
+        }
+    },
+    "parameters": {
+        "api-Version": {
+            "name": "api-version",
+            "in": "query",
+            "description": "Version of the API to use.  This should be set to '3.1-preview' to use this version of the api.",
+            "required": true,
+            "type": "string"
         }
     },
     "externalDocs": {

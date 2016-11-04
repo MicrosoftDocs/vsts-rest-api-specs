@@ -18,7 +18,7 @@
     "basePath": "/",
     "tags": [
         {
-            "name": "eventNotifications"
+            "name": "batchNotificationOperations"
         },
         {
             "name": "events"
@@ -60,14 +60,14 @@
         }
     ], 
     "paths": {
-        "/_apis/notification/eventnotifications": {
+        "/_apis/notification/batchnotificationoperations": {
             "post": {
                 "tags": [
-                    "eventNotifications"
+                    "batchNotificationOperations"
                 ],
-                "summary": "SuspendNotifications",
+                "summary": "PerformBatchNotificationOperations",
                 "description": "",
-                "operationId": "suspendNotifications",
+                "operationId": "performBatchNotificationOperations",
                 "consumes": [
                     "application/json"
                 ],
@@ -78,10 +78,7 @@
                         "description": "",
                         "required": true,
                         "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/SuspendNotificationKey"
-                            }
+                            "$ref": "#/definitions/batchNotificationOperation"
                         }
                     }
                 ],
@@ -112,14 +109,16 @@
                         "name": "body",
                         "description": "",
                         "required": true,
-                        "type": "VssNotificationEvent"
+                        "type": "string",
+                        "format": "vssNotificationEvent"
                     }
                 ],
                 "responses": {
                     "200": {
                         "description": "successful operation",
                         "schema": {
-                            "type": "VssNotificationEvent"
+                            "type": "string",
+                            "format": "vssNotificationEvent"
                         }
                     }
                 }
@@ -151,7 +150,7 @@
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/NotificationEventType"
+                                "$ref": "#/definitions/notificationEventType"
                             }
                         }
                     }
@@ -182,7 +181,7 @@
                     "200": {
                         "description": "successful operation",
                         "schema": {
-                            "$ref": "#/definitions/NotificationEventType"
+                            "$ref": "#/definitions/notificationEventType"
                         }
                     }
                 }
@@ -209,7 +208,7 @@
                         "description": "",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/FieldValuesQuery"
+                            "$ref": "#/definitions/fieldValuesQuery"
                         }
                     },
                     {
@@ -226,7 +225,7 @@
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/NotificationEventField"
+                                "$ref": "#/definitions/notificationEventField"
                             }
                         }
                     }
@@ -254,7 +253,7 @@
                         "description": "",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/ArtifactSubscription"
+                            "$ref": "#/definitions/artifactSubscription"
                         }
                     }
                 ],
@@ -262,7 +261,7 @@
                     "200": {
                         "description": "successful operation",
                         "schema": {
-                            "$ref": "#/definitions/ArtifactSubscription"
+                            "$ref": "#/definitions/artifactSubscription"
                         }
                     }
                 }
@@ -297,7 +296,7 @@
                     "200": {
                         "description": "successful operation",
                         "schema": {
-                            "$ref": "#/definitions/ArtifactSubscription"
+                            "$ref": "#/definitions/artifactSubscription"
                         }
                     }
                 }
@@ -347,7 +346,7 @@
                         "description": "",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/NotificationStatisticsQuery"
+                            "$ref": "#/definitions/notificationStatisticsQuery"
                         }
                     }
                 ],
@@ -357,7 +356,7 @@
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/NotificationStatistic"
+                                "$ref": "#/definitions/notificationStatistic"
                             }
                         }
                     }
@@ -385,7 +384,7 @@
                         "description": "",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/SubscriptionQuery"
+                            "$ref": "#/definitions/subscriptionQuery"
                         }
                     }
                 ],
@@ -395,7 +394,7 @@
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/NotificationSubscription"
+                                "$ref": "#/definitions/notificationSubscription"
                             }
                         }
                     }
@@ -423,7 +422,7 @@
                         "description": "",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/NotificationSubscription"
+                            "$ref": "#/definitions/notificationSubscription"
                         }
                     }
                 ],
@@ -431,7 +430,7 @@
                     "200": {
                         "description": "successful operation",
                         "schema": {
-                            "$ref": "#/definitions/NotificationSubscription"
+                            "$ref": "#/definitions/notificationSubscription"
                         }
                     }
                 }
@@ -483,7 +482,7 @@
                     "200": {
                         "description": "successful operation",
                         "schema": {
-                            "$ref": "#/definitions/NotificationSubscription"
+                            "$ref": "#/definitions/notificationSubscription"
                         }
                     }
                 }
@@ -508,7 +507,7 @@
                         "description": "",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/NotificationSubscription"
+                            "$ref": "#/definitions/notificationSubscription"
                         }
                     },
                     {
@@ -523,7 +522,7 @@
                     "200": {
                         "description": "successful operation",
                         "schema": {
-                            "$ref": "#/definitions/NotificationSubscription"
+                            "$ref": "#/definitions/notificationSubscription"
                         }
                     }
                 }
@@ -546,7 +545,7 @@
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/NotificationSubscriptionTemplate"
+                                "$ref": "#/definitions/notificationSubscriptionTemplate"
                             }
                         }
                     }
@@ -555,13 +554,23 @@
         }
     },
     "definitions": {
-        "ActorFilter": {
-            "type": "RoleBasedFilter",
+        "actorFilter": {
+            "type": "object",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/roleBasedFilter"
+                }
+            ],
             "properties": {
             }
         },
-        "ArtifactFilter": {
-            "type": "BaseSubscriptionFilter",
+        "artifactFilter": {
+            "type": "object",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/baseSubscriptionFilter"
+                }
+            ],
             "properties": {
                 "artifactId": {
                     "type": "string"
@@ -577,7 +586,7 @@
                 }
             }
         },
-        "ArtifactSubscription": {
+        "artifactSubscription": {
             "type": "object",
             "properties": {
                 "artifactId": {
@@ -592,7 +601,7 @@
                 }
             }
         },
-        "BaseSubscriptionFilter": {
+        "baseSubscriptionFilter": {
             "type": "object",
             "properties": {
                 "eventType": {
@@ -603,31 +612,63 @@
                 }
             }
         },
-        "ChatRoomSubscriptionChannel": {
-            "type": "SubscriptionChannelWithAddress",
+        "batchNotificationOperation": {
+            "type": "object",
+            "properties": {
+                "notificationOperation": {
+                    "enum": [
+                        "none",
+                        "suspendUnprocessed"
+                    ]
+                },
+                "notificationQueryConditions": {
+                    "type": "array",
+                    "items": {
+                                "$ref": "#/definitions/notificationQueryCondition"
+                    }
+                }
+            }
+        },
+        "chatRoomSubscriptionChannel": {
+            "type": "object",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/subscriptionChannelWithAddress"
+                }
+            ],
             "properties": {
                 "type": {
                     "type": "string"
                 }
             }
         },
-        "EmailHtmlSubscriptionChannel": {
-            "type": "SubscriptionChannelWithAddress",
+        "emailHtmlSubscriptionChannel": {
+            "type": "object",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/subscriptionChannelWithAddress"
+                }
+            ],
             "properties": {
                 "type": {
                     "type": "string"
                 }
             }
         },
-        "EmailPlaintextSubscriptionChannel": {
-            "type": "SubscriptionChannelWithAddress",
+        "emailPlaintextSubscriptionChannel": {
+            "type": "object",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/subscriptionChannelWithAddress"
+                }
+            ],
             "properties": {
                 "type": {
                     "type": "string"
                 }
             }
         },
-        "EventBacklogStatus": {
+        "eventBacklogStatus": {
             "type": "object",
             "properties": {
                 "eventTypeName": {
@@ -643,18 +684,23 @@
                 }
             }
         },
-        "ExpressionFilter": {
-            "type": "BaseSubscriptionFilter",
+        "expressionFilter": {
+            "type": "object",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/baseSubscriptionFilter"
+                }
+            ],
             "properties": {
                 "criteria": {
-                    "$ref": "#/definitions/ExpressionFilterModel"
+                    "$ref": "#/definitions/expressionFilterModel"
                 },
                 "type": {
                     "type": "string"
                 }
             }
         },
-        "ExpressionFilterClause": {
+        "expressionFilterClause": {
             "type": "object",
             "properties": {
                 "fieldName": {
@@ -677,7 +723,7 @@
                 }
             }
         },
-        "ExpressionFilterGroup": {
+        "expressionFilterGroup": {
             "type": "object",
             "properties": {
                 "end": {
@@ -697,21 +743,21 @@
                 }
             }
         },
-        "ExpressionFilterModel": {
+        "expressionFilterModel": {
             "type": "object",
             "properties": {
                 "clauses": {
                     "description": "Flat list of clauses in this subscription",
                     "type": "array",
                     "items": {
-                        "type": "ExpressionFilterClause"
+                                "$ref": "#/definitions/expressionFilterClause"
                     }
                 },
                 "groups": {
                     "description": "Grouping of clauses in the subscription",
                     "type": "array",
                     "items": {
-                        "type": "ExpressionFilterGroup"
+                                "$ref": "#/definitions/expressionFilterGroup"
                     }
                 },
                 "maxGroupLevel": {
@@ -721,8 +767,13 @@
                 }
             }
         },
-        "FieldInputValues": {
-            "type": "InputValues",
+        "fieldInputValues": {
+            "type": "object",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/inputValues"
+                }
+            ],
             "properties": {
                 "operators": {
                     "type": "array",
@@ -733,13 +784,18 @@
                 }
             }
         },
-        "FieldValuesQuery": {
-            "type": "InputValuesQuery",
+        "fieldValuesQuery": {
+            "type": "object",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/inputValuesQuery"
+                }
+            ],
             "properties": {
                 "inputValues": {
                     "type": "array",
                     "items": {
-                        "type": "FieldInputValues"
+                                "$ref": "#/definitions/fieldInputValues"
                     }
                 },
                 "scope": {
@@ -747,12 +803,17 @@
                 }
             }
         },
-        "IgnoreFilter": {
-            "type": "RoleBasedFilter",
+        "ignoreFilter": {
+            "type": "object",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/roleBasedFilter"
+                }
+            ],
             "properties": {
             }
         },
-        "ISubscriptionChannel": {
+        "iSubscriptionChannel": {
             "type": "object",
             "properties": {
                 "type": {
@@ -760,7 +821,7 @@
                 }
             }
         },
-        "ISubscriptionFilter": {
+        "iSubscriptionFilter": {
             "type": "object",
             "properties": {
                 "eventType": {
@@ -771,7 +832,7 @@
                 }
             }
         },
-        "MessageQueueSubscriptionChannel": {
+        "messageQueueSubscriptionChannel": {
             "type": "object",
             "properties": {
                 "type": {
@@ -779,7 +840,7 @@
                 }
             }
         },
-        "NotificationBacklogStatus": {
+        "notificationBacklogStatus": {
             "type": "object",
             "properties": {
                 "channel": {
@@ -795,29 +856,29 @@
                 }
             }
         },
-        "NotificationEventBacklogStatus": {
+        "notificationEventBacklogStatus": {
             "type": "object",
             "properties": {
                 "eventBacklogStatus": {
                     "type": "array",
                     "items": {
-                        "type": "EventBacklogStatus"
+                                "$ref": "#/definitions/eventBacklogStatus"
                     }
                 },
                 "notificationBacklogStatus": {
                     "type": "array",
                     "items": {
-                        "type": "NotificationBacklogStatus"
+                                "$ref": "#/definitions/notificationBacklogStatus"
                     }
                 }
             }
         },
-        "NotificationEventField": {
+        "notificationEventField": {
             "type": "object",
             "properties": {
                 "fieldType": {
                     "description": "Gets or sets the type of this field.",
-                    "$ref": "#/definitions/NotificationEventFieldType"
+                    "$ref": "#/definitions/notificationEventFieldType"
                 },
                 "id": {
                     "description": "Gets or sets the unique identifier of this field.",
@@ -840,7 +901,7 @@
                 }
             }
         },
-        "NotificationEventFieldType": {
+        "notificationEventFieldType": {
             "type": "object",
             "properties": {
                 "id": {
@@ -850,7 +911,7 @@
                 "operatorConstraints": {
                     "type": "array",
                     "items": {
-                        "type": "OperatorConstraint"
+                                "$ref": "#/definitions/operatorConstraint"
                     }
                 },
                 "operators": {
@@ -862,25 +923,25 @@
                 },
                 "value": {
                     "description": "Gets or sets the value definition of this field like the getValuesMethod and template to display in the UI",
-                    "$ref": "#/definitions/ValueDefinition"
+                    "$ref": "#/definitions/valueDefinition"
                 }
             }
         },
-        "NotificationEventPublisher": {
+        "notificationEventPublisher": {
             "type": "object",
             "properties": {
                 "id": {
                     "type": "string"
                 },
                 "subscriptionManagementInfo": {
-                    "$ref": "#/definitions/SubscriptionManagement"
+                    "$ref": "#/definitions/subscriptionManagement"
                 },
                 "url": {
                     "type": "string"
                 }
             }
         },
-        "NotificationEventRole": {
+        "notificationEventRole": {
             "type": "object",
             "properties": {
                 "id": {
@@ -893,23 +954,23 @@
                 }
             }
         },
-        "NotificationEventType": {
+        "notificationEventType": {
             "type": "object",
             "properties": {
                 "category": {
-                    "$ref": "#/definitions/NotificationEventTypeCategory"
+                    "$ref": "#/definitions/notificationEventTypeCategory"
                 },
                 "color": {
                     "description": "Gets or sets the color representing this event type. Example: rgb(128,245,211) or #fafafa",
                     "type": "string"
                 },
                 "eventPublisher": {
-                    "$ref": "#/definitions/NotificationEventPublisher"
+                    "$ref": "#/definitions/notificationEventPublisher"
                 },
                 "fields": {
                     "type": "object",
                     "additionalProperties": {
-                        "$ref": "#/definitions/NotificationEventField"
+                        "$ref": "#/definitions/notificationEventField"
                     }
                 },
                 "hasInitiator": {
@@ -930,7 +991,7 @@
                 "roles": {
                     "type": "array",
                     "items": {
-                        "type": "NotificationEventRole"
+                                "$ref": "#/definitions/notificationEventRole"
                     }
                 },
                 "supportedScopes": {
@@ -946,7 +1007,7 @@
                 }
             }
         },
-        "NotificationEventTypeCategory": {
+        "notificationEventTypeCategory": {
             "type": "object",
             "properties": {
                 "id": {
@@ -959,7 +1020,26 @@
                 }
             }
         },
-        "NotificationStatistic": {
+        "notificationQueryCondition": {
+            "type": "object",
+            "properties": {
+                "eventInitiator": {
+                    "type": "string",
+                    "format": "uuid"
+                },
+                "eventType": {
+                    "type": "string"
+                },
+                "subscriber": {
+                    "type": "string",
+                    "format": "uuid"
+                },
+                "subscriptionId": {
+                    "type": "string"
+                }
+            }
+        },
+        "notificationStatistic": {
             "type": "object",
             "properties": {
                 "date": {
@@ -989,22 +1069,23 @@
                     ]
                 },
                 "user": {
-                    "type": "IdentityRef"
+                    "type": "string",
+                    "format": "identityRef"
                 }
             }
         },
-        "NotificationStatisticsQuery": {
+        "notificationStatisticsQuery": {
             "type": "object",
             "properties": {
                 "conditions": {
                     "type": "array",
                     "items": {
-                        "type": "NotificationStatisticsQueryConditions"
+                                "$ref": "#/definitions/notificationStatisticsQueryConditions"
                     }
                 }
             }
         },
-        "NotificationStatisticsQueryConditions": {
+        "notificationStatisticsQueryConditions": {
             "type": "object",
             "properties": {
                 "date": {
@@ -1034,21 +1115,28 @@
                     ]
                 },
                 "user": {
-                    "type": "IdentityRef"
+                    "type": "string",
+                    "format": "identityRef"
                 }
             }
         },
-        "NotificationSubscription": {
-            "type": "NotificationSubscriptionBase",
+        "notificationSubscription": {
+            "type": "object",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/notificationSubscriptionBase"
+                }
+            ],
             "properties": {
                 "_links": {
-                    "type": "ReferenceLinks"
+                    "type": "string",
+                    "format": "referenceLinks"
                 },
                 "adminConfig": {
-                    "$ref": "#/definitions/SubscriptionAdminConfig"
+                    "$ref": "#/definitions/subscriptionAdminConfig"
                 },
                 "channel": {
-                    "$ref": "#/definitions/ISubscriptionChannel"
+                    "$ref": "#/definitions/iSubscriptionChannel"
                 },
                 "flags": {
                     "enum": [
@@ -1059,14 +1147,15 @@
                     ]
                 },
                 "lastModifiedBy": {
-                    "type": "IdentityRef"
+                    "type": "string",
+                    "format": "identityRef"
                 },
                 "modifiedDate": {
                     "type": "string",
                     "format": "date-time"
                 },
                 "scope": {
-                    "$ref": "#/definitions/SubscriptionScope"
+                    "$ref": "#/definitions/subscriptionScope"
                 },
                 "status": {
                     "description": "Raw status of the subscription",
@@ -1087,7 +1176,8 @@
                     "type": "string"
                 },
                 "subscriber": {
-                    "type": "IdentityRef"
+                    "type": "string",
+                    "format": "identityRef"
                 },
                 "subscriptionProvider": {
                     "type": "string"
@@ -1096,31 +1186,31 @@
                     "type": "string"
                 },
                 "userConfig": {
-                    "$ref": "#/definitions/SubscriptionUserConfig"
+                    "$ref": "#/definitions/subscriptionUserConfig"
                 }
             }
         },
-        "NotificationSubscriptionBase": {
+        "notificationSubscriptionBase": {
             "type": "object",
             "properties": {
                 "description": {
                     "type": "string"
                 },
                 "filter": {
-                    "$ref": "#/definitions/ISubscriptionFilter"
+                    "$ref": "#/definitions/iSubscriptionFilter"
                 },
                 "id": {
                     "type": "string"
                 }
             }
         },
-        "NotificationSubscriptionsViewData": {
+        "notificationSubscriptionsViewData": {
             "type": "object",
             "properties": {
                 "eventTypes": {
                     "type": "object",
                     "additionalProperties": {
-                        "$ref": "#/definitions/NotificationEventType"
+                        "$ref": "#/definitions/notificationEventType"
                     }
                 },
                 "hasManagePermission": {
@@ -1162,32 +1252,38 @@
                 "publishers": {
                     "type": "object",
                     "additionalProperties": {
-                        "$ref": "#/definitions/NotificationEventPublisher"
+                        "$ref": "#/definitions/notificationEventPublisher"
                     }
                 },
                 "scopes": {
                     "type": "object",
                     "additionalProperties": {
-                        "$ref": "#/definitions/SubscriptionScope"
+                        "$ref": "#/definitions/subscriptionScope"
                     }
                 },
                 "subscriber": {
                     "description": "Subscriber to use when creating new subscriptions in the view",
-                    "type": "IdentityRef"
+                    "type": "string",
+                    "format": "identityRef"
                 },
                 "subscriptions": {
                     "type": "array",
                     "items": {
-                        "type": "NotificationSubscription"
+                                "$ref": "#/definitions/notificationSubscription"
                     }
                 }
             }
         },
-        "NotificationSubscriptionTemplate": {
-            "type": "NotificationSubscriptionBase",
+        "notificationSubscriptionTemplate": {
+            "type": "object",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/notificationSubscriptionBase"
+                }
+            ],
             "properties": {
                 "notificationEventInformation": {
-                    "$ref": "#/definitions/NotificationEventType"
+                    "$ref": "#/definitions/notificationEventType"
                 },
                 "type": {
                     "enum": [
@@ -1199,7 +1295,7 @@
                 }
             }
         },
-        "OperatorConstraint": {
+        "operatorConstraint": {
             "type": "object",
             "properties": {
                 "operator": {
@@ -1214,8 +1310,13 @@
                 }
             }
         },
-        "RoleBasedFilter": {
-            "type": "ExpressionFilter",
+        "roleBasedFilter": {
+            "type": "object",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/expressionFilter"
+                }
+            ],
             "properties": {
                 "exclusions": {
                     "type": "array",
@@ -1231,7 +1332,7 @@
                 }
             }
         },
-        "ServiceHooksSubscriptionChannel": {
+        "serviceHooksSubscriptionChannel": {
             "type": "object",
             "properties": {
                 "type": {
@@ -1239,15 +1340,20 @@
                 }
             }
         },
-        "SoapSubscriptionChannel": {
-            "type": "SubscriptionChannelWithAddress",
+        "soapSubscriptionChannel": {
+            "type": "object",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/subscriptionChannelWithAddress"
+                }
+            ],
             "properties": {
                 "type": {
                     "type": "string"
                 }
             }
         },
-        "SubscriptionAdminConfig": {
+        "subscriptionAdminConfig": {
             "type": "object",
             "properties": {
                 "blockUserDisable": {
@@ -1258,7 +1364,7 @@
                 }
             }
         },
-        "SubscriptionChannelWithAddress": {
+        "subscriptionChannelWithAddress": {
             "type": "object",
             "properties": {
                 "address": {
@@ -1269,7 +1375,7 @@
                 }
             }
         },
-        "SubscriptionManagement": {
+        "subscriptionManagement": {
             "type": "object",
             "properties": {
                 "serviceInstanceType": {
@@ -1281,13 +1387,13 @@
                 }
             }
         },
-        "SubscriptionQuery": {
+        "subscriptionQuery": {
             "type": "object",
             "properties": {
                 "conditions": {
                     "type": "array",
                     "items": {
-                        "type": "SubscriptionQueryCondition"
+                                "$ref": "#/definitions/subscriptionQueryCondition"
                     }
                 },
                 "queryFlags": {
@@ -1300,11 +1406,11 @@
                 }
             }
         },
-        "SubscriptionQueryCondition": {
+        "subscriptionQueryCondition": {
             "type": "object",
             "properties": {
                 "filter": {
-                    "$ref": "#/definitions/ISubscriptionFilter"
+                    "$ref": "#/definitions/iSubscriptionFilter"
                 },
                 "scope": {
                     "type": "string"
@@ -1321,8 +1427,13 @@
                 }
             }
         },
-        "SubscriptionScope": {
-            "type": "EventScope",
+        "subscriptionScope": {
+            "type": "object",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/eventScope"
+                }
+            ],
             "properties": {
                 "name": {
                     "description": "Gets or sets the name of this scope (for example, the name of a project)",
@@ -1330,13 +1441,13 @@
                 }
             }
         },
-        "SubscriptionStatisticViewData": {
+        "subscriptionStatisticViewData": {
             "type": "object",
             "properties": {
                 "events": {
                     "type": "object",
                     "additionalProperties": {
-                        "$ref": "#/definitions/NotificationEventType"
+                        "$ref": "#/definitions/notificationEventType"
                     }
                 },
                 "isAdmin": {
@@ -1351,12 +1462,12 @@
                 "subscriptions": {
                     "type": "object",
                     "additionalProperties": {
-                        "$ref": "#/definitions/NotificationSubscription"
+                        "$ref": "#/definitions/notificationSubscription"
                     }
                 }
             }
         },
-        "SubscriptionUserConfig": {
+        "subscriptionUserConfig": {
             "type": "object",
             "properties": {
                 "enabled": {
@@ -1364,34 +1475,20 @@
                 }
             }
         },
-        "SuspendNotificationKey": {
+        "unsupportedFilter": {
             "type": "object",
-            "properties": {
-                "eventInitiator": {
-                    "type": "string",
-                    "format": "uuid"
-                },
-                "eventTypeName": {
-                    "type": "string"
-                },
-                "notificationSource": {
-                    "type": "string"
-                },
-                "subscriberId": {
-                    "type": "string",
-                    "format": "uuid"
+            "allOf": [
+                {
+                    "$ref": "#/definitions/baseSubscriptionFilter"
                 }
-            }
-        },
-        "UnsupportedFilter": {
-            "type": "BaseSubscriptionFilter",
+            ],
             "properties": {
                 "type": {
                     "type": "string"
                 }
             }
         },
-        "UnsupportedSubscriptionChannel": {
+        "unsupportedSubscriptionChannel": {
             "type": "object",
             "properties": {
                 "type": {
@@ -1399,15 +1496,20 @@
                 }
             }
         },
-        "UserSubscriptionChannel": {
-            "type": "SubscriptionChannelWithAddress",
+        "userSubscriptionChannel": {
+            "type": "object",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/subscriptionChannelWithAddress"
+                }
+            ],
             "properties": {
                 "type": {
                     "type": "string"
                 }
             }
         },
-        "ValueDefinition": {
+        "valueDefinition": {
             "type": "object",
             "properties": {
                 "dataSource": {
@@ -1426,6 +1528,15 @@
                     "type": "string"
                 }
             }
+        }
+    },
+    "parameters": {
+        "api-Version": {
+            "name": "api-version",
+            "in": "query",
+            "description": "Version of the API to use.  This should be set to '3.1-preview' to use this version of the api.",
+            "required": true,
+            "type": "string"
         }
     },
     "externalDocs": {

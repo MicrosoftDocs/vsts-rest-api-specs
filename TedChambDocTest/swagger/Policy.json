@@ -71,7 +71,7 @@
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/PolicyConfiguration"
+                                "$ref": "#/definitions/policyConfiguration"
                             }
                         }
                     }
@@ -99,7 +99,7 @@
                         "description": "",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/PolicyConfiguration"
+                            "$ref": "#/definitions/policyConfiguration"
                         }
                     },
                     {
@@ -122,7 +122,7 @@
                     "200": {
                         "description": "successful operation",
                         "schema": {
-                            "$ref": "#/definitions/PolicyConfiguration"
+                            "$ref": "#/definitions/policyConfiguration"
                         }
                     }
                 }
@@ -188,7 +188,7 @@
                     "200": {
                         "description": "successful operation",
                         "schema": {
-                            "$ref": "#/definitions/PolicyConfiguration"
+                            "$ref": "#/definitions/policyConfiguration"
                         }
                     }
                 }
@@ -213,7 +213,7 @@
                         "description": "",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/PolicyConfiguration"
+                            "$ref": "#/definitions/policyConfiguration"
                         }
                     },
                     {
@@ -236,7 +236,7 @@
                     "200": {
                         "description": "successful operation",
                         "schema": {
-                            "$ref": "#/definitions/PolicyConfiguration"
+                            "$ref": "#/definitions/policyConfiguration"
                         }
                     }
                 }
@@ -292,7 +292,7 @@
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/PolicyConfiguration"
+                                "$ref": "#/definitions/policyConfiguration"
                             }
                         }
                     }
@@ -339,7 +339,7 @@
                     "200": {
                         "description": "successful operation",
                         "schema": {
-                            "$ref": "#/definitions/PolicyConfiguration"
+                            "$ref": "#/definitions/policyConfiguration"
                         }
                     }
                 }
@@ -401,7 +401,7 @@
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/PolicyEvaluationRecord"
+                                "$ref": "#/definitions/policyEvaluationRecord"
                             }
                         }
                     }
@@ -440,7 +440,7 @@
                     "200": {
                         "description": "successful operation",
                         "schema": {
-                            "$ref": "#/definitions/PolicyEvaluationRecord"
+                            "$ref": "#/definitions/policyEvaluationRecord"
                         }
                     }
                 }
@@ -476,7 +476,7 @@
                     "200": {
                         "description": "successful operation",
                         "schema": {
-                            "$ref": "#/definitions/PolicyEvaluationRecord"
+                            "$ref": "#/definitions/policyEvaluationRecord"
                         }
                     }
                 }
@@ -508,7 +508,7 @@
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/PolicyType"
+                                "$ref": "#/definitions/policyType"
                             }
                         }
                     }
@@ -547,7 +547,7 @@
                     "200": {
                         "description": "successful operation",
                         "schema": {
-                            "$ref": "#/definitions/PolicyType"
+                            "$ref": "#/definitions/policyType"
                         }
                     }
                 }
@@ -555,14 +555,21 @@
         }
     },
     "definitions": {
-        "PolicyConfiguration": {
-            "type": "VersionedPolicyConfigurationRef",
+        "policyConfiguration": {
+            "type": "object",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/versionedPolicyConfigurationRef"
+                }
+            ],
             "properties": {
                 "_links": {
-                    "type": "ReferenceLinks"
+                    "type": "string",
+                    "format": "referenceLinks"
                 },
                 "createdBy": {
-                    "type": "IdentityRef"
+                    "type": "string",
+                    "format": "identityRef"
                 },
                 "createdDate": {
                     "type": "string",
@@ -578,11 +585,12 @@
                     "type": "boolean"
                 },
                 "settings": {
-                    "type": "JObject"
+                    "type": "string",
+                    "format": "jObject"
                 }
             }
         },
-        "PolicyConfigurationRef": {
+        "policyConfigurationRef": {
             "type": "object",
             "properties": {
                 "id": {
@@ -590,18 +598,19 @@
                     "format": "int32"
                 },
                 "type": {
-                    "$ref": "#/definitions/PolicyTypeRef"
+                    "$ref": "#/definitions/policyTypeRef"
                 },
                 "url": {
                     "type": "string"
                 }
             }
         },
-        "PolicyEvaluationRecord": {
+        "policyEvaluationRecord": {
             "type": "object",
             "properties": {
                 "_links": {
-                    "type": "ReferenceLinks"
+                    "type": "string",
+                    "format": "referenceLinks"
                 },
                 "artifactId": {
                     "type": "string"
@@ -611,10 +620,11 @@
                     "format": "date-time"
                 },
                 "configuration": {
-                    "$ref": "#/definitions/PolicyConfiguration"
+                    "$ref": "#/definitions/policyConfiguration"
                 },
                 "context": {
-                    "type": "JObject"
+                    "type": "string",
+                    "format": "jObject"
                 },
                 "evaluationId": {
                     "type": "string",
@@ -636,18 +646,24 @@
                 }
             }
         },
-        "PolicyType": {
-            "type": "PolicyTypeRef",
+        "policyType": {
+            "type": "object",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/policyTypeRef"
+                }
+            ],
             "properties": {
                 "_links": {
-                    "type": "ReferenceLinks"
+                    "type": "string",
+                    "format": "referenceLinks"
                 },
                 "description": {
                     "type": "string"
                 }
             }
         },
-        "PolicyTypeRef": {
+        "policyTypeRef": {
             "type": "object",
             "properties": {
                 "displayName": {
@@ -662,14 +678,28 @@
                 }
             }
         },
-        "VersionedPolicyConfigurationRef": {
-            "type": "PolicyConfigurationRef",
+        "versionedPolicyConfigurationRef": {
+            "type": "object",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/policyConfigurationRef"
+                }
+            ],
             "properties": {
                 "revision": {
                     "type": "integer",
                     "format": "int32"
                 }
             }
+        }
+    },
+    "parameters": {
+        "api-Version": {
+            "name": "api-version",
+            "in": "query",
+            "description": "Version of the API to use.  This should be set to '3.1-preview' to use this version of the api.",
+            "required": true,
+            "type": "string"
         }
     },
     "externalDocs": {

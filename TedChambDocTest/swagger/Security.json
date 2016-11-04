@@ -111,7 +111,8 @@
                         "name": "body",
                         "description": "",
                         "required": true,
-                        "type": "JObject"
+                        "type": "string",
+                        "format": "jObject"
                     },
                     {
                         "in": "path",
@@ -128,7 +129,7 @@
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/AccessControlEntry"
+                                "$ref": "#/definitions/accessControlEntry"
                             }
                         }
                     }
@@ -190,7 +191,7 @@
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/AccessControlList"
+                                "$ref": "#/definitions/accessControlList"
                             }
                         }
                     }
@@ -255,7 +256,8 @@
                         "name": "body",
                         "description": "",
                         "required": true,
-                        "type": "Generic"
+                        "type": "string",
+                        "format": "generic"
                     },
                     {
                         "in": "path",
@@ -381,7 +383,7 @@
                     "200": {
                         "description": "successful operation",
                         "schema": {
-                            "$ref": "#/definitions/AccessControlEntry"
+                            "$ref": "#/definitions/accessControlEntry"
                         }
                     }
                 }
@@ -408,7 +410,7 @@
                         "description": "",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/PermissionEvaluationBatch"
+                            "$ref": "#/definitions/permissionEvaluationBatch"
                         }
                     }
                 ],
@@ -416,7 +418,7 @@
                     "200": {
                         "description": "successful operation",
                         "schema": {
-                            "$ref": "#/definitions/PermissionEvaluationBatch"
+                            "$ref": "#/definitions/permissionEvaluationBatch"
                         }
                     }
                 }
@@ -456,7 +458,7 @@
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/SecurityNamespaceDescription"
+                                "$ref": "#/definitions/securityNamespaceDescription"
                             }
                         }
                     }
@@ -478,7 +480,8 @@
                         "name": "body",
                         "description": "",
                         "required": true,
-                        "type": "JObject"
+                        "type": "string",
+                        "format": "jObject"
                     },
                     {
                         "in": "path",
@@ -498,7 +501,7 @@
         }
     },
     "definitions": {
-        "AccessControlEntry": {
+        "accessControlEntry": {
             "type": "object",
             "properties": {
                 "allow": {
@@ -513,22 +516,23 @@
                 },
                 "descriptor": {
                     "description": "The descriptor for the user this AccessControlEntry applies to.",
-                    "type": "IdentityDescriptor"
+                    "type": "string",
+                    "format": "identityDescriptor"
                 },
                 "extendedInfo": {
                     "description": "This value, when set, reports the inherited and effective information for the associated descriptor. This value is only set on AccessControlEntries returned by the QueryAccessControlList(s) call when its includeExtendedInfo parameter is set to true.",
-                    "$ref": "#/definitions/AceExtendedInformation"
+                    "$ref": "#/definitions/aceExtendedInformation"
                 }
             }
         },
-        "AccessControlList": {
+        "accessControlList": {
             "type": "object",
             "properties": {
                 "acesDictionary": {
                     "description": "Storage of permissions keyed on the identity the permission is for.",
                     "type": "object",
                     "additionalProperties": {
-                        "$ref": "#/definitions/AccessControlEntry"
+                        "$ref": "#/definitions/accessControlEntry"
                     }
                 },
                 "includeExtendedInfo": {
@@ -545,12 +549,17 @@
                 }
             }
         },
-        "AccessControlListsCollection": {
-            "type": "array",
+        "accessControlListsCollection": {
+            "type": "object",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/array"
+                }
+            ],
             "properties": {
             }
         },
-        "AceExtendedInformation": {
+        "aceExtendedInformation": {
             "type": "object",
             "properties": {
                 "effectiveAllow": {
@@ -575,7 +584,7 @@
                 }
             }
         },
-        "ActionDefinition": {
+        "actionDefinition": {
             "type": "object",
             "properties": {
                 "bit": {
@@ -598,7 +607,7 @@
                 }
             }
         },
-        "PermissionEvaluation": {
+        "permissionEvaluation": {
             "type": "object",
             "properties": {
                 "permissions": {
@@ -621,7 +630,7 @@
                 }
             }
         },
-        "PermissionEvaluationBatch": {
+        "permissionEvaluationBatch": {
             "type": "object",
             "properties": {
                 "alwaysAllowAdministrators": {
@@ -631,12 +640,12 @@
                     "description": "Array of permission evaluations to evaluate.",
                     "type": "array",
                     "items": {
-                        "type": "PermissionEvaluation"
+                                "$ref": "#/definitions/permissionEvaluation"
                     }
                 }
             }
         },
-        "RemoteBackingStoreAccessControlEntry": {
+        "remoteBackingStoreAccessControlEntry": {
             "type": "object",
             "properties": {
                 "allow": {
@@ -660,7 +669,7 @@
                 }
             }
         },
-        "RemoveAccessControlListsRequest": {
+        "removeAccessControlListsRequest": {
             "type": "object",
             "properties": {
                 "recurse": {
@@ -674,7 +683,7 @@
                 }
             }
         },
-        "RemovePermissionsRequest": {
+        "removePermissionsRequest": {
             "type": "object",
             "properties": {
                 "identityIds": {
@@ -689,25 +698,25 @@
                 }
             }
         },
-        "RenameTokensRequest": {
+        "renameTokensRequest": {
             "type": "object",
             "properties": {
                 "renames": {
                     "type": "array",
                     "items": {
-                        "type": "TokenRename"
+                                "$ref": "#/definitions/tokenRename"
                     }
                 }
             }
         },
-        "SecurityNamespaceData": {
+        "securityNamespaceData": {
             "type": "object",
             "properties": {
                 "accessControlEntries": {
                     "description": "The access control entries in this snapshot of the security namespace data.",
                     "type": "array",
                     "items": {
-                        "type": "RemoteBackingStoreAccessControlEntry"
+                                "$ref": "#/definitions/remoteBackingStoreAccessControlEntry"
                     }
                 },
                 "aclStoreId": {
@@ -739,14 +748,14 @@
                 }
             }
         },
-        "SecurityNamespaceDescription": {
+        "securityNamespaceDescription": {
             "type": "object",
             "properties": {
                 "actions": {
                     "description": "The list of actions that this Security Namespace is responsible for securing.",
                     "type": "array",
                     "items": {
-                        "type": "ActionDefinition"
+                                "$ref": "#/definitions/actionDefinition"
                     }
                 },
                 "dataspaceCategory": {
@@ -786,7 +795,8 @@
                 },
                 "separatorValue": {
                     "description": "If the security tokens this namespace will be operating on need to be split on certain characters to determine its elements that character should be specified here. If not, this value will be the null character.",
-                    "type": "Char"
+                    "type": "string",
+                    "format": "char"
                 },
                 "structureValue": {
                     "description": "Used to send information about the structure of the security namespace over the web service.",
@@ -804,11 +814,12 @@
                 }
             }
         },
-        "SetAccessControlEntriesInfo": {
+        "setAccessControlEntriesInfo": {
             "type": "object",
             "properties": {
                 "accessControlEntries": {
-                    "type": "AccessControlEntriesCollection"
+                    "type": "string",
+                    "format": "accessControlEntriesCollection"
                 },
                 "merge": {
                     "type": "boolean"
@@ -818,19 +829,19 @@
                 }
             }
         },
-        "SetAccessControlListsRequest": {
+        "setAccessControlListsRequest": {
             "type": "object",
             "properties": {
                 "accessControlEntries": {
                     "type": "array",
                     "items": {
-                        "type": "AccessControlEntry"
+                                "$ref": "#/definitions/accessControlEntry"
                     }
                 },
                 "accessControlLists": {
                     "type": "array",
                     "items": {
-                        "type": "AccessControlList"
+                                "$ref": "#/definitions/accessControlList"
                     }
                 },
                 "throwOnInvalidIdentity": {
@@ -838,7 +849,7 @@
                 }
             }
         },
-        "SetInheritFlagInfo": {
+        "setInheritFlagInfo": {
             "type": "object",
             "properties": {
                 "inherit": {
@@ -849,13 +860,13 @@
                 }
             }
         },
-        "SetPermissionsRequest": {
+        "setPermissionsRequest": {
             "type": "object",
             "properties": {
                 "accessControlEntries": {
                     "type": "array",
                     "items": {
-                        "type": "AccessControlEntry"
+                                "$ref": "#/definitions/accessControlEntry"
                     }
                 },
                 "merge": {
@@ -869,7 +880,7 @@
                 }
             }
         },
-        "TokenRename": {
+        "tokenRename": {
             "type": "object",
             "properties": {
                 "copy": {
@@ -889,6 +900,15 @@
                     "type": "boolean"
                 }
             }
+        }
+    },
+    "parameters": {
+        "api-Version": {
+            "name": "api-version",
+            "in": "query",
+            "description": "Version of the API to use.  This should be set to '3.1-preview' to use this version of the api.",
+            "required": true,
+            "type": "string"
         }
     },
     "externalDocs": {

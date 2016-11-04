@@ -77,7 +77,7 @@
                     "200": {
                         "description": "successful operation",
                         "schema": {
-                            "$ref": "#/definitions/Package"
+                            "$ref": "#/definitions/package"
                         }
                     }
                 }
@@ -126,7 +126,7 @@
                     "200": {
                         "description": "successful operation",
                         "schema": {
-                            "$ref": "#/definitions/Package"
+                            "$ref": "#/definitions/package"
                         }
                     }
                 }
@@ -148,7 +148,7 @@
                         "description": "",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/PackageVersionDetails"
+                            "$ref": "#/definitions/packageVersionDetails"
                         }
                     },
                     {
@@ -225,7 +225,8 @@
                     "200": {
                         "description": "successful operation",
                         "schema": {
-                            "type": "Stream"
+                            "type": "string",
+                            "format": "stream"
                         }
                     }
                 }
@@ -233,8 +234,13 @@
         }
     },
     "definitions": {
-        "CatalogDataPage": {
-            "type": "CatalogModelBase",
+        "catalogDataPage": {
+            "type": "object",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/catalogModelBase"
+                }
+            ],
             "properties": {
                 "id": {
                     "type": "string"
@@ -247,18 +253,23 @@
                 }
             }
         },
-        "CatalogModel": {
-            "type": "CatalogModelBase",
+        "catalogModel": {
+            "type": "object",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/catalogModelBase"
+                }
+            ],
             "properties": {
                 "items": {
                     "type": "array",
                     "items": {
-                        "type": "CatalogModelBase"
+                                "$ref": "#/definitions/catalogModelBase"
                     }
                 }
             }
         },
-        "CatalogModelBase": {
+        "catalogModelBase": {
             "type": "object",
             "properties": {
                 "@id": {
@@ -273,18 +284,23 @@
                 }
             }
         },
-        "CatalogPageModel": {
-            "type": "CatalogModelBase",
+        "catalogPageModel": {
+            "type": "object",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/catalogModelBase"
+                }
+            ],
             "properties": {
                 "items": {
                     "type": "array",
                     "items": {
-                        "type": "PackageDetailsLinkModel"
+                                "$ref": "#/definitions/packageDetailsLinkModel"
                     }
                 }
             }
         },
-        "Context": {
+        "context": {
             "type": "object",
             "properties": {
                 "@vocab": {
@@ -292,11 +308,12 @@
                 }
             }
         },
-        "Package": {
+        "package": {
             "type": "object",
             "properties": {
                 "_links": {
-                    "type": "ReferenceLinks"
+                    "type": "string",
+                    "format": "referenceLinks"
                 },
                 "deletedDate": {
                     "description": "If and when the package was deleted",
@@ -316,8 +333,13 @@
                 }
             }
         },
-        "PackageDetailsLinkModel": {
-            "type": "CatalogModelBase",
+        "packageDetailsLinkModel": {
+            "type": "object",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/catalogModelBase"
+                }
+            ],
             "properties": {
                 "nuget:id": {
                     "type": "string"
@@ -327,7 +349,7 @@
                 }
             }
         },
-        "PackageVersionDetails": {
+        "packageVersionDetails": {
             "type": "object",
             "properties": {
                 "listed": {
@@ -336,11 +358,12 @@
                 },
                 "views": {
                     "description": "The view to which the package version will be added",
-                    "type": "JsonPatchOperation"
+                    "type": "string",
+                    "format": "jsonPatchOperation"
                 }
             }
         },
-        "PackageVersionsResponse": {
+        "packageVersionsResponse": {
             "type": "object",
             "properties": {
                 "versions": {
@@ -351,16 +374,16 @@
                 }
             }
         },
-        "QueryResult": {
+        "queryResult": {
             "type": "object",
             "properties": {
                 "@context": {
-                    "$ref": "#/definitions/Context"
+                    "$ref": "#/definitions/context"
                 },
                 "data": {
                     "type": "array",
                     "items": {
-                        "type": "QueryResultPackage"
+                                "$ref": "#/definitions/queryResultPackage"
                     }
                 },
                 "index": {
@@ -374,7 +397,7 @@
                 }
             }
         },
-        "QueryResultPackage": {
+        "queryResultPackage": {
             "type": "object",
             "properties": {
                 "@id": {
@@ -416,12 +439,12 @@
                 "versions": {
                     "type": "array",
                     "items": {
-                        "type": "QueryResultPackageVersion"
+                                "$ref": "#/definitions/queryResultPackageVersion"
                     }
                 }
             }
         },
-        "QueryResultPackageVersion": {
+        "queryResultPackageVersion": {
             "type": "object",
             "properties": {
                 "@id": {
@@ -439,7 +462,7 @@
                 }
             }
         },
-        "ServiceEntry": {
+        "serviceEntry": {
             "type": "object",
             "properties": {
                 "@id": {
@@ -450,16 +473,16 @@
                 }
             }
         },
-        "ServiceIndex": {
+        "serviceIndex": {
             "type": "object",
             "properties": {
                 "@context": {
-                    "$ref": "#/definitions/Context"
+                    "$ref": "#/definitions/context"
                 },
                 "resources": {
                     "type": "array",
                     "items": {
-                        "type": "ServiceEntry"
+                                "$ref": "#/definitions/serviceEntry"
                     }
                 },
                 "version": {
@@ -467,7 +490,7 @@
                 }
             }
         },
-        "V2FeedPackage": {
+        "v2FeedPackage": {
             "type": "object",
             "properties": {
                 "authors": {
@@ -558,6 +581,15 @@
                     "type": "string"
                 }
             }
+        }
+    },
+    "parameters": {
+        "api-Version": {
+            "name": "api-version",
+            "in": "query",
+            "description": "Version of the API to use.  This should be set to '3.1-preview' to use this version of the api.",
+            "required": true,
+            "type": "string"
         }
     },
     "externalDocs": {

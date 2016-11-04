@@ -65,7 +65,7 @@
                         "description": "",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/DiscussionThread"
+                            "$ref": "#/definitions/discussionThread"
                         }
                     }
                 ],
@@ -73,7 +73,7 @@
                     "200": {
                         "description": "successful operation",
                         "schema": {
-                            "$ref": "#/definitions/DiscussionThread"
+                            "$ref": "#/definitions/discussionThread"
                         }
                     }
                 }
@@ -97,14 +97,15 @@
                         "name": "body",
                         "description": "",
                         "required": true,
-                        "type": "Generic"
+                        "type": "string",
+                        "format": "generic"
                     }
                 ],
                 "responses": {
                     "200": {
                         "description": "successful operation",
                         "schema": {
-                            "$ref": "#/definitions/DiscussionThreadCollection"
+                            "$ref": "#/definitions/discussionThreadCollection"
                         }
                     }
                 }
@@ -133,7 +134,7 @@
                     "200": {
                         "description": "successful operation",
                         "schema": {
-                            "$ref": "#/definitions/DiscussionThreadCollection"
+                            "$ref": "#/definitions/discussionThreadCollection"
                         }
                     }
                 }
@@ -164,7 +165,7 @@
                     "200": {
                         "description": "successful operation",
                         "schema": {
-                            "$ref": "#/definitions/DiscussionThread"
+                            "$ref": "#/definitions/discussionThread"
                         }
                     }
                 }
@@ -191,7 +192,7 @@
                         "description": "",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/DiscussionComment"
+                            "$ref": "#/definitions/discussionComment"
                         }
                     },
                     {
@@ -207,7 +208,7 @@
                     "200": {
                         "description": "successful operation",
                         "schema": {
-                            "$ref": "#/definitions/DiscussionComment"
+                            "$ref": "#/definitions/discussionComment"
                         }
                     }
                 }
@@ -236,7 +237,7 @@
                     "200": {
                         "description": "successful operation",
                         "schema": {
-                            "$ref": "#/definitions/DiscussionCommentCollection"
+                            "$ref": "#/definitions/discussionCommentCollection"
                         }
                     }
                 }
@@ -306,7 +307,7 @@
                     "200": {
                         "description": "successful operation",
                         "schema": {
-                            "$ref": "#/definitions/DiscussionComment"
+                            "$ref": "#/definitions/discussionComment"
                         }
                     }
                 }
@@ -331,7 +332,7 @@
                         "description": "",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/DiscussionComment"
+                            "$ref": "#/definitions/discussionComment"
                         }
                     },
                     {
@@ -355,7 +356,7 @@
                     "200": {
                         "description": "successful operation",
                         "schema": {
-                            "$ref": "#/definitions/DiscussionComment"
+                            "$ref": "#/definitions/discussionComment"
                         }
                     }
                 }
@@ -402,19 +403,26 @@
         }
     },
     "definitions": {
-        "ArtifactDiscussionThread": {
-            "type": "DiscussionThread",
+        "artifactDiscussionThread": {
+            "type": "object",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/discussionThread"
+                }
+            ],
             "properties": {
             }
         },
-        "DiscussionComment": {
+        "discussionComment": {
             "type": "object",
             "properties": {
                 "_links": {
-                    "type": "ReferenceLinks"
+                    "type": "string",
+                    "format": "referenceLinks"
                 },
                 "author": {
-                    "type": "IdentityRef"
+                    "type": "string",
+                    "format": "identityRef"
                 },
                 "canDelete": {
                     "type": "boolean"
@@ -458,21 +466,28 @@
                 "usersLiked": {
                     "type": "array",
                     "items": {
-                        "type": "IdentityRef"
+                        "type": "string",
+                        "format": "identityRef"
                     }
                 }
             }
         },
-        "DiscussionCommentCollection": {
-            "type": "array",
+        "discussionCommentCollection": {
+            "type": "object",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/array"
+                }
+            ],
             "properties": {
             }
         },
-        "DiscussionThread": {
+        "discussionThread": {
             "type": "object",
             "properties": {
                 "_links": {
-                    "type": "ReferenceLinks"
+                    "type": "string",
+                    "format": "referenceLinks"
                 },
                 "artifactUri": {
                     "type": "string"
@@ -480,7 +495,7 @@
                 "comments": {
                     "type": "array",
                     "items": {
-                        "type": "DiscussionComment"
+                                "$ref": "#/definitions/discussionComment"
                     }
                 },
                 "commentsCount": {
@@ -500,7 +515,8 @@
                     "format": "date-time"
                 },
                 "properties": {
-                    "type": "PropertiesCollection"
+                    "type": "string",
+                    "format": "propertiesCollection"
                 },
                 "publishedDate": {
                     "type": "string",
@@ -523,10 +539,24 @@
                 }
             }
         },
-        "DiscussionThreadCollection": {
-            "type": "array",
+        "discussionThreadCollection": {
+            "type": "object",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/array"
+                }
+            ],
             "properties": {
             }
+        }
+    },
+    "parameters": {
+        "api-Version": {
+            "name": "api-version",
+            "in": "query",
+            "description": "Version of the API to use.  This should be set to '3.1-preview' to use this version of the api.",
+            "required": true,
+            "type": "string"
         }
     },
     "externalDocs": {
