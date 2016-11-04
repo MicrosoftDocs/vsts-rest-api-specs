@@ -1,0 +1,424 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "",
+        "termsOfService": "https://go.microsoft.com/fwlink/?LinkId=329770",
+        "contact": {
+            "name": "nugetvss",
+            "email": "nugetvss@microsoft.com"
+        },
+        "license": {
+            "name": "MICROSOFT SOFTWARE LICENSE TERMS",
+            "url": "https://go.microsoft.com/fwlink/?LinkId=329770"
+        },
+    },
+    "host": "fabrikam-fiber-inc.visualstudio.com",
+    "basePath": "/",
+    "schemes": [
+        "https"
+    ],
+    "securityDefinitions": {
+        "pat": {
+            "type": "basic",
+            "description": "Personal access token"
+        }
+    },
+    "security": [
+        {
+            "pat": []
+        }
+    ], 
+    "paths": {
+    },
+    "definitions": {
+        "feed": {
+            "type": "object",
+            "properties": {
+                "_links": {
+                    "type": "string",
+                    "format": "referenceLinks"
+                },
+                "deletedDate": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "fullyQualifiedName": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string",
+                    "format": "uuid"
+                },
+                "isReadOnly": {
+                    "type": "boolean"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "permissions": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/feedPermission"
+                    }
+                },
+                "upstreamEnabled": {
+                    "description": "If set, the feed can proxy packages from an upstream feed",
+                    "type": "boolean"
+                },
+                "url": {
+                    "type": "string"
+                },
+                "view": {
+                    "$ref": "#/definitions/feedView"
+                }
+            }
+        },
+        "feedChange": {
+            "type": "object",
+            "properties": {
+                "changeType": {
+                    "enum": [
+                        "addOrUpdate",
+                        "delete"
+                    ]
+                },
+                "feed": {
+                    "$ref": "#/definitions/feed"
+                },
+                "feedContinuationToken": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "latestPackageContinuationToken": {
+                    "type": "integer",
+                    "format": "int64"
+                }
+            }
+        },
+        "feedChangesResponse": {
+            "type": "object",
+            "properties": {
+                "_links": {
+                    "type": "string",
+                    "format": "referenceLinks"
+                },
+                "count": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "feedChanges": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/feedChange"
+                    }
+                },
+                "nextFeedContinuationToken": {
+                    "type": "integer",
+                    "format": "int64"
+                }
+            }
+        },
+        "feedPermission": {
+            "type": "object",
+            "properties": {
+                "identityDescriptor": {
+                    "type": "string",
+                    "format": "identityDescriptor"
+                },
+                "identityId": {
+                    "type": "string",
+                    "format": "uuid"
+                },
+                "role": {
+                    "enum": [
+                        "custom",
+                        "none",
+                        "reader",
+                        "contributor",
+                        "administrator"
+                    ]
+                }
+            }
+        },
+        "feedView": {
+            "type": "object",
+            "properties": {
+                "_links": {
+                    "type": "string",
+                    "format": "referenceLinks"
+                },
+                "id": {
+                    "type": "string",
+                    "format": "uuid"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "type": {
+                    "enum": [
+                        "none",
+                        "release"
+                    ]
+                },
+                "url": {
+                    "type": "string"
+                }
+            }
+        },
+        "globalPermission": {
+            "type": "object",
+            "properties": {
+                "identityDescriptor": {
+                    "type": "string",
+                    "format": "identityDescriptor"
+                },
+                "role": {
+                    "enum": [
+                        "custom",
+                        "none",
+                        "feedCreator"
+                    ]
+                }
+            }
+        },
+        "minimalPackageVersion": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "format": "uuid"
+                },
+                "isDeleted": {
+                    "type": "boolean"
+                },
+                "isLatest": {
+                    "type": "boolean"
+                },
+                "isListed": {
+                    "type": "boolean"
+                },
+                "normalizedVersion": {
+                    "description": "The normalized version representing the identity of a package version",
+                    "type": "string"
+                },
+                "storageId": {
+                    "type": "string"
+                },
+                "version": {
+                    "description": "The display version of the package version",
+                    "type": "string"
+                }
+            }
+        },
+        "package": {
+            "type": "object",
+            "properties": {
+                "_links": {
+                    "type": "string",
+                    "format": "referenceLinks"
+                },
+                "id": {
+                    "type": "string",
+                    "format": "uuid"
+                },
+                "name": {
+                    "description": "The display name of the package",
+                    "type": "string"
+                },
+                "normalizedName": {
+                    "description": "The normalized name representing the identity of this package for this protocol type",
+                    "type": "string"
+                },
+                "protocolType": {
+                    "type": "string"
+                },
+                "starCount": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "url": {
+                    "type": "string"
+                },
+                "versions": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/minimalPackageVersion"
+                    }
+                }
+            }
+        },
+        "packageChange": {
+            "type": "object",
+            "properties": {
+                "package": {
+                    "$ref": "#/definitions/package"
+                },
+                "packageVersionChange": {
+                    "$ref": "#/definitions/packageVersionChange"
+                }
+            }
+        },
+        "packageChangesResponse": {
+            "type": "object",
+            "properties": {
+                "_links": {
+                    "type": "string",
+                    "format": "referenceLinks"
+                },
+                "count": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "nextPackageContinuationToken": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "packageChanges": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/packageChange"
+                    }
+                }
+            }
+        },
+        "packageDependency": {
+            "type": "object",
+            "properties": {
+                "group": {
+                    "type": "string"
+                },
+                "packageName": {
+                    "type": "string"
+                },
+                "versionRange": {
+                    "type": "string"
+                }
+            }
+        },
+        "packageStar": {
+            "type": "object",
+            "properties": {
+                "_links": {
+                    "type": "string",
+                    "format": "referenceLinks"
+                },
+                "url": {
+                    "type": "string"
+                },
+                "userId": {
+                    "type": "string",
+                    "format": "uuid"
+                },
+                "userStar": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "packageVersion": {
+            "type": "object",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/minimalPackageVersion"
+                }
+            ],
+            "properties": {
+                "_links": {
+                    "type": "string",
+                    "format": "referenceLinks"
+                },
+                "author": {
+                    "type": "string"
+                },
+                "deletedDate": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "dependencies": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/packageDependency"
+                    }
+                },
+                "description": {
+                    "type": "string"
+                },
+                "otherVersions": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/minimalPackageVersion"
+                    }
+                },
+                "protocolMetadata": {
+                    "$ref": "#/definitions/protocolMetadata"
+                },
+                "publishDate": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "summary": {
+                    "type": "string"
+                },
+                "tags": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "url": {
+                    "type": "string"
+                },
+                "views": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/feedView"
+                    }
+                }
+            }
+        },
+        "packageVersionChange": {
+            "type": "object",
+            "properties": {
+                "changeType": {
+                    "enum": [
+                        "addOrUpdate",
+                        "delete"
+                    ]
+                },
+                "continuationToken": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "packageVersion": {
+                    "$ref": "#/definitions/packageVersion"
+                }
+            }
+        },
+        "protocolMetadata": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "object"
+                },
+                "schemaVersion": {
+                    "type": "integer",
+                    "format": "int32"
+                }
+            }
+        }
+    },
+    "parameters": {
+        "api-Version": {
+            "name": "api-version",
+            "in": "query",
+            "required": true,
+            "type": "string"
+        }
+    },
+    "externalDocs": {
+        "description": "Visual Studio Team Services REST APIs",
+        "url": "https://www.visualstudio.com/docs/integrate/api/overview"
+    } 
+}

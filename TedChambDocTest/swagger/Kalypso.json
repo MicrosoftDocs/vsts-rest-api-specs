@@ -1,0 +1,910 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "Kalypso",
+        "description": "",
+        "termsOfService": "https://go.microsoft.com/fwlink/?LinkId=329770",
+        "contact": {
+            "name": "nugetvss",
+            "email": "nugetvss@microsoft.com"
+        },
+        "license": {
+            "name": "MICROSOFT SOFTWARE LICENSE TERMS",
+            "url": "https://go.microsoft.com/fwlink/?LinkId=329770"
+        },
+        "version": "3.1"
+    },
+    "host": "fabrikam-fiber-inc.visualstudio.com",
+    "basePath": "/",
+    "tags": [
+        {
+            "name": "alertEndpoints"
+        },
+        {
+            "name": "queries"
+        },
+        {
+            "name": "queryContainers"
+        },
+        {
+            "name": "queryResults"
+        }
+    ],
+    "schemes": [
+        "https"
+    ],
+    "securityDefinitions": {
+        "pat": {
+            "type": "basic",
+            "description": "Personal access token"
+        }
+    },
+    "security": [
+        {
+            "pat": []
+        }
+    ], 
+    "paths": {
+        "/_apis/health/{parentresource}/{containerId}/{queryresource}/{queryId}/queryresults": {
+            "post": {
+                "tags": [
+                    "queryResults"
+                ],
+                "summary": "Execute",
+                "description": "Return result data if the user supplies a getData parameter in the URL. Surfaced as a REST endpoint for debugging purposes only. The underlying run query call in the service is valid for internal scenarios where we are running a query pipeline.",
+                "operationId": "execute",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/queryResult"
+                        }
+                    },
+                    {
+                        "in": "path",
+                        "name": "containerId",
+                        "description": "",
+                        "required": true,
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    {
+                        "in": "path",
+                        "name": "queryId",
+                        "description": "",
+                        "required": true,
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    {
+                        "in": "query",
+                        "name": "getData",
+                        "description": "",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/_apis/health/{parentresource}/{containerId}/queries": {
+            "get": {
+                "tags": [
+                    "queries"
+                ],
+                "summary": "GetQueryDefinitions",
+                "description": "",
+                "operationId": "getQueryDefinitions",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "containerId",
+                        "description": "",
+                        "required": true,
+                        "type": "string",
+                        "format": "uuid"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/queryDefinitionProperties"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/_apis/health/{parentresource}/{containerId}/queries/{queryId}": {
+            "get": {
+                "tags": [
+                    "queries"
+                ],
+                "summary": "GetQueryDefinition",
+                "description": "",
+                "operationId": "getQueryDefinition",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "containerId",
+                        "description": "",
+                        "required": true,
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    {
+                        "in": "path",
+                        "name": "queryId",
+                        "description": "",
+                        "required": true,
+                        "type": "string",
+                        "format": "uuid"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/queryDefinitionProperties"
+                        }
+                    }
+                }
+            }
+        },
+        "/_apis/health/alertendpoints": {
+            "post": {
+                "tags": [
+                    "alertEndpoints"
+                ],
+                "summary": "CreateAlertEndpoint",
+                "description": "",
+                "operationId": "createAlertEndpoint",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/alertEndpointProperties"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/alertEndpointProperties"
+                        }
+                    }
+                }
+            },
+            "get": {
+                "tags": [
+                    "alertEndpoints"
+                ],
+                "summary": "GetAlertEndpoints",
+                "description": "",
+                "operationId": "getAlertEndpoints",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/alertEndpointProperties"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/_apis/health/alertendpoints/{alertEndpointId}": {
+            "delete": {
+                "tags": [
+                    "alertEndpoints"
+                ],
+                "summary": "DeleteAlertEndpoint",
+                "description": "",
+                "operationId": "deleteAlertEndpoint",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "alertEndpointId",
+                        "description": "",
+                        "required": true,
+                        "type": "string",
+                        "format": "uuid"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "type": "string",
+                            "format": "httpResponseMessage"
+                        }
+                    }
+                }
+            }
+        },
+        "/_apis/health/querycontainers": {
+            "post": {
+                "tags": [
+                    "queryContainers"
+                ],
+                "summary": "CreateQueryContainer",
+                "description": "",
+                "operationId": "createQueryContainer",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/queryContainerProperties"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/queryContainerProperties"
+                        }
+                    }
+                }
+            },
+            "get": {
+                "tags": [
+                    "queryContainers"
+                ],
+                "summary": "GetQueryContainers",
+                "description": "",
+                "operationId": "getQueryContainers",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/queryContainerProperties"
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "queryContainers"
+                ],
+                "summary": "UpdateQueryContainer",
+                "description": "",
+                "operationId": "updateQueryContainer",
+                "consumes": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/queryContainerProperties"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "id",
+                        "description": "",
+                        "required": true,
+                        "type": "string",
+                        "format": "uuid"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    }
+                }
+            }
+        },
+        "/_apis/health/querycontainers/{containerId}": {
+            "delete": {
+                "tags": [
+                    "queryContainers"
+                ],
+                "summary": "DeleteQueryContainer",
+                "description": "",
+                "operationId": "deleteQueryContainer",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "containerId",
+                        "description": "",
+                        "required": true,
+                        "type": "string",
+                        "format": "uuid"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    }
+                }
+            },
+            "get": {
+                "tags": [
+                    "queryContainers"
+                ],
+                "summary": "GetQueryContainer",
+                "description": "",
+                "operationId": "getQueryContainer",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "containerId",
+                        "description": "",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/queryContainerProperties"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "alertEndpointProperties": {
+            "type": "object",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/itemMetadata"
+                }
+            ],
+            "properties": {
+                "serviceBusConnectionString": {
+                    "description": "Service Bus connection string.",
+                    "type": "string"
+                },
+                "serviceBusEndpointUri": {
+                    "description": "Uri of the Service Bus namespace (without secrets).",
+                    "type": "string"
+                }
+            }
+        },
+        "alertEndpointReference": {
+            "type": "object",
+            "properties": {
+                "alertEndpointId": {
+                    "description": "Reference a AlertEndpoint id.",
+                    "type": "string",
+                    "format": "uuid"
+                },
+                "filterConditions": {
+                    "description": "The key names a WatchdogMetadataColection entry name that originates in the MDM monitor definition and the value is",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/filterCondition"
+                    }
+                },
+                "monitorId": {
+                    "description": "This is the name of the MDM monitor to match in order to trigger the pipeline.  The monitor name can be found in the first position of an IcM incident title (sample: \"ASPNETRequestQueued_AT\"). This acts as the second-level filter on messages on this endpoint.",
+                    "type": "string"
+                },
+                "tokenMapping": {
+                    "description": "Map resource dimensions within a health alert to token names.",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/tokenBinding"
+                    }
+                },
+                "topologyName": {
+                    "description": "A single Service Bus namespace can be wired to the extensibility point for many MDM namespaces.  The topology name is a string like VSO-TFS or VSO-SPS that identifes the MDM tenant sourcing alerts for this monitor endpoint reference. This acts as the first-level filter on the stream of messages coming off the health alert extensibility Service Bus topic.",
+                    "type": "string"
+                }
+            }
+        },
+        "builtInMonitorProperties": {
+            "type": "object",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/monitorProperties"
+                }
+            ],
+            "properties": {
+                "notification": {
+                    "$ref": "#/definitions/emailNotification"
+                },
+                "trigger": {
+                    "$ref": "#/definitions/scheduledTrigger"
+                },
+                "type": {
+                    "enum": [
+                        "appInsightsPipeline"
+                    ]
+                }
+            }
+        },
+        "cmdbSubscriptionProperties": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "format": "uuid"
+                },
+                "lastExecution": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "state": {
+                    "enum": [
+                        "enabled",
+                        "disabled",
+                        "inaccessible"
+                    ]
+                },
+                "tagsUnion": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "array"
+                    }
+                }
+            }
+        },
+        "emailAddress": {
+            "type": "object",
+            "properties": {
+                "address": {
+                    "type": "string"
+                },
+                "addressType": {
+                    "enum": [
+                        "to",
+                        "cc"
+                    ]
+                }
+            }
+        },
+        "emailNotification": {
+            "type": "object",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/notification"
+                }
+            ],
+            "properties": {
+                "addresses": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/emailAddress"
+                    }
+                }
+            }
+        },
+        "endpointAuthorization": {
+            "type": "object",
+            "properties": {
+                "parameters": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                },
+                "scheme": {
+                    "enum": [
+                        "personalAccessToken"
+                    ]
+                }
+            }
+        },
+        "filterCondition": {
+            "type": "object",
+            "properties": {
+                "key": {
+                    "description": "Property name reference to entries in the WatchdogMetadataCollection for a health alert.",
+                    "type": "string"
+                },
+                "value": {
+                    "type": "string"
+                }
+            }
+        },
+        "healthAlertTrigger": {
+            "type": "object",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/trigger"
+                }
+            ],
+            "properties": {
+                "alertEndpoint": {
+                    "$ref": "#/definitions/alertEndpointReference"
+                }
+            }
+        },
+        "itemMetadata": {
+            "type": "object",
+            "properties": {
+                "description": {
+                    "description": "Description.",
+                    "type": "string"
+                },
+                "displayName": {
+                    "description": "Display name.",
+                    "type": "string"
+                },
+                "id": {
+                    "description": "An immutable id to support stable references.",
+                    "type": "string",
+                    "format": "uuid"
+                },
+                "refName": {
+                    "description": "Reference name that can be used in place of the id.",
+                    "type": "string"
+                }
+            }
+        },
+        "monitorProperties": {
+            "type": "object",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/itemMetadata"
+                }
+            ],
+            "properties": {
+                "category": {
+                    "enum": [
+                        "queryResultMonitor",
+                        "healthAlertMonitor",
+                        "builtInMonitor"
+                    ]
+                }
+            }
+        },
+        "notification": {
+            "type": "object",
+            "properties": {
+                "type": {
+                    "enum": [
+                        "email"
+                    ]
+                }
+            }
+        },
+        "pipeline": {
+            "type": "object",
+            "properties": {
+                "queries": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/queryReference"
+                    }
+                },
+                "tokenBindings": {
+                    "description": "Default token values globally scoped to the pipeline",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/tokenBinding"
+                    }
+                }
+            }
+        },
+        "queryCollectionProperties": {
+            "type": "object",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/queryItemMetadata"
+                }
+            ],
+            "properties": {
+                "queryIds": {
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "format": "uuid"
+                    }
+                }
+            }
+        },
+        "queryContainerProperties": {
+            "type": "object",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/itemMetadata"
+                }
+            ],
+            "properties": {
+                "accountUri": {
+                    "description": "Uri of the VSTS account hosting the repo supplying queries.",
+                    "type": "string"
+                },
+                "authorization": {
+                    "description": "Authorization details for accessing the repo.",
+                    "$ref": "#/definitions/endpointAuthorization"
+                },
+                "contentPath": {
+                    "description": "Path within the repo to use when reading content.",
+                    "type": "string"
+                },
+                "refreshPolicy": {
+                    "description": "Path within the repo to use when reading content. Optional param that defaults to ReplaceOnUpdate.",
+                    "enum": [
+                        "replaceOnUpdate",
+                        "addNewVersionOnUpdate"
+                    ]
+                },
+                "repoName": {
+                    "description": "Name of the repo.  Used to look up the repository id during a content fetch.",
+                    "type": "string"
+                },
+                "visibility": {
+                    "description": "Path within the repo to use when reading content. Optional param that defaults to Private.",
+                    "enum": [
+                        "hidden",
+                        "private",
+                        "public"
+                    ]
+                }
+            }
+        },
+        "queryDefinitionProperties": {
+            "type": "object",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/queryItemMetadata"
+                }
+            ],
+            "properties": {
+                "contentType": {
+                    "description": "A definition with one query returns one set of results and can be used to drive fan-out.  A definition with multiple embedded queries is a collection that can be used in monitors.",
+                    "enum": [
+                        "singleQuery",
+                        "multiQuery"
+                    ]
+                },
+                "queryInstances": {
+                    "description": "A set of executable query instances derived from the raw query string.",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/queryInstance"
+                    }
+                },
+                "rawQuery": {
+                    "description": "Raw query string.",
+                    "type": "string"
+                }
+            }
+        },
+        "queryInstance": {
+            "type": "object",
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "query": {
+                    "type": "string"
+                },
+                "results": {
+                    "type": "string"
+                }
+            }
+        },
+        "queryItemMetadata": {
+            "type": "object",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/itemMetadata"
+                }
+            ],
+            "properties": {
+                "containerId": {
+                    "description": "Reference to the container associated with this query",
+                    "type": "string",
+                    "format": "uuid"
+                },
+                "tokenList": {
+                    "description": "List of tokens that must be bound to run the query.",
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "queryReference": {
+            "type": "object",
+            "properties": {
+                "containerId": {
+                    "type": "string",
+                    "format": "uuid"
+                },
+                "queryId": {
+                    "type": "string",
+                    "format": "uuid"
+                },
+                "tokenBindings": {
+                    "description": "Default token values locally scoped",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/tokenBinding"
+                    }
+                }
+            }
+        },
+        "queryResult": {
+            "type": "object",
+            "properties": {
+                "deepLink": {
+                    "description": "Base-64 encoded deep link of bound query string.",
+                    "type": "string"
+                },
+                "results": {
+                    "description": "Collection of queries from a query definition file with descriptions, query text and Uri references to results.",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/queryInstance"
+                    }
+                },
+                "tokenBindings": {
+                    "description": "Token bindings needed to run a query.",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/tokenBinding"
+                    }
+                }
+            }
+        },
+        "queryResultMonitorProperties": {
+            "type": "object",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/monitorProperties"
+                }
+            ],
+            "properties": {
+                "notification": {
+                    "$ref": "#/definitions/emailNotification"
+                },
+                "pipeline": {
+                    "$ref": "#/definitions/pipeline"
+                },
+                "trigger": {
+                    "$ref": "#/definitions/scheduledTrigger"
+                },
+                "type": {
+                    "enum": [
+                        "zeroRowMonitor"
+                    ]
+                }
+            }
+        },
+        "scheduledTrigger": {
+            "type": "object",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/trigger"
+                }
+            ],
+            "properties": {
+                "interval": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "startTime": {
+                    "type": "string",
+                    "format": "date-time"
+                }
+            }
+        },
+        "tokenBinding": {
+            "type": "object",
+            "properties": {
+                "token": {
+                    "description": "Token name used as replacement string when binding queries.",
+                    "type": "string"
+                },
+                "type": {
+                    "description": "Cast type determines transform applied to value string.",
+                    "enum": [
+                        "none",
+                        "string",
+                        "timeSpan",
+                        "dateTime"
+                    ]
+                },
+                "value": {
+                    "description": "Token value as a string which is cast to a type at bind time.",
+                    "type": "string"
+                }
+            }
+        },
+        "trigger": {
+            "type": "object",
+            "properties": {
+                "type": {
+                    "enum": [
+                        "scheduled",
+                        "healthAlert"
+                    ]
+                }
+            }
+        }
+    },
+    "parameters": {
+        "api-Version": {
+            "name": "api-version",
+            "in": "query",
+            "description": "Version of the API to use.  This should be set to '3.1-preview' to use this version of the api.",
+            "required": true,
+            "type": "string"
+        }
+    },
+    "externalDocs": {
+        "description": "Visual Studio Team Services REST APIs",
+        "url": "https://www.visualstudio.com/docs/integrate/api/overview"
+    } 
+}
