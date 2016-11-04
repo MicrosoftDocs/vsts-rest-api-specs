@@ -56,7 +56,6 @@
 # [Task API](task.json)
 # [Task Agent API](taskagent.json)
 # [Team API](coreteam.json)
-# [Temporary Data API](propertiestemporarydata.json)
 # [Test API](test.json)
 # [Test Impact API](testimpact.json)
 # [User Management API](usermanagement.json)
