@@ -31,6 +31,7 @@
 # [Location API](locationslocation.json)
 # [Gallery API](gallery.json)
 # [Git API](git.json)
+# [Machine Management API](machinemanagement.json)
 # [Name Resolution API](nameresolution.json)
 # [Notification API](notification.json)
 # [NuGet API](nuget.json)
