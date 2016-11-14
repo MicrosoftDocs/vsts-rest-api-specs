@@ -1,0 +1,198 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "Visits",
+        "description": "",
+        "termsOfService": "https://go.microsoft.com/fwlink/?LinkId=329770",
+        "contact": {
+            "name": "nugetvss",
+            "email": "nugetvss@microsoft.com"
+        },
+        "license": {
+            "name": "MICROSOFT SOFTWARE LICENSE TERMS",
+            "url": "https://go.microsoft.com/fwlink/?LinkId=329770"
+        },
+        "version": "3.1"
+    },
+    "host": "fabrikam-fiber-inc.visualstudio.com",
+    "basePath": "/",
+    "tags": [
+        {
+            "name": "user"
+        },
+        {
+            "name": "userBatch"
+        }
+    ],
+    "schemes": [
+        "https"
+    ],
+    "securityDefinitions": {
+        "pat": {
+            "type": "basic",
+            "description": "Personal access token"
+        }
+    },
+    "security": [
+        {
+            "pat": []
+        }
+    ], 
+    "paths": {
+        "/{project}/_apis/visits/user": {
+            "put": {
+                "tags": [
+                    "user"
+                ],
+                "summary": "UpdateLastVisit",
+                "description": "Update or create a last visit date PUT /_apis/visits/user/",
+                "operationId": "updateLastVisit",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/userVisit"
+                        }
+                    },
+                    {
+                        "in": "path",
+                        "name": "project",
+                        "description": "Project ID or project name",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/userVisit"
+                        }
+                    }
+                }
+            }
+        },
+        "/{project}/_apis/visits/userbatch": {
+            "post": {
+                "tags": [
+                    "userBatch"
+                ],
+                "summary": "GetVisits",
+                "description": "Get last visit dates POST /_apis/visits/userBatch",
+                "operationId": "getVisits",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "",
+                        "required": true,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/userVisit"
+                            }
+                        }
+                    },
+                    {
+                        "in": "path",
+                        "name": "project",
+                        "description": "Project ID or project name",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/userVisit"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "identityRef": {
+            "type": "object",
+            "properties": {
+                "displayName": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "imageUrl": {
+                    "type": "string"
+                },
+                "isAadIdentity": {
+                    "type": "boolean"
+                },
+                "isContainer": {
+                    "type": "boolean"
+                },
+                "profileUrl": {
+                    "type": "string"
+                },
+                "uniqueName": {
+                    "type": "string"
+                },
+                "url": {
+                    "type": "string"
+                }
+            }
+        },
+        "userVisit": {
+            "type": "object",
+            "properties": {
+                "artifactId": {
+                    "type": "string"
+                },
+                "lastVisitedDate": {
+                    "description": "The last date the user visited this artifact.",
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "previousLastVisitedDate": {
+                    "description": "The previous last date the user visited this artifact, before updating.",
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "user": {
+                    "$ref": "#/definitions/identityRef"
+                }
+            }
+        }
+    },
+    "parameters": {
+        "api-Version": {
+            "name": "api-version",
+            "in": "query",
+            "description": "Version of the API to use.  This should be set to '3.1-preview' to use this version of the api.",
+            "required": true,
+            "type": "string"
+        }
+    },
+    "externalDocs": {
+        "description": "Visual Studio Team Services REST APIs",
+        "url": "https://www.visualstudio.com/docs/integrate/api/overview"
+    } 
+}

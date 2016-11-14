@@ -64,6 +64,7 @@
 # [User Mapping API](usermapping.json)
 # [Utilization API](utilization.json)
 # [Version Control API](tfvc.json)
+# [Visits API](visits.json)
 # [Vssf Sdk Sample API](vssfsdksample.json)
 # [Work API](work.json)
 # [Work Item Tracking API](workitemtracking.json)
