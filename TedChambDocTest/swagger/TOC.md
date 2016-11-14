@@ -1,7 +1,7 @@
 # [Index](index.md)
 # [Account API](accountsaccount.json)
 # [Authentication API](authentication.json)
-# [Clob API](blob.json)
+# [Blob API](blob.json)
 # [Build API](build.json)
 # [Chat API](chat.json)
 # [Code Review API](codereview.json)
