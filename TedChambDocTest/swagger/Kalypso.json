@@ -500,6 +500,51 @@
                 }
             }
         },
+        "healthAlertMonitorProperties": {
+            "type": "object",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/monitorProperties"
+                }
+            ],
+            "properties": {
+                "trigger": {
+                    "$ref": "#/definitions/healthAlertTrigger"
+                },
+                "troubleshootingGuide": {
+                    "$ref": "#/definitions/pipeline"
+                },
+                "type": {
+                    "enum": [
+                        "preIncidentCreation",
+                        "postIncidentCreation"
+                    ]
+                }
+            }
+        },
+        "healthAlertTrigger": {
+            "type": "object",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/trigger"
+                }
+            ],
+            "properties": {
+                "alertEndpointId": {
+                    "description": "AlertEndpoint reference.",
+                    "type": "string",
+                    "format": "uuid"
+                },
+                "monitorName": {
+                    "description": "This is the name of the MDM monitor to match in order to trigger the pipeline.  The monitor name can be found in the first position of an IcM incident title (sample: \"ASPNETRequestQueued_AT\").",
+                    "type": "string"
+                },
+                "topologyName": {
+                    "description": "A single Service Bus namespace can be wired to the extensibility point for many MDM namespaces.  The topology name is a string like VSO-TFS or VSO-SPS that identifes the MDM tenant sourcing alerts for this monitor endpoint reference. This acts like a filter on the stream of messages coming off the health alert extensibility Service Bus topic.",
+                    "type": "string"
+                }
+            }
+        },
         "itemMetadata": {
             "type": "object",
             "properties": {
