@@ -22,6 +22,9 @@
         },
         {
             "name": "featureStates"
+        },
+        {
+            "name": "featureStatesQuery"
         }
     ],
     "schemes": [
@@ -45,10 +48,19 @@
                     "features"
                 ],
                 "summary": "GetFeatures",
-                "description": "",
+                "description": "Get a list of all defined features",
                 "operationId": "getFeatures",
                 "produces": [
                     "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "targetContributionId",
+                        "description": "Optional target contribution. If null/empty, return all features. If specified include the features that target the specified contribution.",
+                        "required": false,
+                        "type": "string"
+                    }
                 ],
                 "responses": {
                     "200": {
@@ -316,6 +328,139 @@
                     }
                 }
             }
+        },
+        "/_apis/featuremanagement/featurestatesquery": {
+            "post": {
+                "tags": [
+                    "featureStatesQuery"
+                ],
+                "summary": "QueryFeatureStates",
+                "description": "Get the effective state for a list of feature ids",
+                "operationId": "queryFeatureStates",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "Features to query along with current scope values",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/contributedFeatureStateQuery"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/contributedFeatureStateQuery"
+                        }
+                    }
+                }
+            }
+        },
+        "/_apis/featuremanagement/featurestatesquery/{userScope}": {
+            "post": {
+                "tags": [
+                    "featureStatesQuery"
+                ],
+                "summary": "QueryFeatureStatesForDefaultScope",
+                "description": "Get the states of the specified features for the default scope",
+                "operationId": "queryFeatureStatesForDefaultScope",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "Query describing the features to query.",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/contributedFeatureStateQuery"
+                        }
+                    },
+                    {
+                        "in": "path",
+                        "name": "userScope",
+                        "description": "",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/contributedFeatureStateQuery"
+                        }
+                    }
+                }
+            }
+        },
+        "/_apis/featuremanagement/featurestatesquery/{userScope}/{scopeName}/{scopeValue}": {
+            "post": {
+                "tags": [
+                    "featureStatesQuery"
+                ],
+                "summary": "QueryFeatureStatesForNamedScope",
+                "description": "Get the states of the specified features for the specific named scope",
+                "operationId": "queryFeatureStatesForNamedScope",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "Query describing the features to query.",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/contributedFeatureStateQuery"
+                        }
+                    },
+                    {
+                        "in": "path",
+                        "name": "userScope",
+                        "description": "",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "scopeName",
+                        "description": "",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "scopeValue",
+                        "description": "",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/contributedFeatureStateQuery"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -401,6 +546,32 @@
                         "disabled",
                         "enabled"
                     ]
+                }
+            }
+        },
+        "contributedFeatureStateQuery": {
+            "type": "object",
+            "properties": {
+                "featureIds": {
+                    "description": "The list of feature ids to query",
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "featureStates": {
+                    "description": "The query result containing the current feature states for each of the queried feature ids",
+                    "type": "object",
+                    "additionalProperties": {
+                        "$ref": "#/definitions/contributedFeatureState"
+                    }
+                },
+                "scopeValues": {
+                    "description": "A dictionary of scope values (project name, etc.) to use in the query (if querying across scopes)",
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "string"
+                    }
                 }
             }
         }
