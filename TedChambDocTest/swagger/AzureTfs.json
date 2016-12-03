@@ -1,0 +1,242 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "AzureTfs",
+        "description": "",
+        "termsOfService": "https://go.microsoft.com/fwlink/?LinkId=329770",
+        "contact": {
+            "name": "nugetvss",
+            "email": "nugetvss@microsoft.com"
+        },
+        "license": {
+            "name": "MICROSOFT SOFTWARE LICENSE TERMS",
+            "url": "https://go.microsoft.com/fwlink/?LinkId=329770"
+        },
+        "version": "3.1"
+    },
+    "host": "fabrikam-fiber-inc.visualstudio.com",
+    "basePath": "/",
+    "tags": [
+        {
+            "name": "continuousDeploymentConfiguration"
+        }
+    ],
+    "schemes": [
+        "https"
+    ],
+    "securityDefinitions": {
+        "pat": {
+            "type": "basic",
+            "description": "Personal access token"
+        }
+    },
+    "security": [
+        {
+            "pat": []
+        }
+    ], 
+    "paths": {
+        "/_apis/azuretfs/continuousdeploymentconfiguration": {
+            "post": {
+                "tags": [
+                    "continuousDeploymentConfiguration"
+                ],
+                "summary": "ConfigureContinuousDeployment",
+                "description": "",
+                "operationId": "configureContinuousDeployment",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/continuousDeploymentConfiguration"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/continuousDeploymentOperation"
+                        }
+                    }
+                }
+            }
+        },
+        "/_apis/azuretfs/continuousdeploymentconfiguration/{continuousDeploymentOperationId}": {
+            "get": {
+                "tags": [
+                    "continuousDeploymentConfiguration"
+                ],
+                "summary": "GetContinuousDeploymentResult",
+                "description": "",
+                "operationId": "getContinuousDeploymentResult",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "continuousDeploymentOperationId",
+                        "description": "",
+                        "required": true,
+                        "type": "string",
+                        "format": "uuid"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/continuousDeploymentOperation"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "continuousDeploymentConfiguration": {
+            "type": "object",
+            "properties": {
+                "accountConfiguration": {
+                    "$ref": "#/definitions/resourceConfiguration"
+                },
+                "projectConfiguration": {
+                    "$ref": "#/definitions/resourceConfiguration"
+                },
+                "sourceConfiguration": {
+                    "$ref": "#/definitions/sourceConfiguration"
+                },
+                "targetConfiguration": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/property"
+                    }
+                },
+                "testConfiguration": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/property"
+                    }
+                }
+            }
+        },
+        "continuousDeploymentOperation": {
+            "type": "object",
+            "allOf": [
+                {
+                    "$ref": "#/definitions/operation"
+                }
+            ],
+            "properties": {
+                "deploymentStepIds": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/property"
+                    }
+                }
+            }
+        },
+        "operation": {
+            "type": "object",
+            "allOf": [
+                {
+                    "type": "string",
+                    "format": "operationReference"
+                }
+            ],
+            "properties": {
+                "_links": {
+                    "type": "string",
+                    "format": "referenceLinks"
+                },
+                "resultMessage": {
+                    "type": "string"
+                }
+            }
+        },
+        "property": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "value": {
+                    "type": "string"
+                }
+            }
+        },
+        "resourceConfiguration": {
+            "type": "object",
+            "properties": {
+                "createIfNotFound": {
+                    "type": "boolean"
+                },
+                "properties": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/property"
+                    }
+                },
+                "resourceName": {
+                    "type": "string"
+                }
+            }
+        },
+        "sourceConfiguration": {
+            "type": "object",
+            "properties": {
+                "sourceRepository": {
+                    "$ref": "#/definitions/sourceRepository"
+                },
+                "sourceVersion": {
+                    "type": "string"
+                }
+            }
+        },
+        "sourceRepository": {
+            "type": "object",
+            "properties": {
+                "identifier": {
+                    "type": "string"
+                },
+                "properties": {
+                    "description": "The properties cannot be IEnumerable/IList, since XML serializer does not work well with interfaces. This object gets passed as job parameter which uses XML serializer.",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/property"
+                    }
+                },
+                "repositoryType": {
+                    "enum": [
+                        "invalid",
+                        "vstsGit",
+                        "gitHub"
+                    ]
+                }
+            }
+        }
+    },
+    "parameters": {
+        "api-Version": {
+            "name": "api-version",
+            "in": "query",
+            "description": "Version of the API to use.  This should be set to '3.1-preview' to use this version of the api.",
+            "required": true,
+            "type": "string"
+        }
+    },
+    "externalDocs": {
+        "description": "Visual Studio Team Services REST APIs",
+        "url": "https://www.visualstudio.com/docs/integrate/api/overview"
+    } 
+}

@@ -1,6 +1,7 @@
 # [Index](index.md)
 # [Account API](accounts.json)
 # [Authentication API](authentication.json)
+# [Azure TFS API](azuretfs.json)
 # [Blob API](blob.json)
 # [Build API](build2.json)
 # [Chat API](chat.json)
