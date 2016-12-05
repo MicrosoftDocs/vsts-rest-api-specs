@@ -61,6 +61,7 @@
 # [Test API](test.json)
 # [Test Execution API](testexecution.json)
 # [Test Impact API](testimpact.json)
+# [Token Revocation API](testimpact.json)
 # [User Management API](usermanagement.json)
 # [User Mapping API](usermapping.json)
 # [Utilization API](utilization.json)
