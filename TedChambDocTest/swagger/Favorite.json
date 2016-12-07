@@ -42,7 +42,7 @@
         }
     ], 
     "paths": {
-        "/_apis/favorite/favoriteartifacts/{artifactType}/{artifactId}": {
+        "/_apis/favorite/{parentResource}/{artifactType}/{artifactId}": {
             "delete": {
                 "tags": [
                     "favoriteArtifacts"
@@ -195,11 +195,17 @@
                     },
                     {
                         "in": "query",
-                        "name": "project",
+                        "name": "artifactScopeType",
                         "description": "",
                         "required": false,
-                        "type": "string",
-                        "format": "uuid"
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "artifactScopeId",
+                        "description": "",
+                        "required": false,
+                        "type": "string"
                     },
                     {
                         "in": "query",
@@ -241,15 +247,21 @@
                     },
                     {
                         "in": "query",
-                        "name": "projectGuid",
+                        "name": "artifactScopeType",
                         "description": "",
                         "required": true,
-                        "type": "string",
-                        "format": "uuid"
+                        "type": "string"
                     },
                     {
                         "in": "query",
-                        "name": "scope",
+                        "name": "artifactScopeId",
+                        "description": "",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "artifactType",
                         "description": "",
                         "required": true,
                         "type": "string"
@@ -260,58 +272,132 @@
                         "description": "successful operation"
                     }
                 }
+            },
+            "get": {
+                "tags": [
+                    "favorites"
+                ],
+                "summary": "GetFavoriteById",
+                "description": "",
+                "operationId": "getFavoriteById",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "favoriteId",
+                        "description": "",
+                        "required": true,
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    {
+                        "in": "query",
+                        "name": "artifactScopeType",
+                        "description": "",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "artifactScopeId",
+                        "description": "",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "artifactType",
+                        "description": "",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "includeExtendedDetails",
+                        "description": "",
+                        "required": false,
+                        "type": "boolean"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/favorite"
+                        }
+                    }
+                }
             }
         }
     },
     "definitions": {
+        "artifactScope": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "description": "The identifier of the scope the artifact resides in. For a TFS Project, this refers to the Project GUID string. For a Collection, marked this property with an empty string.",
+                    "type": "string"
+                },
+                "name": {
+                    "description": "Name of the artifact scope (e.g. Project Name)  Note: This property is a read-only extension over the stored favorite model. This value cannot be overridden on writes.",
+                    "type": "string"
+                },
+                "type": {
+                    "description": "Type of scope the favorite artifact resides in. Known scopes include \"Project\" or \"Collection\"",
+                    "type": "string"
+                }
+            }
+        },
         "favorite": {
             "type": "object",
             "properties": {
                 "_links": {
-                    "description": "Uri referring to web access UI for the underlying artifact.",
+                    "description": "Links to the resources associated to the underlying artifact. Known Contents: -\"page\" refers to web access UI page for the Artifact",
                     "$ref": "#/definitions/referenceLinks"
                 },
+                "artifactId": {
+                    "description": "ID of the favorited artifact, unique in context of this artifact type.",
+                    "type": "string"
+                },
                 "artifactIsDeleted": {
-                    "description": "Indicates if the artifact described by this favorite is gone.",
+                    "description": "Indicates if the artifact described by this favorite  could not be located.",
                     "type": "boolean"
                 },
-                "data": {
-                    "description": "Application specific data for the entry",
+                "artifactName": {
+                    "description": "Last known name of the artifact.",
                     "type": "string"
+                },
+                "artifactProperties": {
+                    "description": "A dictionary of cached properties describing a Favorited artifact. Structure is generated by the service-side feature metadata provider handling this Artifact Type.",
+                    "type": "string"
+                },
+                "artifactScope": {
+                    "description": "Artifact Scope - This object describes where an artifact is contained. e.g. Project Mandatory param for creating all favorites.",
+                    "$ref": "#/definitions/artifactScope"
+                },
+                "artifactType": {
+                    "description": "Type of artifact.",
+                    "type": "string"
+                },
+                "creationDate": {
+                    "description": "Date and time this Favorite was created on server.",
+                    "type": "string",
+                    "format": "date-time"
                 },
                 "id": {
-                    "description": "Unique Id of the entry, supplied by server at creation time",
+                    "description": "Unique Id of the favorite item, defined by server at creation time.",
                     "type": "string",
                     "format": "uuid"
                 },
-                "metadata": {
-                    "description": "Cached type specific metadata describing the Favorite.",
-                    "type": "string"
-                },
-                "name": {
-                    "description": "Display text for favorite entry",
-                    "type": "string"
-                },
-                "parentId": {
-                    "description": "Legacy Property: Id of the parent favorite folder",
+                "owner": {
+                    "description": "User identity, defined by server, based on active user context.",
                     "type": "string",
                     "format": "uuid"
                 },
-                "projectId": {
-                    "description": "Project Id of the favorite  Note: This property is a read-only extension over the traditional favorite model, which was always queried under a single project. This value cannot be overridden on writes.",
-                    "type": "string",
-                    "format": "uuid"
-                },
-                "projectName": {
-                    "description": "Project Name of the favorite  Note: This property is a read-only extension over the traditional favorite model, which was always queried under a single project. This value cannot be overridden on writes.",
-                    "type": "string"
-                },
-                "scope": {
-                    "description": "Storage scope of the favorite  Note: This property is a read-only extension over the traditional favorite model. This value cannot be overridden on writes.",
-                    "type": "string"
-                },
-                "type": {
-                    "description": "Application specific favorite entry specifier.  Legacy Note: Empty or Null represents that Favorite item is a Folder",
+                "url": {
+                    "description": "Fully-Qualified link to this Resource",
                     "type": "string"
                 }
             }
