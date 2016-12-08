@@ -18,6 +18,9 @@
     "basePath": "/",
     "tags": [
         {
+            "name": "backlogconfiguration"
+        },
+        {
             "name": "boardcolumns"
         },
         {
@@ -181,6 +184,43 @@
                         "description": "successful operation",
                         "schema": {
                             "$ref": "#/definitions/processConfiguration"
+                        }
+                    }
+                }
+            }
+        },
+        "/{project}/{team}/_apis/work/backlogconfiguration": {
+            "get": {
+                "tags": [
+                    "backlogconfiguration"
+                ],
+                "summary": "GetBacklogConfigurations",
+                "description": "",
+                "operationId": "getBacklogConfigurations",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "project",
+                        "description": "Project ID or project name",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "team",
+                        "description": "Team ID or team name",
+                        "required": false,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/backlogConfiguration"
                         }
                     }
                 }
@@ -2138,6 +2178,79 @@
             "properties": {
             }
         },
+        "backlogColumn": {
+            "type": "object",
+            "properties": {
+                "columnFieldReference": {
+                    "$ref": "#/definitions/workItemFieldReference"
+                },
+                "width": {
+                    "type": "integer",
+                    "format": "int32"
+                }
+            }
+        },
+        "backlogConfiguration": {
+            "type": "object",
+            "properties": {
+                "backlogFields": {
+                    "description": "Behavior/type field mapping",
+                    "$ref": "#/definitions/backlogFields"
+                },
+                "bugsBehavior": {
+                    "description": "Bugs behavior",
+                    "enum": [
+                        "off",
+                        "asRequirements",
+                        "asTasks"
+                    ]
+                },
+                "hiddenBacklogs": {
+                    "description": "Hidden Backlog",
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "portfolioBacklogs": {
+                    "description": "Portfolio backlog descriptors",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/backlogLevelConfiguration"
+                    }
+                },
+                "requirementBacklog": {
+                    "description": "Requirement backlog",
+                    "$ref": "#/definitions/backlogLevelConfiguration"
+                },
+                "taskBacklog": {
+                    "description": "Task backlog",
+                    "$ref": "#/definitions/backlogLevelConfiguration"
+                },
+                "url": {
+                    "type": "string"
+                },
+                "workItemTypeMappedStates": {
+                    "description": "Mapped states for work item types",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/workItemTypeStateInfo"
+                    }
+                }
+            }
+        },
+        "backlogFields": {
+            "type": "object",
+            "properties": {
+                "typeFields": {
+                    "description": "Field Type (e.g. Order, Activity) to Field Reference Name map",
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
         "backlogLevel": {
             "type": "object",
             "properties": {
@@ -2154,6 +2267,58 @@
                     "type": "array",
                     "items": {
                         "type": "string"
+                    }
+                }
+            }
+        },
+        "backlogLevelConfiguration": {
+            "type": "object",
+            "properties": {
+                "addPanelFields": {
+                    "description": "List of fields to include in Add Panel",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/workItemFieldReference"
+                    }
+                },
+                "color": {
+                    "description": "Color for the backlog level",
+                    "type": "string"
+                },
+                "columnFields": {
+                    "description": "Default list of columns for the backlog",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/backlogColumn"
+                    }
+                },
+                "defaultWorkItemType": {
+                    "description": "Defaulst Work Item Type for the backlog",
+                    "$ref": "#/definitions/workItemTypeReference"
+                },
+                "id": {
+                    "description": "Backlog Id (for Legacy Backlog Level from process config it can be categoryref name)",
+                    "type": "string"
+                },
+                "name": {
+                    "description": "Backlog Name",
+                    "type": "string"
+                },
+                "rank": {
+                    "description": "Backlog Rank (Taskbacklog is 0)",
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "workItemCountLimit": {
+                    "description": "Max number of work items to show in the given backlog",
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "workItemTypes": {
+                    "description": "Work Item types participating in this backlog as known by the project/Process, can be overridden by team settings for bugs",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/workItemTypeReference"
                     }
                 }
             }
@@ -3339,6 +3504,22 @@
             ],
             "properties": {
                 "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "workItemTypeStateInfo": {
+            "type": "object",
+            "properties": {
+                "states": {
+                    "description": "State name to state category map",
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                },
+                "workItemTypeName": {
+                    "description": "Work Item type name",
                     "type": "string"
                 }
             }
