@@ -930,6 +930,68 @@
             }
         },
         "/_apis/proxies": {
+            "put": {
+                "tags": [
+                    "proxies"
+                ],
+                "summary": "CreateOrUpdateProxy",
+                "description": "",
+                "operationId": "createOrUpdateProxy",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/proxy"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/proxy"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "proxies"
+                ],
+                "summary": "DeleteProxy",
+                "description": "",
+                "operationId": "deleteProxy",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "proxyUrl",
+                        "description": "",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "site",
+                        "description": "",
+                        "required": false,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    }
+                }
+            },
             "get": {
                 "tags": [
                     "proxies"
@@ -973,6 +1035,17 @@
                         "type": "string",
                         "format": "uuid"
                     }
+                }
+            }
+        },
+        "identityDescriptor": {
+            "type": "object",
+            "properties": {
+                "identifier": {
+                    "type": "string"
+                },
+                "identityType": {
+                    "type": "string"
                 }
             }
         },
@@ -1142,6 +1215,9 @@
         "proxy": {
             "type": "object",
             "properties": {
+                "authorization": {
+                    "$ref": "#/definitions/proxyAuthorization"
+                },
                 "description": {
                     "description": "This is a description string",
                     "type": "string"
@@ -1163,6 +1239,47 @@
                 "url": {
                     "description": "The URL of the proxy server",
                     "type": "string"
+                }
+            }
+        },
+        "proxyAuthorization": {
+            "type": "object",
+            "properties": {
+                "authorizationUrl": {
+                    "description": "Gets or sets the endpoint used to obtain access tokens from the configured token service.",
+                    "type": "string"
+                },
+                "clientId": {
+                    "description": "Gets or sets the client identifier for this proxy.",
+                    "type": "string",
+                    "format": "uuid"
+                },
+                "identity": {
+                    "description": "Gets or sets the user identity to authorize for on-prem.",
+                    "$ref": "#/definitions/identityDescriptor"
+                },
+                "publicKey": {
+                    "description": "Gets or sets the public key used to verify the identity of this proxy. Only specify on hosted.",
+                    "$ref": "#/definitions/publicKey"
+                }
+            }
+        },
+        "publicKey": {
+            "type": "object",
+            "properties": {
+                "exponent": {
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "format": "byte"
+                    }
+                },
+                "modulus": {
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "format": "byte"
+                    }
                 }
             }
         },

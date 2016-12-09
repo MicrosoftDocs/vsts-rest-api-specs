@@ -48,6 +48,7 @@
 # [Policy API](policy.json)
 # [Process API](process.json)
 # [Profile API](profile.json)
+# [Proxy API](proxy.json)
 # [Recommendation API](recommendation.json)
 # [Release API](release.json)
 # [Release Management API](rm.json)

@@ -1,0 +1,232 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "Proxy",
+        "description": "",
+        "termsOfService": "https://go.microsoft.com/fwlink/?LinkId=329770",
+        "contact": {
+            "name": "nugetvss",
+            "email": "nugetvss@microsoft.com"
+        },
+        "license": {
+            "name": "MICROSOFT SOFTWARE LICENSE TERMS",
+            "url": "https://go.microsoft.com/fwlink/?LinkId=329770"
+        },
+        "version": "3.1"
+    },
+    "host": "fabrikam-fiber-inc.visualstudio.com",
+    "basePath": "/",
+    "tags": [
+        {
+            "name": "proxies"
+        }
+    ],
+    "schemes": [
+        "https"
+    ],
+    "securityDefinitions": {
+        "pat": {
+            "type": "basic",
+            "description": "Personal access token"
+        }
+    },
+    "security": [
+        {
+            "pat": []
+        }
+    ], 
+    "paths": {
+        "/_apis/proxies": {
+            "put": {
+                "tags": [
+                    "proxies"
+                ],
+                "summary": "CreateOrUpdateProxy",
+                "description": "",
+                "operationId": "createOrUpdateProxy",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/proxy"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/proxy"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "proxies"
+                ],
+                "summary": "DeleteProxy",
+                "description": "",
+                "operationId": "deleteProxy",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "proxyUrl",
+                        "description": "",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "site",
+                        "description": "",
+                        "required": false,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    }
+                }
+            },
+            "get": {
+                "tags": [
+                    "proxies"
+                ],
+                "summary": "GetProxies",
+                "description": "",
+                "operationId": "getProxies",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "proxyUrl",
+                        "description": "",
+                        "required": false,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/proxy"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "identityDescriptor": {
+            "type": "object",
+            "properties": {
+                "identifier": {
+                    "type": "string"
+                },
+                "identityType": {
+                    "type": "string"
+                }
+            }
+        },
+        "proxy": {
+            "type": "object",
+            "properties": {
+                "authorization": {
+                    "$ref": "#/definitions/proxyAuthorization"
+                },
+                "description": {
+                    "description": "This is a description string",
+                    "type": "string"
+                },
+                "friendlyName": {
+                    "description": "The friendly name of the server",
+                    "type": "string"
+                },
+                "globalDefault": {
+                    "type": "boolean"
+                },
+                "site": {
+                    "description": "This is a string representation of the site that the proxy server is located in (e.g. \"NA-WA-RED\")",
+                    "type": "string"
+                },
+                "siteDefault": {
+                    "type": "boolean"
+                },
+                "url": {
+                    "description": "The URL of the proxy server",
+                    "type": "string"
+                }
+            }
+        },
+        "proxyAuthorization": {
+            "type": "object",
+            "properties": {
+                "authorizationUrl": {
+                    "description": "Gets or sets the endpoint used to obtain access tokens from the configured token service.",
+                    "type": "string"
+                },
+                "clientId": {
+                    "description": "Gets or sets the client identifier for this proxy.",
+                    "type": "string",
+                    "format": "uuid"
+                },
+                "identity": {
+                    "description": "Gets or sets the user identity to authorize for on-prem.",
+                    "$ref": "#/definitions/identityDescriptor"
+                },
+                "publicKey": {
+                    "description": "Gets or sets the public key used to verify the identity of this proxy. Only specify on hosted.",
+                    "$ref": "#/definitions/publicKey"
+                }
+            }
+        },
+        "publicKey": {
+            "type": "object",
+            "properties": {
+                "exponent": {
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "format": "byte"
+                    }
+                },
+                "modulus": {
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "format": "byte"
+                    }
+                }
+            }
+        }
+    },
+    "parameters": {
+        "api-Version": {
+            "name": "api-version",
+            "in": "query",
+            "description": "Version of the API to use.  This should be set to '3.1-preview' to use this version of the api.",
+            "required": true,
+            "type": "string"
+        }
+    },
+    "externalDocs": {
+        "description": "Visual Studio Team Services REST APIs",
+        "url": "https://www.visualstudio.com/docs/integrate/api/overview"
+    } 
+}
