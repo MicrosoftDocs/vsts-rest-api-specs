@@ -24,6 +24,12 @@
             "name": "accounts"
         },
         {
+            "name": "collectionProperties"
+        },
+        {
+            "name": "collections"
+        },
+        {
             "name": "organizationMigrationBlobs"
         },
         {
@@ -231,6 +237,211 @@
                     {
                         "in": "path",
                         "name": "accountId",
+                        "description": "",
+                        "required": true,
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/jsonPatchDocument"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    }
+                }
+            }
+        },
+        "/_apis/organization/collections": {
+            "post": {
+                "tags": [
+                    "collections"
+                ],
+                "summary": "CreateCollection",
+                "description": "",
+                "operationId": "createCollection",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/collection"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/collection"
+                        }
+                    }
+                }
+            },
+            "get": {
+                "tags": [
+                    "collections"
+                ],
+                "summary": "GetCollections",
+                "description": "",
+                "operationId": "getCollections",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/collection"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/_apis/organization/collections/{collectionId}": {
+            "delete": {
+                "tags": [
+                    "collections"
+                ],
+                "summary": "DeleteCollection",
+                "description": "",
+                "operationId": "deleteCollection",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "collectionId",
+                        "description": "",
+                        "required": true,
+                        "type": "string",
+                        "format": "uuid"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    }
+                }
+            },
+            "get": {
+                "tags": [
+                    "collections"
+                ],
+                "summary": "GetCollection",
+                "description": "",
+                "operationId": "getCollection",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "collectionId",
+                        "description": "",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "propertyNames",
+                        "description": "",
+                        "required": false,
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/collection"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "tags": [
+                    "collections"
+                ],
+                "summary": "RestoreCollection",
+                "description": "",
+                "operationId": "restoreCollection",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "collectionId",
+                        "description": "",
+                        "required": true,
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    {
+                        "in": "query",
+                        "name": "collectionName",
+                        "description": "",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    }
+                }
+            }
+        },
+        "/_apis/organization/Collections/{collectionId}/Properties": {
+            "patch": {
+                "tags": [
+                    "collectionProperties"
+                ],
+                "summary": "UpdateCollectionProperties",
+                "description": "",
+                "operationId": "updateCollectionProperties",
+                "consumes": [
+                    "application/json-patch+json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "collectionId",
                         "description": "",
                         "required": true,
                         "type": "string",
@@ -594,6 +805,54 @@
                 }
             }
         },
+        "collection": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "object"
+                    }
+                },
+                "dateCreated": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "id": {
+                    "description": "Identifier for a account under an organization",
+                    "type": "string",
+                    "format": "uuid"
+                },
+                "lastUpdated": {
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "name": {
+                    "description": "The unqiue name of account under an organziation",
+                    "type": "string"
+                },
+                "owner": {
+                    "type": "string",
+                    "format": "uuid"
+                },
+                "preferredRegion": {
+                    "type": "string"
+                },
+                "properties": {
+                    "description": "Extended properties",
+                    "$ref": "#/definitions/propertiesCollection"
+                },
+                "status": {
+                    "enum": [
+                        "unknown",
+                        "initial",
+                        "enabled",
+                        "logicallyDeleted",
+                        "markedForPhysicalDelete"
+                    ]
+                }
+            }
+        },
         "jsonPatchDocument": {
             "type": "object",
             "allOf": [
@@ -611,6 +870,12 @@
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/account"
+                    }
+                },
+                "collections": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/collection"
                     }
                 },
                 "creatorId": {
@@ -639,6 +904,9 @@
                 },
                 "primaryAccount": {
                     "$ref": "#/definitions/account"
+                },
+                "primaryCollection": {
+                    "$ref": "#/definitions/collection"
                 },
                 "properties": {
                     "description": "Extended properties",
