@@ -78,7 +78,7 @@
         }
     ], 
     "paths": {
-        "/{project}/_apis/codereview/reviews": {
+        "/_apis/codereview/reviews": {
             "get": {
                 "tags": [
                     "reviews"
@@ -99,11 +99,60 @@
                         "format": "reviewSearchCriteria"
                     },
                     {
+                        "in": "query",
+                        "name": "top",
+                        "description": "",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    {
+                        "in": "query",
+                        "name": "continuationToken",
+                        "description": "",
+                        "required": false,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/review"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/{project}/_apis/codereview/reviews": {
+            "get": {
+                "tags": [
+                    "reviews"
+                ],
+                "summary": "GetReviews",
+                "description": "Query reviews based on search criteria. When making subsequent requests that include continuation tokens, be sure to pass the same search criteria. Otherwise the subsequent requests may return unexpected results.",
+                "operationId": "getReviews",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
                         "in": "path",
                         "name": "project",
                         "description": "Project ID or project name",
-                        "required": false,
+                        "required": true,
                         "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "searchCriteria",
+                        "description": "",
+                        "required": true,
+                        "type": "string",
+                        "format": "reviewSearchCriteria"
                     },
                     {
                         "in": "query",

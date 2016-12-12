@@ -288,6 +288,411 @@
                 }
             }
         },
+        "/_apis/wit/recyclebin": {
+            "get": {
+                "tags": [
+                    "recyclebin"
+                ],
+                "summary": "GetDeletedWorkItems",
+                "description": "",
+                "operationId": "getDeletedWorkItems",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/workItemDeleteReference"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/_apis/wit/recyclebin/{id}": {
+            "delete": {
+                "tags": [
+                    "recyclebin"
+                ],
+                "summary": "DestroyWorkItem",
+                "description": "",
+                "operationId": "destroyWorkItem",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "description": "",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation"
+                    }
+                }
+            },
+            "get": {
+                "tags": [
+                    "recyclebin"
+                ],
+                "summary": "GetDeletedWorkItem",
+                "description": "",
+                "operationId": "getDeletedWorkItem",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "description": "",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/workItemDelete"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "tags": [
+                    "recyclebin"
+                ],
+                "summary": "RestoreWorkItem",
+                "description": "",
+                "operationId": "restoreWorkItem",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/workItemDeleteUpdate"
+                        }
+                    },
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "description": "",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/workItemDelete"
+                        }
+                    }
+                }
+            }
+        },
+        "/_apis/wit/reporting/workitemlinks": {
+            "get": {
+                "tags": [
+                    "workItemLinks"
+                ],
+                "summary": "GetReportingLinks",
+                "description": "Get a batch of work item links",
+                "operationId": "getReportingLinks",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "types",
+                        "description": "A list of types to filter the results to specific work item types. Omit this parameter to get work item links of all work item types.",
+                        "required": false,
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "continuationToken",
+                        "description": "Specifies the continuationToken to start the batch from. Omit this parameter to get the first batch of links.",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "startDateTime",
+                        "description": "Date/time to use as a starting point for link changes. Only link changes that occurred after that date/time will be returned. Cannot be used in conjunction with 'watermark' parameter.",
+                        "required": false,
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/reportingWorkItemLinksBatch"
+                        }
+                    }
+                }
+            }
+        },
+        "/_apis/wit/reporting/workitemrevisions": {
+            "get": {
+                "tags": [
+                    "workItemRevisions"
+                ],
+                "summary": "ReadReportingRevisionsGet",
+                "description": "Get a batch of work item revisions with the option of including deleted items",
+                "operationId": "readReportingRevisionsGet",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "fields",
+                        "description": "A list of fields to return in work item revisions. Omit this parameter to get all reportable fields.",
+                        "required": false,
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "types",
+                        "description": "A list of types to filter the results to specific work item types. Omit this parameter to get work item revisions of all work item types.",
+                        "required": false,
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "continuationToken",
+                        "description": "Specifies the watermark to start the batch from. Omit this parameter to get the first batch of revisions.",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "startDateTime",
+                        "description": "Date/time to use as a starting point for revisions, all revisions will occur after this date/time. Cannot be used in conjunction with 'watermark' parameter.",
+                        "required": false,
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    {
+                        "in": "query",
+                        "name": "includeIdentityRef",
+                        "description": "Return an identity reference instead of a string value for identity fields.",
+                        "required": false,
+                        "type": "boolean"
+                    },
+                    {
+                        "in": "query",
+                        "name": "includeDeleted",
+                        "description": "Specify if the deleted item should be returned.",
+                        "required": false,
+                        "type": "boolean"
+                    },
+                    {
+                        "in": "query",
+                        "name": "includeTagRef",
+                        "description": "Specify if the tag objects should be returned for System.Tags field.",
+                        "required": false,
+                        "type": "boolean"
+                    },
+                    {
+                        "in": "query",
+                        "name": "includeLatestOnly",
+                        "description": "Return only the latest revisions of work items, skipping all historical revisions",
+                        "required": false,
+                        "type": "boolean"
+                    },
+                    {
+                        "in": "query",
+                        "name": "expand",
+                        "description": "",
+                        "required": false,
+                        "type": "string",
+                        "format": "reportingRevisionsExpand"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/reportingWorkItemRevisionsBatch"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "workItemRevisions"
+                ],
+                "summary": "ReadReportingRevisionsPost",
+                "description": "Get a batch of work item revisions",
+                "operationId": "readReportingRevisionsPost",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "An object that contains request settings: field filter, type filter, identity format",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/reportingWorkItemRevisionsFilter"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "continuationToken",
+                        "description": "Specifies the watermark to start the batch from. Omit this parameter to get the first batch of revisions.",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "startDateTime",
+                        "description": "Date/time to use as a starting point for revisions, all revisions will occur after this date/time. Cannot be used in conjunction with 'watermark' parameter.",
+                        "required": false,
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    {
+                        "in": "query",
+                        "name": "expand",
+                        "description": "",
+                        "required": false,
+                        "type": "string",
+                        "format": "reportingRevisionsExpand"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/reportingWorkItemRevisionsBatch"
+                        }
+                    }
+                }
+            }
+        },
+        "/_apis/wit/wiql": {
+            "post": {
+                "tags": [
+                    "wiql"
+                ],
+                "summary": "QueryByWiql",
+                "description": "Gets the results of the query.",
+                "operationId": "queryByWiql",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "The query containing the wiql.",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/wiql"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "timePrecision",
+                        "description": "",
+                        "required": false,
+                        "type": "boolean"
+                    },
+                    {
+                        "in": "query",
+                        "name": "top",
+                        "description": "",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/workItemQueryResult"
+                        }
+                    }
+                }
+            }
+        },
+        "/_apis/wit/wiql/{id}": {
+            "get": {
+                "tags": [
+                    "wiql"
+                ],
+                "summary": "QueryById",
+                "description": "Gets the results of the query by id.",
+                "operationId": "queryById",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "description": "The query id.",
+                        "required": true,
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    {
+                        "in": "query",
+                        "name": "timePrecision",
+                        "description": "",
+                        "required": false,
+                        "type": "boolean"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/workItemQueryResult"
+                        }
+                    }
+                }
+            }
+        },
         "/_apis/wit/workitemrelationtypes": {
             "get": {
                 "tags": [
@@ -849,6 +1254,78 @@
                 }
             }
         },
+        "/_apis/wit/workitemtypetemplate": {
+            "post": {
+                "tags": [
+                    "workItemTypeTemplate"
+                ],
+                "summary": "UpdateWorkItemTypeDefinition",
+                "description": "Add/updates a work item type",
+                "operationId": "updateWorkItemTypeDefinition",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/workItemTypeTemplateUpdateModel"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/provisioningResult"
+                        }
+                    }
+                }
+            }
+        },
+        "/_apis/wit/workitemtypetemplate/{type}": {
+            "get": {
+                "tags": [
+                    "workItemTypeTemplate"
+                ],
+                "summary": "ExportWorkItemTypeDefinition",
+                "description": "Export work item type",
+                "operationId": "exportWorkItemTypeDefinition",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "type",
+                        "description": "",
+                        "required": false,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "exportGlobalLists",
+                        "description": "",
+                        "required": false,
+                        "type": "boolean"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/workItemTypeTemplate"
+                        }
+                    }
+                }
+            }
+        },
         "/{project}/_apis/wit/classificationnodes": {
             "get": {
                 "tags": [
@@ -1360,19 +1837,8 @@
                         "in": "path",
                         "name": "project",
                         "description": "Project ID or project name",
-                        "required": false,
+                        "required": true,
                         "type": "string"
-                    },
-                    {
-                        "in": "query",
-                        "name": "ids",
-                        "description": "",
-                        "required": false,
-                        "type": "array",
-                        "items": {
-                            "type": "integer",
-                            "format": "int32"
-                        }
                     }
                 ],
                 "responses": {
@@ -1399,18 +1865,18 @@
                 "parameters": [
                     {
                         "in": "path",
+                        "name": "project",
+                        "description": "Project ID or project name",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
                         "name": "id",
                         "description": "",
                         "required": true,
                         "type": "integer",
                         "format": "int32"
-                    },
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": false,
-                        "type": "string"
                     }
                 ],
                 "responses": {
@@ -1432,18 +1898,18 @@
                 "parameters": [
                     {
                         "in": "path",
+                        "name": "project",
+                        "description": "Project ID or project name",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
                         "name": "id",
                         "description": "",
                         "required": true,
                         "type": "integer",
                         "format": "int32"
-                    },
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": false,
-                        "type": "string"
                     }
                 ],
                 "responses": {
@@ -1480,18 +1946,18 @@
                     },
                     {
                         "in": "path",
+                        "name": "project",
+                        "description": "Project ID or project name",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
                         "name": "id",
                         "description": "",
                         "required": true,
                         "type": "integer",
                         "format": "int32"
-                    },
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": false,
-                        "type": "string"
                     }
                 ],
                 "responses": {
@@ -1520,7 +1986,7 @@
                         "in": "path",
                         "name": "project",
                         "description": "Project ID or project name",
-                        "required": false,
+                        "required": true,
                         "type": "string"
                     },
                     {
@@ -1575,7 +2041,7 @@
                         "in": "path",
                         "name": "project",
                         "description": "Project ID or project name",
-                        "required": false,
+                        "required": true,
                         "type": "string"
                     },
                     {
@@ -1686,7 +2152,7 @@
                         "in": "path",
                         "name": "project",
                         "description": "Project ID or project name",
-                        "required": false,
+                        "required": true,
                         "type": "string"
                     },
                     {
@@ -1718,6 +2184,108 @@
                         "description": "successful operation",
                         "schema": {
                             "$ref": "#/definitions/reportingWorkItemRevisionsBatch"
+                        }
+                    }
+                }
+            }
+        },
+        "/{project}/_apis/wit/wiql": {
+            "post": {
+                "tags": [
+                    "wiql"
+                ],
+                "summary": "QueryByWiql",
+                "description": "Gets the results of the query.",
+                "operationId": "queryByWiql",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "The query containing the wiql.",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/wiql"
+                        }
+                    },
+                    {
+                        "in": "path",
+                        "name": "project",
+                        "description": "Project ID or project name",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "timePrecision",
+                        "description": "",
+                        "required": false,
+                        "type": "boolean"
+                    },
+                    {
+                        "in": "query",
+                        "name": "top",
+                        "description": "",
+                        "required": false,
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/workItemQueryResult"
+                        }
+                    }
+                }
+            }
+        },
+        "/{project}/_apis/wit/wiql/{id}": {
+            "get": {
+                "tags": [
+                    "wiql"
+                ],
+                "summary": "QueryById",
+                "description": "Gets the results of the query by id.",
+                "operationId": "queryById",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "project",
+                        "description": "Project ID or project name",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "description": "The query id.",
+                        "required": true,
+                        "type": "string",
+                        "format": "uuid"
+                    },
+                    {
+                        "in": "query",
+                        "name": "timePrecision",
+                        "description": "",
+                        "required": false,
+                        "type": "boolean"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/workItemQueryResult"
                         }
                     }
                 }
@@ -2096,7 +2664,7 @@
                         "in": "path",
                         "name": "project",
                         "description": "Project ID or project name",
-                        "required": false,
+                        "required": true,
                         "type": "string"
                     }
                 ],
@@ -2126,7 +2694,7 @@
                         "in": "path",
                         "name": "project",
                         "description": "Project ID or project name",
-                        "required": false,
+                        "required": true,
                         "type": "string"
                     },
                     {
@@ -2413,14 +2981,14 @@
                         "in": "path",
                         "name": "project",
                         "description": "Project ID or project name",
-                        "required": false,
+                        "required": true,
                         "type": "string"
                     },
                     {
                         "in": "path",
                         "name": "team",
                         "description": "Team ID or team name",
-                        "required": false,
+                        "required": true,
                         "type": "string"
                     },
                     {
@@ -2463,25 +3031,25 @@
                 "parameters": [
                     {
                         "in": "path",
-                        "name": "id",
-                        "description": "The query id.",
-                        "required": true,
-                        "type": "string",
-                        "format": "uuid"
-                    },
-                    {
-                        "in": "path",
                         "name": "project",
                         "description": "Project ID or project name",
-                        "required": false,
+                        "required": true,
                         "type": "string"
                     },
                     {
                         "in": "path",
                         "name": "team",
                         "description": "Team ID or team name",
-                        "required": false,
+                        "required": true,
                         "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "description": "The query id.",
+                        "required": true,
+                        "type": "string",
+                        "format": "uuid"
                     },
                     {
                         "in": "query",
