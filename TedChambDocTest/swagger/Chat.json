@@ -1,731 +1,734 @@
 {
-    "swagger": "2.0",
-    "info": {
-        "title": "Chat",
+  "swagger": "2.0",
+  "info": {
+    "title": "Chat",
+    "description": "",
+    "termsOfService": "https://go.microsoft.com/fwlink/?LinkId=329770",
+    "contact": {
+      "name": "nugetvss",
+      "email": "nugetvss@microsoft.com"
+    },
+    "license": {
+      "name": "MICROSOFT SOFTWARE LICENSE TERMS",
+      "url": "https://go.microsoft.com/fwlink/?LinkId=329770"
+    },
+    "version": "3.1"
+  },
+  "host": "fabrikam-fiber-inc.visualstudio.com",
+  "basePath": "/",
+  "tags": [
+    {
+      "name": "messages"
+    },
+    {
+      "name": "rooms"
+    },
+    {
+      "name": "users"
+    }
+  ],
+  "schemes": [
+    "https"
+  ],
+  "securityDefinitions": {
+    "pat": {
+      "type": "basic",
+      "description": "Personal access token"
+    }
+  },
+  "security": [
+    {
+      "pat": []
+    }
+  ], 
+  "paths": {
+    "/_apis/chat/rooms": {
+      "post": {
+        "tags": [
+          "rooms"
+        ],
+        "summary": "CreateChatRoom",
+        "description": "Create a single chat room",
+        "operationId": "createChatRoom",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Information to create the room",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/roomData"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/room"
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "rooms"
+        ],
+        "summary": "GetAllRooms",
         "description": "",
-        "termsOfService": "https://go.microsoft.com/fwlink/?LinkId=329770",
-        "contact": {
-            "name": "nugetvss",
-            "email": "nugetvss@microsoft.com"
-        },
-        "license": {
-            "name": "MICROSOFT SOFTWARE LICENSE TERMS",
-            "url": "https://go.microsoft.com/fwlink/?LinkId=329770"
-        },
-        "version": "3.1"
+        "operationId": "getAllRooms",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/roomCollection"
+            }
+          }
+        }
+      }
     },
-    "host": "fabrikam-fiber-inc.visualstudio.com",
-    "basePath": "/",
-    "tags": [
-        {
-            "name": "messages"
-        },
-        {
-            "name": "rooms"
-        },
-        {
-            "name": "users"
+    "/_apis/chat/rooms/{roomId}": {
+      "delete": {
+        "tags": [
+          "rooms"
+        ],
+        "summary": "DeleteChatRoom",
+        "description": "Delete a given chat room",
+        "operationId": "deleteChatRoom",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "roomId",
+            "description": "Id of the room",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
         }
-    ],
-    "schemes": [
-        "https"
-    ],
-    "securityDefinitions": {
-        "pat": {
-            "type": "basic",
-            "description": "Personal access token"
+      },
+      "get": {
+        "tags": [
+          "rooms"
+        ],
+        "summary": "GetChatRoomById",
+        "description": "Retrieve information on a single chat room",
+        "operationId": "getChatRoomById",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "roomId",
+            "description": "Id of the room to retrieve",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/room"
+            }
+          }
         }
+      },
+      "patch": {
+        "tags": [
+          "rooms"
+        ],
+        "summary": "UpdateChatRoom",
+        "description": "Update information on a single chat room",
+        "operationId": "updateChatRoom",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Room information",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/roomData"
+            }
+          },
+          {
+            "in": "path",
+            "name": "roomId",
+            "description": "Id of the room to update",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/room"
+            }
+          }
+        }
+      }
     },
-    "security": [
-        {
-            "pat": []
+    "/_apis/chat/Rooms/{roomId}/messages": {
+      "get": {
+        "tags": [
+          "messages"
+        ],
+        "summary": "GetAllChatRoomMessages",
+        "description": "Retrieve a listing of all chat messages in a given room",
+        "operationId": "getAllChatRoomMessages",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "roomId",
+            "description": "Id of the room",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/message"
+              }
+            }
+          }
         }
-    ], 
-    "paths": {
-        "/_apis/chat/rooms": {
-            "post": {
-                "tags": [
-                    "rooms"
-                ],
-                "summary": "CreateChatRoom",
-                "description": "Create a single chat room",
-                "operationId": "createChatRoom",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "body",
-                        "name": "body",
-                        "description": "Information to create the room",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/roomData"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "$ref": "#/definitions/room"
-                        }
-                    }
-                }
-            },
-            "get": {
-                "tags": [
-                    "rooms"
-                ],
-                "summary": "GetAllRooms",
-                "description": "",
-                "operationId": "getAllRooms",
-                "produces": [
-                    "application/json"
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "$ref": "#/definitions/roomCollection"
-                        }
-                    }
-                }
+      },
+      "post": {
+        "tags": [
+          "messages"
+        ],
+        "summary": "SendMessageToRoom",
+        "description": "Post message to a room",
+        "operationId": "sendMessageToRoom",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Content of the message to post",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/messageData"
             }
-        },
-        "/_apis/chat/rooms/{roomId}": {
-            "delete": {
-                "tags": [
-                    "rooms"
-                ],
-                "summary": "DeleteChatRoom",
-                "description": "Delete a given chat room",
-                "operationId": "deleteChatRoom",
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "roomId",
-                        "description": "Id of the room",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int32"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation"
-                    }
-                }
-            },
-            "get": {
-                "tags": [
-                    "rooms"
-                ],
-                "summary": "GetChatRoomById",
-                "description": "Retrieve information on a single chat room",
-                "operationId": "getChatRoomById",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "roomId",
-                        "description": "Id of the room to retrieve",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int32"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "$ref": "#/definitions/room"
-                        }
-                    }
-                }
-            },
-            "patch": {
-                "tags": [
-                    "rooms"
-                ],
-                "summary": "UpdateChatRoom",
-                "description": "Update information on a single chat room",
-                "operationId": "updateChatRoom",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "body",
-                        "name": "body",
-                        "description": "Room information",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/roomData"
-                        }
-                    },
-                    {
-                        "in": "path",
-                        "name": "roomId",
-                        "description": "Id of the room to update",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int32"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "$ref": "#/definitions/room"
-                        }
-                    }
-                }
+          },
+          {
+            "in": "path",
+            "name": "roomId",
+            "description": "Id of the room",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/message"
             }
-        },
-        "/_apis/chat/Rooms/{roomId}/messages": {
-            "get": {
-                "tags": [
-                    "messages"
-                ],
-                "summary": "GetAllChatRoomMessages",
-                "description": "Retrieve a listing of all chat messages in a given room",
-                "operationId": "getAllChatRoomMessages",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "roomId",
-                        "description": "Id of the room",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int32"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/message"
-                            }
-                        }
-                    }
-                }
-            },
-            "post": {
-                "tags": [
-                    "messages"
-                ],
-                "summary": "SendMessageToRoom",
-                "description": "Post message to a room",
-                "operationId": "sendMessageToRoom",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "body",
-                        "name": "body",
-                        "description": "Content of the message to post",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/messageData"
-                        }
-                    },
-                    {
-                        "in": "path",
-                        "name": "roomId",
-                        "description": "Id of the room",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int32"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "$ref": "#/definitions/message"
-                        }
-                    }
-                }
-            }
-        },
-        "/_apis/chat/Rooms/{roomId}/messages/{messageId}": {
-            "delete": {
-                "tags": [
-                    "messages"
-                ],
-                "summary": "DeleteMessage",
-                "description": "Delete a given chat message",
-                "operationId": "deleteMessage",
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "roomId",
-                        "description": "Id of the room",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "path",
-                        "name": "messageId",
-                        "description": "Id of the message to delete",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int32"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation"
-                    }
-                }
-            },
-            "get": {
-                "tags": [
-                    "messages"
-                ],
-                "summary": "GetChatRoomMessageById",
-                "description": "Retrieve information on a single chat message",
-                "operationId": "getChatRoomMessageById",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "roomId",
-                        "description": "Id of the room",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "path",
-                        "name": "messageId",
-                        "description": "Id of the message to retrieve",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int32"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "$ref": "#/definitions/message"
-                        }
-                    }
-                }
-            },
-            "patch": {
-                "tags": [
-                    "messages"
-                ],
-                "summary": "UpdateChatMessage",
-                "description": "Update a given chat message",
-                "operationId": "updateChatMessage",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "body",
-                        "name": "body",
-                        "description": "New message content",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/messageData"
-                        }
-                    },
-                    {
-                        "in": "path",
-                        "name": "roomId",
-                        "description": "Id of the room",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "path",
-                        "name": "messageId",
-                        "description": "Id of the message",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int32"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "$ref": "#/definitions/message"
-                        }
-                    }
-                }
-            }
-        },
-        "/_apis/chat/Rooms/{roomId}/users": {
-            "get": {
-                "tags": [
-                    "users"
-                ],
-                "summary": "GetAllChatRoomUsers",
-                "description": "Retrieve a listing of all chat users",
-                "operationId": "getAllChatRoomUsers",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "roomId",
-                        "description": "Id of the room",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int32"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "$ref": "#/definitions/userCollection"
-                        }
-                    }
-                }
-            }
-        },
-        "/_apis/chat/Rooms/{roomId}/users/{userId}": {
-            "get": {
-                "tags": [
-                    "users"
-                ],
-                "summary": "GetChatRoomUserById",
-                "description": "Retrieve information on a single chat user",
-                "operationId": "getChatRoomUserById",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "roomId",
-                        "description": "Id of the room",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "path",
-                        "name": "userId",
-                        "description": "TfId of the user",
-                        "required": true,
-                        "type": "string",
-                        "format": "uuid"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "$ref": "#/definitions/user"
-                        }
-                    }
-                }
-            },
-            "put": {
-                "tags": [
-                    "users"
-                ],
-                "summary": "JoinRoom",
-                "description": "Joins a user to a given room",
-                "operationId": "joinRoom",
-                "consumes": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "body",
-                        "name": "body",
-                        "description": "user model information",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/userData"
-                        }
-                    },
-                    {
-                        "in": "path",
-                        "name": "roomId",
-                        "description": "Id of the room",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "path",
-                        "name": "userId",
-                        "description": "TfId of the user",
-                        "required": true,
-                        "type": "string",
-                        "format": "uuid"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation"
-                    }
-                }
-            },
-            "delete": {
-                "tags": [
-                    "users"
-                ],
-                "summary": "LeaveRoom",
-                "description": "Leaves a user from a given room",
-                "operationId": "leaveRoom",
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "roomId",
-                        "description": "Id of the room",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "path",
-                        "name": "userId",
-                        "description": "TfId of the user",
-                        "required": true,
-                        "type": "string",
-                        "format": "uuid"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation"
-                    }
-                }
-            }
+          }
         }
+      }
     },
-    "definitions": {
-        "identityRef": {
-            "type": "object",
-            "properties": {
-                "displayName": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "string"
-                },
-                "imageUrl": {
-                    "type": "string"
-                },
-                "isAadIdentity": {
-                    "type": "boolean"
-                },
-                "isContainer": {
-                    "type": "boolean"
-                },
-                "profileUrl": {
-                    "type": "string"
-                },
-                "uniqueName": {
-                    "type": "string"
-                },
-                "url": {
-                    "type": "string"
-                }
+    "/_apis/chat/Rooms/{roomId}/messages/{messageId}": {
+      "delete": {
+        "tags": [
+          "messages"
+        ],
+        "summary": "DeleteMessage",
+        "description": "Delete a given chat message",
+        "operationId": "deleteMessage",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "roomId",
+            "description": "Id of the room",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "path",
+            "name": "messageId",
+            "description": "Id of the message to delete",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "messages"
+        ],
+        "summary": "GetChatRoomMessageById",
+        "description": "Retrieve information on a single chat message",
+        "operationId": "getChatRoomMessageById",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "roomId",
+            "description": "Id of the room",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "path",
+            "name": "messageId",
+            "description": "Id of the message to retrieve",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/message"
             }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "messages"
+        ],
+        "summary": "UpdateChatMessage",
+        "description": "Update a given chat message",
+        "operationId": "updateChatMessage",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "New message content",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/messageData"
+            }
+          },
+          {
+            "in": "path",
+            "name": "roomId",
+            "description": "Id of the room",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "path",
+            "name": "messageId",
+            "description": "Id of the message",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/message"
+            }
+          }
+        }
+      }
+    },
+    "/_apis/chat/Rooms/{roomId}/users": {
+      "get": {
+        "tags": [
+          "users"
+        ],
+        "summary": "GetAllChatRoomUsers",
+        "description": "Retrieve a listing of all chat users",
+        "operationId": "getAllChatRoomUsers",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "roomId",
+            "description": "Id of the room",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/userCollection"
+            }
+          }
+        }
+      }
+    },
+    "/_apis/chat/Rooms/{roomId}/users/{userId}": {
+      "get": {
+        "tags": [
+          "users"
+        ],
+        "summary": "GetChatRoomUserById",
+        "description": "Retrieve information on a single chat user",
+        "operationId": "getChatRoomUserById",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "roomId",
+            "description": "Id of the room",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "path",
+            "name": "userId",
+            "description": "TfId of the user",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/user"
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "users"
+        ],
+        "summary": "JoinRoom",
+        "description": "Joins a user to a given room",
+        "operationId": "joinRoom",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "user model information",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/userData"
+            }
+          },
+          {
+            "in": "path",
+            "name": "roomId",
+            "description": "Id of the room",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "path",
+            "name": "userId",
+            "description": "TfId of the user",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "users"
+        ],
+        "summary": "LeaveRoom",
+        "description": "Leaves a user from a given room",
+        "operationId": "leaveRoom",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "roomId",
+            "description": "Id of the room",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "path",
+            "name": "userId",
+            "description": "TfId of the user",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "identityRef": {
+      "type": "object",
+      "properties": {
+        "displayName": {
+          "type": "string"
         },
-        "message": {
-            "type": "object",
-            "properties": {
-                "content": {
-                    "description": "Message content",
-                    "type": "string"
-                },
-                "id": {
-                    "description": "Message Id",
-                    "type": "integer",
-                    "format": "int32"
-                },
-                "messageType": {
-                    "description": "Message Type, currently only plain text is supported.",
-                    "enum": [
-                        "normal",
-                        "system",
-                        "notification",
-                        "error"
-                    ]
-                },
-                "postedBy": {
-                    "description": "User who posted the message. May be null if message came from a system account",
-                    "$ref": "#/definitions/identityRef"
-                },
-                "postedRoomId": {
-                    "description": "Id of the room in which message is posted",
-                    "type": "integer",
-                    "format": "int32"
-                },
-                "postedTime": {
-                    "description": "Message posted time",
-                    "type": "string",
-                    "format": "date-time"
-                }
-            }
+        "id": {
+          "type": "string"
         },
-        "messageData": {
-            "type": "object",
-            "properties": {
-                "content": {
-                    "type": "string"
-                }
-            }
+        "imageUrl": {
+          "type": "string"
         },
-        "room": {
-            "type": "object",
-            "properties": {
-                "createdBy": {
-                    "description": "Room creator user",
-                    "$ref": "#/definitions/identityRef"
-                },
-                "createdDate": {
-                    "description": "Room creation date",
-                    "type": "string",
-                    "format": "date-time"
-                },
-                "description": {
-                    "description": "Description of the room",
-                    "type": "string"
-                },
-                "hasAdminPermissions": {
-                    "description": "Admin permissions for current user",
-                    "type": "boolean"
-                },
-                "hasReadWritePermissions": {
-                    "description": "Read/Write permissions for current user",
-                    "type": "boolean"
-                },
-                "id": {
-                    "description": "Id of the room",
-                    "type": "integer",
-                    "format": "int32"
-                },
-                "lastActivity": {
-                    "description": "Last activity in the room",
-                    "type": "string",
-                    "format": "date-time"
-                },
-                "name": {
-                    "description": "Name of the room",
-                    "type": "string"
-                }
-            }
+        "isAadIdentity": {
+          "type": "boolean"
         },
-        "roomCollection": {
-            "type": "object",
-            "allOf": [
-                {
-                    "type": "array"
-                }
-            ],
-            "properties": {
-            }
+        "isContainer": {
+          "type": "boolean"
         },
-        "roomData": {
-            "type": "object",
-            "properties": {
-                "description": {
-                    "description": "Description of the room",
-                    "type": "string"
-                },
-                "name": {
-                    "description": "Name of the room",
-                    "type": "string"
-                }
-            }
+        "profileUrl": {
+          "type": "string"
+        },
+        "uniqueName": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        }
+      }
+    },
+    "message": {
+      "type": "object",
+      "properties": {
+        "content": {
+          "description": "Message content",
+          "type": "string"
+        },
+        "id": {
+          "description": "Message Id",
+          "type": "integer",
+          "format": "int32"
+        },
+        "messageType": {
+          "description": "Message Type, currently only plain text is supported.",
+          "enum": [
+            "normal",
+            "system",
+            "notification",
+            "error"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.TeamFoundation.Chat.WebApi.MessageType"
+          }
+        },
+        "postedBy": {
+          "description": "User who posted the message. May be null if message came from a system account",
+          "$ref": "#/definitions/identityRef"
+        },
+        "postedRoomId": {
+          "description": "Id of the room in which message is posted",
+          "type": "integer",
+          "format": "int32"
+        },
+        "postedTime": {
+          "description": "Message posted time",
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "messageData": {
+      "type": "object",
+      "properties": {
+        "content": {
+          "type": "string"
+        }
+      }
+    },
+    "room": {
+      "type": "object",
+      "properties": {
+        "createdBy": {
+          "description": "Room creator user",
+          "$ref": "#/definitions/identityRef"
+        },
+        "createdDate": {
+          "description": "Room creation date",
+          "type": "string",
+          "format": "date-time"
+        },
+        "description": {
+          "description": "Description of the room",
+          "type": "string"
+        },
+        "hasAdminPermissions": {
+          "description": "Admin permissions for current user",
+          "type": "boolean"
+        },
+        "hasReadWritePermissions": {
+          "description": "Read/Write permissions for current user",
+          "type": "boolean"
+        },
+        "id": {
+          "description": "Id of the room",
+          "type": "integer",
+          "format": "int32"
+        },
+        "lastActivity": {
+          "description": "Last activity in the room",
+          "type": "string",
+          "format": "date-time"
+        },
+        "name": {
+          "description": "Name of the room",
+          "type": "string"
+        }
+      }
+    },
+    "roomCollection": {
+      "type": "object",
+      "allOf": [
+        {
+          "type": "array"
+        }
+      ],
+      "properties": {
+      }
+    },
+    "roomData": {
+      "type": "object",
+      "properties": {
+        "description": {
+          "description": "Description of the room",
+          "type": "string"
+        },
+        "name": {
+          "description": "Name of the room",
+          "type": "string"
+        }
+      }
+    },
+    "user": {
+      "type": "object",
+      "properties": {
+        "isOnline": {
+          "description": "A value indicating whether the user is online or not.",
+          "type": "boolean"
+        },
+        "joinedDate": {
+          "description": "Time when user joined the room",
+          "type": "string",
+          "format": "date-time"
+        },
+        "lastActivity": {
+          "description": "Last activity time",
+          "type": "string",
+          "format": "date-time"
+        },
+        "roomId": {
+          "description": "Id of the Room",
+          "type": "integer",
+          "format": "int32"
         },
         "user": {
-            "type": "object",
-            "properties": {
-                "isOnline": {
-                    "description": "A value indicating whether the user is online or not.",
-                    "type": "boolean"
-                },
-                "joinedDate": {
-                    "description": "Time when user joined the room",
-                    "type": "string",
-                    "format": "date-time"
-                },
-                "lastActivity": {
-                    "description": "Last activity time",
-                    "type": "string",
-                    "format": "date-time"
-                },
-                "roomId": {
-                    "description": "Id of the Room",
-                    "type": "integer",
-                    "format": "int32"
-                },
-                "user": {
-                    "description": "The shallow reference for the user",
-                    "$ref": "#/definitions/identityRef"
-                }
-            }
-        },
-        "userCollection": {
-            "type": "object",
-            "allOf": [
-                {
-                    "type": "array"
-                }
-            ],
-            "properties": {
-            }
-        },
-        "userData": {
-            "type": "object",
-            "properties": {
-                "userId": {
-                    "type": "string"
-                }
-            }
+          "description": "The shallow reference for the user",
+          "$ref": "#/definitions/identityRef"
         }
+      }
     },
-    "parameters": {
-        "api-Version": {
-            "name": "api-version",
-            "in": "query",
-            "description": "Version of the API to use.  This should be set to '3.1-preview' to use this version of the api.",
-            "required": true,
-            "type": "string"
+    "userCollection": {
+      "type": "object",
+      "allOf": [
+        {
+          "type": "array"
         }
+      ],
+      "properties": {
+      }
     },
-    "externalDocs": {
-        "description": "Visual Studio Team Services REST APIs",
-        "url": "https://www.visualstudio.com/docs/integrate/api/overview"
-    } 
+    "userData": {
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "parameters": {
+    "api-Version": {
+      "name": "api-version",
+      "in": "query",
+      "description": "Version of the API to use.  This should be set to '3.1-preview' to use this version of the api.",
+      "required": true,
+      "type": "string"
+    }
+  },
+  "externalDocs": {
+    "description": "Visual Studio Team Services REST APIs",
+    "url": "https://www.visualstudio.com/docs/integrate/api/overview"
+  }
 }

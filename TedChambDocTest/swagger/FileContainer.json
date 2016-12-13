@@ -1,440 +1,449 @@
 {
-    "swagger": "2.0",
-    "info": {
-        "title": "FileContainer",
-        "description": "",
-        "termsOfService": "https://go.microsoft.com/fwlink/?LinkId=329770",
-        "contact": {
-            "name": "nugetvss",
-            "email": "nugetvss@microsoft.com"
-        },
-        "license": {
-            "name": "MICROSOFT SOFTWARE LICENSE TERMS",
-            "url": "https://go.microsoft.com/fwlink/?LinkId=329770"
-        },
-        "version": "3.1"
+  "swagger": "2.0",
+  "info": {
+    "title": "FileContainer",
+    "description": "",
+    "termsOfService": "https://go.microsoft.com/fwlink/?LinkId=329770",
+    "contact": {
+      "name": "nugetvss",
+      "email": "nugetvss@microsoft.com"
     },
-    "host": "fabrikam-fiber-inc.visualstudio.com",
-    "basePath": "/",
-    "tags": [
-        {
-            "name": "containers"
-        }
-    ],
-    "schemes": [
-        "https"
-    ],
-    "securityDefinitions": {
-        "pat": {
-            "type": "basic",
-            "description": "Personal access token"
-        }
+    "license": {
+      "name": "MICROSOFT SOFTWARE LICENSE TERMS",
+      "url": "https://go.microsoft.com/fwlink/?LinkId=329770"
     },
-    "security": [
-        {
-            "pat": []
-        }
-    ], 
-    "paths": {
-        "/_apis/resources/containers": {
-            "get": {
-                "tags": [
-                    "containers"
-                ],
-                "summary": "GetContainers",
-                "description": "Gets containers filtered by a comma separated list of artifact uris, if not specified returns all containers",
-                "operationId": "getContainers",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "query",
-                        "name": "artifactUris",
-                        "description": "",
-                        "required": false,
-                        "type": "string"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/fileContainer"
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/_apis/resources/containers/{containerId}": {
-            "post": {
-                "tags": [
-                    "containers"
-                ],
-                "summary": "CreateItems",
-                "description": "",
-                "operationId": "createItems",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "body",
-                        "name": "body",
-                        "description": "",
-                        "required": true,
-                        "schema": {
-                            "type": "string",
-                            "format": "vssJsonCollectionWrapperV"
-                        }
-                    },
-                    {
-                        "in": "path",
-                        "name": "containerId",
-                        "description": "",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int32"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/fileContainerItem"
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/_apis/resources/containers/{containerId}/{*itemPath}": {
-            "get": {
-                "tags": [
-                    "containers"
-                ],
-                "summary": "GetItems",
-                "description": "",
-                "operationId": "getItems",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "containerId",
-                        "description": "",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int64"
-                    },
-                    {
-                        "in": "query",
-                        "name": "itemPath",
-                        "description": "",
-                        "required": false,
-                        "type": "string"
-                    },
-                    {
-                        "in": "query",
-                        "name": "metadata",
-                        "description": "",
-                        "required": false,
-                        "type": "boolean"
-                    },
-                    {
-                        "in": "query",
-                        "name": "format",
-                        "description": "",
-                        "required": false,
-                        "type": "string"
-                    },
-                    {
-                        "in": "query",
-                        "name": "downloadFileName",
-                        "description": "",
-                        "required": false,
-                        "type": "string"
-                    },
-                    {
-                        "in": "query",
-                        "name": "includeDownloadTickets",
-                        "description": "",
-                        "required": false,
-                        "type": "boolean"
-                    },
-                    {
-                        "in": "query",
-                        "name": "isShallow",
-                        "description": "",
-                        "required": false,
-                        "type": "boolean"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/fileContainerItem"
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/_apis/resources/containers/{containerId}/{itemPath}": {
-            "delete": {
-                "tags": [
-                    "containers"
-                ],
-                "summary": "DeleteItem",
-                "description": "Deletes the specified items in a container.",
-                "operationId": "deleteItem",
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "containerId",
-                        "description": "Container Id.",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int64"
-                    },
-                    {
-                        "in": "query",
-                        "name": "itemPath",
-                        "description": "Path to delete.",
-                        "required": true,
-                        "type": "string"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation"
-                    }
-                }
-            }
-        }
-    },
-    "definitions": {
-        "fileContainer": {
-            "type": "object",
-            "properties": {
-                "artifactUri": {
-                    "description": "Uri of the artifact associated with the container.",
-                    "type": "string"
-                },
-                "contentLocation": {
-                    "description": "Download Url for the content of this item.",
-                    "type": "string"
-                },
-                "createdBy": {
-                    "description": "Owner.",
-                    "type": "string",
-                    "format": "uuid"
-                },
-                "dateCreated": {
-                    "description": "Creation date.",
-                    "type": "string",
-                    "format": "date-time"
-                },
-                "description": {
-                    "description": "Description.",
-                    "type": "string"
-                },
-                "id": {
-                    "description": "Id.",
-                    "type": "integer",
-                    "format": "int64"
-                },
-                "itemLocation": {
-                    "description": "Location of the item resource.",
-                    "type": "string"
-                },
-                "name": {
-                    "description": "Name.",
-                    "type": "string"
-                },
-                "options": {
-                    "description": "Options the container can have.",
-                    "enum": [
-                        "none"
-                    ]
-                },
-                "scopeIdentifier": {
-                    "description": "Project Id.",
-                    "type": "string",
-                    "format": "uuid"
-                },
-                "securityToken": {
-                    "description": "Security token of the artifact associated with the container.",
-                    "type": "string"
-                },
-                "signingKeyId": {
-                    "description": "Identifier of the optional encryption key.",
-                    "type": "string",
-                    "format": "uuid"
-                },
-                "size": {
-                    "description": "Total size of the files in bytes.",
-                    "type": "integer",
-                    "format": "int64"
-                }
-            }
-        },
-        "fileContainerItem": {
-            "type": "object",
-            "properties": {
-                "containerId": {
-                    "description": "Container Id.",
-                    "type": "integer",
-                    "format": "int64"
-                },
-                "contentId": {
-                    "type": "array",
-                    "items": {
-                        "type": "string",
-                        "format": "byte"
-                    }
-                },
-                "contentLocation": {
-                    "description": "Download Url for the content of this item.",
-                    "type": "string"
-                },
-                "createdBy": {
-                    "description": "Creator.",
-                    "type": "string",
-                    "format": "uuid"
-                },
-                "dateCreated": {
-                    "description": "Creation date.",
-                    "type": "string",
-                    "format": "date-time"
-                },
-                "dateLastModified": {
-                    "description": "Last modified date.",
-                    "type": "string",
-                    "format": "date-time"
-                },
-                "fileEncoding": {
-                    "description": "Encoding of the file. Zero if not a file.",
-                    "type": "integer",
-                    "format": "int32"
-                },
-                "fileHash": {
-                    "description": "Hash value of the file. Null if not a file.",
-                    "type": "array",
-                    "items": {
-                        "type": "string",
-                        "format": "byte"
-                    }
-                },
-                "fileId": {
-                    "description": "Id of the file content.",
-                    "type": "integer",
-                    "format": "int32"
-                },
-                "fileLength": {
-                    "description": "Length of the file. Zero if not of a file.",
-                    "type": "integer",
-                    "format": "int64"
-                },
-                "fileType": {
-                    "description": "Type of the file. Zero if not a file.",
-                    "type": "integer",
-                    "format": "int32"
-                },
-                "itemLocation": {
-                    "description": "Location of the item resource.",
-                    "type": "string"
-                },
-                "itemType": {
-                    "description": "Type of the item: Folder, File or String.",
-                    "enum": [
-                        "any",
-                        "folder",
-                        "file"
-                    ]
-                },
-                "lastModifiedBy": {
-                    "description": "Modifier.",
-                    "type": "string",
-                    "format": "uuid"
-                },
-                "path": {
-                    "description": "Unique path that identifies the item.",
-                    "type": "string"
-                },
-                "scopeIdentifier": {
-                    "description": "Project Id.",
-                    "type": "string",
-                    "format": "uuid"
-                },
-                "status": {
-                    "description": "Status of the item: Created or Pending Upload.",
-                    "enum": [
-                        "created",
-                        "pendingUpload"
-                    ]
-                },
-                "ticket": {
-                    "type": "string"
-                }
-            }
-        },
-        "vssJsonCollectionWrapper": {
-            "type": "object",
-            "allOf": [
-                {
-                    "type": "string",
-                    "format": "vssJsonCollectionWrapperBase"
-                }
-            ],
-            "properties": {
-                "value": {
-                    "type": "array",
-                    "items": {
-                        "type": "object"
-                    }
-                }
-            }
-        },
-        "vssJsonCollectionWrapperV": {
-            "type": "object",
-            "allOf": [
-                {
-                    "type": "string",
-                    "format": "vssJsonCollectionWrapperBase"
-                }
-            ],
-            "properties": {
-                "value": {
-                    "type": "string",
-                    "format": "t"
-                }
-            }
-        }
-    },
-    "parameters": {
-        "api-Version": {
-            "name": "api-version",
+    "version": "3.1"
+  },
+  "host": "fabrikam-fiber-inc.visualstudio.com",
+  "basePath": "/",
+  "tags": [
+    {
+      "name": "containers"
+    }
+  ],
+  "schemes": [
+    "https"
+  ],
+  "securityDefinitions": {
+    "pat": {
+      "type": "basic",
+      "description": "Personal access token"
+    }
+  },
+  "security": [
+    {
+      "pat": []
+    }
+  ], 
+  "paths": {
+    "/_apis/resources/containers": {
+      "get": {
+        "tags": [
+          "containers"
+        ],
+        "summary": "GetContainers",
+        "description": "Gets containers filtered by a comma separated list of artifact uris, if not specified returns all containers",
+        "operationId": "getContainers",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
             "in": "query",
-            "description": "Version of the API to use.  This should be set to '3.1-preview' to use this version of the api.",
+            "name": "artifactUris",
+            "description": "",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/fileContainer"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/_apis/resources/containers/{containerId}": {
+      "post": {
+        "tags": [
+          "containers"
+        ],
+        "summary": "CreateItems",
+        "description": "",
+        "operationId": "createItems",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "vssJsonCollectionWrapperV"
+            }
+          },
+          {
+            "in": "path",
+            "name": "containerId",
+            "description": "",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/fileContainerItem"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/_apis/resources/containers/{containerId}/{*itemPath}": {
+      "get": {
+        "tags": [
+          "containers"
+        ],
+        "summary": "GetItems",
+        "description": "",
+        "operationId": "getItems",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "containerId",
+            "description": "",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "in": "query",
+            "name": "itemPath",
+            "description": "",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "metadata",
+            "description": "",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "format",
+            "description": "",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "downloadFileName",
+            "description": "",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "includeDownloadTickets",
+            "description": "",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "isShallow",
+            "description": "",
+            "required": false,
+            "type": "boolean"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/fileContainerItem"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/_apis/resources/containers/{containerId}/{itemPath}": {
+      "delete": {
+        "tags": [
+          "containers"
+        ],
+        "summary": "DeleteItem",
+        "description": "Deletes the specified items in a container.",
+        "operationId": "deleteItem",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "containerId",
+            "description": "Container Id.",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "in": "query",
+            "name": "itemPath",
+            "description": "Path to delete.",
             "required": true,
             "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
         }
+      }
+    }
+  },
+  "definitions": {
+    "fileContainer": {
+      "type": "object",
+      "properties": {
+        "artifactUri": {
+          "description": "Uri of the artifact associated with the container.",
+          "type": "string"
+        },
+        "contentLocation": {
+          "description": "Download Url for the content of this item.",
+          "type": "string"
+        },
+        "createdBy": {
+          "description": "Owner.",
+          "type": "string",
+          "format": "uuid"
+        },
+        "dateCreated": {
+          "description": "Creation date.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "description": {
+          "description": "Description.",
+          "type": "string"
+        },
+        "id": {
+          "description": "Id.",
+          "type": "integer",
+          "format": "int64"
+        },
+        "itemLocation": {
+          "description": "Location of the item resource.",
+          "type": "string"
+        },
+        "name": {
+          "description": "Name.",
+          "type": "string"
+        },
+        "options": {
+          "description": "Options the container can have.",
+          "enum": [
+            "none"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.VisualStudio.Services.FileContainer.ContainerOptions"
+          }
+        },
+        "scopeIdentifier": {
+          "description": "Project Id.",
+          "type": "string",
+          "format": "uuid"
+        },
+        "securityToken": {
+          "description": "Security token of the artifact associated with the container.",
+          "type": "string"
+        },
+        "signingKeyId": {
+          "description": "Identifier of the optional encryption key.",
+          "type": "string",
+          "format": "uuid"
+        },
+        "size": {
+          "description": "Total size of the files in bytes.",
+          "type": "integer",
+          "format": "int64"
+        }
+      }
     },
-    "externalDocs": {
-        "description": "Visual Studio Team Services REST APIs",
-        "url": "https://www.visualstudio.com/docs/integrate/api/overview"
-    } 
+    "fileContainerItem": {
+      "type": "object",
+      "properties": {
+        "containerId": {
+          "description": "Container Id.",
+          "type": "integer",
+          "format": "int64"
+        },
+        "contentId": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "byte"
+          }
+        },
+        "contentLocation": {
+          "description": "Download Url for the content of this item.",
+          "type": "string"
+        },
+        "createdBy": {
+          "description": "Creator.",
+          "type": "string",
+          "format": "uuid"
+        },
+        "dateCreated": {
+          "description": "Creation date.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "dateLastModified": {
+          "description": "Last modified date.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "fileEncoding": {
+          "description": "Encoding of the file. Zero if not a file.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "fileHash": {
+          "description": "Hash value of the file. Null if not a file.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "byte"
+          }
+        },
+        "fileId": {
+          "description": "Id of the file content.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "fileLength": {
+          "description": "Length of the file. Zero if not of a file.",
+          "type": "integer",
+          "format": "int64"
+        },
+        "fileType": {
+          "description": "Type of the file. Zero if not a file.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "itemLocation": {
+          "description": "Location of the item resource.",
+          "type": "string"
+        },
+        "itemType": {
+          "description": "Type of the item: Folder, File or String.",
+          "enum": [
+            "any",
+            "folder",
+            "file"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.VisualStudio.Services.FileContainer.ContainerItemType"
+          }
+        },
+        "lastModifiedBy": {
+          "description": "Modifier.",
+          "type": "string",
+          "format": "uuid"
+        },
+        "path": {
+          "description": "Unique path that identifies the item.",
+          "type": "string"
+        },
+        "scopeIdentifier": {
+          "description": "Project Id.",
+          "type": "string",
+          "format": "uuid"
+        },
+        "status": {
+          "description": "Status of the item: Created or Pending Upload.",
+          "enum": [
+            "created",
+            "pendingUpload"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.VisualStudio.Services.FileContainer.ContainerItemStatus"
+          }
+        },
+        "ticket": {
+          "type": "string"
+        }
+      }
+    },
+    "vssJsonCollectionWrapper": {
+      "type": "object",
+      "allOf": [
+        {
+          "type": "string",
+          "format": "vssJsonCollectionWrapperBase"
+        }
+      ],
+      "properties": {
+        "value": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        }
+      }
+    },
+    "vssJsonCollectionWrapperV": {
+      "type": "object",
+      "allOf": [
+        {
+          "type": "string",
+          "format": "vssJsonCollectionWrapperBase"
+        }
+      ],
+      "properties": {
+        "value": {
+          "type": "string",
+          "format": "t"
+        }
+      }
+    }
+  },
+  "parameters": {
+    "api-Version": {
+      "name": "api-version",
+      "in": "query",
+      "description": "Version of the API to use.  This should be set to '3.1-preview' to use this version of the api.",
+      "required": true,
+      "type": "string"
+    }
+  },
+  "externalDocs": {
+    "description": "Visual Studio Team Services REST APIs",
+    "url": "https://www.visualstudio.com/docs/integrate/api/overview"
+  }
 }

@@ -1,2355 +1,2379 @@
 {
-    "swagger": "2.0",
-    "info": {
-        "title": "Tfvc",
-        "description": "",
-        "termsOfService": "https://go.microsoft.com/fwlink/?LinkId=329770",
-        "contact": {
-            "name": "nugetvss",
-            "email": "nugetvss@microsoft.com"
-        },
-        "license": {
-            "name": "MICROSOFT SOFTWARE LICENSE TERMS",
-            "url": "https://go.microsoft.com/fwlink/?LinkId=329770"
-        },
-        "version": "3.1"
+  "swagger": "2.0",
+  "info": {
+    "title": "Tfvc",
+    "description": "",
+    "termsOfService": "https://go.microsoft.com/fwlink/?LinkId=329770",
+    "contact": {
+      "name": "nugetvss",
+      "email": "nugetvss@microsoft.com"
     },
-    "host": "fabrikam-fiber-inc.visualstudio.com",
-    "basePath": "/",
-    "tags": [
-        {
-            "name": "branches"
-        },
-        {
-            "name": "changesetChanges"
-        },
-        {
-            "name": "changesets"
-        },
-        {
-            "name": "changesetsBatch"
-        },
-        {
-            "name": "changesetWorkItems"
-        },
-        {
-            "name": "itemBatch"
-        },
-        {
-            "name": "items"
-        },
-        {
-            "name": "labelItems"
-        },
-        {
-            "name": "labels"
-        },
-        {
-            "name": "shelvesetChanges"
-        },
-        {
-            "name": "shelvesets"
-        },
-        {
-            "name": "shelvesetWorkItems"
-        }
-    ],
-    "schemes": [
-        "https"
-    ],
-    "securityDefinitions": {
-        "pat": {
-            "type": "basic",
-            "description": "Personal access token"
-        }
+    "license": {
+      "name": "MICROSOFT SOFTWARE LICENSE TERMS",
+      "url": "https://go.microsoft.com/fwlink/?LinkId=329770"
     },
-    "security": [
-        {
-            "pat": []
-        }
-    ], 
-    "paths": {
-        "/_apis/tfvc/branches": {
-            "get": {
-                "tags": [
-                    "branches"
-                ],
-                "summary": "GetBranches",
-                "description": "Get a collection of branch roots -- first-level children, branches with no parents",
-                "operationId": "getBranches",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "query",
-                        "name": "includeParent",
-                        "description": "",
-                        "required": false,
-                        "type": "boolean"
-                    },
-                    {
-                        "in": "query",
-                        "name": "includeChildren",
-                        "description": "",
-                        "required": false,
-                        "type": "boolean"
-                    },
-                    {
-                        "in": "query",
-                        "name": "includeDeleted",
-                        "description": "",
-                        "required": false,
-                        "type": "boolean"
-                    },
-                    {
-                        "in": "query",
-                        "name": "includeLinks",
-                        "description": "",
-                        "required": false,
-                        "type": "boolean"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/tfvcBranch"
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/_apis/tfvc/branches/{path}": {
-            "get": {
-                "tags": [
-                    "branches"
-                ],
-                "summary": "GetBranch",
-                "description": "Get a single branch hierarchy at the given path with parents or children (if specified)",
-                "operationId": "getBranch",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "query",
-                        "name": "path",
-                        "description": "",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "query",
-                        "name": "includeParent",
-                        "description": "",
-                        "required": false,
-                        "type": "boolean"
-                    },
-                    {
-                        "in": "query",
-                        "name": "includeChildren",
-                        "description": "",
-                        "required": false,
-                        "type": "boolean"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "$ref": "#/definitions/tfvcBranch"
-                        }
-                    }
-                }
-            }
-        },
-        "/_apis/tfvc/changesets": {
-            "post": {
-                "tags": [
-                    "changesets"
-                ],
-                "summary": "CreateChangeset",
-                "description": "",
-                "operationId": "createChangeset",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "body",
-                        "name": "body",
-                        "description": "",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/tfvcChangeset"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "$ref": "#/definitions/tfvcChangesetRef"
-                        }
-                    }
-                }
-            },
-            "get": {
-                "tags": [
-                    "changesets"
-                ],
-                "summary": "GetChangesets",
-                "description": "Retrieve Tfvc changesets",
-                "operationId": "getChangesets",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "query",
-                        "name": "maxCommentLength",
-                        "description": "",
-                        "required": false,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "query",
-                        "name": "skip",
-                        "description": "",
-                        "required": false,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "query",
-                        "name": "top",
-                        "description": "",
-                        "required": false,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "query",
-                        "name": "orderby",
-                        "description": "",
-                        "required": false,
-                        "type": "string"
-                    },
-                    {
-                        "in": "query",
-                        "name": "searchCriteria",
-                        "description": "",
-                        "required": false,
-                        "type": "string",
-                        "format": "tfvcChangesetSearchCriteria"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/tfvcChangesetRef"
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/_apis/tfvc/changesets/{id}": {
-            "get": {
-                "tags": [
-                    "changesets"
-                ],
-                "summary": "GetChangeset",
-                "description": "Retrieve a Tfvc Changeset",
-                "operationId": "getChangeset",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "id",
-                        "description": "",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "query",
-                        "name": "maxChangeCount",
-                        "description": "",
-                        "required": false,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "query",
-                        "name": "includeDetails",
-                        "description": "",
-                        "required": false,
-                        "type": "boolean"
-                    },
-                    {
-                        "in": "query",
-                        "name": "includeWorkItems",
-                        "description": "",
-                        "required": false,
-                        "type": "boolean"
-                    },
-                    {
-                        "in": "query",
-                        "name": "maxCommentLength",
-                        "description": "",
-                        "required": false,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "query",
-                        "name": "includeSourceRename",
-                        "description": "",
-                        "required": false,
-                        "type": "boolean"
-                    },
-                    {
-                        "in": "query",
-                        "name": "skip",
-                        "description": "",
-                        "required": false,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "query",
-                        "name": "top",
-                        "description": "",
-                        "required": false,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "query",
-                        "name": "orderby",
-                        "description": "",
-                        "required": false,
-                        "type": "string"
-                    },
-                    {
-                        "in": "query",
-                        "name": "searchCriteria",
-                        "description": "",
-                        "required": false,
-                        "type": "string",
-                        "format": "tfvcChangesetSearchCriteria"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "$ref": "#/definitions/tfvcChangeset"
-                        }
-                    }
-                }
-            }
-        },
-        "/_apis/tfvc/changesets/{id}/changes": {
-            "get": {
-                "tags": [
-                    "changesetChanges"
-                ],
-                "summary": "GetChangesetChanges",
-                "description": "Retrieve Tfvc changes for a given changeset",
-                "operationId": "getChangesetChanges",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "id",
-                        "description": "",
-                        "required": false,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "query",
-                        "name": "skip",
-                        "description": "",
-                        "required": false,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "query",
-                        "name": "top",
-                        "description": "",
-                        "required": false,
-                        "type": "integer",
-                        "format": "int32"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/tfvcChange"
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/_apis/tfvc/changesets/{id}/workItems": {
-            "get": {
-                "tags": [
-                    "changesetWorkItems"
-                ],
-                "summary": "GetChangesetWorkItems",
-                "description": "",
-                "operationId": "getChangesetWorkItems",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "id",
-                        "description": "",
-                        "required": false,
-                        "type": "integer",
-                        "format": "int32"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/associatedWorkItem"
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/_apis/tfvc/changesetsbatch": {
-            "post": {
-                "tags": [
-                    "changesetsBatch"
-                ],
-                "summary": "GetBatchedChangesets",
-                "description": "",
-                "operationId": "getBatchedChangesets",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "body",
-                        "name": "body",
-                        "description": "",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/tfvcChangesetsRequestData"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/tfvcChangesetRef"
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/_apis/tfvc/itembatch": {
-            "post": {
-                "tags": [
-                    "itemBatch"
-                ],
-                "summary": "GetItemsBatch",
-                "description": "Post for retrieving a set of items given a list of paths or a long path. Allows for specifying the recursionLevel and version descriptors for each path.",
-                "operationId": "getItemsBatch",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/zip",
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "body",
-                        "name": "body",
-                        "description": "",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/tfvcItemRequestData"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "type": "array"
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/_apis/tfvc/items": {
-            "get": {
-                "tags": [
-                    "items"
-                ],
-                "summary": "GetItems",
-                "description": "Get a list of Tfvc items",
-                "operationId": "getItems",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "query",
-                        "name": "scopePath",
-                        "description": "",
-                        "required": false,
-                        "type": "string"
-                    },
-                    {
-                        "in": "query",
-                        "name": "recursionLevel",
-                        "description": "",
-                        "required": false,
-                        "type": "string",
-                        "format": "versionControlRecursionType"
-                    },
-                    {
-                        "in": "query",
-                        "name": "includeLinks",
-                        "description": "",
-                        "required": false,
-                        "type": "boolean"
-                    },
-                    {
-                        "in": "query",
-                        "name": "versionDescriptor",
-                        "description": "",
-                        "required": false,
-                        "type": "string",
-                        "format": "tfvcVersionDescriptor"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/tfvcItem"
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/_apis/tfvc/items/{path}": {
-            "get": {
-                "tags": [
-                    "items"
-                ],
-                "summary": "GetItem",
-                "description": "Get Item Metadata and/or Content. The download parameter is to indicate whether the content should be available as a download or just sent as a stream in the response. Doesn't apply to zipped content which is always returned as a download.",
-                "operationId": "getItem",
-                "produces": [
-                    "application/octet-stream",
-                    "text/plain",
-                    "application/zip",
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "query",
-                        "name": "path",
-                        "description": "",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "query",
-                        "name": "fileName",
-                        "description": "",
-                        "required": false,
-                        "type": "string"
-                    },
-                    {
-                        "in": "query",
-                        "name": "download",
-                        "description": "",
-                        "required": false,
-                        "type": "boolean"
-                    },
-                    {
-                        "in": "query",
-                        "name": "scopePath",
-                        "description": "",
-                        "required": false,
-                        "type": "string"
-                    },
-                    {
-                        "in": "query",
-                        "name": "recursionLevel",
-                        "description": "",
-                        "required": false,
-                        "type": "string",
-                        "format": "versionControlRecursionType"
-                    },
-                    {
-                        "in": "query",
-                        "name": "versionDescriptor",
-                        "description": "",
-                        "required": false,
-                        "type": "string",
-                        "format": "tfvcVersionDescriptor"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "$ref": "#/definitions/tfvcItem"
-                        }
-                    }
-                }
-            }
-        },
-        "/_apis/tfvc/labels": {
-            "get": {
-                "tags": [
-                    "labels"
-                ],
-                "summary": "GetLabels",
-                "description": "Get a collection of shallow label references.",
-                "operationId": "getLabels",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "query",
-                        "name": "requestData",
-                        "description": "labelScope, name, owner, and itemLabelFilter",
-                        "required": true,
-                        "type": "string",
-                        "format": "tfvcLabelRequestData"
-                    },
-                    {
-                        "in": "query",
-                        "name": "top",
-                        "description": "Max number of labels to return",
-                        "required": false,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "query",
-                        "name": "skip",
-                        "description": "Number of labels to skip",
-                        "required": false,
-                        "type": "integer",
-                        "format": "int32"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/tfvcLabelRef"
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/_apis/tfvc/labels/{labelId}": {
-            "get": {
-                "tags": [
-                    "labels"
-                ],
-                "summary": "GetLabel",
-                "description": "Get a single deep label.",
-                "operationId": "getLabel",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "labelId",
-                        "description": "Unique identifier of label",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "query",
-                        "name": "requestData",
-                        "description": "maxItemCount",
-                        "required": true,
-                        "type": "string",
-                        "format": "tfvcLabelRequestData"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "$ref": "#/definitions/tfvcLabel"
-                        }
-                    }
-                }
-            }
-        },
-        "/_apis/tfvc/labels/{labelId}/items": {
-            "get": {
-                "tags": [
-                    "labelItems"
-                ],
-                "summary": "GetLabelItems",
-                "description": "Get items under a label.",
-                "operationId": "getLabelItems",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "labelId",
-                        "description": "Unique identifier of label",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "query",
-                        "name": "top",
-                        "description": "Max number of items to return",
-                        "required": false,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "query",
-                        "name": "skip",
-                        "description": "Number of items to skip",
-                        "required": false,
-                        "type": "integer",
-                        "format": "int32"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/tfvcItem"
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/_apis/tfvc/shelvesets": {
-            "get": {
-                "tags": [
-                    "shelvesets"
-                ],
-                "summary": "GetShelveset",
-                "description": "Get a single deep shelveset.",
-                "operationId": "getShelveset",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "query",
-                        "name": "shelvesetId",
-                        "description": "Shelveset's unique ID",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "query",
-                        "name": "requestData",
-                        "description": "includeDetails, includeWorkItems, maxChangeCount, and maxCommentLength",
-                        "required": false,
-                        "type": "string",
-                        "format": "tfvcShelvesetRequestData"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "$ref": "#/definitions/tfvcShelveset"
-                        }
-                    }
-                }
-            }
-        },
-        "/_apis/tfvc/shelvesets/changes": {
-            "get": {
-                "tags": [
-                    "shelvesetChanges"
-                ],
-                "summary": "GetShelvesetChanges",
-                "description": "Get changes included in a shelveset.",
-                "operationId": "getShelvesetChanges",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "query",
-                        "name": "shelvesetId",
-                        "description": "Shelveset's unique ID",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "query",
-                        "name": "top",
-                        "description": "Max number of changes to return",
-                        "required": false,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "query",
-                        "name": "skip",
-                        "description": "Number of changes to skip",
-                        "required": false,
-                        "type": "integer",
-                        "format": "int32"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/tfvcChange"
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/_apis/tfvc/shelvesets/workitems": {
-            "get": {
-                "tags": [
-                    "shelvesetWorkItems"
-                ],
-                "summary": "GetShelvesetWorkItems",
-                "description": "Get work items associated with a shelveset.",
-                "operationId": "getShelvesetWorkItems",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "query",
-                        "name": "shelvesetId",
-                        "description": "Shelveset's unique ID",
-                        "required": true,
-                        "type": "string"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/associatedWorkItem"
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/{project}/_apis/tfvc/branches": {
-            "get": {
-                "tags": [
-                    "branches"
-                ],
-                "summary": "GetBranches",
-                "description": "Get a collection of branch roots -- first-level children, branches with no parents",
-                "operationId": "getBranches",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "query",
-                        "name": "includeParent",
-                        "description": "",
-                        "required": false,
-                        "type": "boolean"
-                    },
-                    {
-                        "in": "query",
-                        "name": "includeChildren",
-                        "description": "",
-                        "required": false,
-                        "type": "boolean"
-                    },
-                    {
-                        "in": "query",
-                        "name": "includeDeleted",
-                        "description": "",
-                        "required": false,
-                        "type": "boolean"
-                    },
-                    {
-                        "in": "query",
-                        "name": "includeLinks",
-                        "description": "",
-                        "required": false,
-                        "type": "boolean"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/tfvcBranch"
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/{project}/_apis/tfvc/branches/{path}": {
-            "get": {
-                "tags": [
-                    "branches"
-                ],
-                "summary": "GetBranch",
-                "description": "Get a single branch hierarchy at the given path with parents or children (if specified)",
-                "operationId": "getBranch",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "query",
-                        "name": "path",
-                        "description": "",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "query",
-                        "name": "includeParent",
-                        "description": "",
-                        "required": false,
-                        "type": "boolean"
-                    },
-                    {
-                        "in": "query",
-                        "name": "includeChildren",
-                        "description": "",
-                        "required": false,
-                        "type": "boolean"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "$ref": "#/definitions/tfvcBranch"
-                        }
-                    }
-                }
-            }
-        },
-        "/{project}/_apis/tfvc/changesets": {
-            "post": {
-                "tags": [
-                    "changesets"
-                ],
-                "summary": "CreateChangeset",
-                "description": "",
-                "operationId": "createChangeset",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "body",
-                        "name": "body",
-                        "description": "",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/tfvcChangeset"
-                        }
-                    },
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": true,
-                        "type": "string"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "$ref": "#/definitions/tfvcChangesetRef"
-                        }
-                    }
-                }
-            },
-            "get": {
-                "tags": [
-                    "changesets"
-                ],
-                "summary": "GetChangesets",
-                "description": "Retrieve Tfvc changesets",
-                "operationId": "getChangesets",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "query",
-                        "name": "maxCommentLength",
-                        "description": "",
-                        "required": false,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "query",
-                        "name": "skip",
-                        "description": "",
-                        "required": false,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "query",
-                        "name": "top",
-                        "description": "",
-                        "required": false,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "query",
-                        "name": "orderby",
-                        "description": "",
-                        "required": false,
-                        "type": "string"
-                    },
-                    {
-                        "in": "query",
-                        "name": "searchCriteria",
-                        "description": "",
-                        "required": false,
-                        "type": "string",
-                        "format": "tfvcChangesetSearchCriteria"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/tfvcChangesetRef"
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/{project}/_apis/tfvc/changesets/{id}": {
-            "get": {
-                "tags": [
-                    "changesets"
-                ],
-                "summary": "GetChangeset",
-                "description": "Retrieve a Tfvc Changeset",
-                "operationId": "getChangeset",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
-                        "name": "id",
-                        "description": "",
-                        "required": true,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "query",
-                        "name": "maxChangeCount",
-                        "description": "",
-                        "required": false,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "query",
-                        "name": "includeDetails",
-                        "description": "",
-                        "required": false,
-                        "type": "boolean"
-                    },
-                    {
-                        "in": "query",
-                        "name": "includeWorkItems",
-                        "description": "",
-                        "required": false,
-                        "type": "boolean"
-                    },
-                    {
-                        "in": "query",
-                        "name": "maxCommentLength",
-                        "description": "",
-                        "required": false,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "query",
-                        "name": "includeSourceRename",
-                        "description": "",
-                        "required": false,
-                        "type": "boolean"
-                    },
-                    {
-                        "in": "query",
-                        "name": "skip",
-                        "description": "",
-                        "required": false,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "query",
-                        "name": "top",
-                        "description": "",
-                        "required": false,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "query",
-                        "name": "orderby",
-                        "description": "",
-                        "required": false,
-                        "type": "string"
-                    },
-                    {
-                        "in": "query",
-                        "name": "searchCriteria",
-                        "description": "",
-                        "required": false,
-                        "type": "string",
-                        "format": "tfvcChangesetSearchCriteria"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "$ref": "#/definitions/tfvcChangeset"
-                        }
-                    }
-                }
-            }
-        },
-        "/{project}/_apis/tfvc/itembatch": {
-            "post": {
-                "tags": [
-                    "itemBatch"
-                ],
-                "summary": "GetItemsBatch",
-                "description": "Post for retrieving a set of items given a list of paths or a long path. Allows for specifying the recursionLevel and version descriptors for each path.",
-                "operationId": "getItemsBatch",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/zip",
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "body",
-                        "name": "body",
-                        "description": "",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/tfvcItemRequestData"
-                        }
-                    },
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": true,
-                        "type": "string"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "type": "array"
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/{project}/_apis/tfvc/items": {
-            "get": {
-                "tags": [
-                    "items"
-                ],
-                "summary": "GetItems",
-                "description": "Get a list of Tfvc items",
-                "operationId": "getItems",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "query",
-                        "name": "scopePath",
-                        "description": "",
-                        "required": false,
-                        "type": "string"
-                    },
-                    {
-                        "in": "query",
-                        "name": "recursionLevel",
-                        "description": "",
-                        "required": false,
-                        "type": "string",
-                        "format": "versionControlRecursionType"
-                    },
-                    {
-                        "in": "query",
-                        "name": "includeLinks",
-                        "description": "",
-                        "required": false,
-                        "type": "boolean"
-                    },
-                    {
-                        "in": "query",
-                        "name": "versionDescriptor",
-                        "description": "",
-                        "required": false,
-                        "type": "string",
-                        "format": "tfvcVersionDescriptor"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/tfvcItem"
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/{project}/_apis/tfvc/items/{path}": {
-            "get": {
-                "tags": [
-                    "items"
-                ],
-                "summary": "GetItem",
-                "description": "Get Item Metadata and/or Content. The download parameter is to indicate whether the content should be available as a download or just sent as a stream in the response. Doesn't apply to zipped content which is always returned as a download.",
-                "operationId": "getItem",
-                "produces": [
-                    "application/octet-stream",
-                    "text/plain",
-                    "application/zip",
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "query",
-                        "name": "path",
-                        "description": "",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "query",
-                        "name": "fileName",
-                        "description": "",
-                        "required": false,
-                        "type": "string"
-                    },
-                    {
-                        "in": "query",
-                        "name": "download",
-                        "description": "",
-                        "required": false,
-                        "type": "boolean"
-                    },
-                    {
-                        "in": "query",
-                        "name": "scopePath",
-                        "description": "",
-                        "required": false,
-                        "type": "string"
-                    },
-                    {
-                        "in": "query",
-                        "name": "recursionLevel",
-                        "description": "",
-                        "required": false,
-                        "type": "string",
-                        "format": "versionControlRecursionType"
-                    },
-                    {
-                        "in": "query",
-                        "name": "versionDescriptor",
-                        "description": "",
-                        "required": false,
-                        "type": "string",
-                        "format": "tfvcVersionDescriptor"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "$ref": "#/definitions/tfvcItem"
-                        }
-                    }
-                }
-            }
-        },
-        "/{project}/_apis/tfvc/labels": {
-            "get": {
-                "tags": [
-                    "labels"
-                ],
-                "summary": "GetLabels",
-                "description": "Get a collection of shallow label references.",
-                "operationId": "getLabels",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "query",
-                        "name": "requestData",
-                        "description": "labelScope, name, owner, and itemLabelFilter",
-                        "required": true,
-                        "type": "string",
-                        "format": "tfvcLabelRequestData"
-                    },
-                    {
-                        "in": "query",
-                        "name": "top",
-                        "description": "Max number of labels to return",
-                        "required": false,
-                        "type": "integer",
-                        "format": "int32"
-                    },
-                    {
-                        "in": "query",
-                        "name": "skip",
-                        "description": "Number of labels to skip",
-                        "required": false,
-                        "type": "integer",
-                        "format": "int32"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "$ref": "#/definitions/tfvcLabelRef"
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/{project}/_apis/tfvc/labels/{labelId}": {
-            "get": {
-                "tags": [
-                    "labels"
-                ],
-                "summary": "GetLabel",
-                "description": "Get a single deep label.",
-                "operationId": "getLabel",
-                "produces": [
-                    "application/json"
-                ],
-                "parameters": [
-                    {
-                        "in": "path",
-                        "name": "project",
-                        "description": "Project ID or project name",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "path",
-                        "name": "labelId",
-                        "description": "Unique identifier of label",
-                        "required": true,
-                        "type": "string"
-                    },
-                    {
-                        "in": "query",
-                        "name": "requestData",
-                        "description": "maxItemCount",
-                        "required": true,
-                        "type": "string",
-                        "format": "tfvcLabelRequestData"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "successful operation",
-                        "schema": {
-                            "$ref": "#/definitions/tfvcLabel"
-                        }
-                    }
-                }
-            }
-        }
+    "version": "3.1"
+  },
+  "host": "fabrikam-fiber-inc.visualstudio.com",
+  "basePath": "/",
+  "tags": [
+    {
+      "name": "branches"
     },
-    "definitions": {
-        "associatedWorkItem": {
-            "type": "object",
-            "properties": {
-                "assignedTo": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "integer",
-                    "format": "int32"
-                },
-                "state": {
-                    "type": "string"
-                },
-                "title": {
-                    "type": "string"
-                },
-                "url": {
-                    "description": "REST url",
-                    "type": "string"
-                },
-                "webUrl": {
-                    "type": "string"
-                },
-                "workItemType": {
-                    "type": "string"
-                }
-            }
-        },
-        "change": {
-            "type": "object",
-            "properties": {
-                "changeType": {
-                    "enum": [
-                        "none",
-                        "add",
-                        "edit",
-                        "encoding",
-                        "rename",
-                        "delete",
-                        "undelete",
-                        "branch",
-                        "merge",
-                        "lock",
-                        "rollback",
-                        "sourceRename",
-                        "targetRename",
-                        "property",
-                        "all"
-                    ]
-                },
-                "item": {
-                    "type": "string",
-                    "format": "t"
-                },
-                "newContent": {
-                    "$ref": "#/definitions/itemContent"
-                },
-                "sourceServerItem": {
-                    "type": "string"
-                },
-                "url": {
-                    "type": "string"
-                }
-            }
-        },
-        "checkinNote": {
-            "type": "object",
-            "properties": {
-                "name": {
-                    "type": "string"
-                },
-                "value": {
-                    "type": "string"
-                }
-            }
-        },
-        "fileContentMetadata": {
-            "type": "object",
-            "properties": {
-                "contentType": {
-                    "type": "string"
-                },
-                "encoding": {
-                    "type": "integer",
-                    "format": "int32"
-                },
-                "extension": {
-                    "type": "string"
-                },
-                "fileName": {
-                    "type": "string"
-                },
-                "isBinary": {
-                    "type": "boolean"
-                },
-                "isImage": {
-                    "type": "boolean"
-                },
-                "vsLink": {
-                    "type": "string"
-                }
-            }
-        },
-        "identityRef": {
-            "type": "object",
-            "properties": {
-                "displayName": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "string"
-                },
-                "imageUrl": {
-                    "type": "string"
-                },
-                "isAadIdentity": {
-                    "type": "boolean"
-                },
-                "isContainer": {
-                    "type": "boolean"
-                },
-                "profileUrl": {
-                    "type": "string"
-                },
-                "uniqueName": {
-                    "type": "string"
-                },
-                "url": {
-                    "type": "string"
-                }
-            }
-        },
-        "itemContent": {
-            "type": "object",
-            "properties": {
-                "content": {
-                    "type": "string"
-                },
-                "contentType": {
-                    "enum": [
-                        "rawText",
-                        "base64Encoded"
-                    ]
-                }
-            }
-        },
-        "itemModel": {
-            "type": "object",
-            "properties": {
-                "_links": {
-                    "$ref": "#/definitions/referenceLinks"
-                },
-                "contentMetadata": {
-                    "$ref": "#/definitions/fileContentMetadata"
-                },
-                "isFolder": {
-                    "type": "boolean"
-                },
-                "isSymLink": {
-                    "type": "boolean"
-                },
-                "path": {
-                    "type": "string"
-                },
-                "url": {
-                    "type": "string"
-                }
-            }
-        },
-        "referenceLinks": {
-            "type": "object",
-            "properties": {
-                "links": {
-                    "type": "object",
-                    "additionalProperties": {
-                        "type": "object"
-                    }
-                }
-            }
-        },
-        "teamProjectReference": {
-            "type": "object",
-            "properties": {
-                "abbreviation": {
-                    "type": "string"
-                },
-                "description": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "string",
-                    "format": "uuid"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "revision": {
-                    "type": "integer",
-                    "format": "int64"
-                },
-                "state": {
-                    "type": "string",
-                    "format": "projectState"
-                },
-                "url": {
-                    "type": "string"
-                }
-            }
-        },
-        "tfvcBranch": {
-            "type": "object",
-            "allOf": [
-                {
-                    "$ref": "#/definitions/tfvcBranchRef"
-                }
-            ],
-            "properties": {
-                "children": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/tfvcBranch"
-                    }
-                },
-                "mappings": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/tfvcBranchMapping"
-                    }
-                },
-                "parent": {
-                    "$ref": "#/definitions/tfvcShallowBranchRef"
-                },
-                "relatedBranches": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/tfvcShallowBranchRef"
-                    }
-                }
-            }
-        },
-        "tfvcBranchMapping": {
-            "type": "object",
-            "properties": {
-                "depth": {
-                    "type": "string"
-                },
-                "serverItem": {
-                    "type": "string"
-                },
-                "type": {
-                    "type": "string"
-                }
-            }
-        },
-        "tfvcBranchRef": {
-            "type": "object",
-            "allOf": [
-                {
-                    "$ref": "#/definitions/tfvcShallowBranchRef"
-                }
-            ],
-            "properties": {
-                "_links": {
-                    "$ref": "#/definitions/referenceLinks"
-                },
-                "createdDate": {
-                    "type": "string",
-                    "format": "date-time"
-                },
-                "description": {
-                    "type": "string"
-                },
-                "isDeleted": {
-                    "type": "boolean"
-                },
-                "owner": {
-                    "$ref": "#/definitions/identityRef"
-                },
-                "url": {
-                    "type": "string"
-                }
-            }
-        },
-        "tfvcChange": {
-            "type": "object",
-            "allOf": [
-                {
-                    "type": "string",
-                    "format": "change"
-                }
-            ],
-            "properties": {
-                "mergeSources": {
-                    "description": "List of merge sources in case of rename or branch creation.",
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/tfvcMergeSource"
-                    }
-                },
-                "pendingVersion": {
-                    "description": "Version at which a (shelved) change was pended against",
-                    "type": "integer",
-                    "format": "int32"
-                }
-            }
-        },
-        "tfvcChangeset": {
-            "type": "object",
-            "allOf": [
-                {
-                    "$ref": "#/definitions/tfvcChangesetRef"
-                }
-            ],
-            "properties": {
-                "accountId": {
-                    "type": "string",
-                    "format": "uuid"
-                },
-                "changes": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/tfvcChange"
-                    }
-                },
-                "checkinNotes": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/checkinNote"
-                    }
-                },
-                "collectionId": {
-                    "type": "string",
-                    "format": "uuid"
-                },
-                "hasMoreChanges": {
-                    "type": "boolean"
-                },
-                "policyOverride": {
-                    "$ref": "#/definitions/tfvcPolicyOverrideInfo"
-                },
-                "teamProjectIds": {
-                    "type": "array",
-                    "items": {
-                        "type": "string",
-                        "format": "uuid"
-                    }
-                },
-                "workItems": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/associatedWorkItem"
-                    }
-                }
-            }
-        },
-        "tfvcChangesetRef": {
-            "type": "object",
-            "properties": {
-                "_links": {
-                    "$ref": "#/definitions/referenceLinks"
-                },
-                "author": {
-                    "$ref": "#/definitions/identityRef"
-                },
-                "changesetId": {
-                    "type": "integer",
-                    "format": "int32"
-                },
-                "checkedInBy": {
-                    "$ref": "#/definitions/identityRef"
-                },
-                "comment": {
-                    "type": "string"
-                },
-                "commentTruncated": {
-                    "type": "boolean"
-                },
-                "createdDate": {
-                    "type": "string",
-                    "format": "date-time"
-                },
-                "url": {
-                    "type": "string"
-                }
-            }
-        },
-        "tfvcChangesetSearchCriteria": {
-            "type": "object",
-            "properties": {
-                "author": {
-                    "description": "Alias or display name of user who made the changes",
-                    "type": "string"
-                },
-                "followRenames": {
-                    "description": "Whether or not to follow renames for the given item being queried",
-                    "type": "boolean"
-                },
-                "fromDate": {
-                    "description": "If provided, only include changesets created after this date (string) Think of a better name for this.",
-                    "type": "string"
-                },
-                "fromId": {
-                    "description": "If provided, only include changesets after this changesetID",
-                    "type": "integer",
-                    "format": "int32"
-                },
-                "includeLinks": {
-                    "description": "Whether to include the _links field on the shallow references",
-                    "type": "boolean"
-                },
-                "itemPath": {
-                    "description": "Path of item to search under",
-                    "type": "string"
-                },
-                "toDate": {
-                    "description": "If provided, only include changesets created before this date (string) Think of a better name for this.",
-                    "type": "string"
-                },
-                "toId": {
-                    "description": "If provided, a version descriptor for the latest change list to include",
-                    "type": "integer",
-                    "format": "int32"
-                }
-            }
-        },
-        "tfvcChangesetsRequestData": {
-            "type": "object",
-            "properties": {
-                "changesetIds": {
-                    "type": "array",
-                    "items": {
-                        "type": "integer",
-                        "format": "int32"
-                    }
-                },
-                "commentLength": {
-                    "type": "integer",
-                    "format": "int32"
-                },
-                "includeLinks": {
-                    "description": "Whether to include the _links field on the shallow references",
-                    "type": "boolean"
-                }
-            }
-        },
-        "tfvcItem": {
-            "type": "object",
-            "allOf": [
-                {
-                    "$ref": "#/definitions/itemModel"
-                }
-            ],
-            "properties": {
-                "changeDate": {
-                    "type": "string",
-                    "format": "date-time"
-                },
-                "deletionId": {
-                    "type": "integer",
-                    "format": "int32"
-                },
-                "hashValue": {
-                    "description": "MD5 hash as a base 64 string, applies to files only.",
-                    "type": "string"
-                },
-                "isBranch": {
-                    "type": "boolean"
-                },
-                "isPendingChange": {
-                    "type": "boolean"
-                },
-                "size": {
-                    "description": "The size of the file, if applicable.",
-                    "type": "integer",
-                    "format": "int64"
-                },
-                "version": {
-                    "type": "integer",
-                    "format": "int32"
-                }
-            }
-        },
-        "tfvcItemDescriptor": {
-            "type": "object",
-            "properties": {
-                "path": {
-                    "type": "string"
-                },
-                "recursionLevel": {
-                    "enum": [
-                        "none",
-                        "oneLevel",
-                        "oneLevelPlusNestedEmptyFolders",
-                        "full"
-                    ]
-                },
-                "version": {
-                    "type": "string"
-                },
-                "versionOption": {
-                    "enum": [
-                        "none",
-                        "previous",
-                        "useRename"
-                    ]
-                },
-                "versionType": {
-                    "enum": [
-                        "none",
-                        "changeset",
-                        "shelveset",
-                        "change",
-                        "date",
-                        "latest",
-                        "tip",
-                        "mergeSource"
-                    ]
-                }
-            }
-        },
-        "tfvcItemRequestData": {
-            "type": "object",
-            "properties": {
-                "includeContentMetadata": {
-                    "description": "If true, include metadata about the file type",
-                    "type": "boolean"
-                },
-                "includeLinks": {
-                    "description": "Whether to include the _links field on the shallow references",
-                    "type": "boolean"
-                },
-                "itemDescriptors": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/tfvcItemDescriptor"
-                    }
-                }
-            }
-        },
-        "tfvcLabel": {
-            "type": "object",
-            "allOf": [
-                {
-                    "$ref": "#/definitions/tfvcLabelRef"
-                }
-            ],
-            "properties": {
-                "items": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/tfvcItem"
-                    }
-                }
-            }
-        },
-        "tfvcLabelRef": {
-            "type": "object",
-            "properties": {
-                "_links": {
-                    "$ref": "#/definitions/referenceLinks"
-                },
-                "description": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "integer",
-                    "format": "int32"
-                },
-                "labelScope": {
-                    "type": "string"
-                },
-                "modifiedDate": {
-                    "type": "string",
-                    "format": "date-time"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "owner": {
-                    "$ref": "#/definitions/identityRef"
-                },
-                "url": {
-                    "type": "string"
-                }
-            }
-        },
-        "tfvcLabelRequestData": {
-            "type": "object",
-            "properties": {
-                "includeLinks": {
-                    "description": "Whether to include the _links field on the shallow references",
-                    "type": "boolean"
-                },
-                "itemLabelFilter": {
-                    "type": "string"
-                },
-                "labelScope": {
-                    "type": "string"
-                },
-                "maxItemCount": {
-                    "type": "integer",
-                    "format": "int32"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "owner": {
-                    "type": "string"
-                }
-            }
-        },
-        "tfvcMergeSource": {
-            "type": "object",
-            "properties": {
-                "isRename": {
-                    "description": "Indicates if this a rename source. If false, it is a merge source.",
-                    "type": "boolean"
-                },
-                "serverItem": {
-                    "description": "The server item of the merge source",
-                    "type": "string"
-                },
-                "versionFrom": {
-                    "description": "Start of the version range",
-                    "type": "integer",
-                    "format": "int32"
-                },
-                "versionTo": {
-                    "description": "End of the version range",
-                    "type": "integer",
-                    "format": "int32"
-                }
-            }
-        },
-        "tfvcPolicyFailureInfo": {
-            "type": "object",
-            "properties": {
-                "message": {
-                    "type": "string"
-                },
-                "policyName": {
-                    "type": "string"
-                }
-            }
-        },
-        "tfvcPolicyOverrideInfo": {
-            "type": "object",
-            "properties": {
-                "comment": {
-                    "type": "string"
-                },
-                "policyFailures": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/tfvcPolicyFailureInfo"
-                    }
-                }
-            }
-        },
-        "tfvcShallowBranchRef": {
-            "type": "object",
-            "properties": {
-                "path": {
-                    "type": "string"
-                }
-            }
-        },
-        "tfvcShelveset": {
-            "type": "object",
-            "allOf": [
-                {
-                    "$ref": "#/definitions/tfvcShelvesetRef"
-                }
-            ],
-            "properties": {
-                "changes": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/tfvcChange"
-                    }
-                },
-                "notes": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/checkinNote"
-                    }
-                },
-                "policyOverride": {
-                    "$ref": "#/definitions/tfvcPolicyOverrideInfo"
-                },
-                "workItems": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/associatedWorkItem"
-                    }
-                }
-            }
-        },
-        "tfvcShelvesetRef": {
-            "type": "object",
-            "properties": {
-                "_links": {
-                    "$ref": "#/definitions/referenceLinks"
-                },
-                "comment": {
-                    "type": "string"
-                },
-                "commentTruncated": {
-                    "type": "boolean"
-                },
-                "createdDate": {
-                    "type": "string",
-                    "format": "date-time"
-                },
-                "id": {
-                    "type": "string"
-                },
-                "name": {
-                    "type": "string"
-                },
-                "owner": {
-                    "$ref": "#/definitions/identityRef"
-                },
-                "url": {
-                    "type": "string"
-                }
-            }
-        },
-        "tfvcShelvesetRequestData": {
-            "type": "object",
-            "properties": {
-                "includeDetails": {
-                    "description": "Whether to include policyOverride and notes Only applies when requesting a single deep shelveset",
-                    "type": "boolean"
-                },
-                "includeLinks": {
-                    "description": "Whether to include the _links field on the shallow references. Does not apply when requesting a single deep shelveset object. Links will always be included in the deep shelveset.",
-                    "type": "boolean"
-                },
-                "includeWorkItems": {
-                    "description": "Whether to include workItems",
-                    "type": "boolean"
-                },
-                "maxChangeCount": {
-                    "description": "Max number of changes to include",
-                    "type": "integer",
-                    "format": "int32"
-                },
-                "maxCommentLength": {
-                    "description": "Max length of comment",
-                    "type": "integer",
-                    "format": "int32"
-                },
-                "name": {
-                    "description": "Shelveset's name",
-                    "type": "string"
-                },
-                "owner": {
-                    "description": "Owner's ID. Could be a name or a guid.",
-                    "type": "string"
-                }
-            }
-        },
-        "tfvcVersionDescriptor": {
-            "type": "object",
-            "properties": {
-                "version": {
-                    "type": "string"
-                },
-                "versionOption": {
-                    "enum": [
-                        "none",
-                        "previous",
-                        "useRename"
-                    ]
-                },
-                "versionType": {
-                    "enum": [
-                        "none",
-                        "changeset",
-                        "shelveset",
-                        "change",
-                        "date",
-                        "latest",
-                        "tip",
-                        "mergeSource"
-                    ]
-                }
-            }
-        },
-        "versionControlProjectInfo": {
-            "type": "object",
-            "properties": {
-                "defaultSourceControlType": {
-                    "enum": [
-                        "tfvc",
-                        "git"
-                    ]
-                },
-                "project": {
-                    "$ref": "#/definitions/teamProjectReference"
-                },
-                "supportsGit": {
-                    "type": "boolean"
-                },
-                "supportsTFVC": {
-                    "type": "boolean"
-                }
-            }
-        }
+    {
+      "name": "changesetChanges"
     },
-    "parameters": {
-        "api-Version": {
-            "name": "api-version",
+    {
+      "name": "changesets"
+    },
+    {
+      "name": "changesetsBatch"
+    },
+    {
+      "name": "changesetWorkItems"
+    },
+    {
+      "name": "itemBatch"
+    },
+    {
+      "name": "items"
+    },
+    {
+      "name": "labelItems"
+    },
+    {
+      "name": "labels"
+    },
+    {
+      "name": "shelvesetChanges"
+    },
+    {
+      "name": "shelvesets"
+    },
+    {
+      "name": "shelvesetWorkItems"
+    }
+  ],
+  "schemes": [
+    "https"
+  ],
+  "securityDefinitions": {
+    "pat": {
+      "type": "basic",
+      "description": "Personal access token"
+    }
+  },
+  "security": [
+    {
+      "pat": []
+    }
+  ], 
+  "paths": {
+    "/_apis/tfvc/branches": {
+      "get": {
+        "tags": [
+          "branches"
+        ],
+        "summary": "GetBranches",
+        "description": "Get a collection of branch roots -- first-level children, branches with no parents",
+        "operationId": "getBranches",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
             "in": "query",
-            "description": "Version of the API to use.  This should be set to '3.1-preview' to use this version of the api.",
+            "name": "includeParent",
+            "description": "",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "includeChildren",
+            "description": "",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "includeDeleted",
+            "description": "",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "includeLinks",
+            "description": "",
+            "required": false,
+            "type": "boolean"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/tfvcBranch"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/_apis/tfvc/branches/{path}": {
+      "get": {
+        "tags": [
+          "branches"
+        ],
+        "summary": "GetBranch",
+        "description": "Get a single branch hierarchy at the given path with parents or children (if specified)",
+        "operationId": "getBranch",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "path",
+            "description": "",
             "required": true,
             "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "includeParent",
+            "description": "",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "includeChildren",
+            "description": "",
+            "required": false,
+            "type": "boolean"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/tfvcBranch"
+            }
+          }
         }
+      }
     },
-    "externalDocs": {
-        "description": "Visual Studio Team Services REST APIs",
-        "url": "https://www.visualstudio.com/docs/integrate/api/overview"
-    } 
+    "/_apis/tfvc/changesets": {
+      "post": {
+        "tags": [
+          "changesets"
+        ],
+        "summary": "CreateChangeset",
+        "description": "",
+        "operationId": "createChangeset",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/tfvcChangeset"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/tfvcChangesetRef"
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "changesets"
+        ],
+        "summary": "GetChangesets",
+        "description": "Retrieve Tfvc changesets",
+        "operationId": "getChangesets",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "maxCommentLength",
+            "description": "",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "skip",
+            "description": "",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "top",
+            "description": "",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "orderby",
+            "description": "",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "searchCriteria",
+            "description": "",
+            "required": false,
+            "type": "string",
+            "format": "tfvcChangesetSearchCriteria"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/tfvcChangesetRef"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/_apis/tfvc/changesets/{id}": {
+      "get": {
+        "tags": [
+          "changesets"
+        ],
+        "summary": "GetChangeset",
+        "description": "Retrieve a Tfvc Changeset",
+        "operationId": "getChangeset",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "description": "",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "maxChangeCount",
+            "description": "",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "includeDetails",
+            "description": "",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "includeWorkItems",
+            "description": "",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "maxCommentLength",
+            "description": "",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "includeSourceRename",
+            "description": "",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "skip",
+            "description": "",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "top",
+            "description": "",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "orderby",
+            "description": "",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "searchCriteria",
+            "description": "",
+            "required": false,
+            "type": "string",
+            "format": "tfvcChangesetSearchCriteria"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/tfvcChangeset"
+            }
+          }
+        }
+      }
+    },
+    "/_apis/tfvc/changesets/{id}/changes": {
+      "get": {
+        "tags": [
+          "changesetChanges"
+        ],
+        "summary": "GetChangesetChanges",
+        "description": "Retrieve Tfvc changes for a given changeset",
+        "operationId": "getChangesetChanges",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "description": "",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "skip",
+            "description": "",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "top",
+            "description": "",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/tfvcChange"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/_apis/tfvc/changesets/{id}/workItems": {
+      "get": {
+        "tags": [
+          "changesetWorkItems"
+        ],
+        "summary": "GetChangesetWorkItems",
+        "description": "",
+        "operationId": "getChangesetWorkItems",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "description": "",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/associatedWorkItem"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/_apis/tfvc/changesetsbatch": {
+      "post": {
+        "tags": [
+          "changesetsBatch"
+        ],
+        "summary": "GetBatchedChangesets",
+        "description": "",
+        "operationId": "getBatchedChangesets",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/tfvcChangesetsRequestData"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/tfvcChangesetRef"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/_apis/tfvc/itembatch": {
+      "post": {
+        "tags": [
+          "itemBatch"
+        ],
+        "summary": "GetItemsBatch",
+        "description": "Post for retrieving a set of items given a list of paths or a long path. Allows for specifying the recursionLevel and version descriptors for each path.",
+        "operationId": "getItemsBatch",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/zip",
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/tfvcItemRequestData"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "array"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/_apis/tfvc/items": {
+      "get": {
+        "tags": [
+          "items"
+        ],
+        "summary": "GetItems",
+        "description": "Get a list of Tfvc items",
+        "operationId": "getItems",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "scopePath",
+            "description": "",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "recursionLevel",
+            "description": "",
+            "required": false,
+            "type": "string",
+            "format": "versionControlRecursionType"
+          },
+          {
+            "in": "query",
+            "name": "includeLinks",
+            "description": "",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "versionDescriptor",
+            "description": "",
+            "required": false,
+            "type": "string",
+            "format": "tfvcVersionDescriptor"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/tfvcItem"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/_apis/tfvc/items/{path}": {
+      "get": {
+        "tags": [
+          "items"
+        ],
+        "summary": "GetItem",
+        "description": "Get Item Metadata and/or Content. The download parameter is to indicate whether the content should be available as a download or just sent as a stream in the response. Doesn't apply to zipped content which is always returned as a download.",
+        "operationId": "getItem",
+        "produces": [
+          "application/octet-stream",
+          "text/plain",
+          "application/zip",
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "path",
+            "description": "",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "fileName",
+            "description": "",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "download",
+            "description": "",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "scopePath",
+            "description": "",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "recursionLevel",
+            "description": "",
+            "required": false,
+            "type": "string",
+            "format": "versionControlRecursionType"
+          },
+          {
+            "in": "query",
+            "name": "versionDescriptor",
+            "description": "",
+            "required": false,
+            "type": "string",
+            "format": "tfvcVersionDescriptor"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/tfvcItem"
+            }
+          }
+        }
+      }
+    },
+    "/_apis/tfvc/labels": {
+      "get": {
+        "tags": [
+          "labels"
+        ],
+        "summary": "GetLabels",
+        "description": "Get a collection of shallow label references.",
+        "operationId": "getLabels",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "requestData",
+            "description": "labelScope, name, owner, and itemLabelFilter",
+            "required": true,
+            "type": "string",
+            "format": "tfvcLabelRequestData"
+          },
+          {
+            "in": "query",
+            "name": "top",
+            "description": "Max number of labels to return",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "skip",
+            "description": "Number of labels to skip",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/tfvcLabelRef"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/_apis/tfvc/labels/{labelId}": {
+      "get": {
+        "tags": [
+          "labels"
+        ],
+        "summary": "GetLabel",
+        "description": "Get a single deep label.",
+        "operationId": "getLabel",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "labelId",
+            "description": "Unique identifier of label",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "requestData",
+            "description": "maxItemCount",
+            "required": true,
+            "type": "string",
+            "format": "tfvcLabelRequestData"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/tfvcLabel"
+            }
+          }
+        }
+      }
+    },
+    "/_apis/tfvc/labels/{labelId}/items": {
+      "get": {
+        "tags": [
+          "labelItems"
+        ],
+        "summary": "GetLabelItems",
+        "description": "Get items under a label.",
+        "operationId": "getLabelItems",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "labelId",
+            "description": "Unique identifier of label",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "top",
+            "description": "Max number of items to return",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "skip",
+            "description": "Number of items to skip",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/tfvcItem"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/_apis/tfvc/shelvesets": {
+      "get": {
+        "tags": [
+          "shelvesets"
+        ],
+        "summary": "GetShelveset",
+        "description": "Get a single deep shelveset.",
+        "operationId": "getShelveset",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "shelvesetId",
+            "description": "Shelveset's unique ID",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "requestData",
+            "description": "includeDetails, includeWorkItems, maxChangeCount, and maxCommentLength",
+            "required": false,
+            "type": "string",
+            "format": "tfvcShelvesetRequestData"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/tfvcShelveset"
+            }
+          }
+        }
+      }
+    },
+    "/_apis/tfvc/shelvesets/changes": {
+      "get": {
+        "tags": [
+          "shelvesetChanges"
+        ],
+        "summary": "GetShelvesetChanges",
+        "description": "Get changes included in a shelveset.",
+        "operationId": "getShelvesetChanges",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "shelvesetId",
+            "description": "Shelveset's unique ID",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "top",
+            "description": "Max number of changes to return",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "skip",
+            "description": "Number of changes to skip",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/tfvcChange"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/_apis/tfvc/shelvesets/workitems": {
+      "get": {
+        "tags": [
+          "shelvesetWorkItems"
+        ],
+        "summary": "GetShelvesetWorkItems",
+        "description": "Get work items associated with a shelveset.",
+        "operationId": "getShelvesetWorkItems",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "shelvesetId",
+            "description": "Shelveset's unique ID",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/associatedWorkItem"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/{project}/_apis/tfvc/branches": {
+      "get": {
+        "tags": [
+          "branches"
+        ],
+        "summary": "GetBranches",
+        "description": "Get a collection of branch roots -- first-level children, branches with no parents",
+        "operationId": "getBranches",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "includeParent",
+            "description": "",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "includeChildren",
+            "description": "",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "includeDeleted",
+            "description": "",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "includeLinks",
+            "description": "",
+            "required": false,
+            "type": "boolean"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/tfvcBranch"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/{project}/_apis/tfvc/branches/{path}": {
+      "get": {
+        "tags": [
+          "branches"
+        ],
+        "summary": "GetBranch",
+        "description": "Get a single branch hierarchy at the given path with parents or children (if specified)",
+        "operationId": "getBranch",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "path",
+            "description": "",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "includeParent",
+            "description": "",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "includeChildren",
+            "description": "",
+            "required": false,
+            "type": "boolean"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/tfvcBranch"
+            }
+          }
+        }
+      }
+    },
+    "/{project}/_apis/tfvc/changesets": {
+      "post": {
+        "tags": [
+          "changesets"
+        ],
+        "summary": "CreateChangeset",
+        "description": "",
+        "operationId": "createChangeset",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/tfvcChangeset"
+            }
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/tfvcChangesetRef"
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "changesets"
+        ],
+        "summary": "GetChangesets",
+        "description": "Retrieve Tfvc changesets",
+        "operationId": "getChangesets",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "maxCommentLength",
+            "description": "",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "skip",
+            "description": "",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "top",
+            "description": "",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "orderby",
+            "description": "",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "searchCriteria",
+            "description": "",
+            "required": false,
+            "type": "string",
+            "format": "tfvcChangesetSearchCriteria"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/tfvcChangesetRef"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/{project}/_apis/tfvc/changesets/{id}": {
+      "get": {
+        "tags": [
+          "changesets"
+        ],
+        "summary": "GetChangeset",
+        "description": "Retrieve a Tfvc Changeset",
+        "operationId": "getChangeset",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "id",
+            "description": "",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "maxChangeCount",
+            "description": "",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "includeDetails",
+            "description": "",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "includeWorkItems",
+            "description": "",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "maxCommentLength",
+            "description": "",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "includeSourceRename",
+            "description": "",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "skip",
+            "description": "",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "top",
+            "description": "",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "orderby",
+            "description": "",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "searchCriteria",
+            "description": "",
+            "required": false,
+            "type": "string",
+            "format": "tfvcChangesetSearchCriteria"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/tfvcChangeset"
+            }
+          }
+        }
+      }
+    },
+    "/{project}/_apis/tfvc/itembatch": {
+      "post": {
+        "tags": [
+          "itemBatch"
+        ],
+        "summary": "GetItemsBatch",
+        "description": "Post for retrieving a set of items given a list of paths or a long path. Allows for specifying the recursionLevel and version descriptors for each path.",
+        "operationId": "getItemsBatch",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/zip",
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/tfvcItemRequestData"
+            }
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "array"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/{project}/_apis/tfvc/items": {
+      "get": {
+        "tags": [
+          "items"
+        ],
+        "summary": "GetItems",
+        "description": "Get a list of Tfvc items",
+        "operationId": "getItems",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "scopePath",
+            "description": "",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "recursionLevel",
+            "description": "",
+            "required": false,
+            "type": "string",
+            "format": "versionControlRecursionType"
+          },
+          {
+            "in": "query",
+            "name": "includeLinks",
+            "description": "",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "versionDescriptor",
+            "description": "",
+            "required": false,
+            "type": "string",
+            "format": "tfvcVersionDescriptor"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/tfvcItem"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/{project}/_apis/tfvc/items/{path}": {
+      "get": {
+        "tags": [
+          "items"
+        ],
+        "summary": "GetItem",
+        "description": "Get Item Metadata and/or Content. The download parameter is to indicate whether the content should be available as a download or just sent as a stream in the response. Doesn't apply to zipped content which is always returned as a download.",
+        "operationId": "getItem",
+        "produces": [
+          "application/octet-stream",
+          "text/plain",
+          "application/zip",
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "path",
+            "description": "",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "fileName",
+            "description": "",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "download",
+            "description": "",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "scopePath",
+            "description": "",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "recursionLevel",
+            "description": "",
+            "required": false,
+            "type": "string",
+            "format": "versionControlRecursionType"
+          },
+          {
+            "in": "query",
+            "name": "versionDescriptor",
+            "description": "",
+            "required": false,
+            "type": "string",
+            "format": "tfvcVersionDescriptor"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/tfvcItem"
+            }
+          }
+        }
+      }
+    },
+    "/{project}/_apis/tfvc/labels": {
+      "get": {
+        "tags": [
+          "labels"
+        ],
+        "summary": "GetLabels",
+        "description": "Get a collection of shallow label references.",
+        "operationId": "getLabels",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "requestData",
+            "description": "labelScope, name, owner, and itemLabelFilter",
+            "required": true,
+            "type": "string",
+            "format": "tfvcLabelRequestData"
+          },
+          {
+            "in": "query",
+            "name": "top",
+            "description": "Max number of labels to return",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "skip",
+            "description": "Number of labels to skip",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/tfvcLabelRef"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/{project}/_apis/tfvc/labels/{labelId}": {
+      "get": {
+        "tags": [
+          "labels"
+        ],
+        "summary": "GetLabel",
+        "description": "Get a single deep label.",
+        "operationId": "getLabel",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "labelId",
+            "description": "Unique identifier of label",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "requestData",
+            "description": "maxItemCount",
+            "required": true,
+            "type": "string",
+            "format": "tfvcLabelRequestData"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/tfvcLabel"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "associatedWorkItem": {
+      "type": "object",
+      "properties": {
+        "assignedTo": {
+          "type": "string"
+        },
+        "id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "state": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "url": {
+          "description": "REST url",
+          "type": "string"
+        },
+        "webUrl": {
+          "type": "string"
+        },
+        "workItemType": {
+          "type": "string"
+        }
+      }
+    },
+    "change": {
+      "type": "object",
+      "properties": {
+        "changeType": {
+          "enum": [
+            "none",
+            "add",
+            "edit",
+            "encoding",
+            "rename",
+            "delete",
+            "undelete",
+            "branch",
+            "merge",
+            "lock",
+            "rollback",
+            "sourceRename",
+            "targetRename",
+            "property",
+            "all"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.TeamFoundation.SourceControl.WebApi.VersionControlChangeType"
+          }
+        },
+        "item": {
+          "type": "string",
+          "format": "t"
+        },
+        "newContent": {
+          "$ref": "#/definitions/itemContent"
+        },
+        "sourceServerItem": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        }
+      }
+    },
+    "checkinNote": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        }
+      }
+    },
+    "fileContentMetadata": {
+      "type": "object",
+      "properties": {
+        "contentType": {
+          "type": "string"
+        },
+        "encoding": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "extension": {
+          "type": "string"
+        },
+        "fileName": {
+          "type": "string"
+        },
+        "isBinary": {
+          "type": "boolean"
+        },
+        "isImage": {
+          "type": "boolean"
+        },
+        "vsLink": {
+          "type": "string"
+        }
+      }
+    },
+    "identityRef": {
+      "type": "object",
+      "properties": {
+        "displayName": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "imageUrl": {
+          "type": "string"
+        },
+        "isAadIdentity": {
+          "type": "boolean"
+        },
+        "isContainer": {
+          "type": "boolean"
+        },
+        "profileUrl": {
+          "type": "string"
+        },
+        "uniqueName": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        }
+      }
+    },
+    "itemContent": {
+      "type": "object",
+      "properties": {
+        "content": {
+          "type": "string"
+        },
+        "contentType": {
+          "enum": [
+            "rawText",
+            "base64Encoded"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.TeamFoundation.SourceControl.WebApi.ItemContentType"
+          }
+        }
+      }
+    },
+    "itemModel": {
+      "type": "object",
+      "properties": {
+        "_links": {
+          "$ref": "#/definitions/referenceLinks"
+        },
+        "contentMetadata": {
+          "$ref": "#/definitions/fileContentMetadata"
+        },
+        "isFolder": {
+          "type": "boolean"
+        },
+        "isSymLink": {
+          "type": "boolean"
+        },
+        "path": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        }
+      }
+    },
+    "referenceLinks": {
+      "type": "object",
+      "properties": {
+        "links": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object"
+          }
+        }
+      }
+    },
+    "teamProjectReference": {
+      "type": "object",
+      "properties": {
+        "abbreviation": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "name": {
+          "type": "string"
+        },
+        "revision": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "state": {
+          "type": "string",
+          "format": "projectState"
+        },
+        "url": {
+          "type": "string"
+        }
+      }
+    },
+    "tfvcBranch": {
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/tfvcBranchRef"
+        }
+      ],
+      "properties": {
+        "children": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/tfvcBranch"
+          }
+        },
+        "mappings": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/tfvcBranchMapping"
+          }
+        },
+        "parent": {
+          "$ref": "#/definitions/tfvcShallowBranchRef"
+        },
+        "relatedBranches": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/tfvcShallowBranchRef"
+          }
+        }
+      }
+    },
+    "tfvcBranchMapping": {
+      "type": "object",
+      "properties": {
+        "depth": {
+          "type": "string"
+        },
+        "serverItem": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        }
+      }
+    },
+    "tfvcBranchRef": {
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/tfvcShallowBranchRef"
+        }
+      ],
+      "properties": {
+        "_links": {
+          "$ref": "#/definitions/referenceLinks"
+        },
+        "createdDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "description": {
+          "type": "string"
+        },
+        "isDeleted": {
+          "type": "boolean"
+        },
+        "owner": {
+          "$ref": "#/definitions/identityRef"
+        },
+        "url": {
+          "type": "string"
+        }
+      }
+    },
+    "tfvcChange": {
+      "type": "object",
+      "allOf": [
+        {
+          "type": "string",
+          "format": "change"
+        }
+      ],
+      "properties": {
+        "mergeSources": {
+          "description": "List of merge sources in case of rename or branch creation.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/tfvcMergeSource"
+          }
+        },
+        "pendingVersion": {
+          "description": "Version at which a (shelved) change was pended against",
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "tfvcChangeset": {
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/tfvcChangesetRef"
+        }
+      ],
+      "properties": {
+        "accountId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "changes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/tfvcChange"
+          }
+        },
+        "checkinNotes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/checkinNote"
+          }
+        },
+        "collectionId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "hasMoreChanges": {
+          "type": "boolean"
+        },
+        "policyOverride": {
+          "$ref": "#/definitions/tfvcPolicyOverrideInfo"
+        },
+        "teamProjectIds": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "workItems": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/associatedWorkItem"
+          }
+        }
+      }
+    },
+    "tfvcChangesetRef": {
+      "type": "object",
+      "properties": {
+        "_links": {
+          "$ref": "#/definitions/referenceLinks"
+        },
+        "author": {
+          "$ref": "#/definitions/identityRef"
+        },
+        "changesetId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "checkedInBy": {
+          "$ref": "#/definitions/identityRef"
+        },
+        "comment": {
+          "type": "string"
+        },
+        "commentTruncated": {
+          "type": "boolean"
+        },
+        "createdDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "url": {
+          "type": "string"
+        }
+      }
+    },
+    "tfvcChangesetSearchCriteria": {
+      "type": "object",
+      "properties": {
+        "author": {
+          "description": "Alias or display name of user who made the changes",
+          "type": "string"
+        },
+        "followRenames": {
+          "description": "Whether or not to follow renames for the given item being queried",
+          "type": "boolean"
+        },
+        "fromDate": {
+          "description": "If provided, only include changesets created after this date (string) Think of a better name for this.",
+          "type": "string"
+        },
+        "fromId": {
+          "description": "If provided, only include changesets after this changesetID",
+          "type": "integer",
+          "format": "int32"
+        },
+        "includeLinks": {
+          "description": "Whether to include the _links field on the shallow references",
+          "type": "boolean"
+        },
+        "itemPath": {
+          "description": "Path of item to search under",
+          "type": "string"
+        },
+        "toDate": {
+          "description": "If provided, only include changesets created before this date (string) Think of a better name for this.",
+          "type": "string"
+        },
+        "toId": {
+          "description": "If provided, a version descriptor for the latest change list to include",
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "tfvcChangesetsRequestData": {
+      "type": "object",
+      "properties": {
+        "changesetIds": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "commentLength": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "includeLinks": {
+          "description": "Whether to include the _links field on the shallow references",
+          "type": "boolean"
+        }
+      }
+    },
+    "tfvcItem": {
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/itemModel"
+        }
+      ],
+      "properties": {
+        "changeDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "deletionId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "hashValue": {
+          "description": "MD5 hash as a base 64 string, applies to files only.",
+          "type": "string"
+        },
+        "isBranch": {
+          "type": "boolean"
+        },
+        "isPendingChange": {
+          "type": "boolean"
+        },
+        "size": {
+          "description": "The size of the file, if applicable.",
+          "type": "integer",
+          "format": "int64"
+        },
+        "version": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "tfvcItemDescriptor": {
+      "type": "object",
+      "properties": {
+        "path": {
+          "type": "string"
+        },
+        "recursionLevel": {
+          "enum": [
+            "none",
+            "oneLevel",
+            "oneLevelPlusNestedEmptyFolders",
+            "full"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.TeamFoundation.SourceControl.WebApi.VersionControlRecursionType"
+          }
+        },
+        "version": {
+          "type": "string"
+        },
+        "versionOption": {
+          "enum": [
+            "none",
+            "previous",
+            "useRename"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.TeamFoundation.SourceControl.WebApi.TfvcVersionOption"
+          }
+        },
+        "versionType": {
+          "enum": [
+            "none",
+            "changeset",
+            "shelveset",
+            "change",
+            "date",
+            "latest",
+            "tip",
+            "mergeSource"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.TeamFoundation.SourceControl.WebApi.TfvcVersionType"
+          }
+        }
+      }
+    },
+    "tfvcItemRequestData": {
+      "type": "object",
+      "properties": {
+        "includeContentMetadata": {
+          "description": "If true, include metadata about the file type",
+          "type": "boolean"
+        },
+        "includeLinks": {
+          "description": "Whether to include the _links field on the shallow references",
+          "type": "boolean"
+        },
+        "itemDescriptors": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/tfvcItemDescriptor"
+          }
+        }
+      }
+    },
+    "tfvcLabel": {
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/tfvcLabelRef"
+        }
+      ],
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/tfvcItem"
+          }
+        }
+      }
+    },
+    "tfvcLabelRef": {
+      "type": "object",
+      "properties": {
+        "_links": {
+          "$ref": "#/definitions/referenceLinks"
+        },
+        "description": {
+          "type": "string"
+        },
+        "id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "labelScope": {
+          "type": "string"
+        },
+        "modifiedDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "name": {
+          "type": "string"
+        },
+        "owner": {
+          "$ref": "#/definitions/identityRef"
+        },
+        "url": {
+          "type": "string"
+        }
+      }
+    },
+    "tfvcLabelRequestData": {
+      "type": "object",
+      "properties": {
+        "includeLinks": {
+          "description": "Whether to include the _links field on the shallow references",
+          "type": "boolean"
+        },
+        "itemLabelFilter": {
+          "type": "string"
+        },
+        "labelScope": {
+          "type": "string"
+        },
+        "maxItemCount": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "name": {
+          "type": "string"
+        },
+        "owner": {
+          "type": "string"
+        }
+      }
+    },
+    "tfvcMergeSource": {
+      "type": "object",
+      "properties": {
+        "isRename": {
+          "description": "Indicates if this a rename source. If false, it is a merge source.",
+          "type": "boolean"
+        },
+        "serverItem": {
+          "description": "The server item of the merge source",
+          "type": "string"
+        },
+        "versionFrom": {
+          "description": "Start of the version range",
+          "type": "integer",
+          "format": "int32"
+        },
+        "versionTo": {
+          "description": "End of the version range",
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "tfvcPolicyFailureInfo": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string"
+        },
+        "policyName": {
+          "type": "string"
+        }
+      }
+    },
+    "tfvcPolicyOverrideInfo": {
+      "type": "object",
+      "properties": {
+        "comment": {
+          "type": "string"
+        },
+        "policyFailures": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/tfvcPolicyFailureInfo"
+          }
+        }
+      }
+    },
+    "tfvcShallowBranchRef": {
+      "type": "object",
+      "properties": {
+        "path": {
+          "type": "string"
+        }
+      }
+    },
+    "tfvcShelveset": {
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/tfvcShelvesetRef"
+        }
+      ],
+      "properties": {
+        "changes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/tfvcChange"
+          }
+        },
+        "notes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/checkinNote"
+          }
+        },
+        "policyOverride": {
+          "$ref": "#/definitions/tfvcPolicyOverrideInfo"
+        },
+        "workItems": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/associatedWorkItem"
+          }
+        }
+      }
+    },
+    "tfvcShelvesetRef": {
+      "type": "object",
+      "properties": {
+        "_links": {
+          "$ref": "#/definitions/referenceLinks"
+        },
+        "comment": {
+          "type": "string"
+        },
+        "commentTruncated": {
+          "type": "boolean"
+        },
+        "createdDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "owner": {
+          "$ref": "#/definitions/identityRef"
+        },
+        "url": {
+          "type": "string"
+        }
+      }
+    },
+    "tfvcShelvesetRequestData": {
+      "type": "object",
+      "properties": {
+        "includeDetails": {
+          "description": "Whether to include policyOverride and notes Only applies when requesting a single deep shelveset",
+          "type": "boolean"
+        },
+        "includeLinks": {
+          "description": "Whether to include the _links field on the shallow references. Does not apply when requesting a single deep shelveset object. Links will always be included in the deep shelveset.",
+          "type": "boolean"
+        },
+        "includeWorkItems": {
+          "description": "Whether to include workItems",
+          "type": "boolean"
+        },
+        "maxChangeCount": {
+          "description": "Max number of changes to include",
+          "type": "integer",
+          "format": "int32"
+        },
+        "maxCommentLength": {
+          "description": "Max length of comment",
+          "type": "integer",
+          "format": "int32"
+        },
+        "name": {
+          "description": "Shelveset's name",
+          "type": "string"
+        },
+        "owner": {
+          "description": "Owner's ID. Could be a name or a guid.",
+          "type": "string"
+        }
+      }
+    },
+    "tfvcVersionDescriptor": {
+      "type": "object",
+      "properties": {
+        "version": {
+          "type": "string"
+        },
+        "versionOption": {
+          "enum": [
+            "none",
+            "previous",
+            "useRename"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.TeamFoundation.SourceControl.WebApi.TfvcVersionOption"
+          }
+        },
+        "versionType": {
+          "enum": [
+            "none",
+            "changeset",
+            "shelveset",
+            "change",
+            "date",
+            "latest",
+            "tip",
+            "mergeSource"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.TeamFoundation.SourceControl.WebApi.TfvcVersionType"
+          }
+        }
+      }
+    },
+    "versionControlProjectInfo": {
+      "type": "object",
+      "properties": {
+        "defaultSourceControlType": {
+          "enum": [
+            "tfvc",
+            "git"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.TeamFoundation.Core.WebApi.SourceControlTypes"
+          }
+        },
+        "project": {
+          "$ref": "#/definitions/teamProjectReference"
+        },
+        "supportsGit": {
+          "type": "boolean"
+        },
+        "supportsTFVC": {
+          "type": "boolean"
+        }
+      }
+    }
+  },
+  "parameters": {
+    "api-Version": {
+      "name": "api-version",
+      "in": "query",
+      "description": "Version of the API to use.  This should be set to '3.1-preview' to use this version of the api.",
+      "required": true,
+      "type": "string"
+    }
+  },
+  "externalDocs": {
+    "description": "Visual Studio Team Services REST APIs",
+    "url": "https://www.visualstudio.com/docs/integrate/api/overview"
+  }
 }
