@@ -18,10 +18,13 @@
     "basePath": "/",
     "tags": [
         {
-            "name": "user"
+            "name": "artifactStatsBatch"
         },
         {
-            "name": "userBatch"
+            "name": "artifactVisits"
+        },
+        {
+            "name": "artifactVisitsBatch"
         }
     ],
     "schemes": [
@@ -39,13 +42,61 @@
         }
     ], 
     "paths": {
-        "/_apis/visits/user": {
+        "/_apis/visits/artifactstatsbatch": {
+            "post": {
+                "tags": [
+                    "artifactStatsBatch"
+                ],
+                "summary": "GetStats",
+                "description": "Get last visit dates POST /_apis/visits/artifactStatsBatch",
+                "operationId": "getStats",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "",
+                        "required": true,
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/artifactStats"
+                            }
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "includeUpdatesSinceLastVisit",
+                        "description": "",
+                        "required": false,
+                        "type": "boolean"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/artifactStats"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/_apis/visits/artifactvisits": {
             "put": {
                 "tags": [
-                    "user"
+                    "artifactVisits"
                 ],
                 "summary": "UpdateLastVisit",
-                "description": "Update or create a last visit date PUT /_apis/visits/user/",
+                "description": "Update or create a last visit date PUT /_apis/visits/artifactVisits",
                 "operationId": "updateLastVisit",
                 "consumes": [
                     "application/json"
@@ -60,7 +111,7 @@
                         "description": "",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/userVisit"
+                            "$ref": "#/definitions/artifactVisit"
                         }
                     }
                 ],
@@ -68,19 +119,19 @@
                     "200": {
                         "description": "successful operation",
                         "schema": {
-                            "$ref": "#/definitions/userVisit"
+                            "$ref": "#/definitions/artifactVisit"
                         }
                     }
                 }
             }
         },
-        "/_apis/visits/userbatch": {
+        "/_apis/visits/artifactvisitsbatch": {
             "post": {
                 "tags": [
-                    "userBatch"
+                    "artifactVisitsBatch"
                 ],
                 "summary": "GetVisits",
-                "description": "Get last visit dates POST /_apis/visits/userBatch",
+                "description": "Get last visit dates POST /_apis/visits/artifactVisitsBatch",
                 "operationId": "getVisits",
                 "consumes": [
                     "application/json"
@@ -97,7 +148,7 @@
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/userVisit"
+                                "$ref": "#/definitions/artifactVisit"
                             }
                         }
                     }
@@ -108,7 +159,7 @@
                         "schema": {
                             "type": "array",
                             "items": {
-                                "$ref": "#/definitions/userVisit"
+                                "$ref": "#/definitions/artifactVisit"
                             }
                         }
                     }
@@ -117,6 +168,55 @@
         }
     },
     "definitions": {
+        "artifactStats": {
+            "type": "object",
+            "properties": {
+                "artifactId": {
+                    "type": "string"
+                },
+                "commentsCount": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                },
+                "discussionArtifactId": {
+                    "type": "string"
+                },
+                "newCommentsCount": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "integer",
+                        "format": "int32"
+                    }
+                },
+                "user": {
+                    "$ref": "#/definitions/identityRef"
+                }
+            }
+        },
+        "artifactVisit": {
+            "type": "object",
+            "properties": {
+                "artifactId": {
+                    "type": "string"
+                },
+                "lastVisitedDate": {
+                    "description": "The last date the user visited this artifact.",
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "previousLastVisitedDate": {
+                    "description": "The previous last date the user visited this artifact, before updating.",
+                    "type": "string",
+                    "format": "date-time"
+                },
+                "user": {
+                    "$ref": "#/definitions/identityRef"
+                }
+            }
+        },
         "identityRef": {
             "type": "object",
             "properties": {
@@ -143,27 +243,6 @@
                 },
                 "url": {
                     "type": "string"
-                }
-            }
-        },
-        "userVisit": {
-            "type": "object",
-            "properties": {
-                "artifactId": {
-                    "type": "string"
-                },
-                "lastVisitedDate": {
-                    "description": "The last date the user visited this artifact.",
-                    "type": "string",
-                    "format": "date-time"
-                },
-                "previousLastVisitedDate": {
-                    "description": "The previous last date the user visited this artifact, before updating.",
-                    "type": "string",
-                    "format": "date-time"
-                },
-                "user": {
-                    "$ref": "#/definitions/identityRef"
                 }
             }
         }
