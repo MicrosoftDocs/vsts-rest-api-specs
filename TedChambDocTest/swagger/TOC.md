@@ -57,6 +57,7 @@
 # [Search API](search.json)
 # [Security API](security.json)
 # [Security Roles API](securityroles.json)
+# [Service Hooks API](servicehooks.json)
 # [Settings API](settings.json)
 # [Task API](task.json)
 # [Task Agent API](taskagent.json)
