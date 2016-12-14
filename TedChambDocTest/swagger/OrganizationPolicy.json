@@ -21,6 +21,9 @@
       "name": "policies"
     },
     {
+      "name": "policiesBatch"
+    },
+    {
       "name": "policyInformation"
     }
   ],
@@ -39,52 +42,6 @@
     }
   ], 
   "paths": {
-    "/_apis/organizationpolicy/policies": {
-      "get": {
-        "tags": [
-          "policies"
-        ],
-        "summary": "GetPolicies",
-        "description": "",
-        "operationId": "getPolicies",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "query",
-            "name": "policyNames",
-            "description": "",
-            "required": false,
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          },
-          {
-            "in": "query",
-            "name": "defaultValues",
-            "description": "",
-            "required": false,
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "type": "object",
-              "additionalProperties": {
-                "$ref": "#/definitions/policy"
-              }
-            }
-          }
-        }
-      }
-    },
     "/_apis/organizationpolicy/policies/{policyName}": {
       "get": {
         "tags": [
@@ -93,25 +50,20 @@
         "summary": "GetPolicy",
         "description": "",
         "operationId": "getPolicy",
-        "consumes": [
-          "application/json"
-        ],
         "produces": [
           "application/json"
         ],
         "parameters": [
           {
-            "in": "body",
-            "name": "body",
-            "description": "",
-            "required": true,
-            "schema": {
-              "type": "object"
-            }
-          },
-          {
             "in": "path",
             "name": "policyName",
+            "description": "",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "defaultValue",
             "description": "",
             "required": true,
             "type": "string"
@@ -157,6 +109,52 @@
         "responses": {
           "200": {
             "description": "successful operation"
+          }
+        }
+      }
+    },
+    "/_apis/organizationpolicy/policiesbatch": {
+      "get": {
+        "tags": [
+          "policiesBatch"
+        ],
+        "summary": "GetPolicies",
+        "description": "",
+        "operationId": "getPolicies",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "policyNames",
+            "description": "",
+            "required": true,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "defaultValues",
+            "description": "",
+            "required": true,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "$ref": "#/definitions/policy"
+              }
+            }
           }
         }
       }
@@ -242,11 +240,11 @@
     "policy": {
       "type": "object",
       "properties": {
-        "allowOverride": {
-          "type": "boolean"
-        },
         "effectiveValue": {
           "type": "object"
+        },
+        "enforce": {
+          "type": "boolean"
         },
         "isValueUndefined": {
           "type": "boolean"
