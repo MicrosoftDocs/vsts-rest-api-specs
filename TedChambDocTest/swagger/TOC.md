@@ -4,6 +4,7 @@
 # [Azure TFS API](azuretfs.json)
 # [Blob API](blob.json)
 # [Build API](build2.json)
+# [Cache API](cache.json)
 # [Chat API](chat.json)
 # [Code Review API](codereview.json)
 # [Collection Import API](collectionimport.json)

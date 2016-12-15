@@ -30,6 +30,12 @@
       "name": "licenseCheck"
     },
     {
+      "name": "memberEntitlements"
+    },
+    {
+      "name": "memberEntitlementsBatch"
+    },
+    {
       "name": "userManagementSummary"
     },
     {
@@ -51,6 +57,162 @@
     }
   ], 
   "paths": {
+    "/_apis/memberentitlements": {
+      "post": {
+        "tags": [
+          "memberEntitlements"
+        ],
+        "summary": "AddMemberEntitlement",
+        "description": "Used to add members to a project in an account. It adds them to groups, assigns licenses, and assigns extensions.",
+        "operationId": "addMemberEntitlement",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Member model for where to add the member and what licenses and extensions they should receive.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/memberEntitlement"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "memberEntitlements"
+        ],
+        "summary": "DeleteMemberEntitlement",
+        "description": "Deletes members from an account",
+        "operationId": "deleteMemberEntitlement",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "memberId",
+            "description": "memberId of the member to be removed.",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "memberEntitlements"
+        ],
+        "summary": "EditMemberEntitlement",
+        "description": "Used to edit a member in an account. Edits groups, licenses, and extensions.",
+        "operationId": "editMemberEntitlement",
+        "consumes": [
+          "application/json-patch+json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "document of operations to be used",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/jsonPatchDocument"
+            }
+          },
+          {
+            "in": "query",
+            "name": "memberId",
+            "description": "member Id of the member to be edit",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "memberEntitlements"
+        ],
+        "summary": "GetMemberEntitlements",
+        "description": "Used to get member entitlement information in an account",
+        "operationId": "getMemberEntitlements",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "top",
+            "description": "",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "skip",
+            "description": "",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/memberEntitlement"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/_apis/memberentitlementsbatch": {
+      "patch": {
+        "tags": [
+          "memberEntitlementsBatch"
+        ],
+        "summary": "BulkUpdateMemberEntitlements",
+        "description": "Used to edit multiple members in an account. Edits groups, licenses, and extensions.",
+        "operationId": "bulkUpdateMemberEntitlements",
+        "consumes": [
+          "application/json-patch+json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "JsonPatch document",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/jsonPatchDocument"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        }
+      }
+    },
     "/_apis/usermanagement/edituserextensionsbootstrap": {
       "get": {
         "tags": [
@@ -488,6 +650,59 @@
         }
       }
     },
+    "graphMember": {
+      "type": "object",
+      "properties": {
+        "_links": {
+          "$ref": "#/definitions/referenceLinks"
+        },
+        "disabled": {
+          "type": "boolean"
+        },
+        "displayName": {
+          "type": "string"
+        },
+        "entitySubtype": {
+          "type": "string"
+        },
+        "entityType": {
+          "type": "string"
+        },
+        "origin": {
+          "description": "The source for the origin identifier",
+          "type": "string"
+        },
+        "originId": {
+          "description": "The unique identifier from the system of origin",
+          "type": "string"
+        },
+        "persistentId": {
+          "description": "The unique identifier within the member's scope. This identifier will not change for the lifetime of the member.",
+          "type": "string",
+          "format": "uuid"
+        },
+        "principalName": {
+          "type": "string"
+        },
+        "transientDescriptor": {
+          "$ref": "#/definitions/identityDescriptor"
+        },
+        "url": {
+          "type": "string"
+        }
+      }
+    },
+    "identityDescriptor": {
+      "type": "object",
+      "properties": {
+        "identifier": {
+          "type": "string"
+        },
+        "identityType": {
+          "type": "string"
+        }
+      }
+    },
     "inviteFlowBootstrapData": {
       "type": "object",
       "properties": {
@@ -503,6 +718,16 @@
             "$ref": "#/definitions/project"
           }
         }
+      }
+    },
+    "jsonPatchDocument": {
+      "type": "object",
+      "allOf": [
+        {
+          "type": "array"
+        }
+      ],
+      "properties": {
       }
     },
     "licenseSummaryData": {
@@ -521,12 +746,48 @@
             "unknown",
             "free",
             "paid",
+            "earlyAdopter",
             "stakeholder",
             "vSEnterprise",
-            "vSProfessional"
+            "vSProfessional",
+            "vSTestProfessional",
+            "vSPlatforms",
+            "invitedSubscriber"
           ],
           "x-ms-enum": {
             "name": "Microsoft.VisualStudio.Services.UserManagement.WebApi.LicenseType"
+          }
+        }
+      }
+    },
+    "memberEntitlement": {
+      "type": "object",
+      "properties": {
+        "accessLevel": {
+          "description": "Member's access level denoted by a license",
+          "$ref": "#/definitions/accessLevel"
+        },
+        "extensions": {
+          "description": "Member's extensions",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/extension"
+          }
+        },
+        "lastAccessedDate": {
+          "description": "Date the Member last access the collection",
+          "type": "string",
+          "format": "date-time"
+        },
+        "member": {
+          "description": "Member reference",
+          "$ref": "#/definitions/graphMember"
+        },
+        "projects": {
+          "description": "Member's projects",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/project"
           }
         }
       }
@@ -545,6 +806,17 @@
           "type": "array",
           "items": {
             "$ref": "#/definitions/role"
+          }
+        }
+      }
+    },
+    "referenceLinks": {
+      "type": "object",
+      "properties": {
+        "links": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object"
           }
         }
       }
