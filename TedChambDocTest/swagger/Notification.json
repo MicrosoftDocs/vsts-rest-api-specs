@@ -95,7 +95,7 @@
           "events"
         ],
         "summary": "PublishEvent",
-        "description": "",
+        "description": "Publish an event.",
         "operationId": "publishEvent",
         "consumes": [
           "application/json"
@@ -129,11 +129,20 @@
         "tags": [
           "eventTypes"
         ],
-        "summary": "GetEventTypes",
-        "description": "",
-        "operationId": "getEventTypes",
+        "summary": "ListEventTypes",
+        "description": "List available event types for this service. Optionally filter by event types for the specified publisher.",
+        "operationId": "listEventTypes",
         "produces": [
           "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "publisherId",
+            "description": "",
+            "required": false,
+            "type": "string"
+          }
         ],
         "responses": {
           "200": {
@@ -154,7 +163,7 @@
           "eventTypes"
         ],
         "summary": "GetEventType",
-        "description": "",
+        "description": "Get a specific event type.",
         "operationId": "getEventType",
         "produces": [
           "application/json"
@@ -359,9 +368,9 @@
         "tags": [
           "subscriptionQuery"
         ],
-        "summary": "QuerySubscription",
-        "description": "",
-        "operationId": "querySubscription",
+        "summary": "QuerySubscriptions",
+        "description": "Query for notification subscriptions.",
+        "operationId": "querySubscriptions",
         "consumes": [
           "application/json"
         ],
@@ -398,7 +407,7 @@
           "subscriptions"
         ],
         "summary": "CreateSubscription",
-        "description": "",
+        "description": "Create a notification subscription.",
         "operationId": "createSubscription",
         "consumes": [
           "application/json"
@@ -413,7 +422,7 @@
             "description": "",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/notificationSubscription"
+              "$ref": "#/definitions/notificationSubscriptionCreateParameters"
             }
           }
         ],
@@ -425,6 +434,46 @@
             }
           }
         }
+      },
+      "get": {
+        "tags": [
+          "subscriptions"
+        ],
+        "summary": "ListSubscriptions",
+        "description": "Get a list of subscriptions for the specified subscriber. If no subscriber is specified, subscriptions for the calling user are returned.",
+        "operationId": "listSubscriptions",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "subscriber",
+            "description": "",
+            "required": false,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "query",
+            "name": "queryFlags",
+            "description": "",
+            "required": false,
+            "type": "string",
+            "format": "subscriptionQueryFlags"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/notificationSubscription"
+              }
+            }
+          }
+        }
       }
     },
     "/_apis/notification/subscriptions/{subscriptionId}": {
@@ -433,7 +482,7 @@
           "subscriptions"
         ],
         "summary": "DeleteSubscription",
-        "description": "",
+        "description": "Delete a notification subscription.",
         "operationId": "deleteSubscription",
         "parameters": [
           {
@@ -455,7 +504,7 @@
           "subscriptions"
         ],
         "summary": "GetSubscription",
-        "description": "",
+        "description": "Get a notification subscription.",
         "operationId": "getSubscription",
         "produces": [
           "application/json"
@@ -491,7 +540,7 @@
           "subscriptions"
         ],
         "summary": "UpdateSubscription",
-        "description": "",
+        "description": "Update an existing notification subscription.",
         "operationId": "updateSubscription",
         "consumes": [
           "application/json"
@@ -506,7 +555,7 @@
             "description": "",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/notificationSubscription"
+              "$ref": "#/definitions/notificationSubscriptionUpdateParameters"
             }
           },
           {
@@ -1093,22 +1142,29 @@
     },
     "notificationSubscription": {
       "type": "object",
-      "allOf": [
-        {
-          "$ref": "#/definitions/notificationSubscriptionBase"
-        }
-      ],
       "properties": {
         "_links": {
+          "description": "Links to related resources, APIs, and views for the subscription.",
           "$ref": "#/definitions/referenceLinks"
         },
         "adminConfig": {
+          "description": "Admin-managed settings for the subscription. Only applies when the subscriber is a group.",
           "$ref": "#/definitions/subscriptionAdminConfig"
         },
         "channel": {
+          "description": "Channel for delivering notifications triggered by the subscription.",
           "$ref": "#/definitions/iSubscriptionChannel"
         },
+        "description": {
+          "description": "Description of the subscription. Typically describes filter criteria which helps identity the subscription.",
+          "type": "string"
+        },
+        "filter": {
+          "description": "Matching criteria for the subscription.",
+          "$ref": "#/definitions/iSubscriptionFilter"
+        },
         "flags": {
+          "description": "Read-only indicators that further describe the subscription.",
           "enum": [
             "none",
             "groupSubscription",
@@ -1119,18 +1175,25 @@
             "name": "Microsoft.VisualStudio.Services.Notifications.WebApi.SubscriptionFlags"
           }
         },
+        "id": {
+          "description": "Subscription identifier.",
+          "type": "string"
+        },
         "lastModifiedBy": {
+          "description": "User that last modified (or created) the subscription.",
           "$ref": "#/definitions/identityRef"
         },
         "modifiedDate": {
+          "description": "Date when the subscription was last modified. If the subscription has not been updated since it was created, this value will indicate when the subscription was created.",
           "type": "string",
           "format": "date-time"
         },
         "scope": {
+          "description": "The container in which events must be published from in order to be matched by the subscription. If empty, the scope is the current host (typically an account or project collection). For example, a subscription scoped to project A will not produce notifications for events published from project B.",
           "$ref": "#/definitions/subscriptionScope"
         },
         "status": {
-          "description": "Raw status of the subscription",
+          "description": "Status of the subscription. Typically indicates whether the subscription is enabled or not.",
           "enum": [
             "jailedByNotificationsVolume",
             "pendingDeletion",
@@ -1148,33 +1211,45 @@
           }
         },
         "statusMessage": {
+          "description": "Message that provides more details about the status of the subscription.",
           "type": "string"
         },
         "subscriber": {
+          "description": "User or group that will receive notifications for events matching the subscription's filter criteria.",
           "$ref": "#/definitions/identityRef"
         },
-        "subscriptionProvider": {
-          "type": "string"
-        },
         "url": {
+          "description": "REST API URL of the subscriotion.",
           "type": "string"
         },
         "userConfig": {
+          "description": "User-managed settings for the subscription. Only applies when the subscriber is a group. Typically used to indicate whether the calling user is opted in or out of a group subscription.",
           "$ref": "#/definitions/subscriptionUserConfig"
         }
       }
     },
-    "notificationSubscriptionBase": {
+    "notificationSubscriptionCreateParameters": {
       "type": "object",
       "properties": {
+        "channel": {
+          "description": "Channel for delivering notifications triggered by the new subscription.",
+          "$ref": "#/definitions/iSubscriptionChannel"
+        },
         "description": {
+          "description": "Brief description for the new subscription. Typically describes filter criteria which helps identity the subscription.",
           "type": "string"
         },
         "filter": {
+          "description": "Matching criteria for the new subscription.",
           "$ref": "#/definitions/iSubscriptionFilter"
         },
-        "id": {
-          "type": "string"
+        "scope": {
+          "description": "The container in which events must be published from in order to be matched by the new subscription. If not specified, defaults to the current host (typically an account or project collection). For example, a subscription scoped to project A will not produce notifications for events published from project B.",
+          "$ref": "#/definitions/subscriptionScope"
+        },
+        "subscriber": {
+          "description": "User or group that will receive notifications for events matching the subscription's filter criteria. If not specified, defaults to the calling user.",
+          "$ref": "#/definitions/identityRef"
         }
       }
     },
@@ -1257,12 +1332,16 @@
     },
     "notificationSubscriptionTemplate": {
       "type": "object",
-      "allOf": [
-        {
-          "$ref": "#/definitions/notificationSubscriptionBase"
-        }
-      ],
       "properties": {
+        "description": {
+          "type": "string"
+        },
+        "filter": {
+          "$ref": "#/definitions/iSubscriptionFilter"
+        },
+        "id": {
+          "type": "string"
+        },
         "notificationEventInformation": {
           "$ref": "#/definitions/notificationEventType"
         },
@@ -1276,6 +1355,61 @@
           "x-ms-enum": {
             "name": "Microsoft.VisualStudio.Services.Notifications.WebApi.SubscriptionTemplateType"
           }
+        }
+      }
+    },
+    "notificationSubscriptionUpdateParameters": {
+      "type": "object",
+      "properties": {
+        "adminConfig": {
+          "description": "Admin-managed settings for the subscription. Only applies to subscriptions where the subscriber is a group.",
+          "$ref": "#/definitions/subscriptionAdminConfig"
+        },
+        "channel": {
+          "description": "Channel for delivering notifications triggered by the subscription.",
+          "$ref": "#/definitions/iSubscriptionChannel"
+        },
+        "description": {
+          "description": "Updated description for the subscription. Typically describes filter criteria which helps identity the subscription.",
+          "type": "string"
+        },
+        "filter": {
+          "description": "Matching criteria for the subscription.",
+          "$ref": "#/definitions/iSubscriptionFilter"
+        },
+        "scope": {
+          "description": "The container in which events must be published from in order to be matched by the new subscription. If not specified, defaults to the current host (typically the current account or project collection). For example, a subscription scoped to project A will not produce notifications for events published from project B.",
+          "$ref": "#/definitions/subscriptionScope"
+        },
+        "status": {
+          "description": "Updated status for the subscription. Typically used to enable or disable a subscription.",
+          "enum": [
+            "jailedByNotificationsVolume",
+            "pendingDeletion",
+            "disabledMissingIdentity",
+            "disabledInvalidRoleExpression",
+            "disabledInvalidPathClause",
+            "disabledAsDuplicateOfDefault",
+            "disabledByAdmin",
+            "disabledByUser",
+            "enabled",
+            "enabledOnProbation"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.VisualStudio.Services.Notifications.WebApi.SubscriptionStatus"
+          }
+        },
+        "statusMessage": {
+          "description": "Optional message that provides more details about the updated status.",
+          "type": "string"
+        },
+        "subscriber": {
+          "description": "User or group that will receive notifications for events matching the subscription's filter criteria.",
+          "$ref": "#/definitions/identityRef"
+        },
+        "userConfig": {
+          "description": "User-managed settings for the subscription. Only applies to subscriptions where the subscriber is a group. Typically used to opt-in or opt-out a user from a group subscription.",
+          "$ref": "#/definitions/subscriptionUserConfig"
         }
       }
     },
@@ -1308,7 +1442,8 @@
     "subscriptionAdminConfig": {
       "type": "object",
       "properties": {
-        "blockUserDisable": {
+        "blockUserOptOut": {
+          "description": "If true, members of the group subscribed to the associated subscription cannot opt (choose not to get notified)",
           "type": "boolean"
         },
         "enabled": {
@@ -1346,12 +1481,14 @@
       "type": "object",
       "properties": {
         "conditions": {
+          "description": "One or more conditions to query on. If more than 2 conditions are specified, the combined results of each condition is returned (i.e. conditions are logically OR'ed).",
           "type": "array",
           "items": {
             "$ref": "#/definitions/subscriptionQueryCondition"
           }
         },
         "queryFlags": {
+          "description": "Flags the refine the types of subscriptions that will be returned from the query.",
           "enum": [
             "none",
             "includeAllGroupSubscriptions",
@@ -1371,17 +1508,21 @@
       "type": "object",
       "properties": {
         "filter": {
+          "description": "Filter conditions that matching subscriptions must have. Typically only the filter's type and event type are used for matching.",
           "$ref": "#/definitions/iSubscriptionFilter"
         },
-        "id": {
-          "type": "string"
-        },
         "scope": {
+          "description": "Scope that matching subscriptions must have.",
           "type": "string"
         },
         "subscriber": {
+          "description": "ID of the subscriber (user or group) that matching subscriptions must be subscribed to.",
           "type": "string",
           "format": "uuid"
+        },
+        "subscriptionId": {
+          "description": "ID of the subscription to query for.",
+          "type": "string"
         },
         "subscriptionType": {
           "enum": [
@@ -1403,7 +1544,6 @@
       ],
       "properties": {
         "name": {
-          "description": "Gets or sets the name of this scope (for example, the name of a project)",
           "type": "string"
         }
       }
@@ -1437,7 +1577,8 @@
     "subscriptionUserConfig": {
       "type": "object",
       "properties": {
-        "enabled": {
+        "optedIn": {
+          "description": "Indicates whether the user will receive notifications for the associated group subscription.",
           "type": "boolean"
         }
       }
