@@ -1,0 +1,422 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "MemberEntitlement",
+    "description": "",
+    "termsOfService": "https://go.microsoft.com/fwlink/?LinkId=329770",
+    "contact": {
+      "name": "nugetvss",
+      "email": "nugetvss@microsoft.com"
+    },
+    "license": {
+      "name": "MICROSOFT SOFTWARE LICENSE TERMS",
+      "url": "https://go.microsoft.com/fwlink/?LinkId=329770"
+    },
+    "version": "3.1"
+  },
+  "host": "fabrikam-fiber-inc.visualstudio.com",
+  "basePath": "/",
+  "tags": [
+    {
+      "name": "memberEntitlements"
+    },
+    {
+      "name": "memberEntitlementsBatch"
+    }
+  ],
+  "schemes": [
+    "https"
+  ],
+  "securityDefinitions": {
+    "pat": {
+      "type": "basic",
+      "description": "Personal access token"
+    }
+  },
+  "security": [
+    {
+      "pat": []
+    }
+  ], 
+  "paths": {
+    "/_apis/memberentitlements": {
+      "post": {
+        "tags": [
+          "memberEntitlements"
+        ],
+        "summary": "AddMemberEntitlement",
+        "description": "Used to add members to a project in an account. It adds them to groups, assigns licenses, and assigns extensions.",
+        "operationId": "addMemberEntitlement",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Member model for where to add the member and what licenses and extensions they should receive.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/memberEntitlement"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "memberEntitlements"
+        ],
+        "summary": "DeleteMemberEntitlement",
+        "description": "Deletes members from an account",
+        "operationId": "deleteMemberEntitlement",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "memberId",
+            "description": "memberId of the member to be removed.",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "memberEntitlements"
+        ],
+        "summary": "EditMemberEntitlement",
+        "description": "Used to edit a member in an account. Edits groups, licenses, and extensions.",
+        "operationId": "editMemberEntitlement",
+        "consumes": [
+          "application/json-patch+json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "document of operations to be used",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/jsonPatchDocument"
+            }
+          },
+          {
+            "in": "query",
+            "name": "memberId",
+            "description": "member Id of the member to be edit",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "memberEntitlements"
+        ],
+        "summary": "GetMemberEntitlements",
+        "description": "Used to get member entitlement information in an account",
+        "operationId": "getMemberEntitlements",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "top",
+            "description": "",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "skip",
+            "description": "",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/memberEntitlement"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/_apis/memberentitlementsbatch": {
+      "patch": {
+        "tags": [
+          "memberEntitlementsBatch"
+        ],
+        "summary": "BulkUpdateMemberEntitlements",
+        "description": "Used to edit multiple members in an account. Edits groups, licenses, and extensions.",
+        "operationId": "bulkUpdateMemberEntitlements",
+        "consumes": [
+          "application/json-patch+json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "JsonPatch document",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/jsonPatchDocument"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "accessLevel": {
+      "type": "object",
+      "properties": {
+        "accountLicenseType": {
+          "enum": [
+            "none",
+            "earlyAdopter",
+            "express",
+            "professional",
+            "advanced",
+            "stakeholder"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.VisualStudio.Services.Licensing.AccountLicenseType"
+          }
+        },
+        "licenseDisplayName": {
+          "type": "string"
+        },
+        "licensingSource": {
+          "enum": [
+            "none",
+            "account",
+            "msdn",
+            "profile",
+            "auto",
+            "trial"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.VisualStudio.Services.Licensing.LicensingSource"
+          }
+        }
+      }
+    },
+    "extension": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "minimumLicenseRequired": {
+          "enum": [
+            "none",
+            "express",
+            "advanced",
+            "advancedPlus",
+            "stakeholder"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.VisualStudio.Services.Commerce.MinimumRequiredServiceLevel"
+          }
+        },
+        "name": {
+          "type": "string"
+        },
+        "quantity": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "graphMember": {
+      "type": "object",
+      "properties": {
+        "_links": {
+          "$ref": "#/definitions/referenceLinks"
+        },
+        "disabled": {
+          "type": "boolean"
+        },
+        "displayName": {
+          "type": "string"
+        },
+        "entitySubtype": {
+          "type": "string"
+        },
+        "entityType": {
+          "type": "string"
+        },
+        "origin": {
+          "description": "The source for the origin identifier",
+          "type": "string"
+        },
+        "originId": {
+          "description": "The unique identifier from the system of origin",
+          "type": "string"
+        },
+        "persistentId": {
+          "description": "The unique identifier within the member's scope. This identifier will not change for the lifetime of the member.",
+          "type": "string",
+          "format": "uuid"
+        },
+        "principalName": {
+          "type": "string"
+        },
+        "transientDescriptor": {
+          "$ref": "#/definitions/identityDescriptor"
+        },
+        "url": {
+          "type": "string"
+        }
+      }
+    },
+    "identityDescriptor": {
+      "type": "object",
+      "properties": {
+        "identifier": {
+          "type": "string"
+        },
+        "identityType": {
+          "type": "string"
+        }
+      }
+    },
+    "jsonPatchDocument": {
+      "type": "object",
+      "allOf": [
+        {
+          "type": "array"
+        }
+      ],
+      "properties": {
+      }
+    },
+    "memberEntitlement": {
+      "type": "object",
+      "properties": {
+        "accessLevel": {
+          "description": "Member's access level denoted by a license",
+          "$ref": "#/definitions/accessLevel"
+        },
+        "extensions": {
+          "description": "Member's extensions",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/extension"
+          }
+        },
+        "lastAccessedDate": {
+          "description": "Date the Member last access the collection",
+          "type": "string",
+          "format": "date-time"
+        },
+        "member": {
+          "description": "Member reference",
+          "$ref": "#/definitions/graphMember"
+        },
+        "projects": {
+          "description": "Member's projects",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/project"
+          }
+        }
+      }
+    },
+    "project": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "name": {
+          "type": "string"
+        },
+        "roles": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/role"
+          }
+        }
+      }
+    },
+    "referenceLinks": {
+      "type": "object",
+      "properties": {
+        "links": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object"
+          }
+        }
+      }
+    },
+    "role": {
+      "type": "object",
+      "properties": {
+        "groupName": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "roleType": {
+          "enum": [
+            "projectManager",
+            "projectReader",
+            "projectContributor",
+            "projectAdministrator",
+            "custom"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.VisualStudio.Services.UserManagement.WebApi.RoleType"
+          }
+        }
+      }
+    }
+  },
+  "parameters": {
+    "api-Version": {
+      "name": "api-version",
+      "in": "query",
+      "description": "Version of the API to use.  This should be set to '3.1-preview' to use this version of the api.",
+      "required": true,
+      "type": "string"
+    }
+  },
+  "externalDocs": {
+    "description": "Visual Studio Team Services REST APIs",
+    "url": "https://www.visualstudio.com/docs/integrate/api/overview"
+  }
+}

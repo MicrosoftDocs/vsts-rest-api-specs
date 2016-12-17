@@ -36,6 +36,7 @@
 # [Git API](git.json)
 # [Machine Management API](machinemanagement.json)
 # [Maven API](maven.json)
+# [Member Entitlement API](memberentitlement.json)
 # [Name Resolution API](nameresolutionsdk.json)
 # [Notification API](notification.json)
 # [NuGet API](nuget.json)
