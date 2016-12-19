@@ -56,6 +56,7 @@
 # [Release Management API](rm.json)
 # [Reporting API](reporting.json)
 # [Reparent Account API](reparentaccount.json)
+# [Reparent Collection API](reparentcollection.json)
 # [Search API](search.json)
 # [Security API](security.json)
 # [Security Roles API](securityroles.json)
