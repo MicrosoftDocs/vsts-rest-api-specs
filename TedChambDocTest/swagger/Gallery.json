@@ -57,6 +57,9 @@
       "name": "extensionValidator"
     },
     {
+      "name": "package"
+    },
+    {
       "name": "privateasset"
     },
     {
@@ -84,17 +87,6 @@
   "schemes": [
     "https"
   ],
-  "securityDefinitions": {
-    "pat": {
-      "type": "basic",
-      "description": "Personal access token"
-    }
-  },
-  "security": [
-    {
-      "pat": []
-    }
-  ], 
   "paths": {
     "/_apis/gallery/acquisitionoptions/{itemId}": {
       "get": {
@@ -1058,6 +1050,65 @@
             "description": "successful operation",
             "schema": {
               "$ref": "#/definitions/publishedExtension"
+            }
+          }
+        }
+      }
+    },
+    "/_apis/gallery/publishers/{publisherName}/extensions/{extensionName}/{version}/package": {
+      "get": {
+        "tags": [
+          "package"
+        ],
+        "summary": "GetPackage",
+        "description": "",
+        "operationId": "getPackage",
+        "produces": [
+          "application/octet-stream"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "publisherName",
+            "description": "",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "extensionName",
+            "description": "",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "version",
+            "description": "",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "accountToken",
+            "description": "",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "acceptDefault",
+            "description": "",
+            "required": false,
+            "type": "boolean"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "string",
+              "format": "stream"
             }
           }
         }
@@ -3022,6 +3073,29 @@
       "type": "string"
     }
   },
+  "securityDefinitions": {
+    "accessToken": {
+      "type": "basic",
+      "description": "Personal access token. Use any value for the user name and the token as the password."
+     },
+     "oauth2": {
+      "type": "oauth2",
+      "flow": "accessCode",
+      "authorizationUrl": "https://app.vssps.visualstudio.com/oauth2/authorize&response_type=Assertion",
+      "tokenUrl": "https://app.vssps.visualstudio.com/oauth2/token?client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer&grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer",
+      "scopes": {
+        "vso.gallery": "Grants read access to public and private items and publishers.",
+        "vso.gallery_manage": "Grants read access, the ability to publish and manage items and publishers.",
+        "vso.gallery_publish": "Grants read access and the ability to upload, update, and share items.",
+        "vso.gallery_acquire": "Grants read access and the ability to acquire items."
+      }
+    }
+  },
+  "security": [
+    {
+      "accessToken": []
+    }
+  ],
   "externalDocs": {
     "description": "Visual Studio Team Services REST APIs",
     "url": "https://www.visualstudio.com/docs/integrate/api/overview"

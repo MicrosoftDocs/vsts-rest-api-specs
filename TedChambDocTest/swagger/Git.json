@@ -123,17 +123,6 @@
   "schemes": [
     "https"
   ],
-  "securityDefinitions": {
-    "pat": {
-      "type": "basic",
-      "description": "Personal access token"
-    }
-  },
-  "security": [
-    {
-      "pat": []
-    }
-  ], 
   "paths": {
     "/_apis/git/pullrequests/{pullRequestId}": {
       "get": {
@@ -9451,6 +9440,10 @@
           "description": "Service Endpoint for connection to external endpoint",
           "type": "string",
           "format": "uuid"
+        },
+        "tfvcSource": {
+          "description": "Source for importing tfvc repository",
+          "$ref": "#/definitions/gitImportTfvcSource"
         }
       }
     },
@@ -9480,6 +9473,24 @@
         },
         "targetRepository": {
           "$ref": "#/definitions/gitRepository"
+        }
+      }
+    },
+    "gitImportTfvcSource": {
+      "type": "object",
+      "properties": {
+        "importHistory": {
+          "description": "Set true to import History, false otherwise",
+          "type": "boolean"
+        },
+        "importHistoryDurationInDays": {
+          "description": "Get history for last n days (max allowed value is 180 days)",
+          "type": "integer",
+          "format": "int32"
+        },
+        "path": {
+          "description": "Path which we want to import (this can be copied from Path Control in Explorer)",
+          "type": "string"
         }
       }
     },
@@ -11957,6 +11968,29 @@
       "type": "string"
     }
   },
+  "securityDefinitions": {
+    "accessToken": {
+      "type": "basic",
+      "description": "Personal access token. Use any value for the user name and the token as the password."
+     },
+     "oauth2": {
+      "type": "oauth2",
+      "flow": "accessCode",
+      "authorizationUrl": "https://app.vssps.visualstudio.com/oauth2/authorize&response_type=Assertion",
+      "tokenUrl": "https://app.vssps.visualstudio.com/oauth2/token?client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer&grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer",
+      "scopes": {
+        "vso.code": "Grants the ability to read source code and metadata about commits, changesets, branches, and other version control artifacts. Also grants the ability to get notified about version control events via service hooks.",
+        "vso.code_manage": "Grants the ability to read, update, and delete source code, access metadata about commits, changesets, branches, and other version control artifacts. Also grants the ability to create and manage code repositories, create and manage pull requests and code reviews, and to receive notifications about version control events via service hooks.",
+        "vso.code_write": "Grants the ability to read, update, and delete source code, access metadata about commits, changesets, branches, and other version control artifacts. Also grants the ability to create and manage pull requests and code reviews and to receive notifications about version control events via service hooks.",
+        "vso.code_status": "Grants the ability to read and write commit and pull request status."
+      }
+    }
+  },
+  "security": [
+    {
+      "accessToken": []
+    }
+  ],
   "externalDocs": {
     "description": "Visual Studio Team Services REST APIs",
     "url": "https://www.visualstudio.com/docs/integrate/api/overview"
