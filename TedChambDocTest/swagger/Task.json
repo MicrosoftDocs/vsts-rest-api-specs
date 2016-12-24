@@ -27,6 +27,9 @@
       "name": "logs"
     },
     {
+      "name": "plangroupsqueue"
+    },
+    {
       "name": "plans"
     },
     {
@@ -40,6 +43,63 @@
     "https"
   ],
   "paths": {
+    "/_apis/distributedtask/hubs/{hubName}/plangroupsqueue": {
+      "get": {
+        "tags": [
+          "plangroupsqueue"
+        ],
+        "summary": "GetQueuedPlanGroups",
+        "description": "",
+        "operationId": "getQueuedPlanGroups",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "scopeIdentifier",
+            "description": "The project GUID to scope the request",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "path",
+            "name": "hubName",
+            "description": "The name of the server hub: \"build\" for the Build server or \"rm\" for the Release Management server",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "statusFilter",
+            "description": "",
+            "required": false,
+            "type": "string",
+            "format": "planGroupStatusFilter"
+          },
+          {
+            "in": "query",
+            "name": "count",
+            "description": "",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/taskOrchestrationQueuedPlanGroup"
+              }
+            }
+          }
+        }
+      }
+    },
     "/{scopeIdentifier}/_apis/distributedtask/hubs/{hubName}/plans/{planId}": {
       "get": {
         "tags": [
@@ -1348,6 +1408,56 @@
         "version": {
           "type": "integer",
           "format": "int32"
+        }
+      }
+    },
+    "taskOrchestrationQueuedPlan": {
+      "type": "object",
+      "properties": {
+        "planGroup": {
+          "type": "string"
+        },
+        "planId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "poolId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "queuePosition": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "queueTime": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "scopeIdentifier": {
+          "type": "string",
+          "format": "uuid"
+        }
+      }
+    },
+    "taskOrchestrationQueuedPlanGroup": {
+      "type": "object",
+      "properties": {
+        "planGroup": {
+          "type": "string"
+        },
+        "plans": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/taskOrchestrationQueuedPlan"
+          }
+        },
+        "queuePosition": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "scopeIdentifier": {
+          "type": "string",
+          "format": "uuid"
         }
       }
     },

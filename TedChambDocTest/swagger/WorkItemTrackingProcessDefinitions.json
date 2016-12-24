@@ -18,6 +18,9 @@
   "basePath": "/",
   "tags": [
     {
+      "name": "behaviors"
+    },
+    {
       "name": "controls"
     },
     {
@@ -46,6 +49,197 @@
     "https"
   ],
   "paths": {
+    "/_apis/work/processdefinitions/{processId}/behaviors": {
+      "post": {
+        "tags": [
+          "behaviors"
+        ],
+        "summary": "CreateBehavior",
+        "description": "",
+        "operationId": "createBehavior",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/behaviorCreateModel"
+            }
+          },
+          {
+            "in": "path",
+            "name": "processId",
+            "description": "",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/behaviorModel"
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "behaviors"
+        ],
+        "summary": "GetBehaviors",
+        "description": "",
+        "operationId": "getBehaviors",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "processId",
+            "description": "",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/behaviorModel"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/_apis/work/processdefinitions/{processId}/behaviors/{behaviorId}": {
+      "delete": {
+        "tags": [
+          "behaviors"
+        ],
+        "summary": "DeleteBehavior",
+        "description": "",
+        "operationId": "deleteBehavior",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "processId",
+            "description": "",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "path",
+            "name": "behaviorId",
+            "description": "",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "behaviors"
+        ],
+        "summary": "GetBehavior",
+        "description": "",
+        "operationId": "getBehavior",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "processId",
+            "description": "",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "path",
+            "name": "behaviorId",
+            "description": "",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/behaviorModel"
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "behaviors"
+        ],
+        "summary": "ReplaceBehavior",
+        "description": "",
+        "operationId": "replaceBehavior",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/behaviorReplaceModel"
+            }
+          },
+          {
+            "in": "path",
+            "name": "processId",
+            "description": "",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "path",
+            "name": "behaviorId",
+            "description": "",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/behaviorModel"
+            }
+          }
+        }
+      }
+    },
     "/_apis/work/processdefinitions/{processId}/fields/{field}": {
       "post": {
         "tags": [
@@ -226,7 +420,8 @@
             "name": "expand",
             "description": "",
             "required": false,
-            "type": "string"
+            "type": "string",
+            "format": "getWorkItemTypeExpand"
           }
         ],
         "responses": {
@@ -1736,6 +1931,81 @@
     }
   },
   "definitions": {
+    "behaviorCreateModel": {
+      "type": "object",
+      "properties": {
+        "inherits": {
+          "description": "Parent behavior id",
+          "type": "string"
+        },
+        "name": {
+          "description": "Name of the behavior",
+          "type": "string"
+        },
+        "properties": {
+          "description": "Behavior properties e.g. Color",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "behaviorModel": {
+      "type": "object",
+      "properties": {
+        "description": {
+          "description": "Description",
+          "type": "string"
+        },
+        "id": {
+          "description": "Behavior Id",
+          "type": "string"
+        },
+        "inherits": {
+          "description": "Parent behavior reference",
+          "$ref": "#/definitions/workItemBehaviorReference"
+        },
+        "isAbstract": {
+          "description": "Is the behavior abstract (i.e. can not be associated with any work item type)",
+          "type": "boolean"
+        },
+        "isOverridden": {
+          "description": "Is the behavior overrides a behavior from system process",
+          "type": "boolean"
+        },
+        "name": {
+          "description": "Behavior Name",
+          "type": "string"
+        },
+        "properties": {
+          "description": "Behavior properties e.g. Color",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "url": {
+          "type": "string"
+        }
+      }
+    },
+    "behaviorReplaceModel": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "description": "Behavior Name",
+          "type": "string"
+        },
+        "properties": {
+          "description": "Behavior Properties e.g. Color",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        }
+      }
+    },
     "control": {
       "type": "object",
       "properties": {

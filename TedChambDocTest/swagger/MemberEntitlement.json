@@ -56,64 +56,6 @@
           }
         }
       },
-      "delete": {
-        "tags": [
-          "memberEntitlements"
-        ],
-        "summary": "DeleteMemberEntitlement",
-        "description": "Deletes members from an account",
-        "operationId": "deleteMemberEntitlement",
-        "parameters": [
-          {
-            "in": "query",
-            "name": "memberId",
-            "description": "memberId of the member to be removed.",
-            "required": true,
-            "type": "string",
-            "format": "uuid"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation"
-          }
-        }
-      },
-      "patch": {
-        "tags": [
-          "memberEntitlements"
-        ],
-        "summary": "EditMemberEntitlement",
-        "description": "Used to edit a member in an account. Edits groups, licenses, and extensions.",
-        "operationId": "editMemberEntitlement",
-        "consumes": [
-          "application/json-patch+json"
-        ],
-        "parameters": [
-          {
-            "in": "body",
-            "name": "body",
-            "description": "document of operations to be used",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/jsonPatchDocument"
-            }
-          },
-          {
-            "in": "query",
-            "name": "memberId",
-            "description": "member Id of the member to be edit",
-            "required": true,
-            "type": "string",
-            "format": "uuid"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation"
-          }
-        }
-      },
       "get": {
         "tags": [
           "memberEntitlements"
@@ -155,6 +97,101 @@
         }
       }
     },
+    "/_apis/memberentitlements/{memberId}": {
+      "delete": {
+        "tags": [
+          "memberEntitlements"
+        ],
+        "summary": "DeleteMemberEntitlement",
+        "description": "Deletes members from an account",
+        "operationId": "deleteMemberEntitlement",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "memberId",
+            "description": "memberId of the member to be removed.",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "memberEntitlements"
+        ],
+        "summary": "GetMemberEntitlement",
+        "description": "Used to get member entitlement information in an account",
+        "operationId": "getMemberEntitlement",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "memberId",
+            "description": "",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/memberEntitlement"
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "memberEntitlements"
+        ],
+        "summary": "UpdateMemberEntitlement",
+        "description": "Used to edit a member in an account. Edits groups, licenses, and extensions.",
+        "operationId": "updateMemberEntitlement",
+        "consumes": [
+          "application/json-patch+json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "document of operations to be used",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/jsonPatchDocument"
+            }
+          },
+          {
+            "in": "path",
+            "name": "memberId",
+            "description": "member Id of the member to be edit",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/memberEntitlementsPatchReponse"
+            }
+          }
+        }
+      }
+    },
     "/_apis/memberentitlementsbatch": {
       "patch": {
         "tags": [
@@ -165,6 +202,9 @@
         "operationId": "bulkUpdateMemberEntitlements",
         "consumes": [
           "application/json-patch+json"
+        ],
+        "produces": [
+          "application/json"
         ],
         "parameters": [
           {
@@ -179,7 +219,10 @@
         ],
         "responses": {
           "200": {
-            "description": "successful operation"
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/memberEntitlementsPatchReponse"
+            }
           }
         }
       }
@@ -310,6 +353,24 @@
       "properties": {
       }
     },
+    "jsonPatchOperation": {
+      "type": "object",
+      "properties": {
+        "from": {
+          "type": "string"
+        },
+        "op": {
+          "type": "string",
+          "format": "operation"
+        },
+        "path": {
+          "type": "string"
+        },
+        "value": {
+          "type": "object"
+        }
+      }
+    },
     "memberEntitlement": {
       "type": "object",
       "properties": {
@@ -339,6 +400,48 @@
           "items": {
             "$ref": "#/definitions/project"
           }
+        }
+      }
+    },
+    "memberEntitlementsPatchReponse": {
+      "type": "object",
+      "properties": {
+        "isSuccess": {
+          "description": "True if all operations were successful",
+          "type": "boolean"
+        },
+        "operationResults": {
+          "description": "List of results for each operation",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/operationResult"
+          }
+        }
+      }
+    },
+    "operationResult": {
+      "type": "object",
+      "properties": {
+        "errorCode": {
+          "description": "Error code corresponding to the error that occurred",
+          "type": "integer",
+          "format": "int32"
+        },
+        "errorMessage": {
+          "description": "Details about the error that occurred",
+          "type": "string"
+        },
+        "isSuccess": {
+          "description": "Success status of the operation",
+          "type": "boolean"
+        },
+        "operation": {
+          "description": "Original operation",
+          "$ref": "#/definitions/jsonPatchOperation"
+        },
+        "result": {
+          "description": "Result of the MemberEntitlement after the operation",
+          "$ref": "#/definitions/memberEntitlement"
         }
       }
     },

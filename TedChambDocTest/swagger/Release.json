@@ -45,6 +45,9 @@
       "name": "favorites"
     },
     {
+      "name": "folders"
+    },
+    {
       "name": "history"
     },
     {
@@ -913,6 +916,20 @@
             "required": false,
             "type": "string",
             "format": "releaseDefinitionQueryOrder"
+          },
+          {
+            "in": "query",
+            "name": "path",
+            "description": "",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "isExactNameMatch",
+            "description": "",
+            "required": false,
+            "type": "boolean"
           }
         ],
         "responses": {
@@ -1665,6 +1682,179 @@
               "items": {
                 "$ref": "#/definitions/favoriteItem"
               }
+            }
+          }
+        }
+      }
+    },
+    "/{project}/_apis/release/folders/{*path}": {
+      "get": {
+        "tags": [
+          "folders"
+        ],
+        "summary": "GetFolders",
+        "description": "Gets folders",
+        "operationId": "getFolders",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "path",
+            "description": "",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "queryOrder",
+            "description": "",
+            "required": false,
+            "type": "string",
+            "format": "folderPathQueryOrder"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/folder"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/{project}/_apis/release/folders/{path}": {
+      "post": {
+        "tags": [
+          "folders"
+        ],
+        "summary": "CreateFolder",
+        "description": "Creates a new folder",
+        "operationId": "createFolder",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/folder"
+            }
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "path",
+            "description": "",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/folder"
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "folders"
+        ],
+        "summary": "DeleteFolder",
+        "description": "Deletes a definition folder for given folder name and path and all it's existing definitions",
+        "operationId": "deleteFolder",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "path",
+            "description": "",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "folders"
+        ],
+        "summary": "UpdateFolder",
+        "description": "Updates an existing folder at given  existing path",
+        "operationId": "updateFolder",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/folder"
+            }
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "path",
+            "description": "",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/folder"
             }
           }
         }
@@ -4206,6 +4396,31 @@
         }
       }
     },
+    "folder": {
+      "type": "object",
+      "properties": {
+        "createdBy": {
+          "$ref": "#/definitions/identityRef"
+        },
+        "createdOn": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "description": {
+          "type": "string"
+        },
+        "lastChangedBy": {
+          "$ref": "#/definitions/identityRef"
+        },
+        "lastChangedDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "path": {
+          "type": "string"
+        }
+      }
+    },
     "identityRef": {
       "type": "object",
       "properties": {
@@ -5012,6 +5227,9 @@
           "format": "date-time"
         },
         "name": {
+          "type": "string"
+        },
+        "path": {
           "type": "string"
         },
         "releaseNameFormat": {
@@ -6049,6 +6267,29 @@
         },
         "title": {
           "type": "string"
+        }
+      }
+    },
+    "taskOrchestrationPlanGroupReference": {
+      "type": "object",
+      "properties": {
+        "planGroup": {
+          "type": "string"
+        },
+        "projectId": {
+          "type": "string",
+          "format": "uuid"
+        }
+      }
+    },
+    "taskOrchestrationPlanGroupsStartedEvent": {
+      "type": "object",
+      "properties": {
+        "planGroups": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/taskOrchestrationPlanGroupReference"
+          }
         }
       }
     },
