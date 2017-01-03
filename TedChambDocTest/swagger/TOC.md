@@ -47,6 +47,7 @@
 # [Organization Policy API](organizationpolicy.json)
 # [OSS API](oss.json)
 # [Partitioning API](partitioning.json)
+# [Pipeline API](pipeline.json)
 # [Policy API](policy.json)
 # [Process API](process.json)
 # [Profile API](profile.json)
