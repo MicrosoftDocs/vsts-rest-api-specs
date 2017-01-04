@@ -35,6 +35,7 @@
 # [Gallery API](gallery.json)
 # [Git API](git.json)
 # [Machine Management API](machinemanagement.json)
+# [Marketing Preferences API](marketingpreferences.json)
 # [Maven API](maven.json)
 # [Member Entitlement API](memberentitlement.json)
 # [Name Resolution API](nameresolutionsdk.json)
