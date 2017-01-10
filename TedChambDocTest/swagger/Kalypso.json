@@ -24,7 +24,13 @@
       "name": "builtInMonitors"
     },
     {
+      "name": "containers"
+    },
+    {
       "name": "healthAlertMonitors"
+    },
+    {
+      "name": "monitors"
     },
     {
       "name": "queries"
@@ -43,140 +49,6 @@
     "https"
   ],
   "paths": {
-    "/_apis/health/{containerId}/{queryId}/queryresults": {
-      "post": {
-        "tags": [
-          "queryResults"
-        ],
-        "summary": "Execute",
-        "description": "Return result data if the user supplies a getData parameter in the URL. Surfaced as a REST endpoint for debugging purposes only. The underlying run query call in the service is valid for internal scenarios where we are running a query pipeline.",
-        "operationId": "execute",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "body",
-            "name": "body",
-            "description": "",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/queryResult"
-            }
-          },
-          {
-            "in": "path",
-            "name": "containerId",
-            "description": "",
-            "required": true,
-            "type": "string",
-            "format": "uuid"
-          },
-          {
-            "in": "path",
-            "name": "queryId",
-            "description": "",
-            "required": true,
-            "type": "string",
-            "format": "uuid"
-          },
-          {
-            "in": "query",
-            "name": "getData",
-            "description": "",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          }
-        }
-      }
-    },
-    "/_apis/health/{containerId}/queries": {
-      "get": {
-        "tags": [
-          "queries"
-        ],
-        "summary": "GetQueryDefinitions",
-        "description": "",
-        "operationId": "getQueryDefinitions",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "containerId",
-            "description": "",
-            "required": true,
-            "type": "string",
-            "format": "uuid"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/queryDefinitionProperties"
-              }
-            }
-          }
-        }
-      }
-    },
-    "/_apis/health/{containerId}/queries/{queryId}": {
-      "get": {
-        "tags": [
-          "queries"
-        ],
-        "summary": "GetQueryDefinition",
-        "description": "",
-        "operationId": "getQueryDefinition",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "containerId",
-            "description": "",
-            "required": true,
-            "type": "string",
-            "format": "uuid"
-          },
-          {
-            "in": "path",
-            "name": "queryId",
-            "description": "",
-            "required": true,
-            "type": "string",
-            "format": "uuid"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "$ref": "#/definitions/queryDefinitionProperties"
-            }
-          }
-        }
-      }
-    },
     "/_apis/health/alertendpoints": {
       "post": {
         "tags": [
@@ -259,21 +131,556 @@
           "200": {
             "description": "successful operation",
             "schema": {
-              "type": "string",
-              "format": "httpResponseMessage"
+              "$ref": "#/definitions/alertEndpointProperties"
             }
           }
         }
       }
     },
-    "/_apis/health/builtinmonitors": {
+    "/_apis/health/containers": {
+      "post": {
+        "tags": [
+          "containers"
+        ],
+        "summary": "CreateContainer",
+        "description": "",
+        "operationId": "createContainer",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/queryContainerProperties"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/queryContainerProperties"
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "containers"
+        ],
+        "summary": "GetContainers",
+        "description": "",
+        "operationId": "getContainers",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/queryContainerProperties"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/_apis/health/containers/{containerId}": {
+      "delete": {
+        "tags": [
+          "containers"
+        ],
+        "summary": "DeleteContainer",
+        "description": "",
+        "operationId": "deleteContainer",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "containerId",
+            "description": "",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "containers"
+        ],
+        "summary": "GetContainer",
+        "description": "",
+        "operationId": "getContainer",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "containerId",
+            "description": "",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/queryContainerProperties"
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "containers"
+        ],
+        "summary": "UpdateContainer",
+        "description": "",
+        "operationId": "updateContainer",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/queryContainerProperties"
+            }
+          },
+          {
+            "in": "path",
+            "name": "containerId",
+            "description": "",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        }
+      }
+    },
+    "/_apis/health/Containers/{containerId}/monitors": {
+      "get": {
+        "tags": [
+          "monitors"
+        ],
+        "summary": "GetMonitors",
+        "description": "",
+        "operationId": "getMonitors",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "containerId",
+            "description": "",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/monitorProperties"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/_apis/health/Containers/{containerId}/queries": {
+      "post": {
+        "tags": [
+          "queries"
+        ],
+        "summary": "AddQueryDefinition",
+        "description": "",
+        "operationId": "addQueryDefinition",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/queryDefinitionProperties"
+            }
+          },
+          {
+            "in": "path",
+            "name": "containerId",
+            "description": "",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "queries"
+        ],
+        "summary": "GetQueryDefinitions",
+        "description": "",
+        "operationId": "getQueryDefinitions",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "containerId",
+            "description": "",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/queryDefinitionProperties"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/_apis/health/Containers/{containerId}/queries/{queryId}": {
+      "delete": {
+        "tags": [
+          "queries"
+        ],
+        "summary": "DeleteQueryDefinition",
+        "description": "",
+        "operationId": "deleteQueryDefinition",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "containerId",
+            "description": "",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "path",
+            "name": "queryId",
+            "description": "",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "queries"
+        ],
+        "summary": "GetQueryDefinition",
+        "description": "",
+        "operationId": "getQueryDefinition",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "containerId",
+            "description": "",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "path",
+            "name": "queryId",
+            "description": "",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/queryDefinitionProperties"
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "queries"
+        ],
+        "summary": "UpdateQueryDefinition",
+        "description": "",
+        "operationId": "updateQueryDefinition",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/queryDefinitionProperties"
+            }
+          },
+          {
+            "in": "path",
+            "name": "containerId",
+            "description": "",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "path",
+            "name": "queryId",
+            "description": "",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "/_apis/health/Containers/{containerId}/queryresultmonitors": {
+      "post": {
+        "tags": [
+          "queryResultMonitors"
+        ],
+        "summary": "CreateQueryResultMonitor",
+        "description": "",
+        "operationId": "createQueryResultMonitor",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/queryResultMonitorProperties"
+            }
+          },
+          {
+            "in": "path",
+            "name": "containerId",
+            "description": "",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/queryResultMonitorProperties"
+            }
+          }
+        }
+      }
+    },
+    "/_apis/health/Containers/{containerId}/queryresultmonitors/{monitorId}": {
+      "delete": {
+        "tags": [
+          "queryResultMonitors"
+        ],
+        "summary": "DeleteQueryResultMonitor",
+        "description": "",
+        "operationId": "deleteQueryResultMonitor",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "containerId",
+            "description": "",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "path",
+            "name": "monitorId",
+            "description": "",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "queryResultMonitors"
+        ],
+        "summary": "GetQueryResultMonitor",
+        "description": "",
+        "operationId": "getQueryResultMonitor",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "containerId",
+            "description": "",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "path",
+            "name": "monitorId",
+            "description": "",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/queryResultMonitorProperties"
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "queryResultMonitors"
+        ],
+        "summary": "UpdateQueryResultMonitor",
+        "description": "",
+        "operationId": "updateQueryResultMonitor",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/queryResultMonitorProperties"
+            }
+          },
+          {
+            "in": "path",
+            "name": "containerId",
+            "description": "",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "path",
+            "name": "monitorId",
+            "description": "",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        }
+      }
+    },
+    "/_apis/health/Monitors/builtinmonitors": {
       "post": {
         "tags": [
           "builtInMonitors"
         ],
-        "summary": "CreateMonitor",
+        "summary": "CreateBuiltInMonitor",
         "description": "",
-        "operationId": "createMonitor",
+        "operationId": "createBuiltInMonitor",
         "consumes": [
           "application/json"
         ],
@@ -299,16 +706,92 @@
             }
           }
         }
+      },
+      "get": {
+        "tags": [
+          "builtInMonitors"
+        ],
+        "summary": "GetBuiltInMonitors",
+        "description": "",
+        "operationId": "getBuiltInMonitors",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/builtInMonitorProperties"
+              }
+            }
+          }
+        }
       }
     },
-    "/_apis/health/healthalertmonitors": {
+    "/_apis/health/Monitors/builtinmonitors/{monitorId}": {
+      "delete": {
+        "tags": [
+          "builtInMonitors"
+        ],
+        "summary": "DeleteBuiltInMonitor",
+        "description": "",
+        "operationId": "deleteBuiltInMonitor",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "monitorId",
+            "description": "",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "builtInMonitors"
+        ],
+        "summary": "GetBuiltInMonitor",
+        "description": "",
+        "operationId": "getBuiltInMonitor",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "monitorId",
+            "description": "",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/builtInMonitorProperties"
+            }
+          }
+        }
+      }
+    },
+    "/_apis/health/Monitors/healthalertmonitors": {
       "post": {
         "tags": [
           "healthAlertMonitors"
         ],
-        "summary": "CreateMonitor",
+        "summary": "CreateHealthAlertMonitor",
         "description": "",
-        "operationId": "createMonitor",
+        "operationId": "createHealthAlertMonitor",
         "consumes": [
           "application/json"
         ],
@@ -324,6 +807,82 @@
             "schema": {
               "$ref": "#/definitions/healthAlertMonitorProperties"
             }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/healthAlertMonitorProperties"
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "healthAlertMonitors"
+        ],
+        "summary": "GetHealthAlertMonitors",
+        "description": "",
+        "operationId": "getHealthAlertMonitors",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/healthAlertMonitorProperties"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/_apis/health/Monitors/healthalertmonitors/{monitorId}": {
+      "delete": {
+        "tags": [
+          "healthAlertMonitors"
+        ],
+        "summary": "DeleteHealthAlertMonitor",
+        "description": "",
+        "operationId": "deleteHealthAlertMonitor",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "monitorId",
+            "description": "",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "healthAlertMonitors"
+        ],
+        "summary": "GetHealthAlertMonitor",
+        "description": "",
+        "operationId": "getHealthAlertMonitor",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "monitorId",
+            "description": "",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
           }
         ],
         "responses": {
@@ -481,14 +1040,14 @@
         }
       }
     },
-    "/_apis/health/queryresultmonitors": {
+    "/_apis/health/QueryContainers/{containerId}/Queries/{queryId}/queryresults": {
       "post": {
         "tags": [
-          "queryResultMonitors"
+          "queryResults"
         ],
-        "summary": "CreateMonitor",
-        "description": "",
-        "operationId": "createMonitor",
+        "summary": "Execute",
+        "description": "Return result data if the user supplies a getData parameter in the URL. Surfaced as a REST endpoint for debugging purposes only. The underlying run query call in the service is valid for internal scenarios where we are running a query pipeline.",
+        "operationId": "execute",
         "consumes": [
           "application/json"
         ],
@@ -502,15 +1061,41 @@
             "description": "",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/queryResultMonitorProperties"
+              "$ref": "#/definitions/queryResult"
             }
+          },
+          {
+            "in": "path",
+            "name": "containerId",
+            "description": "",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "path",
+            "name": "queryId",
+            "description": "",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "query",
+            "name": "getData",
+            "description": "",
+            "required": true,
+            "type": "string"
           }
         ],
         "responses": {
           "200": {
             "description": "successful operation",
             "schema": {
-              "$ref": "#/definitions/queryResultMonitorProperties"
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
             }
           }
         }
@@ -664,9 +1249,47 @@
         }
       }
     },
+    "identityRef": {
+      "type": "object",
+      "properties": {
+        "displayName": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "imageUrl": {
+          "type": "string"
+        },
+        "isAadIdentity": {
+          "type": "boolean"
+        },
+        "isContainer": {
+          "type": "boolean"
+        },
+        "profileUrl": {
+          "type": "string"
+        },
+        "uniqueName": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        }
+      }
+    },
     "itemMetadata": {
       "type": "object",
       "properties": {
+        "createdBy": {
+          "description": "Created By",
+          "$ref": "#/definitions/identityRef"
+        },
+        "createdOn": {
+          "description": "Created On",
+          "type": "string",
+          "format": "date-time"
+        },
         "description": {
           "description": "Description.",
           "type": "string"
@@ -679,6 +1302,15 @@
           "description": "An immutable id to support stable references.",
           "type": "string",
           "format": "uuid"
+        },
+        "modifiedBy": {
+          "description": "Created By",
+          "$ref": "#/definitions/identityRef"
+        },
+        "modifiedOn": {
+          "description": "Created On",
+          "type": "string",
+          "format": "date-time"
         },
         "refName": {
           "description": "Reference name that can be used in place of the id.",
@@ -702,6 +1334,13 @@
           ],
           "x-ms-enum": {
             "name": "Microsoft.VisualStudio.Services.Kalypso.WebApi.MonitorCategory"
+          }
+        },
+        "results": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "monitorResult"
           }
         },
         "tsgLink": {
@@ -805,6 +1444,10 @@
           "x-ms-enum": {
             "name": "Microsoft.VisualStudio.Services.Kalypso.WebApi.ContentType"
           }
+        },
+        "path": {
+          "description": "Path in the repository",
+          "type": "string"
         },
         "queryInstances": {
           "description": "A set of executable query instances derived from the raw query string.",
