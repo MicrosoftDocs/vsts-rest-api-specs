@@ -22,6 +22,9 @@
     },
     {
       "name": "fields"
+    },
+    {
+      "name": "workItemTypes"
     }
   ],
   "schemes": [
@@ -150,6 +153,94 @@
         }
       }
     },
+    "/_apis/work/processes/{processId}/workitemtypes": {
+      "get": {
+        "tags": [
+          "workItemTypes"
+        ],
+        "summary": "GetWorkItemTypes",
+        "description": "",
+        "operationId": "getWorkItemTypes",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "processId",
+            "description": "",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "query",
+            "name": "expand",
+            "description": "",
+            "required": false,
+            "type": "string",
+            "format": "getWorkItemTypeExpand"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/workItemTypeModel"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/_apis/work/processes/{processId}/workitemtypes/{witRefName}": {
+      "get": {
+        "tags": [
+          "workItemTypes"
+        ],
+        "summary": "GetWorkItemType",
+        "description": "",
+        "operationId": "getWorkItemType",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "processId",
+            "description": "",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "path",
+            "name": "witRefName",
+            "description": "",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "expand",
+            "description": "",
+            "required": false,
+            "type": "string",
+            "format": "getWorkItemTypeExpand"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/workItemTypeModel"
+            }
+          }
+        }
+      }
+    },
     "/_apis/work/processes/{processId}/workItemTypes/{witRefName}/fields": {
       "get": {
         "tags": [
@@ -193,6 +284,72 @@
     }
   },
   "definitions": {
+    "control": {
+      "type": "object",
+      "properties": {
+        "contribution": {
+          "description": "Contribution for the control.",
+          "$ref": "#/definitions/witContribution"
+        },
+        "controlType": {
+          "description": "Type of the control.",
+          "type": "string"
+        },
+        "height": {
+          "description": "Height of the control, for html controls.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "id": {
+          "description": "The id for the layout node.",
+          "type": "string"
+        },
+        "inherited": {
+          "description": "A value indicating whether this layout node has been inherited from a parent layout.  This is expected to only be only set by the combiner.",
+          "type": "boolean"
+        },
+        "isContribution": {
+          "description": "A value indicating if the layout node is contribution or not.",
+          "type": "boolean"
+        },
+        "label": {
+          "description": "Label for the field",
+          "type": "string"
+        },
+        "metadata": {
+          "description": "Inner text of the control.",
+          "type": "string"
+        },
+        "order": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "overridden": {
+          "description": "A value indicating whether this layout node has been overridden by a child layout.",
+          "type": "boolean"
+        },
+        "readOnly": {
+          "description": "A value indicating if the control is readonly.",
+          "type": "boolean"
+        },
+        "visible": {
+          "description": "A value indicating if the control should be hidden or not.",
+          "type": "boolean"
+        },
+        "watermark": {
+          "description": "Watermark text for the textbox.",
+          "type": "string"
+        }
+      }
+    },
+    "extension": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      }
+    },
     "fieldModel": {
       "type": "object",
       "properties": {
@@ -228,6 +385,187 @@
         },
         "url": {
           "type": "string"
+        }
+      }
+    },
+    "formLayout": {
+      "type": "object",
+      "properties": {
+        "extensions": {
+          "description": "Gets and sets extensions list",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/extension"
+          }
+        },
+        "pages": {
+          "description": "Top level tabs of the layout.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/page"
+          }
+        },
+        "systemControls": {
+          "description": "Headers controls of the layout.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/control"
+          }
+        }
+      }
+    },
+    "group": {
+      "type": "object",
+      "properties": {
+        "contribution": {
+          "description": "Contribution for the group.",
+          "$ref": "#/definitions/witContribution"
+        },
+        "controls": {
+          "description": "Controls to be put in the group.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/control"
+          }
+        },
+        "height": {
+          "description": "The height for the contribution.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "id": {
+          "description": "The id for the layout node.",
+          "type": "string"
+        },
+        "inherited": {
+          "description": "A value indicating whether this layout node has been inherited from a parent layout.  This is expected to only be only set by the combiner.",
+          "type": "boolean"
+        },
+        "isContribution": {
+          "description": "A value indicating if the layout node is contribution are not.",
+          "type": "boolean"
+        },
+        "label": {
+          "description": "Label for the group.",
+          "type": "string"
+        },
+        "order": {
+          "description": "Order in which the group should appear in the section.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "overridden": {
+          "description": "A value indicating whether this layout node has been overridden by a child layout.",
+          "type": "boolean"
+        },
+        "visible": {
+          "description": "A value indicating if the group should be hidden or not.",
+          "type": "boolean"
+        }
+      }
+    },
+    "page": {
+      "type": "object",
+      "properties": {
+        "contribution": {
+          "description": "Contribution for the page.",
+          "$ref": "#/definitions/witContribution"
+        },
+        "id": {
+          "description": "The id for the layout node.",
+          "type": "string"
+        },
+        "inherited": {
+          "description": "A value indicating whether this layout node has been inherited from a parent layout.  This is expected to only be only set by the combiner.",
+          "type": "boolean"
+        },
+        "isContribution": {
+          "description": "A value indicating if the layout node is contribution are not.",
+          "type": "boolean"
+        },
+        "label": {
+          "description": "The label for the page.",
+          "type": "string"
+        },
+        "locked": {
+          "description": "A value indicating whether any user operations are permitted on this page and the contents of this page",
+          "type": "boolean"
+        },
+        "order": {
+          "description": "Order in which the page should appear in the layout.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "overridden": {
+          "description": "A value indicating whether this layout node has been overridden by a child layout.",
+          "type": "boolean"
+        },
+        "pageType": {
+          "description": "The icon for the page.",
+          "enum": [
+            "custom",
+            "history",
+            "links",
+            "attachments"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.TeamFoundation.WorkItemTracking.Process.WebApi.Models.PageType"
+          }
+        },
+        "sections": {
+          "description": "The sections of the page.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/section"
+          }
+        },
+        "visible": {
+          "description": "A value indicating if the page should be hidden or not.",
+          "type": "boolean"
+        }
+      }
+    },
+    "section": {
+      "type": "object",
+      "properties": {
+        "groups": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/group"
+          }
+        },
+        "id": {
+          "description": "The id for the layout node.",
+          "type": "string"
+        },
+        "overridden": {
+          "description": "A value indicating whether this layout node has been overridden by a child layout.",
+          "type": "boolean"
+        }
+      }
+    },
+    "witContribution": {
+      "type": "object",
+      "properties": {
+        "contributionId": {
+          "description": "The id for the contribution.",
+          "type": "string"
+        },
+        "height": {
+          "description": "The height for the contribution.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "inputs": {
+          "description": "A dictionary holding key value pairs for contribution inputs.",
+          "type": "object",
+          "additionalProperties": {
+            "type": "object"
+          }
+        },
+        "showOnDeletedWorkItem": {
+          "description": "A value indicating if the contribution should be show on deleted workItem.",
+          "type": "boolean"
         }
       }
     },
@@ -289,6 +627,100 @@
       "properties": {
         "id": {
           "type": "string"
+        },
+        "url": {
+          "type": "string"
+        }
+      }
+    },
+    "workItemStateResultModel": {
+      "type": "object",
+      "properties": {
+        "color": {
+          "type": "string"
+        },
+        "hidden": {
+          "type": "boolean"
+        },
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "name": {
+          "type": "string"
+        },
+        "order": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "stateCategory": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        }
+      }
+    },
+    "workItemTypeBehavior": {
+      "type": "object",
+      "properties": {
+        "behavior": {
+          "$ref": "#/definitions/workItemBehaviorReference"
+        },
+        "isDefault": {
+          "type": "boolean"
+        },
+        "url": {
+          "type": "string"
+        }
+      }
+    },
+    "workItemTypeModel": {
+      "type": "object",
+      "properties": {
+        "behaviors": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/workItemTypeBehavior"
+          }
+        },
+        "class": {
+          "enum": [
+            "system",
+            "derived",
+            "custom"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.TeamFoundation.WorkItemTracking.Process.WebApi.Models.WorkItemTypeClass"
+          }
+        },
+        "color": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "inherits": {
+          "description": "Parent WIT Id/Internal ReferenceName that it inherits from",
+          "type": "string"
+        },
+        "isDisabled": {
+          "type": "boolean"
+        },
+        "layout": {
+          "$ref": "#/definitions/formLayout"
+        },
+        "name": {
+          "type": "string"
+        },
+        "states": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/workItemStateResultModel"
+          }
         },
         "url": {
           "type": "string"
