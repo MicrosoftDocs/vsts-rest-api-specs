@@ -63,6 +63,9 @@
       "name": "queues"
     },
     {
+      "name": "revisions"
+    },
+    {
       "name": "serviceendpointproxy"
     },
     {
@@ -2963,9 +2966,57 @@
         "tags": [
           "taskgroups"
         ],
-        "summary": "GetTaskGroups",
+        "summary": "GetTaskGroupRevision",
         "description": "",
-        "operationId": "getTaskGroups",
+        "operationId": "getTaskGroupRevision",
+        "produces": [
+          "application/json",
+          "text/plain"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "taskGroupId",
+            "description": "",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "query",
+            "name": "revision",
+            "description": "",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "string",
+              "format": "stream"
+            }
+          }
+        }
+      }
+    },
+    "/{project}/_apis/distributedtask/taskgroups/{taskGroupId}/revisions": {
+      "get": {
+        "tags": [
+          "revisions"
+        ],
+        "summary": "GetTaskGroupHistory",
+        "description": "",
+        "operationId": "getTaskGroupHistory",
         "produces": [
           "application/json"
         ],
@@ -2981,16 +3032,9 @@
             "in": "path",
             "name": "taskGroupId",
             "description": "",
-            "required": false,
+            "required": true,
             "type": "string",
             "format": "uuid"
-          },
-          {
-            "in": "query",
-            "name": "expanded",
-            "description": "",
-            "required": false,
-            "type": "boolean"
           }
         ],
         "responses": {
@@ -2999,7 +3043,7 @@
             "schema": {
               "type": "array",
               "items": {
-                "$ref": "#/definitions/taskGroup"
+                "$ref": "#/definitions/taskGroupRevision"
               }
             }
           }
@@ -4983,8 +5027,29 @@
         }
       ],
       "properties": {
+        "comment": {
+          "type": "string"
+        },
+        "createdBy": {
+          "$ref": "#/definitions/identityRef"
+        },
+        "createdOn": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "modifiedBy": {
+          "$ref": "#/definitions/identityRef"
+        },
+        "modifiedOn": {
+          "type": "string",
+          "format": "date-time"
+        },
         "owner": {
           "type": "string"
+        },
+        "revision": {
+          "type": "integer",
+          "format": "int32"
         },
         "tasks": {
           "type": "array",
@@ -5014,6 +5079,43 @@
         },
         "visibleRule": {
           "type": "string"
+        }
+      }
+    },
+    "taskGroupRevision": {
+      "type": "object",
+      "properties": {
+        "changedBy": {
+          "$ref": "#/definitions/identityRef"
+        },
+        "changedDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "changeType": {
+          "enum": [
+            "add",
+            "update",
+            "delete"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.TeamFoundation.DistributedTask.WebApi.Enums.AuditAction"
+          }
+        },
+        "comment": {
+          "type": "string"
+        },
+        "fileId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "revision": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "taskGroupId": {
+          "type": "string",
+          "format": "uuid"
         }
       }
     },
