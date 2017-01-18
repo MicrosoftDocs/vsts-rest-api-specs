@@ -1,0 +1,199 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Graph",
+    "description": "",
+    "termsOfService": "https://go.microsoft.com/fwlink/?LinkId=329770",
+    "contact": {
+      "name": "nugetvss",
+      "email": "nugetvss@microsoft.com"
+    },
+    "license": {
+      "name": "MICROSOFT SOFTWARE LICENSE TERMS",
+      "url": "https://go.microsoft.com/fwlink/?LinkId=329770"
+    },
+    "version": "3.1"
+  },
+  "host": "fabrikam-fiber-inc.visualstudio.com",
+  "basePath": "/",
+  "tags": [
+    {
+      "name": "memberRefs"
+    },
+    {
+      "name": "memberRefsByPersistentId"
+    },
+    {
+      "name": "memberRefsByTransientDescriptor"
+    }
+  ],
+  "schemes": [
+    "https"
+  ],
+  "paths": {
+    "/_apis/graph/memberrefs": {
+      "get": {
+        "tags": [
+          "memberRefs"
+        ],
+        "summary": "GetMemberRefByUntranslatedId",
+        "description": "Get memberRef by masterId",
+        "operationId": "getMemberRefByUntranslatedId",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "untranslatedId",
+            "description": "masterId",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/GraphMemberRef"
+            }
+          }
+        }
+      }
+    },
+    "/_apis/graph/memberRefs/{persistentId}": {
+      "get": {
+        "tags": [
+          "memberRefsByPersistentId"
+        ],
+        "summary": "GetMemberRefByPersistentId",
+        "description": "Get memberRef by localId",
+        "operationId": "getMemberRefByPersistentId",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "persistentId",
+            "description": "localId",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "query",
+            "name": "includeUntranslatedId",
+            "description": "include masterId in the results",
+            "required": false,
+            "type": "boolean"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/GraphMemberRef"
+            }
+          }
+        }
+      }
+    },
+    "/_apis/graph/memberRefs/{transientDescriptor}": {
+      "get": {
+        "tags": [
+          "memberRefsByTransientDescriptor"
+        ],
+        "summary": "GetMemberRefByTransientDescriptor",
+        "description": "Get memberRef by descriptor",
+        "operationId": "getMemberRefByTransientDescriptor",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "transientDescriptor",
+            "description": "Identity Descriptor",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/IdentityDescriptor"
+            }
+          },
+          {
+            "in": "query",
+            "name": "includeUntranslatedId",
+            "description": "include masterId in the results",
+            "required": false,
+            "type": "boolean"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/GraphMemberRef"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "GraphMemberRef": {
+      "type": "object",
+      "properties": {
+        "persistentId": {
+          "description": "The unique identifier within the member's scope. This identifier will not change for the lifetime of the member. If you must perisist a reference to a GraphMember within your system, only persist this field. All other fields can change over time.",
+          "type": "string",
+          "format": "uuid"
+        },
+        "transientDescriptor": {
+          "description": "The transient descriptor is the primary way to reference the GraphMember while the system is running. This field will uniquely identify the same GraphMember across both Accounts and Organizations.",
+          "$ref": "#/definitions/IdentityDescriptor"
+        },
+        "untranslatedId": {
+          "description": "Memeber's Untranslated Identifier",
+          "type": "string",
+          "format": "uuid"
+        }
+      }
+    },
+    "IdentityDescriptor": {
+      "type": "object",
+      "properties": {
+        "identifier": {
+          "type": "string"
+        },
+        "identityType": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "parameters": {
+    "api-Version": {
+      "name": "api-version",
+      "in": "query",
+      "description": "Version of the API to use.  This should be set to '3.1-preview' to use this version of the api.",
+      "required": true,
+      "type": "string"
+    }
+  },
+  "securityDefinitions": {
+    "accessToken": {
+      "type": "basic",
+      "description": "Personal access token. Use any value for the user name and the token as the password."
+     }
+  },
+  "security": [
+    {
+      "accessToken": []
+    }
+  ],
+  "externalDocs": {
+    "description": "Visual Studio Team Services REST APIs",
+    "url": "https://www.visualstudio.com/docs/integrate/api/overview"
+  }
+}
