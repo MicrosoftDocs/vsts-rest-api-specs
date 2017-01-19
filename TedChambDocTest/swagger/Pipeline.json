@@ -18,6 +18,9 @@
   "basePath": "/",
   "tags": [
     {
+      "name": "artifacts"
+    },
+    {
       "name": "definitions"
     },
     {
@@ -640,6 +643,157 @@
         }
       }
     },
+    "/{project}/_apis/pipeline/pipelines/{pipelineId}/artifacts": {
+      "post": {
+        "tags": [
+          "artifacts"
+        ],
+        "summary": "AddArtifact",
+        "description": "",
+        "operationId": "addArtifact",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/PipelineArtifact"
+            }
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "pipelineId",
+            "description": "",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "pipelineEnvironmentId",
+            "description": "",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "attempt",
+            "description": "",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/PipelineArtifact"
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "artifacts"
+        ],
+        "summary": "GetPipelineArtifacts",
+        "description": "",
+        "operationId": "getPipelineArtifacts",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "pipelineId",
+            "description": "",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/PipelineArtifact"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/{project}/_apis/pipeline/pipelines/{pipelineId}/artifacts/{artifactName}": {
+      "get": {
+        "tags": [
+          "artifacts"
+        ],
+        "summary": "GetArtifact",
+        "description": "Gets a specific artifact for a pipeline",
+        "operationId": "getArtifact",
+        "produces": [
+          "application/zip",
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "pipelineId",
+            "description": "",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "artifactName",
+            "description": "",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/PipelineArtifact"
+            }
+          }
+        }
+      }
+    },
     "/{project}/_apis/pipeline/pipelines/{pipelineId}/environments/{environmentId}": {
       "get": {
         "tags": [
@@ -1219,6 +1373,37 @@
         },
         "instanceReference": {
           "$ref": "#/definitions/BuildVersion"
+        }
+      }
+    },
+    "ArtifactResource": {
+      "type": "object",
+      "properties": {
+        "_links": {
+          "$ref": "#/definitions/ReferenceLinks"
+        },
+        "data": {
+          "description": "The type-specific resource data. For example, \"#/10002/5/drop\", \"$/drops/5\", \"\\\\myshare\\myfolder\\mydrops\\5\"",
+          "type": "string"
+        },
+        "downloadUri": {
+          "description": "Link to the resource. This might include things like query parameters to download as a zip file",
+          "type": "string"
+        },
+        "properties": {
+          "description": "Properties of Artifact Resource",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "type": {
+          "description": "The type of the resource: File container, version control folder, UNC path, etc.",
+          "type": "string"
+        },
+        "uri": {
+          "description": "Link to the resource",
+          "type": "string"
         }
       }
     },
@@ -1989,6 +2174,24 @@
         "revision": {
           "type": "integer",
           "format": "int32"
+        }
+      }
+    },
+    "PipelineArtifact": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "The artifact id",
+          "type": "integer",
+          "format": "int32"
+        },
+        "name": {
+          "description": "The name of the artifact",
+          "type": "string"
+        },
+        "resource": {
+          "description": "The actual resource",
+          "$ref": "#/definitions/ArtifactResource"
         }
       }
     },
