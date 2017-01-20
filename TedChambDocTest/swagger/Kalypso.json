@@ -30,6 +30,9 @@
       "name": "healthAlertMonitors"
     },
     {
+      "name": "inputValuesQuery"
+    },
+    {
       "name": "monitors"
     },
     {
@@ -786,6 +789,41 @@
         }
       }
     },
+    "/_apis/health/inputvaluesquery": {
+      "post": {
+        "tags": [
+          "inputValuesQuery"
+        ],
+        "summary": "GetInputValues",
+        "description": "",
+        "operationId": "getInputValues",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/InputValuesQuery"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/InputValuesQuery"
+            }
+          }
+        }
+      }
+    },
     "/_apis/health/Monitors/builtinmonitors": {
       "post": {
         "tags": [
@@ -1042,7 +1080,7 @@
         }
       }
     },
-    "/_apis/health/QueryContainers/{containerId}/Queries/{queryId}/queryresults": {
+    "/_apis/health/QueryContainers/{containerId}/Queries/queryresults": {
       "post": {
         "tags": [
           "queryResults"
@@ -1075,12 +1113,11 @@
             "format": "uuid"
           },
           {
-            "in": "path",
-            "name": "queryId",
+            "in": "query",
+            "name": "queryPath",
             "description": "",
             "required": true,
-            "type": "string",
-            "format": "uuid"
+            "type": "string"
           },
           {
             "in": "query",
@@ -1277,6 +1314,27 @@
         },
         "url": {
           "type": "string"
+        }
+      }
+    },
+    "InputValuesQuery": {
+      "type": "object",
+      "properties": {
+        "currentValues": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "inputValues": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "InputValues"
+          }
+        },
+        "resource": {
+          "type": "object"
         }
       }
     },
@@ -1494,9 +1552,8 @@
           "type": "string",
           "format": "uuid"
         },
-        "queryId": {
-          "type": "string",
-          "format": "uuid"
+        "queryPath": {
+          "type": "string"
         },
         "tokenBindings": {
           "description": "Default token values locally scoped",
