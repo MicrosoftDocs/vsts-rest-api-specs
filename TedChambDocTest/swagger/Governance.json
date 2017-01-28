@@ -1,7 +1,7 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "TokenRevocation",
+    "title": "Governance",
     "description": "",
     "termsOfService": "https://go.microsoft.com/fwlink/?LinkId=329770",
     "contact": {
@@ -18,21 +18,21 @@
   "basePath": "/",
   "tags": [
     {
-      "name": "rules"
+      "name": "notes"
     }
   ],
   "schemes": [
     "https"
   ],
   "paths": {
-    "/_apis/tokenrevocation/rules": {
-      "put": {
+    "/_apis/notes": {
+      "post": {
         "tags": [
-          "rules"
+          "notes"
         ],
-        "summary": "CreateRules",
+        "summary": "CreateNote",
         "description": "",
-        "operationId": "createRules",
+        "operationId": "createNote",
         "consumes": [
           "application/json"
         ],
@@ -46,10 +46,7 @@
             "description": "",
             "required": true,
             "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/TokenRevocationRule"
-              }
+              "$ref": "#/definitions/Note"
             }
           }
         ],
@@ -57,22 +54,18 @@
           "200": {
             "description": "successful operation",
             "schema": {
-              "type": "array",
-              "items": {
-                "type": "string",
-                "format": "uuid"
-              }
+              "$ref": "#/definitions/Note"
             }
           }
         }
       },
       "get": {
         "tags": [
-          "rules"
+          "notes"
         ],
-        "summary": "ListRules",
+        "summary": "GetNotes",
         "description": "",
-        "operationId": "listRules",
+        "operationId": "getNotes",
         "produces": [
           "application/json"
         ],
@@ -82,29 +75,29 @@
             "schema": {
               "type": "array",
               "items": {
-                "$ref": "#/definitions/TokenRevocationRule"
+                "$ref": "#/definitions/Note"
               }
             }
           }
         }
       }
     },
-    "/_apis/tokenrevocation/rules/{ruleId}": {
+    "/_apis/notes/{noteId}": {
       "delete": {
         "tags": [
-          "rules"
+          "notes"
         ],
-        "summary": "DeleteRule",
+        "summary": "DeleteNote",
         "description": "",
-        "operationId": "deleteRule",
+        "operationId": "deleteNote",
         "parameters": [
           {
             "in": "path",
-            "name": "ruleId",
+            "name": "noteId",
             "description": "",
             "required": true,
-            "type": "string",
-            "format": "uuid"
+            "type": "integer",
+            "format": "int32"
           }
         ],
         "responses": {
@@ -112,44 +105,88 @@
             "description": "successful operation"
           }
         }
+      },
+      "get": {
+        "tags": [
+          "notes"
+        ],
+        "summary": "GetNote",
+        "description": "",
+        "operationId": "getNote",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "noteId",
+            "description": "",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/Note"
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "notes"
+        ],
+        "summary": "UpdateNote",
+        "description": "",
+        "operationId": "updateNote",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Note"
+            }
+          },
+          {
+            "in": "path",
+            "name": "noteId",
+            "description": "",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/Note"
+            }
+          }
+        }
       }
     }
   },
   "definitions": {
-    "TokenRevocationRule": {
+    "Note": {
       "type": "object",
       "properties": {
-        "createdBefore": {
-          "description": "Tokens created before date you want the rule to match",
-          "type": "string",
-          "format": "date-time"
+        "noteId": {
+          "type": "integer",
+          "format": "int32"
         },
-        "creationDate": {
-          "description": "Rule creation date",
-          "type": "string",
-          "format": "date-time"
-        },
-        "expirationDate": {
-          "description": "Rule expiration date",
-          "type": "string",
-          "format": "date-time"
-        },
-        "identityId": {
-          "description": "IdentityId for Identity you want the rule to match",
-          "type": "string",
-          "format": "uuid"
-        },
-        "ownerId": {
-          "description": "Rule owner/creator",
-          "type": "string",
-          "format": "uuid"
-        },
-        "ruleId": {
-          "description": "Auto Generate Id",
-          "type": "string",
-          "format": "uuid"
-        },
-        "scopes": {
+        "title": {
           "type": "string"
         }
       }

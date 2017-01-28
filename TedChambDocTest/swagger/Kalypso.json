@@ -1080,7 +1080,7 @@
         }
       }
     },
-    "/_apis/health/QueryContainers/{containerId}/Queries/queryresults": {
+    "/_apis/health/QueryContainers/{containerId}/Queries/{queryId}/queryresults": {
       "post": {
         "tags": [
           "queryResults"
@@ -1113,11 +1113,12 @@
             "format": "uuid"
           },
           {
-            "in": "query",
-            "name": "queryPath",
+            "in": "path",
+            "name": "queryId",
             "description": "",
             "required": true,
-            "type": "string"
+            "type": "string",
+            "format": "uuid"
           },
           {
             "in": "query",
@@ -1327,6 +1328,7 @@
           }
         },
         "inputValues": {
+          "description": "The input values to return on input, and the result from the consumer on output.",
           "type": "array",
           "items": {
             "type": "string",
@@ -1334,6 +1336,7 @@
           }
         },
         "resource": {
+          "description": "Subscription containing information about the publisher/consumer and the current input values",
           "type": "object"
         }
       }
@@ -1378,6 +1381,31 @@
         }
       }
     },
+    "MonitorData": {
+      "type": "object",
+      "properties": {
+        "finishTime": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "message": {
+          "type": "string"
+        },
+        "monitorResult": {
+          "enum": [
+            "succeeded",
+            "failed"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.VisualStudio.Services.Kalypso.WebApi.MonitorResult"
+          }
+        },
+        "startTime": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
     "MonitorProperties": {
       "type": "object",
       "allOf": [
@@ -1400,11 +1428,10 @@
           "type": "string",
           "format": "uuid"
         },
-        "results": {
+        "monitorData": {
           "type": "array",
           "items": {
-            "type": "string",
-            "format": "MonitorResult"
+            "$ref": "#/definitions/MonitorData"
           }
         },
         "tsgLink": {
