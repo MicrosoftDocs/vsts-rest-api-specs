@@ -24,6 +24,9 @@
       "name": "fields"
     },
     {
+      "name": "processes"
+    },
+    {
       "name": "workItemTypes"
     }
   ],
@@ -31,6 +34,73 @@
     "https"
   ],
   "paths": {
+    "/_apis/work/processes": {
+      "post": {
+        "tags": [
+          "processes"
+        ],
+        "summary": "CreateProcess",
+        "description": "",
+        "operationId": "createProcess",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CreateProcessModel"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ProcessModel"
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "processes"
+        ],
+        "summary": "GetProcesses",
+        "description": "",
+        "operationId": "getProcesses",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "expand",
+            "description": "",
+            "required": false,
+            "type": "string",
+            "format": "GetProcessExpandLevel"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/ProcessModel"
+              }
+            }
+          }
+        }
+      }
+    },
     "/_apis/work/processes/{processId}/behaviors": {
       "get": {
         "tags": [
@@ -281,6 +351,109 @@
           }
         }
       }
+    },
+    "/_apis/work/processes/{processTypeId}": {
+      "delete": {
+        "tags": [
+          "processes"
+        ],
+        "summary": "DeleteProcess",
+        "description": "",
+        "operationId": "deleteProcess",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "processTypeId",
+            "description": "",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "processes"
+        ],
+        "summary": "GetProcessById",
+        "description": "",
+        "operationId": "getProcessById",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "processTypeId",
+            "description": "",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "query",
+            "name": "expand",
+            "description": "",
+            "required": false,
+            "type": "string",
+            "format": "GetProcessExpandLevel"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ProcessModel"
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "processes"
+        ],
+        "summary": "UpdateProcess",
+        "description": "",
+        "operationId": "updateProcess",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UpdateProcessModel"
+            }
+          },
+          {
+            "in": "path",
+            "name": "processTypeId",
+            "description": "",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ProcessModel"
+            }
+          }
+        }
+      }
     }
   },
   "definitions": {
@@ -338,6 +511,24 @@
         },
         "watermark": {
           "description": "Watermark text for the textbox.",
+          "type": "string"
+        }
+      }
+    },
+    "CreateProcessModel": {
+      "type": "object",
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "parentProcessTypeId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "referenceName": {
           "type": "string"
         }
       }
@@ -525,6 +716,76 @@
         }
       }
     },
+    "ProcessModel": {
+      "type": "object",
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "projects": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ProjectReference"
+          }
+        },
+        "properties": {
+          "$ref": "#/definitions/ProcessProperties"
+        },
+        "referenceName": {
+          "type": "string"
+        },
+        "typeId": {
+          "type": "string",
+          "format": "uuid"
+        }
+      }
+    },
+    "ProcessProperties": {
+      "type": "object",
+      "properties": {
+        "class": {
+          "enum": [
+            "system",
+            "derived",
+            "custom"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.TeamFoundation.WorkItemTracking.Process.WebApi.Models.ProcessClass"
+          }
+        },
+        "isDefault": {
+          "type": "boolean"
+        },
+        "isEnabled": {
+          "type": "boolean"
+        },
+        "parentProcessTypeId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "version": {
+          "type": "string"
+        }
+      }
+    },
+    "ProjectReference": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "name": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        }
+      }
+    },
     "Section": {
       "type": "object",
       "properties": {
@@ -541,6 +802,23 @@
         "overridden": {
           "description": "A value indicating whether this layout node has been overridden by a child layout.",
           "type": "boolean"
+        }
+      }
+    },
+    "UpdateProcessModel": {
+      "type": "object",
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "isDefault": {
+          "type": "boolean"
+        },
+        "isEnabled": {
+          "type": "boolean"
+        },
+        "name": {
+          "type": "string"
         }
       }
     },
