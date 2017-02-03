@@ -3,7 +3,7 @@
 # [Authentication](authentication.json)
 # [Azure TFS](azuretfs.json)
 # [Blob](blob.json)
-# [Build](build2.json)
+# [Build](build.json)
 # [Cache](cache.json)
 # [Chat](chat.json)
 # [Code Review](codereview.json)
