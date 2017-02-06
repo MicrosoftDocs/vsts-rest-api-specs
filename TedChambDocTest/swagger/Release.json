@@ -3262,6 +3262,7 @@
             "custom",
             "tfvc",
             "svn",
+            "externalGit",
             "pipeline"
           ],
           "x-ms-enum": {
@@ -3834,6 +3835,9 @@
     "Deployment": {
       "type": "object",
       "properties": {
+        "_links": {
+          "$ref": "#/definitions/ReferenceLinks"
+        },
         "attempt": {
           "type": "integer",
           "format": "int32"
@@ -3906,6 +3910,10 @@
             "$ref": "#/definitions/ReleaseApproval"
           }
         },
+        "queuedOn": {
+          "type": "string",
+          "format": "date-time"
+        },
         "reason": {
           "enum": [
             "none",
@@ -3958,6 +3966,27 @@
       "properties": {
         "approval": {
           "$ref": "#/definitions/ReleaseApproval"
+        },
+        "approvalOptions": {
+          "$ref": "#/definitions/ApprovalOptions"
+        },
+        "completedApprovals": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ReleaseApproval"
+          }
+        },
+        "deployment": {
+          "$ref": "#/definitions/Deployment"
+        },
+        "isMultipleRankApproval": {
+          "type": "boolean"
+        },
+        "pendingApprovals": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ReleaseApproval"
+          }
         },
         "project": {
           "$ref": "#/definitions/ProjectReference"
@@ -4074,6 +4103,9 @@
     "DeploymentCompletedEvent": {
       "type": "object",
       "properties": {
+        "deployment": {
+          "$ref": "#/definitions/Deployment"
+        },
         "environment": {
           "$ref": "#/definitions/ReleaseEnvironment"
         },
@@ -4143,6 +4175,16 @@
     "DeploymentManualInterventionPendingEvent": {
       "type": "object",
       "properties": {
+        "deployment": {
+          "$ref": "#/definitions/Deployment"
+        },
+        "emailRecipients": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
         "environmentOwner": {
           "$ref": "#/definitions/IdentityRef"
         },
@@ -4250,6 +4292,9 @@
         },
         "project": {
           "$ref": "#/definitions/ProjectReference"
+        },
+        "release": {
+          "$ref": "#/definitions/Release"
         }
       }
     },
@@ -4801,6 +4846,31 @@
         }
       }
     },
+    "PropertiesCollection": {
+      "type": "object",
+      "properties": {
+        "count": {
+          "description": "Implements ICollection<KeyValuePair<String,Object>>.Count/>",
+          "type": "integer",
+          "format": "int32"
+        },
+        "item": {
+          "type": "object"
+        },
+        "keys": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "values": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
     "PropertySelector": {
       "type": "object",
       "properties": {
@@ -4924,12 +4994,17 @@
         "projectReference": {
           "$ref": "#/definitions/ProjectReference"
         },
+        "properties": {
+          "$ref": "#/definitions/PropertiesCollection"
+        },
         "reason": {
           "enum": [
             "none",
             "manual",
             "continuousIntegration",
-            "schedule"
+            "schedule",
+            "individualCI",
+            "batchedCI"
           ],
           "x-ms-enum": {
             "name": "Microsoft.VisualStudio.Services.ReleaseManagement.WebApi.ReleaseReason"
@@ -4950,6 +5025,12 @@
           ],
           "x-ms-enum": {
             "name": "Microsoft.VisualStudio.Services.ReleaseManagement.WebApi.ReleaseStatus"
+          }
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
           }
         },
         "url": {
@@ -5264,6 +5345,12 @@
           ],
           "x-ms-enum": {
             "name": "Microsoft.VisualStudio.Services.ReleaseManagement.WebApi.ReleaseDefinitionSource"
+          }
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
           }
         },
         "triggers": {
@@ -5826,6 +5913,9 @@
     "ReleaseReference": {
       "type": "object",
       "properties": {
+        "_links": {
+          "$ref": "#/definitions/ReferenceLinks"
+        },
         "artifacts": {
           "type": "array",
           "items": {
@@ -5846,8 +5936,24 @@
           "type": "integer",
           "format": "int32"
         },
+        "modifiedBy": {
+          "$ref": "#/definitions/IdentityRef"
+        },
         "name": {
           "type": "string"
+        },
+        "reason": {
+          "enum": [
+            "none",
+            "manual",
+            "continuousIntegration",
+            "schedule",
+            "individualCI",
+            "batchedCI"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.VisualStudio.Services.ReleaseManagement.WebApi.ReleaseReason"
+          }
         },
         "releaseDefinition": {
           "$ref": "#/definitions/ShallowReference"
@@ -5963,12 +6069,17 @@
             "type": "string"
           }
         },
+        "properties": {
+          "$ref": "#/definitions/PropertiesCollection"
+        },
         "reason": {
           "enum": [
             "none",
             "manual",
             "continuousIntegration",
-            "schedule"
+            "schedule",
+            "individualCI",
+            "batchedCI"
           ],
           "x-ms-enum": {
             "name": "Microsoft.VisualStudio.Services.ReleaseManagement.WebApi.ReleaseReason"
