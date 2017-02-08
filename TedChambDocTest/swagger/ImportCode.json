@@ -26,6 +26,39 @@
   ],
   "paths": {
     "/_apis/importcode/importcodes": {
+      "patch": {
+        "tags": [
+          "importcodes"
+        ],
+        "summary": "RequestAdditionalImportCode",
+        "description": "",
+        "operationId": "requestAdditionalImportCode",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/AdditionalImportCodeRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ImportCodeInfo"
+            }
+          }
+        }
+      },
       "post": {
         "tags": [
           "importcodes"
@@ -92,9 +125,37 @@
     }
   },
   "definitions": {
+    "AdditionalImportCodeRequest": {
+      "type": "object",
+      "properties": {
+        "currentImportCode": {
+          "type": "string"
+        },
+        "expirationDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "runType": {
+          "enum": [
+            "none",
+            "dryRun",
+            "productionRun"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.VisualStudio.Services.Cloud.WebApi.DataImportRunType"
+          }
+        }
+      }
+    },
     "ImportCodeInfo": {
       "type": "object",
       "properties": {
+        "children": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
         "code": {
           "type": "string"
         },
@@ -112,8 +173,15 @@
             "type": "object"
           }
         },
+        "parentCode": {
+          "type": "string"
+        },
         "requestedFor": {
           "type": "string"
+        },
+        "revokedDate": {
+          "type": "string",
+          "format": "date-time"
         },
         "runType": {
           "enum": [

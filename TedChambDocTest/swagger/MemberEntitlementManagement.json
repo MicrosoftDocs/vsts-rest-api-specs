@@ -39,6 +39,9 @@
         "consumes": [
           "application/json"
         ],
+        "produces": [
+          "application/json"
+        ],
         "parameters": [
           {
             "in": "body",
@@ -52,7 +55,10 @@
         ],
         "responses": {
           "200": {
-            "description": "successful operation"
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/MemberEntitlement"
+            }
           }
         }
       },
@@ -387,6 +393,11 @@
             "$ref": "#/definitions/Extension"
           }
         },
+        "id": {
+          "description": "The unique identifier which matches the Id of the GraphMember",
+          "type": "string",
+          "format": "uuid"
+        },
         "lastAccessedDate": {
           "description": "Date the Member last access the collection",
           "type": "string",
@@ -396,11 +407,11 @@
           "description": "Member reference",
           "$ref": "#/definitions/GraphMember"
         },
-        "projects": {
-          "description": "Member's projects",
+        "projectEntitlements": {
+          "description": "Relation between a project and the member's effective permissions in that project",
           "type": "array",
           "items": {
-            "$ref": "#/definitions/Project"
+            "$ref": "#/definitions/ProjectEntitlement"
           }
         }
       }
@@ -443,18 +454,26 @@
         }
       }
     },
-    "Project": {
+    "ProjectEntitlement": {
       "type": "object",
       "properties": {
         "group": {
           "$ref": "#/definitions/Group"
         },
+        "isProjectPermissionInherited": {
+          "type": "boolean"
+        },
+        "projectRef": {
+          "$ref": "#/definitions/ProjectRef"
+        }
+      }
+    },
+    "ProjectRef": {
+      "type": "object",
+      "properties": {
         "id": {
           "type": "string",
           "format": "uuid"
-        },
-        "isProjectPermissionInherited": {
-          "type": "boolean"
         },
         "name": {
           "type": "string"
