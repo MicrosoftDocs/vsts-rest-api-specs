@@ -36,6 +36,9 @@
       "name": "pipelines"
     },
     {
+      "name": "revisions"
+    },
+    {
       "name": "tags"
     },
     {
@@ -206,6 +209,14 @@
           },
           {
             "in": "query",
+            "name": "triggers",
+            "description": "",
+            "required": false,
+            "type": "string",
+            "format": "PipelineDefinitionTriggerType"
+          },
+          {
+            "in": "query",
             "name": "queryOrder",
             "description": "",
             "required": false,
@@ -337,6 +348,7 @@
         "description": "",
         "operationId": "getDefinition",
         "produces": [
+          "text/plain",
           "application/json"
         ],
         "parameters": [
@@ -549,6 +561,47 @@
               "type": "array",
               "items": {
                 "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/{project}/_apis/pipeline/definitions/{pipelineId}/revisions": {
+      "get": {
+        "tags": [
+          "revisions"
+        ],
+        "summary": "GetPipelineDefinitionHistory",
+        "description": "",
+        "operationId": "getPipelineDefinitionHistory",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "pipelineId",
+            "description": "",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/PipelineDefinitionRevision"
               }
             }
           }
@@ -1954,7 +2007,7 @@
         }
       }
     },
-    "AgentQueueReference": {
+    "AgentPoolReference": {
       "type": "object",
       "properties": {
         "id": {
@@ -1962,10 +2015,25 @@
           "format": "int32"
         },
         "isHosted": {
+          "description": "Gets or sets a value indicating whether or not this pool is managed by the service.",
           "type": "boolean"
         },
         "name": {
           "type": "string"
+        }
+      }
+    },
+    "AgentQueueReference": {
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/ShallowReference"
+        }
+      ],
+      "properties": {
+        "pool": {
+          "description": "The pool used by this queue.",
+          "$ref": "#/definitions/AgentPoolReference"
         }
       }
     },
@@ -3249,6 +3317,42 @@
         },
         "name": {
           "type": "string"
+        }
+      }
+    },
+    "PipelineDefinitionRevision": {
+      "type": "object",
+      "properties": {
+        "changedBy": {
+          "$ref": "#/definitions/IdentityRef"
+        },
+        "changedDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "changeType": {
+          "enum": [
+            "add",
+            "update",
+            "delete"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.VisualStudio.Services.Pipeline.WebApi.Contracts.AuditAction"
+          }
+        },
+        "comment": {
+          "type": "string"
+        },
+        "definitionId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "definitionUrl": {
+          "type": "string"
+        },
+        "revision": {
+          "type": "integer",
+          "format": "int32"
         }
       }
     },

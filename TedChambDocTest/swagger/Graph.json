@@ -19,6 +19,24 @@
   "tags": [
     {
       "name": "descriptors"
+    },
+    {
+      "name": "groups"
+    },
+    {
+      "name": "memberships"
+    },
+    {
+      "name": "membershipsbatch"
+    },
+    {
+      "name": "scopes"
+    },
+    {
+      "name": "subjectquery"
+    },
+    {
+      "name": "users"
     }
   ],
   "schemes": [
@@ -62,9 +80,966 @@
           }
         }
       }
+    },
+    "/_apis/graph/groups": {
+      "post": {
+        "tags": [
+          "groups"
+        ],
+        "summary": "CreateGroup",
+        "description": "The body of the request must be a derived type of GraphGroupCreationContext which contains a group reference. A group reference must either:  1. uniquely identify a group that exists in the graph of the instance's identity provider , such as Azure Active Directory (AAD) or Microsoft account (MSA), for a hosted VS Team Services account, or Active Directory (AD), for a TFS server. Use one of these supported creation contexts: - originId(e.g.the AAD object ID) [GraphGroupOriginIdCreationContext] - principalName(e.g.the AAD group principal name or the Microsoft account name) [GraphGroupPrincipalNameCreationContext]  2. Uniquely identify a group that exists in a hosted VS Team Services account and you want to restore that group. Use GraphGroupVstsCreationContext and fill only one of the following peroperties: - id (to reference a specific VS Team Services group in the restore case only) - descriptors (to reference a specific VS Team Services group in the restore case only)  3. Specify properties that should be used to create a new Team Foundation group. Use the GraphGroupVstsCreationContext  - displayName [required] - description - optional test to help understand the pupose of the group - id - optionally specify the internal Guid - descriptor - optionally specify the sid at creation time",
+        "operationId": "createGroup",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "The subset of the full graph group used to uniquely find the graph subject in an external provider.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/GraphGroupCreationContext"
+            }
+          },
+          {
+            "in": "query",
+            "name": "scopeDescriptor",
+            "description": "",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "groupDescriptors",
+            "description": "A comma separated list of descriptors referencing groups you want the graph group to join",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "SubjectDescriptor"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/GraphGroup"
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "groups"
+        ],
+        "summary": "GetGroups",
+        "description": "",
+        "operationId": "getGroups",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "scopeDescriptor",
+            "description": "",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "disabled",
+            "description": "",
+            "required": false,
+            "type": "string",
+            "format": "GraphDisabledFilter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/GraphGroup"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/_apis/graph/groups/{groupDescriptor}": {
+      "delete": {
+        "tags": [
+          "groups"
+        ],
+        "summary": "DeleteGroup",
+        "description": "This call makes the group disabled and by default removes all members. If the includeMemberships=false flag is set, the memberships within this group are not evaluated and provide no permissions. Calls to GET .../groups/{} will return the group with disabled marked true. Other GET calls, which may return multiple groups, can control whether or not deleted groups should be returned using the disabled flag, which defaults to false.",
+        "operationId": "deleteGroup",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "groupDescriptor",
+            "description": "The descriptor of the group to delete.",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "groups"
+        ],
+        "summary": "GetGroup",
+        "description": "This endpoint returns a result for any descriptor that has ever been valid in the system, even if the group has since been deleted or has had all their memberships deleted. The current validity of the group is indicated through its disabled property, which is omitted when false.",
+        "operationId": "getGroup",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "groupDescriptor",
+            "description": "The descriptor of the desired graph group.",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/GraphGroup"
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "groups"
+        ],
+        "summary": "UpdateGroup",
+        "description": "Update the fields of a VS Team Services group.  Currently limited to only changing the description and account name.",
+        "operationId": "updateGroup",
+        "consumes": [
+          "application/json-patch+json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "groupDescriptor",
+            "description": "The descriptor of the group to modify.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "The JSON+Patch document containing the fields to alter.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/JsonPatchDocument"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        }
+      }
+    },
+    "/_apis/graph/memberships/{subjectDescriptor}/{containerDescriptor}": {
+      "post": {
+        "tags": [
+          "memberships"
+        ],
+        "summary": "AddMembership",
+        "description": "Create a new membership between two eligible members",
+        "operationId": "addMembership",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "subjectDescriptor",
+            "description": "A descriptor to a group or user that can be the child subject in the relationship.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "containerDescriptor",
+            "description": "A descriptor to a group that can be the container in the relationship.",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/GraphMembership"
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "memberships"
+        ],
+        "summary": "CheckMembership",
+        "description": "This method will search for a requested membership and return 200 if the membership is found.",
+        "operationId": "checkMembership",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "subjectDescriptor",
+            "description": "The group or user that is a child of the relationship.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "containerDescriptor",
+            "description": "The group that is the parent in the relationship.",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "memberships"
+        ],
+        "summary": "GetMembership",
+        "description": "This method will search for a requested membership and return the membership if found.",
+        "operationId": "getMembership",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "subjectDescriptor",
+            "description": "A descriptor to the member in the relationship.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "containerDescriptor",
+            "description": "A descriptor to the container in the relationship.",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/GraphMembership"
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "memberships"
+        ],
+        "summary": "RemoveMembership",
+        "description": "Deletes a membership between to members of the graph.",
+        "operationId": "removeMembership",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "subjectDescriptor",
+            "description": "A descriptor to a group or user that is the child subject in the relationship.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "containerDescriptor",
+            "description": "A descriptor to a group that is the container in the relationship.",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        }
+      }
+    },
+    "/_apis/graph/membershipsbatch/{subjectDescriptor}": {
+      "get": {
+        "tags": [
+          "membershipsbatch"
+        ],
+        "summary": "GetMemberships",
+        "description": "Get all the memberships where this descriptor is a member in the relationship by default. To get relationships where the descriptor is a container, use the optional parameter direction with a value of down. Scopes are not supported in this method yet.",
+        "operationId": "getMemberships",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "subjectDescriptor",
+            "description": "Fetch all direct memberships of this descriptor.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "direction",
+            "description": "Defaults to down for groups and up for users. Explicitly set this to change the default behavior.",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/GraphMembership"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/_apis/graph/scopes/{scopeDescriptor}": {
+      "post": {
+        "tags": [
+          "scopes"
+        ],
+        "summary": "CreateScope",
+        "description": "",
+        "operationId": "createScope",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/GraphScopeCreationContext"
+            }
+          },
+          {
+            "in": "path",
+            "name": "scopeDescriptor",
+            "description": "",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/GraphScope"
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "scopes"
+        ],
+        "summary": "DeleteScope",
+        "description": "",
+        "operationId": "deleteScope",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "scopeDescriptor",
+            "description": "",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "scopes"
+        ],
+        "summary": "GetScope",
+        "description": "Get a scope identified by its descriptor",
+        "operationId": "getScope",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "scopeDescriptor",
+            "description": "A descriptor that uniquely identifies a scope.",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/GraphScope"
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "scopes"
+        ],
+        "summary": "UpdateScope",
+        "description": "",
+        "operationId": "updateScope",
+        "consumes": [
+          "application/json-patch+json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "scopeDescriptor",
+            "description": "",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/JsonPatchDocument"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        }
+      }
+    },
+    "/_apis/graph/subjectquery": {
+      "post": {
+        "tags": [
+          "subjectquery"
+        ],
+        "summary": "LookupSubjects",
+        "description": "",
+        "operationId": "lookupSubjects",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/GraphSubjectLookup"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/GraphSubject"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/_apis/graph/users": {
+      "post": {
+        "tags": [
+          "users"
+        ],
+        "summary": "CreateUser",
+        "description": "The body of the request must be a derived type of GraphUserCreationContext which contains a user reference. The user reference must uniquely identify a user that exists in the graph of the instance's identity provider, such as Azure Active Directory (AAD) or Microsoft Account (MSA), for a hosted VS Team Services account, or Active Directory (AD), for a TFS server. The properties supported for each user reference include: - originId(e.g.the AAD object ID) [GraphUserOriginIdCreationContext] - principalName(e.g.the AAD user principal name or the Microsoft account name) [GraphUserPrincipalNameCreationContext] - onPremisesSecurityIdentifier(e.g.the AD security identifier)  [GraphUserOriginIdCreationContext] - id (optional, if you want the ID to be a particular GUID)  If the user to be added corresponds to a user that was previously deleted, then that user will be restored. If the user was deleted with includeMemberships=false, they will have their previous memberships upon completion of the subsequent add request.",
+        "operationId": "createUser",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "The subset of the full graph user used to uniquely find the graph subject in an external provider.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/GraphUserCreationContext"
+            }
+          },
+          {
+            "in": "query",
+            "name": "groupDescriptors",
+            "description": "A comma separated list of descriptors of groups you want the graph user to join",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "SubjectDescriptor"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/GraphUser"
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "users"
+        ],
+        "summary": "GetUsers",
+        "description": "Gets all users in the current scope (usually organization or account). The optional parameters are used to filter down the returned results. May truncate exceptionally large result sets. Returned results are in no guaranteed order.",
+        "operationId": "getUsers",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "subjectType",
+            "description": "A comma separated list of user subject subtypes to reduce the retrieved results, e.g. Microsoft.IdentityModel.Claims.ClaimsIdentity>",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "disabled",
+            "description": "Selects a subset of users based on their disabled state. If false, selects enabled users only. If true, selects disabled users only. If any, selects both enabled and disabled users.",
+            "required": false,
+            "type": "string",
+            "format": "GraphDisabledFilter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/GraphUser"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/_apis/graph/users/{userDescriptor}": {
+      "delete": {
+        "tags": [
+          "users"
+        ],
+        "summary": "DeleteUser",
+        "description": "This is a soft delete. Calls to GET .../users/{persistentId} will return the user with disabled marked true. Other GET calls, which may return multiple users, can control whether or not deleted users should be returned using the disabled flag, which defaults to false.",
+        "operationId": "deleteUser",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "userDescriptor",
+            "description": "The descriptor of the user to delete.",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "users"
+        ],
+        "summary": "GetUser",
+        "description": "This endpoint returns a result for any user that has ever been valid in the system, even if the user has since been deleted or has had all their memberships deleted. The current validity of the user is indicated through its disabled property, which is omitted when false.",
+        "operationId": "getUser",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "userDescriptor",
+            "description": "",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/GraphUser"
+            }
+          }
+        }
+      }
     }
   },
   "definitions": {
+    "GraphGroup": {
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/GraphMember"
+        }
+      ],
+      "properties": {
+        "description": {
+          "description": "A short phrase to help human readers disambiguate groups with similar names",
+          "type": "string"
+        }
+      }
+    },
+    "GraphGroupCreationContext": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "Optional: If provided, we will use this identifier for the Id of the created group",
+          "type": "string",
+          "format": "uuid"
+        }
+      }
+    },
+    "GraphGroupOriginIdCreationContext": {
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/GraphGroupCreationContext"
+        }
+      ],
+      "properties": {
+        "originId": {
+          "description": "This should be the object id or sid of the group from the source AD or AAD provider. Vsts will comunicate with the source provider to fill all other fields on creation.",
+          "type": "string"
+        }
+      }
+    },
+    "GraphGroupPrincipalNameCreationContext": {
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/GraphGroupCreationContext"
+        }
+      ],
+      "properties": {
+        "principalName": {
+          "description": "This should be the principal name or upn or the group in the source AD or AAD provider. Vsts will comunicate with the source provider to fill all other fields on creation.",
+          "type": "string"
+        }
+      }
+    },
+    "GraphGroupVstsCreationContext": {
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/GraphGroupCreationContext"
+        }
+      ],
+      "properties": {
+        "crossProject": {
+          "description": "For internal use only in back compat scenarios.",
+          "type": "boolean"
+        },
+        "descriptor": {
+          "type": "string"
+        },
+        "displayName": {
+          "description": "Used by VSTS groups; if set this will be the group DisplayName, otherwise ignored",
+          "type": "string"
+        },
+        "groupDescription": {
+          "description": "Used by VSTS groups; if set this will be the group description, otherwise ignored",
+          "type": "string"
+        },
+        "restrictedVisibility": {
+          "description": "For internal use only in back compat scenarios.",
+          "type": "boolean"
+        },
+        "specialGroupType": {
+          "description": "For internal use only in back compat scenarios.",
+          "type": "string"
+        }
+      }
+    },
+    "GraphMember": {
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/GraphSubject"
+        }
+      ],
+      "properties": {
+        "domain": {
+          "description": "This represents the name of the container of origin for a graph member. (For MSA this is \"Windows Live ID\", for AD the name of the domain, for AAD the name of the directory, for Vsts groups the ScopeId, etc)",
+          "type": "string"
+        },
+        "metaTypeId": {
+          "description": "Used only for internal back-compat scenarios.",
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "GraphMembership": {
+      "type": "object",
+      "properties": {
+        "containerDescriptor": {
+          "type": "string"
+        },
+        "memberDescriptor": {
+          "type": "string"
+        }
+      }
+    },
+    "GraphScope": {
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/GraphSubject"
+        }
+      ],
+      "properties": {
+        "administratorDescriptor": {
+          "description": "The subject descriptor that references the administrators group for this scope. Only members of this group can change the contents of this scope or assign other users permissions to access this scope.",
+          "type": "string"
+        },
+        "isGlobal": {
+          "description": "When true, this scope is also a securing host for one or more scopes.",
+          "type": "boolean"
+        },
+        "parentDescriptor": {
+          "description": "The subject descriptor for the closest account or organization in the ancestor tree of this scope.",
+          "type": "string"
+        },
+        "scopeType": {
+          "description": "The type of this scope. Typically ServiceHost or TeamProject.",
+          "enum": [
+            "generic",
+            "serviceHost",
+            "teamProject"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.VisualStudio.Services.Identity.GroupScopeType"
+          }
+        },
+        "securingHostDescriptor": {
+          "description": "The subject descriptor for the containing organization in the ancestor tree of this scope.",
+          "type": "string"
+        }
+      }
+    },
+    "GraphScopeCreationContext": {
+      "type": "object",
+      "properties": {
+        "adminGroupDescription": {
+          "description": "Set this field to override the default decription of this scope's admin group.",
+          "type": "string"
+        },
+        "adminGroupName": {
+          "description": "All scopes have an Adminstrator Group that controls access to the contents of the scope. Set this field to use a non-default group name for that administrators group.",
+          "type": "string"
+        },
+        "creatorId": {
+          "description": "Set this optional field if this scope is created on behalf of a user other than the user making the request. This should be the Id of the user that is not the requestor.",
+          "type": "string",
+          "format": "uuid"
+        },
+        "id": {
+          "description": "An optional ID that uniquely represents the scope within it's parent scope. If this parameter is not provided, Vsts will generate on automatically.",
+          "type": "string",
+          "format": "uuid"
+        },
+        "name": {
+          "description": "The scope must be provided with a unique name within the parent scope. This means the created scope can have a parent or child with the same name, but no siblings with the same name.",
+          "type": "string"
+        },
+        "scopeType": {
+          "description": "The type of scope being created.",
+          "enum": [
+            "generic",
+            "serviceHost",
+            "teamProject"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.VisualStudio.Services.Identity.GroupScopeType"
+          }
+        }
+      }
+    },
+    "GraphSubject": {
+      "type": "object",
+      "properties": {
+        "_links": {
+          "description": "This field contains zero or more iteresting links about the the graph subject. These links may be invoked to obtain additional relationships or more detailed information about this graph subject.",
+          "$ref": "#/definitions/ReferenceLinks"
+        },
+        "descriptor": {
+          "description": "The descriptor is the primary way to reference the graph subject while the system is running. This field will uniquely identify the same graph subject across both Accounts and Organizations.",
+          "type": "string"
+        },
+        "disabled": {
+          "description": "If this value is true, the graph subject is not active within the current Vsts scope. This graph subject can be used reliably for presenting historical data but may not be valid for other operations.",
+          "type": "boolean"
+        },
+        "displayName": {
+          "description": "This is the non-unique display name of the graph subject. To change this field, you must alter its value in the source provider.",
+          "type": "string"
+        },
+        "id": {
+          "description": "The unique identifier within the subject's scope. This identifier will not change for the lifetime of the subject. If you must perisist a reference to a graph subject within your system, only persist this field. All other fields can change over time.",
+          "type": "string",
+          "format": "uuid"
+        },
+        "origin": {
+          "description": "The type of source provider for the origin identifier (ex:AD, AAD, MSA)",
+          "type": "string"
+        },
+        "originId": {
+          "description": "The unique identifier from the system of origin. Typically a sid, object id or Guid. Linking and unlinking operations can cause this value to change for a user because the user is not backed by a different provider and has a different unique id in the new provider.",
+          "type": "string"
+        },
+        "principalName": {
+          "description": "This is the PrincipalName of this graph subject from the source provider. The source provider may change this field over time and it is not guaranteed to be immutable for the life of the graph subject by Vsts.",
+          "type": "string"
+        },
+        "subjectKind": {
+          "description": "This field identifies the type of the graph subject (ex: Group, Scope, User).",
+          "type": "string"
+        },
+        "url": {
+          "description": "This url is the full route to the source resource of this graph subject.",
+          "type": "string"
+        }
+      }
+    },
+    "GraphSubjectLookup": {
+      "type": "object",
+      "properties": {
+        "lookupKeys": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/GraphSubjectLookupKey"
+          }
+        }
+      }
+    },
+    "GraphSubjectLookupKey": {
+      "type": "object",
+      "properties": {
+        "descriptor": {
+          "$ref": "#/definitions/SubjectDescriptor"
+        }
+      }
+    },
+    "GraphUser": {
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/GraphMember"
+        }
+      ],
+      "properties": {
+        "mailAddress": {
+          "description": "The email address of record for a given user. This may be different then the principla name.",
+          "type": "string"
+        }
+      }
+    },
+    "GraphUserCreationContext": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "Optional: If provided, we will use this identifier for the Id of the created user",
+          "type": "string",
+          "format": "uuid"
+        }
+      }
+    },
+    "GraphUserOriginIdCreationContext": {
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/GraphUserCreationContext"
+        }
+      ],
+      "properties": {
+        "originId": {
+          "type": "string"
+        }
+      }
+    },
+    "GraphUserPrincipalNameCreationContext": {
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/GraphUserCreationContext"
+        }
+      ],
+      "properties": {
+        "principalName": {
+          "type": "string"
+        }
+      }
+    },
     "IdentityDescriptor": {
       "type": "object",
       "properties": {
@@ -74,6 +1049,39 @@
         },
         "identityType": {
           "description": "Type of descriptor (for example, Windows, Passport, etc.).",
+          "type": "string"
+        }
+      }
+    },
+    "JsonPatchDocument": {
+      "type": "object",
+      "allOf": [
+        {
+          "type": "array"
+        }
+      ],
+      "properties": {
+      }
+    },
+    "ReferenceLinks": {
+      "type": "object",
+      "properties": {
+        "links": {
+          "description": "The readonly view of the links.  Because Reference links are readonly, we only want to expose them as read only.",
+          "type": "object",
+          "additionalProperties": {
+            "type": "object"
+          }
+        }
+      }
+    },
+    "SubjectDescriptor": {
+      "type": "object",
+      "properties": {
+        "identifier": {
+          "type": "string"
+        },
+        "subjectType": {
           "type": "string"
         }
       }
