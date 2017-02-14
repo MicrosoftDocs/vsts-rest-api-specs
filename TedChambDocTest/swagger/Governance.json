@@ -18,6 +18,9 @@
   "basePath": "/",
   "tags": [
     {
+      "name": "policies"
+    },
+    {
       "name": "products"
     }
   ],
@@ -25,6 +28,185 @@
     "https"
   ],
   "paths": {
+    "/_apis/governance/policies": {
+      "post": {
+        "tags": [
+          "policies"
+        ],
+        "summary": "CreatePolicy",
+        "description": "",
+        "operationId": "createPolicy",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Policy"
+            }
+          },
+          {
+            "in": "query",
+            "name": "includeUrls",
+            "description": "",
+            "required": false,
+            "type": "boolean"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/Policy"
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "policies"
+        ],
+        "summary": "GetPolicies",
+        "description": "",
+        "operationId": "getPolicies",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "includeUrls",
+            "description": "",
+            "required": false,
+            "type": "boolean"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Policy"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/_apis/governance/policies/{policyId}": {
+      "delete": {
+        "tags": [
+          "policies"
+        ],
+        "summary": "DeletePolicy",
+        "description": "",
+        "operationId": "deletePolicy",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "policyId",
+            "description": "",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "policies"
+        ],
+        "summary": "GetPolicy",
+        "description": "",
+        "operationId": "getPolicy",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "policyId",
+            "description": "",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "includeUrls",
+            "description": "",
+            "required": false,
+            "type": "boolean"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/Policy"
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "policies"
+        ],
+        "summary": "UpdatePolicy",
+        "description": "",
+        "operationId": "updatePolicy",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Policy"
+            }
+          },
+          {
+            "in": "path",
+            "name": "policyId",
+            "description": "",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "includeUrls",
+            "description": "",
+            "required": false,
+            "type": "boolean"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/Policy"
+            }
+          }
+        }
+      }
+    },
     "/_apis/governance/products": {
       "post": {
         "tags": [
@@ -206,6 +388,39 @@
     }
   },
   "definitions": {
+    "Policy": {
+      "type": "object",
+      "properties": {
+        "configuration": {
+          "$ref": "#/definitions/PolicyCongfiguration"
+        },
+        "evaluatorId": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "name": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        }
+      }
+    },
+    "PolicyCongfiguration": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "type": "object"
+        },
+        "schemaVersion": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
     "Product": {
       "type": "object",
       "properties": {
@@ -221,6 +436,12 @@
         },
         "name": {
           "type": "string"
+        },
+        "policies": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Policy"
+          }
         },
         "url": {
           "type": "string"
