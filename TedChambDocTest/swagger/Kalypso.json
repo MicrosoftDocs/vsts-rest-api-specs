@@ -1151,6 +1151,10 @@
         }
       ],
       "properties": {
+        "mdmAccount": {
+          "description": "Mdm Account name",
+          "type": "string"
+        },
         "serviceBusConnectionString": {
           "description": "Service Bus connection string.",
           "type": "string"
@@ -1222,6 +1226,35 @@
         }
       }
     },
+    "Endpoint": {
+      "type": "object",
+      "properties": {
+        "alertEndpoint": {
+          "type": "string"
+        },
+        "columnName": {
+          "type": "string"
+        },
+        "columnValue": {
+          "type": "string"
+        },
+        "endpointType": {
+          "enum": [
+            "keyValue",
+            "regex"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.VisualStudio.Services.Kalypso.WebApi.EndpointType"
+          }
+        },
+        "expression": {
+          "type": "string"
+        },
+        "resourceType": {
+          "type": "string"
+        }
+      }
+    },
     "EndpointAuthorization": {
       "type": "object",
       "properties": {
@@ -1282,10 +1315,22 @@
         "monitorName": {
           "description": "This is the name of the MDM monitor to match in order to trigger the pipeline.  The monitor name can be found in the first position of an IcM incident title (sample: \"ASPNETRequestQueued_AT\").",
           "type": "string"
-        },
-        "topologyName": {
-          "description": "A single Service Bus namespace can be wired to the extensibility point for many MDM namespaces.  The topology name is a string like VSO-TFS or VSO-SPS that identifes the MDM tenant sourcing alerts for this monitor endpoint reference. This acts like a filter on the stream of messages coming off the health alert extensibility Service Bus topic.",
-          "type": "string"
+        }
+      }
+    },
+    "IcmNotification": {
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/Notification"
+        }
+      ],
+      "properties": {
+        "endpoints": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Endpoint"
+          }
         }
       }
     },
@@ -1445,7 +1490,8 @@
       "properties": {
         "type": {
           "enum": [
-            "email"
+            "email",
+            "icm"
           ],
           "x-ms-enum": {
             "name": "Microsoft.VisualStudio.Services.Kalypso.WebApi.AlertNotificationType"
@@ -1636,6 +1682,9 @@
         }
       ],
       "properties": {
+        "icmNotification": {
+          "$ref": "#/definitions/IcmNotification"
+        },
         "notification": {
           "$ref": "#/definitions/EmailNotification"
         },
