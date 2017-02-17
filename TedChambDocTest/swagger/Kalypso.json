@@ -1169,6 +1169,15 @@
         }
       }
     },
+    "BlobEndpointProperties": {
+      "type": "object",
+      "properties": {
+        "blobStorageConnectionString": {
+          "description": "Blob storage connection string",
+          "type": "string"
+        }
+      }
+    },
     "BuiltInMonitorProperties": {
       "type": "object",
       "allOf": [
@@ -1426,6 +1435,19 @@
         }
       }
     },
+    "KustoEndpointProperties": {
+      "type": "object",
+      "properties": {
+        "clusterName": {
+          "description": "Kusto cluster name",
+          "type": "string"
+        },
+        "databaseName": {
+          "description": "Kusto database name",
+          "type": "string"
+        }
+      }
+    },
     "MonitorData": {
       "type": "object",
       "properties": {
@@ -1448,6 +1470,29 @@
         "startTime": {
           "type": "string",
           "format": "date-time"
+        }
+      }
+    },
+    "MonitorOutputStore": {
+      "type": "object",
+      "properties": {
+        "blobEndpoint": {
+          "$ref": "#/definitions/BlobEndpointProperties"
+        },
+        "kustoEndpoint": {
+          "$ref": "#/definitions/KustoEndpointProperties"
+        },
+        "storeNamePrefix": {
+          "type": "string"
+        },
+        "type": {
+          "enum": [
+            "kusto",
+            "blob"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.VisualStudio.Services.Kalypso.WebApi.MonitorOutputStoreType"
+          }
         }
       }
     },
@@ -1537,6 +1582,10 @@
           "description": "Path within the repo to use when reading content.",
           "type": "string"
         },
+        "outputStore": {
+          "description": "Storage details for monitor output",
+          "$ref": "#/definitions/MonitorOutputStore"
+        },
         "project": {
           "description": "Name of the team project.  Used to look up the repository.",
           "type": "string"
@@ -1622,11 +1671,23 @@
       "type": "object",
       "properties": {
         "containerId": {
+          "description": "Container id where the query is located",
           "type": "string",
           "format": "uuid"
         },
         "queryPath": {
+          "description": "Repository path of the query",
           "type": "string"
+        },
+        "stage": {
+          "description": "the stage of the query in the pipeline",
+          "enum": [
+            "stageOne",
+            "stageTwo"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.VisualStudio.Services.Kalypso.WebApi.PipelineStage"
+          }
         },
         "tokenBindings": {
           "description": "Default token values locally scoped",
