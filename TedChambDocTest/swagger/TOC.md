@@ -78,4 +78,3 @@
 # [Work Item Tracking Process](workitemtrackingprocess.json)
 # [Work Item Tracking Process Definition](workitemtrackingprocessdefinitions.json)
 # [Work Item Tracking Process Template](workitemtrackingprocesstemplate.json)
-# [Pet Store](petstore.json)
