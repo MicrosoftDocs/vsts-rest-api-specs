@@ -2688,13 +2688,16 @@
         }
       }
     },
-    "ExtensionEventBase": {
+    "ExtensionEvent": {
       "type": "object",
       "properties": {
         "id": {
           "description": "Id which identifies each data point uniquely",
           "type": "integer",
           "format": "int64"
+        },
+        "properties": {
+          "$ref": "#/definitions/JObject"
         },
         "statisticDate": {
           "description": "Timestamp of when the event occured",
@@ -2710,6 +2713,13 @@
     "ExtensionEvents": {
       "type": "object",
       "properties": {
+        "events": {
+          "description": "Generic container for events data. The dictionary key denotes the type of event and the list contains properties related to that event",
+          "type": "object",
+          "additionalProperties": {
+            "type": "array"
+          }
+        },
         "extensionId": {
           "description": "Id of the extension, this will never be sent back to the client. This field will mainly be used when EMS calls into Gallery REST API to update install/uninstall events for various extensions in one go.",
           "type": "string",
@@ -2719,23 +2729,9 @@
           "description": "Name of the extension",
           "type": "string"
         },
-        "installEvents": {
-          "description": "List of install events for this extension",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/InstallEvent"
-          }
-        },
         "publisherName": {
           "description": "Name of the publisher",
           "type": "string"
-        },
-        "uninstallEvents": {
-          "description": "List of all uninstall events for this extension",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/UninstallEvent"
-          }
         }
       }
     },
@@ -3060,28 +3056,14 @@
         }
       }
     },
-    "InstallEvent": {
-      "type": "object",
-      "allOf": [
-        {
-          "$ref": "#/definitions/ExtensionEventBase"
-        }
-      ],
-      "properties": {
-        "properties": {
-          "description": "Install metadata",
-          "$ref": "#/definitions/InstallProperties"
-        }
-      }
-    },
     "InstallProperties": {
       "type": "object",
       "properties": {
-        "accountId": {
+        "hostId": {
           "description": "Id of account",
           "type": "string"
         },
-        "accountName": {
+        "hostName": {
           "description": "Name of account",
           "type": "string"
         }
@@ -3383,6 +3365,90 @@
         }
       }
     },
+    "QnAItem": {
+      "type": "object",
+      "properties": {
+        "createdDate": {
+          "description": "Time when the review was first created",
+          "type": "string",
+          "format": "date-time"
+        },
+        "extensionId": {
+          "description": "Unique identifier of the Extension",
+          "type": "string",
+          "format": "uuid"
+        },
+        "id": {
+          "description": "Unique identifier of a QnA item",
+          "type": "integer",
+          "format": "int64"
+        },
+        "status": {
+          "description": "Get status of item",
+          "enum": [
+            "none",
+            "deleted"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.VisualStudio.Services.Gallery.WebApi.QnAItemStatus"
+          }
+        },
+        "text": {
+          "description": "Text description of the QnA item",
+          "type": "string"
+        },
+        "updatedDate": {
+          "description": "Time when the review was edited/updated",
+          "type": "string",
+          "format": "date-time"
+        },
+        "user": {
+          "description": "User details for the item.",
+          "$ref": "#/definitions/UserIdentityRef"
+        }
+      }
+    },
+    "QnAThread": {
+      "type": "object",
+      "properties": {
+        "answers": {
+          "description": "List of answers",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/QnAItem"
+          }
+        },
+        "id": {
+          "description": "Identifier of the QnA thread",
+          "type": "integer",
+          "format": "int64"
+        },
+        "isEditable": {
+          "description": "Indicates whether invoking user can edit the thread",
+          "type": "boolean"
+        },
+        "question": {
+          "description": "Question of the thread",
+          "$ref": "#/definitions/QnAItem"
+        }
+      }
+    },
+    "QnAThreadsResult": {
+      "type": "object",
+      "properties": {
+        "hasMoreThreads": {
+          "description": "Flag indicating if there are more QnA threads to be shown (for paging)",
+          "type": "boolean"
+        },
+        "threads": {
+          "description": "List of the QnA threads",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/QnAThread"
+          }
+        }
+      }
+    },
     "QueryFilter": {
       "type": "object",
       "properties": {
@@ -3610,28 +3676,14 @@
         }
       }
     },
-    "UninstallEvent": {
-      "type": "object",
-      "allOf": [
-        {
-          "$ref": "#/definitions/ExtensionEventBase"
-        }
-      ],
-      "properties": {
-        "properties": {
-          "description": "Uninstall metadata",
-          "$ref": "#/definitions/UninstallProperties"
-        }
-      }
-    },
     "UninstallProperties": {
       "type": "object",
       "properties": {
-        "accountId": {
+        "hostId": {
           "description": "Id of account",
           "type": "string"
         },
-        "accountName": {
+        "hostName": {
           "description": "Name of account",
           "type": "string"
         },
@@ -3659,6 +3711,20 @@
         "userId": {
           "description": "User id that this policy refers to",
           "type": "string"
+        }
+      }
+    },
+    "UserIdentityRef": {
+      "type": "object",
+      "properties": {
+        "displayName": {
+          "description": "User display name",
+          "type": "string"
+        },
+        "id": {
+          "description": "User VSID",
+          "type": "string",
+          "format": "uuid"
         }
       }
     },
