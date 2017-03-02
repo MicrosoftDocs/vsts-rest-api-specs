@@ -235,6 +235,28 @@
       }
     },
     "/_apis/wit/fields": {
+      "delete": {
+        "tags": [
+          "fields"
+        ],
+        "summary": "DeleteField",
+        "description": "",
+        "operationId": "deleteField",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "referenceName",
+            "description": "",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        }
+      },
       "get": {
         "tags": [
           "fields"
@@ -1803,6 +1825,35 @@
       }
     },
     "/{project}/_apis/wit/fields": {
+      "delete": {
+        "tags": [
+          "fields"
+        ],
+        "summary": "DeleteField",
+        "description": "",
+        "operationId": "deleteField",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "referenceName",
+            "description": "",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        }
+      },
       "get": {
         "tags": [
           "fields"
@@ -3830,6 +3881,37 @@
       "properties": {
       }
     },
+    "JsonPatchOperation": {
+      "type": "object",
+      "properties": {
+        "from": {
+          "description": "The path to copy from for the Move/Copy operation.",
+          "type": "string"
+        },
+        "op": {
+          "description": "The patch operation",
+          "enum": [
+            "add",
+            "remove",
+            "replace",
+            "move",
+            "copy",
+            "test"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.VisualStudio.Services.WebApi.Patch.Operation"
+          }
+        },
+        "path": {
+          "description": "The path for the operation",
+          "type": "string"
+        },
+        "value": {
+          "description": "The value for the operation. This is either a primitive or a JToken.",
+          "type": "object"
+        }
+      }
+    },
     "Link": {
       "type": "object",
       "properties": {
@@ -4138,14 +4220,22 @@
       "type": "object",
       "allOf": [
         {
-          "type": "string",
-          "format": "VssJsonCollectionWrapperBase"
+          "$ref": "#/definitions/VssJsonCollectionWrapperBase"
         }
       ],
       "properties": {
         "value": {
           "type": "string",
           "format": "T"
+        }
+      }
+    },
+    "VssJsonCollectionWrapperBase": {
+      "type": "object",
+      "properties": {
+        "count": {
+          "type": "integer",
+          "format": "int32"
         }
       }
     },
@@ -4351,6 +4441,9 @@
         }
       ],
       "properties": {
+        "description": {
+          "type": "string"
+        },
         "name": {
           "type": "string"
         },
@@ -4377,7 +4470,11 @@
             "history",
             "double",
             "guid",
-            "boolean"
+            "boolean",
+            "identity",
+            "picklistString",
+            "picklistInteger",
+            "picklistDouble"
           ],
           "x-ms-enum": {
             "name": "Microsoft.TeamFoundation.WorkItemTracking.WebApi.Models.FieldType"

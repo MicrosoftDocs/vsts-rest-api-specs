@@ -54,6 +54,9 @@
       "name": "inputvaluesquery"
     },
     {
+      "name": "ipAddress"
+    },
+    {
       "name": "logs"
     },
     {
@@ -81,6 +84,9 @@
       "name": "sourcebranches"
     },
     {
+      "name": "tags"
+    },
+    {
       "name": "tasks"
     },
     {
@@ -97,6 +103,60 @@
     "https"
   ],
   "paths": {
+    "/_apis/release/ipaddress": {
+      "get": {
+        "tags": [
+          "ipAddress"
+        ],
+        "summary": "GetIPAddress",
+        "description": "",
+        "operationId": "getIPAddress",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "/_apis/release/ipaddress/{ipDetectionMethods}": {
+      "get": {
+        "tags": [
+          "ipAddress"
+        ],
+        "summary": "GetSupportedIPDetectionMethods",
+        "description": "Gets supported IP detection methods for request source",
+        "operationId": "getSupportedIPDetectionMethods",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "ipDetectionMethods",
+            "description": "",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
     "/_apis/release/projects": {
       "get": {
         "tags": [
@@ -277,6 +337,26 @@
             "description": "",
             "required": false,
             "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "tagFilter",
+            "description": "",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "propertyFilters",
+            "description": "",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -886,6 +966,26 @@
             "description": "",
             "required": false,
             "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "tagFilter",
+            "description": "",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "propertyFilters",
+            "description": "",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -1019,6 +1119,16 @@
             "required": true,
             "type": "integer",
             "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "propertyFilters",
+            "description": "",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -1183,6 +1293,216 @@
           {
             "oauth2": [
               "vso.release"
+            ]
+          }
+        ]
+      }
+    },
+    "/{project}/_apis/release/definitions/{releaseDefinitionId}/tags": {
+      "post": {
+        "tags": [
+          "tags"
+        ],
+        "summary": "AddDefinitionTags",
+        "description": "Adds multiple tags to a definition",
+        "operationId": "addDefinitionTags",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "releaseDefinitionId",
+            "description": "",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.release_execute"
+            ]
+          }
+        ]
+      },
+      "get": {
+        "tags": [
+          "tags"
+        ],
+        "summary": "GetDefinitionTags",
+        "description": "Gets the tags for a definition",
+        "operationId": "getDefinitionTags",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "releaseDefinitionId",
+            "description": "",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.release"
+            ]
+          }
+        ]
+      }
+    },
+    "/{project}/_apis/release/definitions/{releaseDefinitionId}/tags/{tag}": {
+      "patch": {
+        "tags": [
+          "tags"
+        ],
+        "summary": "AddDefinitionTag",
+        "description": "Adds a tag to a definition",
+        "operationId": "addDefinitionTag",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "releaseDefinitionId",
+            "description": "",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "path",
+            "name": "tag",
+            "description": "",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "tags"
+        ],
+        "summary": "DeleteDefinitionTag",
+        "description": "Deletes a tag from a definition",
+        "operationId": "deleteDefinitionTag",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "releaseDefinitionId",
+            "description": "",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "path",
+            "name": "tag",
+            "description": "",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.release_manage"
             ]
           }
         ]
@@ -2004,6 +2324,26 @@
             "description": "",
             "required": false,
             "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "tagFilter",
+            "description": "",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "propertyFilters",
+            "description": "",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -2151,6 +2491,16 @@
             "description": "",
             "required": false,
             "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "propertyFilters",
+            "description": "",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -3023,6 +3373,223 @@
         ]
       }
     },
+    "/{project}/_apis/release/releases/{releaseId}/tags": {
+      "post": {
+        "tags": [
+          "tags"
+        ],
+        "summary": "AddReleaseTags",
+        "description": "Adds tag to a release",
+        "operationId": "addReleaseTags",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "releaseId",
+            "description": "",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.release_execute"
+            ]
+          }
+        ]
+      },
+      "get": {
+        "tags": [
+          "tags"
+        ],
+        "summary": "GetReleaseTags",
+        "description": "Gets the tags for a release",
+        "operationId": "getReleaseTags",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "releaseId",
+            "description": "",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.release"
+            ]
+          }
+        ]
+      }
+    },
+    "/{project}/_apis/release/releases/{releaseId}/tags/{tag}": {
+      "patch": {
+        "tags": [
+          "tags"
+        ],
+        "summary": "AddReleaseTag",
+        "description": "Adds a tag to a releaseId",
+        "operationId": "addReleaseTag",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "releaseId",
+            "description": "",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "path",
+            "name": "tag",
+            "description": "",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.release_execute"
+            ]
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "tags"
+        ],
+        "summary": "DeleteReleaseTag",
+        "description": "Deletes a tag from a release",
+        "operationId": "deleteReleaseTag",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "releaseId",
+            "description": "",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "path",
+            "name": "tag",
+            "description": "",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.release_manage"
+            ]
+          }
+        ]
+      }
+    },
     "/{project}/_apis/release/releases/{releaseId}/workitems": {
       "get": {
         "tags": [
@@ -3239,6 +3806,39 @@
           }
         }
       }
+    },
+    "/{project}/_apis/release/tags": {
+      "get": {
+        "tags": [
+          "tags"
+        ],
+        "summary": "GetTags",
+        "description": "",
+        "operationId": "getTags",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
     }
   },
   "definitions": {
@@ -3314,6 +3914,9 @@
       "type": "object",
       "properties": {
         "autoTriggeredAndPreviousEnvironmentApprovedCanBeSkipped": {
+          "type": "boolean"
+        },
+        "enforceIdentityRevalidation": {
           "type": "boolean"
         },
         "releaseCreatorCanBeApprover": {
@@ -3898,7 +4501,8 @@
             "phaseFailed",
             "canceled",
             "phaseCanceled",
-            "manualInterventionPending"
+            "manualInterventionPending",
+            "queuedForPipeline"
           ],
           "x-ms-enum": {
             "name": "Microsoft.VisualStudio.Services.ReleaseManagement.WebApi.DeploymentOperationStatus"
@@ -3982,6 +4586,12 @@
             "$ref": "#/definitions/ReleaseApproval"
           }
         },
+        "data": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object"
+          }
+        },
         "deployment": {
           "$ref": "#/definitions/Deployment"
         },
@@ -4051,7 +4661,8 @@
             "phaseFailed",
             "canceled",
             "phaseCanceled",
-            "manualInterventionPending"
+            "manualInterventionPending",
+            "queuedForPipeline"
           ],
           "x-ms-enum": {
             "name": "Microsoft.VisualStudio.Services.ReleaseManagement.WebApi.DeploymentOperationStatus"
@@ -4109,6 +4720,9 @@
     "DeploymentAuthorizationInfo": {
       "type": "object",
       "properties": {
+        "nonce": {
+          "type": "string"
+        },
         "resources": {
           "type": "array",
           "items": {
@@ -4126,6 +4740,15 @@
     "DeploymentCompletedEvent": {
       "type": "object",
       "properties": {
+        "comment": {
+          "type": "string"
+        },
+        "data": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object"
+          }
+        },
         "deployment": {
           "$ref": "#/definitions/Deployment"
         },
@@ -4145,20 +4768,6 @@
         }
       ],
       "properties": {
-        "clean": {
-          "type": "boolean"
-        },
-        "cleanOptions": {
-          "enum": [
-            "source",
-            "sourceAndOutputDir",
-            "sourceDir",
-            "allBuildDir"
-          ],
-          "x-ms-enum": {
-            "name": "Microsoft.VisualStudio.Services.ReleaseManagement.WebApi.Contracts.RepositoryCleanOptions"
-          }
-        },
         "demands": {
           "type": "array",
           "items": {
@@ -4290,7 +4899,8 @@
             "phaseFailed",
             "canceled",
             "phaseCanceled",
-            "manualInterventionPending"
+            "manualInterventionPending",
+            "queuedForPipeline"
           ],
           "x-ms-enum": {
             "name": "Microsoft.VisualStudio.Services.ReleaseManagement.WebApi.DeploymentOperationStatus"
@@ -4548,8 +5158,18 @@
         },
         "inputMode": {
           "description": "Mode in which the value of this input should be entered",
-          "type": "string",
-          "format": "InputMode"
+          "enum": [
+            "none",
+            "textBox",
+            "passwordBox",
+            "combo",
+            "radioButtons",
+            "checkBox",
+            "textArea"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.VisualStudio.Services.FormInput.InputMode"
+          }
         },
         "isConfidential": {
           "description": "Gets whether this input is confidential, such as for a password or application key",
@@ -4576,8 +5196,7 @@
         },
         "validation": {
           "description": "Information to use to validate this input's value",
-          "type": "string",
-          "format": "InputValidation"
+          "$ref": "#/definitions/InputValidation"
         },
         "valueHint": {
           "description": "A hint for input value. It can be used in the UI as the input placeholder.",
@@ -4585,8 +5204,50 @@
         },
         "values": {
           "description": "Information about possible values for this input",
+          "$ref": "#/definitions/InputValues"
+        }
+      }
+    },
+    "InputValidation": {
+      "type": "object",
+      "properties": {
+        "dataType": {
+          "enum": [
+            "none",
+            "string",
+            "number",
+            "boolean",
+            "guid",
+            "uri"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.VisualStudio.Services.FormInput.InputDataType"
+          }
+        },
+        "isRequired": {
+          "type": "boolean"
+        },
+        "maxLength": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "maxValue": {
           "type": "string",
-          "format": "InputValues"
+          "format": "decimal"
+        },
+        "minLength": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "minValue": {
+          "type": "string",
+          "format": "decimal"
+        },
+        "pattern": {
+          "type": "string"
+        },
+        "patternMismatchErrorMessage": {
+          "type": "string"
         }
       }
     },
@@ -4610,6 +5271,51 @@
         }
       }
     },
+    "InputValues": {
+      "type": "object",
+      "properties": {
+        "defaultValue": {
+          "description": "The default value to use for this input",
+          "type": "string"
+        },
+        "error": {
+          "description": "Errors encountered while computing dynamic values.",
+          "$ref": "#/definitions/InputValuesError"
+        },
+        "inputId": {
+          "description": "The id of the input",
+          "type": "string"
+        },
+        "isDisabled": {
+          "description": "Should this input be disabled",
+          "type": "boolean"
+        },
+        "isLimitedToPossibleValues": {
+          "description": "Should the value be restricted to one of the values in the PossibleValues (True) or are the values in PossibleValues just a suggestion (False)",
+          "type": "boolean"
+        },
+        "isReadOnly": {
+          "description": "Should this input be made read-only",
+          "type": "boolean"
+        },
+        "possibleValues": {
+          "description": "Possible values that this input can take",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/InputValue"
+          }
+        }
+      }
+    },
+    "InputValuesError": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "description": "The error message.",
+          "type": "string"
+        }
+      }
+    },
     "InputValuesQuery": {
       "type": "object",
       "properties": {
@@ -4623,8 +5329,7 @@
           "description": "The input values to return on input, and the result from the consumer on output.",
           "type": "array",
           "items": {
-            "type": "string",
-            "format": "InputValues"
+            "$ref": "#/definitions/InputValues"
           }
         },
         "resource": {
@@ -5358,6 +6063,9 @@
         "path": {
           "type": "string"
         },
+        "properties": {
+          "$ref": "#/definitions/PropertiesCollection"
+        },
         "releaseNameFormat": {
           "type": "string"
         },
@@ -5374,7 +6082,7 @@
             "restApi",
             "userInterface",
             "ibiza",
-            "visualStudioIde"
+            "portalExtensionApi"
           ],
           "x-ms-enum": {
             "name": "Microsoft.VisualStudio.Services.ReleaseManagement.WebApi.ReleaseDefinitionSource"
@@ -6539,14 +7247,22 @@
       "type": "object",
       "allOf": [
         {
-          "type": "string",
-          "format": "VssJsonCollectionWrapperBase"
+          "$ref": "#/definitions/VssJsonCollectionWrapperBase"
         }
       ],
       "properties": {
         "value": {
           "type": "string",
           "format": "T"
+        }
+      }
+    },
+    "VssJsonCollectionWrapperBase": {
+      "type": "object",
+      "properties": {
+        "count": {
+          "type": "integer",
+          "format": "int32"
         }
       }
     },

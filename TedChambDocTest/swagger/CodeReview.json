@@ -3311,8 +3311,15 @@
           "type": "boolean"
         },
         "commentType": {
-          "type": "string",
-          "format": "CommentType"
+          "enum": [
+            "unknown",
+            "text",
+            "codeChange",
+            "system"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi.CommentType"
+          }
         },
         "content": {
           "type": "string"
@@ -3389,8 +3396,18 @@
           "format": "date-time"
         },
         "status": {
-          "type": "string",
-          "format": "DiscussionStatus"
+          "enum": [
+            "unknown",
+            "active",
+            "fixed",
+            "wontFix",
+            "closed",
+            "byDesign",
+            "pending"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.VisualStudio.Services.CodeReview.Discussion.WebApi.DiscussionStatus"
+          }
         },
         "workItemId": {
           "type": "integer",
@@ -3597,6 +3614,37 @@
         }
       ],
       "properties": {
+      }
+    },
+    "JsonPatchOperation": {
+      "type": "object",
+      "properties": {
+        "from": {
+          "description": "The path to copy from for the Move/Copy operation.",
+          "type": "string"
+        },
+        "op": {
+          "description": "The patch operation",
+          "enum": [
+            "add",
+            "remove",
+            "replace",
+            "move",
+            "copy",
+            "test"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.VisualStudio.Services.WebApi.Patch.Operation"
+          }
+        },
+        "path": {
+          "description": "The path for the operation",
+          "type": "string"
+        },
+        "value": {
+          "description": "The value for the operation. This is either a primitive or a JToken.",
+          "type": "object"
+        }
       }
     },
     "NotificationContext": {
@@ -3976,14 +4024,22 @@
       "type": "object",
       "allOf": [
         {
-          "type": "string",
-          "format": "VssJsonCollectionWrapperBase"
+          "$ref": "#/definitions/VssJsonCollectionWrapperBase"
         }
       ],
       "properties": {
         "value": {
           "type": "string",
           "format": "T"
+        }
+      }
+    },
+    "VssJsonCollectionWrapperBase": {
+      "type": "object",
+      "properties": {
+        "count": {
+          "type": "integer",
+          "format": "int32"
         }
       }
     }

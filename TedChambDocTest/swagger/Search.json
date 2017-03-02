@@ -1094,8 +1094,19 @@
         },
         "operation": {
           "description": "The operation causing a state change (install, uninstall, update, enable, disable).",
-          "type": "string",
-          "format": "ExtensionOperation"
+          "enum": [
+            "preInstall",
+            "preEnable",
+            "postInstall",
+            "postUninstall",
+            "postEnable",
+            "postDisable",
+            "postUpdate",
+            "preUninstall"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.VisualStudio.Services.ExtensionManagement.Sdk.Server.ExtensionOperation"
+          }
         },
         "publisherId": {
           "description": "The id of the Publisher for Extension whose state is changing.",
@@ -1103,8 +1114,7 @@
         },
         "target": {
           "description": "The target host of the extension operation.",
-          "type": "string",
-          "format": "ExtensionEventTarget"
+          "$ref": "#/definitions/ExtensionEventTarget"
         },
         "version": {
           "description": "The version of the Extension whose state is changing.",
@@ -1121,6 +1131,24 @@
         },
         "message": {
           "description": "Message indicating reason for abort.",
+          "type": "string"
+        }
+      }
+    },
+    "ExtensionEventTarget": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "The host identifier.",
+          "type": "string",
+          "format": "uuid"
+        },
+        "name": {
+          "description": "The host name.",
+          "type": "string"
+        },
+        "uri": {
+          "description": "The host uri.",
           "type": "string"
         }
       }
@@ -1411,14 +1439,22 @@
       "type": "object",
       "allOf": [
         {
-          "type": "string",
-          "format": "VssJsonCollectionWrapperBase"
+          "$ref": "#/definitions/VssJsonCollectionWrapperBase"
         }
       ],
       "properties": {
         "value": {
           "type": "string",
           "format": "T"
+        }
+      }
+    },
+    "VssJsonCollectionWrapperBase": {
+      "type": "object",
+      "properties": {
+        "count": {
+          "type": "integer",
+          "format": "int32"
         }
       }
     },

@@ -5901,25 +5901,6 @@
         }
       }
     },
-    "OperationReference": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "description": "The identifier for this operation.",
-          "type": "string",
-          "format": "uuid"
-        },
-        "status": {
-          "description": "The current status of the operation.",
-          "type": "string",
-          "format": "OperationStatus"
-        },
-        "url": {
-          "description": "Url to get the full object.",
-          "type": "string"
-        }
-      }
-    },
     "PlanUpdateModel": {
       "type": "object",
       "properties": {
@@ -6642,8 +6623,18 @@
         },
         "state": {
           "description": "Project state.",
-          "type": "string",
-          "format": "ProjectState"
+          "enum": [
+            "deleting",
+            "new",
+            "wellFormed",
+            "createPending",
+            "all",
+            "unchanged",
+            "deleted"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.TeamFoundation.Core.WebApi.ProjectState"
+          }
         },
         "url": {
           "description": "Url to the full version of the object.",
@@ -7200,6 +7191,20 @@
         }
       }
     },
+    "TestOperationReference": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        }
+      }
+    },
     "TestPlan": {
       "type": "object",
       "properties": {
@@ -7546,11 +7551,11 @@
     "TestResultDocument": {
       "type": "object",
       "properties": {
-        "attachment": {
-          "$ref": "#/definitions/TestAttachmentRequestModel"
+        "operationReference": {
+          "$ref": "#/definitions/TestOperationReference"
         },
-        "operation": {
-          "$ref": "#/definitions/OperationReference"
+        "payload": {
+          "$ref": "#/definitions/TestResultPayload"
         }
       }
     },
@@ -7626,6 +7631,20 @@
           "type": "string"
         },
         "value": {
+          "type": "string"
+        }
+      }
+    },
+    "TestResultPayload": {
+      "type": "object",
+      "properties": {
+        "comment": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "stream": {
           "type": "string"
         }
       }
@@ -8297,14 +8316,22 @@
       "type": "object",
       "allOf": [
         {
-          "type": "string",
-          "format": "VssJsonCollectionWrapperBase"
+          "$ref": "#/definitions/VssJsonCollectionWrapperBase"
         }
       ],
       "properties": {
         "value": {
           "type": "string",
           "format": "T"
+        }
+      }
+    },
+    "VssJsonCollectionWrapperBase": {
+      "type": "object",
+      "properties": {
+        "count": {
+          "type": "integer",
+          "format": "int32"
         }
       }
     },

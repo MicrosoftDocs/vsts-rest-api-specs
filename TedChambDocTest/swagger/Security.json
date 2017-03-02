@@ -79,7 +79,14 @@
               "type": "boolean"
             }
           }
-        }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.security_manage"
+            ]
+          }
+        ]
       },
       "post": {
         "tags": [
@@ -123,7 +130,14 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.security_manage"
+            ]
+          }
+        ]
       }
     },
     "/_apis/accesscontrollists/{securityNamespaceId}": {
@@ -228,7 +242,14 @@
               "type": "boolean"
             }
           }
-        }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.security_manage"
+            ]
+          }
+        ]
       },
       "post": {
         "tags": [
@@ -264,7 +285,14 @@
           "200": {
             "description": "successful operation"
           }
-        }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.security_manage"
+            ]
+          }
+        ]
       }
     },
     "/_apis/permissions/{securityNamespaceId}/{permissions}": {
@@ -378,7 +406,14 @@
               "$ref": "#/definitions/AccessControlEntry"
             }
           }
-        }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.security_manage"
+            ]
+          }
+        ]
       }
     },
     "/_apis/security/permissionevaluationbatch": {
@@ -489,7 +524,14 @@
           "200": {
             "description": "successful operation"
           }
-        }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.security_manage"
+            ]
+          }
+        ]
       }
     }
   },
@@ -728,6 +770,11 @@
           "type": "integer",
           "format": "int32"
         },
+        "systemBitMask": {
+          "description": "The bits reserved by system store",
+          "type": "integer",
+          "format": "int32"
+        },
         "useTokenTranslator": {
           "description": "If true, the security service will expect an ISecurityDataspaceTokenTranslator plugin to exist for this namespace",
           "type": "boolean"
@@ -743,14 +790,22 @@
       "type": "object",
       "allOf": [
         {
-          "type": "string",
-          "format": "VssJsonCollectionWrapperBase"
+          "$ref": "#/definitions/VssJsonCollectionWrapperBase"
         }
       ],
       "properties": {
         "value": {
           "type": "string",
           "format": "T"
+        }
+      }
+    },
+    "VssJsonCollectionWrapperBase": {
+      "type": "object",
+      "properties": {
+        "count": {
+          "type": "integer",
+          "format": "int32"
         }
       }
     }
@@ -768,7 +823,16 @@
     "accessToken": {
       "type": "basic",
       "description": "Personal access token. Use any value for the user name and the token as the password."
-     }
+     },
+     "oauth2": {
+      "type": "oauth2",
+      "flow": "accessCode",
+      "authorizationUrl": "https://app.vssps.visualstudio.com/oauth2/authorize&response_type=Assertion",
+      "tokenUrl": "https://app.vssps.visualstudio.com/oauth2/token?client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer&grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer",
+      "scopes": {
+        "vso.security_manage": "Grants the ability to read, write, and manage security permissions."
+      }
+    }
   },
   "security": [
     {

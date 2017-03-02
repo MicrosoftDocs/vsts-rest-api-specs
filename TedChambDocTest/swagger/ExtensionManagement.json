@@ -1667,6 +1667,23 @@
         }
       }
     },
+    "DataProviderExceptionDetails": {
+      "type": "object",
+      "properties": {
+        "exceptionType": {
+          "description": "The type of the exception that was thrown.",
+          "type": "string"
+        },
+        "message": {
+          "description": "Message that is associated with the exception.",
+          "type": "string"
+        },
+        "stackTrace": {
+          "description": "The StackTrace from the exception turned into a string.",
+          "type": "string"
+        }
+      }
+    },
     "DataProviderQuery": {
       "type": "object",
       "properties": {
@@ -1808,6 +1825,20 @@
           "items": {
             "type": "string"
           }
+        }
+      }
+    },
+    "ExtensionBadge": {
+      "type": "object",
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "imgUri": {
+          "type": "string"
+        },
+        "link": {
+          "type": "string"
         }
       }
     },
@@ -2076,6 +2107,41 @@
         }
       }
     },
+    "ExtensionPolicy": {
+      "type": "object",
+      "properties": {
+        "install": {
+          "description": "Permissions on 'Install' operation",
+          "enum": [
+            "none",
+            "private",
+            "public",
+            "preview",
+            "released",
+            "firstParty",
+            "all"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.VisualStudio.Services.Gallery.WebApi.ExtensionPolicyFlags"
+          }
+        },
+        "request": {
+          "description": "Permission on 'Request' operation",
+          "enum": [
+            "none",
+            "private",
+            "public",
+            "preview",
+            "released",
+            "firstParty",
+            "all"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.VisualStudio.Services.Gallery.WebApi.ExtensionPolicyFlags"
+          }
+        }
+      }
+    },
     "ExtensionRequest": {
       "type": "object",
       "properties": {
@@ -2169,6 +2235,20 @@
         }
       }
     },
+    "ExtensionShare": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        }
+      }
+    },
     "ExtensionState": {
       "type": "object",
       "allOf": [
@@ -2193,6 +2273,18 @@
         }
       }
     },
+    "ExtensionStatistic": {
+      "type": "object",
+      "properties": {
+        "statisticName": {
+          "type": "string"
+        },
+        "value": {
+          "type": "number",
+          "format": "double"
+        }
+      }
+    },
     "ExtensionUrls": {
       "type": "object",
       "properties": {
@@ -2202,6 +2294,57 @@
         },
         "extensionPage": {
           "description": "Link to view the extension details page",
+          "type": "string"
+        }
+      }
+    },
+    "ExtensionVersion": {
+      "type": "object",
+      "properties": {
+        "assetUri": {
+          "type": "string"
+        },
+        "badges": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ExtensionBadge"
+          }
+        },
+        "fallbackAssetUri": {
+          "type": "string"
+        },
+        "files": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ExtensionFile"
+          }
+        },
+        "flags": {
+          "enum": [
+            "none",
+            "validated"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.VisualStudio.Services.Gallery.WebApi.ExtensionVersionFlags"
+          }
+        },
+        "lastUpdated": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "properties": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "validationResultMessage": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        },
+        "versionDescription": {
           "type": "string"
         }
       }
@@ -2231,6 +2374,29 @@
           "type": "string"
         },
         "url": {
+          "type": "string"
+        }
+      }
+    },
+    "InstallationTarget": {
+      "type": "object",
+      "properties": {
+        "maxInclusive": {
+          "type": "boolean"
+        },
+        "maxVersion": {
+          "type": "string"
+        },
+        "minInclusive": {
+          "type": "boolean"
+        },
+        "minVersion": {
+          "type": "string"
+        },
+        "target": {
+          "type": "string"
+        },
+        "targetVersion": {
           "type": "string"
         }
       }
@@ -2421,8 +2587,15 @@
           }
         },
         "deploymentType": {
-          "type": "string",
-          "format": "ExtensionDeploymentTechnology"
+          "enum": [
+            "exe",
+            "msi",
+            "vsix",
+            "referralLink"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.VisualStudio.Services.Gallery.WebApi.ExtensionDeploymentTechnology"
+          }
         },
         "displayName": {
           "type": "string"
@@ -2435,14 +2608,28 @@
           "type": "string"
         },
         "flags": {
-          "type": "string",
-          "format": "PublishedExtensionFlags"
+          "enum": [
+            "none",
+            "disabled",
+            "builtIn",
+            "validated",
+            "trusted",
+            "paid",
+            "public",
+            "multiVersion",
+            "system",
+            "preview",
+            "unpublished",
+            "trial"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.VisualStudio.Services.Gallery.WebApi.PublishedExtensionFlags"
+          }
         },
         "installationTargets": {
           "type": "array",
           "items": {
-            "type": "string",
-            "format": "InstallationTarget"
+            "$ref": "#/definitions/InstallationTarget"
           }
         },
         "lastUpdated": {
@@ -2458,8 +2645,7 @@
           "format": "date-time"
         },
         "publisher": {
-          "type": "string",
-          "format": "PublisherFacts"
+          "$ref": "#/definitions/PublisherFacts"
         },
         "releaseDate": {
           "description": "Date on which the extension first went public.",
@@ -2469,8 +2655,7 @@
         "sharedWith": {
           "type": "array",
           "items": {
-            "type": "string",
-            "format": "ExtensionShare"
+            "$ref": "#/definitions/ExtensionShare"
           }
         },
         "shortDescription": {
@@ -2479,8 +2664,7 @@
         "statistics": {
           "type": "array",
           "items": {
-            "type": "string",
-            "format": "ExtensionStatistic"
+            "$ref": "#/definitions/ExtensionStatistic"
           }
         },
         "tags": {
@@ -2492,9 +2676,35 @@
         "versions": {
           "type": "array",
           "items": {
-            "type": "string",
-            "format": "ExtensionVersion"
+            "$ref": "#/definitions/ExtensionVersion"
           }
+        }
+      }
+    },
+    "PublisherFacts": {
+      "type": "object",
+      "properties": {
+        "displayName": {
+          "type": "string"
+        },
+        "flags": {
+          "enum": [
+            "unChanged",
+            "none",
+            "disabled",
+            "verified",
+            "serviceFlags"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.VisualStudio.Services.Gallery.WebApi.PublisherFlags"
+          }
+        },
+        "publisherId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "publisherName": {
+          "type": "string"
         }
       }
     },
@@ -2606,8 +2816,7 @@
         },
         "permissions": {
           "description": "The extension policy applied to the user",
-          "type": "string",
-          "format": "ExtensionPolicy"
+          "$ref": "#/definitions/ExtensionPolicy"
         },
         "userId": {
           "description": "User id that this policy refers to",
@@ -2619,14 +2828,22 @@
       "type": "object",
       "allOf": [
         {
-          "type": "string",
-          "format": "VssJsonCollectionWrapperBase"
+          "$ref": "#/definitions/VssJsonCollectionWrapperBase"
         }
       ],
       "properties": {
         "value": {
           "type": "string",
           "format": "T"
+        }
+      }
+    },
+    "VssJsonCollectionWrapperBase": {
+      "type": "object",
+      "properties": {
+        "count": {
+          "type": "integer",
+          "format": "int32"
         }
       }
     }

@@ -138,6 +138,70 @@
             }
           }
         }
+      },
+      "get": {
+        "tags": [
+          "alertEndpoints"
+        ],
+        "summary": "GetAlertEndpoint",
+        "description": "",
+        "operationId": "getAlertEndpoint",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "alertEndpointId",
+            "description": "",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/AlertEndpointProperties"
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "alertEndpoints"
+        ],
+        "summary": "UpdateContainer",
+        "description": "",
+        "operationId": "updateContainer",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/AlertEndpointProperties"
+            }
+          },
+          {
+            "in": "path",
+            "name": "alertEndpointId",
+            "description": "",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        }
       }
     },
     "/_apis/health/containers": {
@@ -1143,6 +1207,15 @@
     }
   },
   "definitions": {
+    "AdvancedProperties": {
+      "type": "object",
+      "properties": {
+        "severity": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
     "AlertEndpointProperties": {
       "type": "object",
       "allOf": [
@@ -1235,35 +1308,6 @@
         }
       }
     },
-    "Endpoint": {
-      "type": "object",
-      "properties": {
-        "alertEndpoint": {
-          "type": "string"
-        },
-        "columnName": {
-          "type": "string"
-        },
-        "columnValue": {
-          "type": "string"
-        },
-        "endpointType": {
-          "enum": [
-            "keyValue",
-            "regex"
-          ],
-          "x-ms-enum": {
-            "name": "Microsoft.VisualStudio.Services.Kalypso.WebApi.EndpointType"
-          }
-        },
-        "expression": {
-          "type": "string"
-        },
-        "resourceType": {
-          "type": "string"
-        }
-      }
-    },
     "EndpointAuthorization": {
       "type": "object",
       "properties": {
@@ -1335,11 +1379,14 @@
         }
       ],
       "properties": {
-        "endpoints": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/Endpoint"
-          }
+        "advancedProperties": {
+          "$ref": "#/definitions/AdvancedProperties"
+        },
+        "mdmAccount": {
+          "type": "string"
+        },
+        "resourceType": {
+          "type": "string"
         }
       }
     },
@@ -1372,6 +1419,71 @@
         }
       }
     },
+    "InputValue": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "description": "Any other data about this input",
+          "type": "object",
+          "additionalProperties": {
+            "type": "object"
+          }
+        },
+        "displayValue": {
+          "description": "The text to show for the display of this value",
+          "type": "string"
+        },
+        "value": {
+          "description": "The value to store for this input",
+          "type": "string"
+        }
+      }
+    },
+    "InputValues": {
+      "type": "object",
+      "properties": {
+        "defaultValue": {
+          "description": "The default value to use for this input",
+          "type": "string"
+        },
+        "error": {
+          "description": "Errors encountered while computing dynamic values.",
+          "$ref": "#/definitions/InputValuesError"
+        },
+        "inputId": {
+          "description": "The id of the input",
+          "type": "string"
+        },
+        "isDisabled": {
+          "description": "Should this input be disabled",
+          "type": "boolean"
+        },
+        "isLimitedToPossibleValues": {
+          "description": "Should the value be restricted to one of the values in the PossibleValues (True) or are the values in PossibleValues just a suggestion (False)",
+          "type": "boolean"
+        },
+        "isReadOnly": {
+          "description": "Should this input be made read-only",
+          "type": "boolean"
+        },
+        "possibleValues": {
+          "description": "Possible values that this input can take",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/InputValue"
+          }
+        }
+      }
+    },
+    "InputValuesError": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "description": "The error message.",
+          "type": "string"
+        }
+      }
+    },
     "InputValuesQuery": {
       "type": "object",
       "properties": {
@@ -1385,8 +1497,7 @@
           "description": "The input values to return on input, and the result from the consumer on output.",
           "type": "array",
           "items": {
-            "type": "string",
-            "format": "InputValues"
+            "$ref": "#/definitions/InputValues"
           }
         },
         "resource": {
@@ -1826,14 +1937,22 @@
       "type": "object",
       "allOf": [
         {
-          "type": "string",
-          "format": "VssJsonCollectionWrapperBase"
+          "$ref": "#/definitions/VssJsonCollectionWrapperBase"
         }
       ],
       "properties": {
         "value": {
           "type": "string",
           "format": "T"
+        }
+      }
+    },
+    "VssJsonCollectionWrapperBase": {
+      "type": "object",
+      "properties": {
+        "count": {
+          "type": "integer",
+          "format": "int32"
         }
       }
     }

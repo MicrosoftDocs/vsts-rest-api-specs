@@ -1389,7 +1389,7 @@
           },
           {
             "in": "query",
-            "name": "queryFlags",
+            "name": "include",
             "description": "Filter options. Supported values: includeInstall, includeUninstall. Default is to fetch all types of events",
             "required": false,
             "type": "string"
@@ -2495,6 +2495,11 @@
     "EventCounts": {
       "type": "object",
       "properties": {
+        "averageRating": {
+          "description": "Average rating on the day for extension",
+          "type": "string",
+          "format": "Single"
+        },
         "buyCount": {
           "description": "Number of times the extension was bought in hosted scenario (applies only to VSTS extensions)",
           "type": "integer",
@@ -3387,7 +3392,9 @@
           "description": "Get status of item",
           "enum": [
             "none",
-            "deleted"
+            "deleted",
+            "userEditable",
+            "publisherCreated"
           ],
           "x-ms-enum": {
             "name": "Microsoft.VisualStudio.Services.Gallery.WebApi.QnAItemStatus"
@@ -3405,47 +3412,6 @@
         "user": {
           "description": "User details for the item.",
           "$ref": "#/definitions/UserIdentityRef"
-        }
-      }
-    },
-    "QnAThread": {
-      "type": "object",
-      "properties": {
-        "answers": {
-          "description": "List of answers",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/QnAItem"
-          }
-        },
-        "id": {
-          "description": "Identifier of the QnA thread",
-          "type": "integer",
-          "format": "int64"
-        },
-        "isEditable": {
-          "description": "Indicates whether invoking user can edit the thread",
-          "type": "boolean"
-        },
-        "question": {
-          "description": "Question of the thread",
-          "$ref": "#/definitions/QnAItem"
-        }
-      }
-    },
-    "QnAThreadsResult": {
-      "type": "object",
-      "properties": {
-        "hasMoreThreads": {
-          "description": "Flag indicating if there are more QnA threads to be shown (for paging)",
-          "type": "boolean"
-        },
-        "threads": {
-          "description": "List of the QnA threads",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/QnAThread"
-          }
         }
       }
     },
@@ -3492,6 +3458,39 @@
           "description": "Defines the order of sorting, 1 for Ascending, 2 for Descending, else default ordering based on the SortBy value",
           "type": "integer",
           "format": "int32"
+        }
+      }
+    },
+    "Question": {
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/QnAItem"
+        }
+      ],
+      "properties": {
+        "responses": {
+          "description": "List of answers in for the question / thread",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/QnAItem"
+          }
+        }
+      }
+    },
+    "QuestionsResult": {
+      "type": "object",
+      "properties": {
+        "hasMoreQuestions": {
+          "description": "Flag indicating if there are more QnA threads to be shown (for paging)",
+          "type": "boolean"
+        },
+        "questions": {
+          "description": "List of the QnA threads",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Question"
+          }
         }
       }
     },
@@ -3767,14 +3766,22 @@
       "type": "object",
       "allOf": [
         {
-          "type": "string",
-          "format": "VssJsonCollectionWrapperBase"
+          "$ref": "#/definitions/VssJsonCollectionWrapperBase"
         }
       ],
       "properties": {
         "value": {
           "type": "string",
           "format": "T"
+        }
+      }
+    },
+    "VssJsonCollectionWrapperBase": {
+      "type": "object",
+      "properties": {
+        "count": {
+          "type": "integer",
+          "format": "int32"
         }
       }
     }

@@ -115,6 +115,53 @@
     }
   },
   "definitions": {
+    "AzureOfferPlanDefinition": {
+      "type": "object",
+      "properties": {
+        "isPublic": {
+          "description": "Determines whether or not this plan is visible to all users",
+          "type": "boolean"
+        },
+        "meterId": {
+          "description": "The meter id which identifies the offer meter this plan is associated with",
+          "type": "integer",
+          "format": "int32"
+        },
+        "offerId": {
+          "description": "The offer / product name as defined by the publisher in Azure",
+          "type": "string"
+        },
+        "offerName": {
+          "description": "The offer / product name as defined by the publisher in Azure",
+          "type": "string"
+        },
+        "planId": {
+          "description": "The id of the plan, which is usually in the format \"{publisher}:{offer}:{plan}\"",
+          "type": "string"
+        },
+        "planName": {
+          "description": "The plan name as defined by the publisher in Azure",
+          "type": "string"
+        },
+        "planVersion": {
+          "description": "The version string which optionally identifies the version of the plan",
+          "type": "string"
+        },
+        "publisher": {
+          "description": "The publisher of the plan as defined by the publisher in Azure",
+          "type": "string"
+        },
+        "publisherName": {
+          "description": "get/set publisher name",
+          "type": "string"
+        },
+        "quantity": {
+          "description": "The number of users associated with the plan as defined in Azure",
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
     "OfferMeter": {
       "type": "object",
       "properties": {
@@ -125,18 +172,33 @@
         },
         "assignmentModel": {
           "description": "Gets or sets the user assignment model.",
-          "type": "string",
-          "format": "OfferMeterAssignmentModel"
+          "enum": [
+            "explicit",
+            "implicit"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.VisualStudio.Services.Commerce.OfferMeterAssignmentModel"
+          }
         },
         "billingEntity": {
           "description": "Gets or sets the responsible entity/method for billing. Determines how this meter is handled in the backend.",
-          "type": "string",
-          "format": "BillingProvider"
+          "enum": [
+            "selfManaged",
+            "azureStoreManaged"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.VisualStudio.Services.Commerce.BillingProvider"
+          }
         },
         "billingMode": {
           "description": "Gets or sets the billing mode of the resource",
-          "type": "string",
-          "format": "ResourceBillingMode"
+          "enum": [
+            "committment",
+            "payAsYouGo"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.VisualStudio.Services.Commerce.ResourceBillingMode"
+          }
         },
         "billingStartDate": {
           "description": "Gets or sets the billing start date. If TrialDays + PreviewGraceDays > then, on 'BillingStartDate' it starts the preview Grace and/or trial period.",
@@ -145,13 +207,24 @@
         },
         "billingState": {
           "description": "Gets or sets the state of the billing.",
-          "type": "string",
-          "format": "MeterBillingState"
+          "enum": [
+            "free",
+            "paid"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.VisualStudio.Services.Commerce.MeterBillingState"
+          }
         },
         "category": {
           "description": "Category.",
-          "type": "string",
-          "format": "MeterCategory"
+          "enum": [
+            "legacy",
+            "bundle",
+            "extension"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.VisualStudio.Services.Commerce.MeterCategory"
+          }
         },
         "committedQuantity": {
           "description": "Quantity commited by the user, when resources is commitment based.",
@@ -167,8 +240,7 @@
           "description": "Gets or sets the map of named quantity varied plans, plans can be purchased that vary only in the number of users included. Null if this offer meter does not support named fixed quantity plans.",
           "type": "array",
           "items": {
-            "type": "string",
-            "format": "AzureOfferPlanDefinition"
+            "$ref": "#/definitions/AzureOfferPlanDefinition"
           }
         },
         "galleryId": {
@@ -177,8 +249,16 @@
         },
         "includedInLicenseLevel": {
           "description": "Gets or sets the Min license level the offer is free for.",
-          "type": "string",
-          "format": "MinimumRequiredServiceLevel"
+          "enum": [
+            "none",
+            "express",
+            "advanced",
+            "advancedPlus",
+            "stakeholder"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.VisualStudio.Services.Commerce.MinimumRequiredServiceLevel"
+          }
         },
         "includedQuantity": {
           "description": "Quantity included for free.",
@@ -201,8 +281,16 @@
         },
         "minimumRequiredAccessLevel": {
           "description": "Gets or sets the minimum required access level for the meter.",
-          "type": "string",
-          "format": "MinimumRequiredServiceLevel"
+          "enum": [
+            "none",
+            "express",
+            "advanced",
+            "advancedPlus",
+            "stakeholder"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.VisualStudio.Services.Commerce.MinimumRequiredServiceLevel"
+          }
         },
         "name": {
           "description": "Name of the resource",
@@ -210,8 +298,14 @@
         },
         "offerScope": {
           "description": "Gets or sets the offer scope.",
-          "type": "string",
-          "format": "OfferScope"
+          "enum": [
+            "account",
+            "user",
+            "userAccount"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.VisualStudio.Services.Commerce.OfferScope"
+          }
         },
         "platformMeterId": {
           "description": "Gets or sets the identifier representing this meter in commerce platform",
@@ -225,13 +319,26 @@
         },
         "renewalFrequency": {
           "description": "Gets or sets the Renewak Frequency.",
-          "type": "string",
-          "format": "MeterRenewalFrequecy"
+          "enum": [
+            "none",
+            "monthly",
+            "annually"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.VisualStudio.Services.Commerce.MeterRenewalFrequecy"
+          }
         },
         "status": {
           "description": "Gets or sets the status.",
-          "type": "string",
-          "format": "MeterState"
+          "enum": [
+            "registered",
+            "active",
+            "retired",
+            "deleted"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.VisualStudio.Services.Commerce.MeterState"
+          }
         },
         "trialCycles": {
           "description": "Gets or sets the trial cycles.",
@@ -282,14 +389,22 @@
       "type": "object",
       "allOf": [
         {
-          "type": "string",
-          "format": "VssJsonCollectionWrapperBase"
+          "$ref": "#/definitions/VssJsonCollectionWrapperBase"
         }
       ],
       "properties": {
         "value": {
           "type": "string",
           "format": "T"
+        }
+      }
+    },
+    "VssJsonCollectionWrapperBase": {
+      "type": "object",
+      "properties": {
+        "count": {
+          "type": "integer",
+          "format": "int32"
         }
       }
     }

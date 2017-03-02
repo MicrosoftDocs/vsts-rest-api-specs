@@ -203,7 +203,7 @@
           "200": {
             "description": "successful operation",
             "schema": {
-              "$ref": "#/definitions/MemberEntitlement"
+              "$ref": "#/definitions/MemberEntitlementsPatchResponse"
             }
           }
         }
@@ -274,6 +274,11 @@
         "entityType": {
           "type": "string"
         },
+        "id": {
+          "description": "The unique identifier within the member's scope. This identifier will not change for the lifetime of the member.",
+          "type": "string",
+          "format": "uuid"
+        },
         "origin": {
           "description": "The source for the origin identifier",
           "type": "string"
@@ -281,11 +286,6 @@
         "originId": {
           "description": "The unique identifier from the system of origin",
           "type": "string"
-        },
-        "persistentId": {
-          "description": "The unique identifier within the member's scope. This identifier will not change for the lifetime of the member.",
-          "type": "string",
-          "format": "uuid"
         },
         "principalName": {
           "type": "string"
@@ -345,6 +345,37 @@
       "properties": {
       }
     },
+    "JsonPatchOperation": {
+      "type": "object",
+      "properties": {
+        "from": {
+          "description": "The path to copy from for the Move/Copy operation.",
+          "type": "string"
+        },
+        "op": {
+          "description": "The patch operation",
+          "enum": [
+            "add",
+            "remove",
+            "replace",
+            "move",
+            "copy",
+            "test"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.VisualStudio.Services.WebApi.Patch.Operation"
+          }
+        },
+        "path": {
+          "description": "The path for the operation",
+          "type": "string"
+        },
+        "value": {
+          "description": "The value for the operation. This is either a primitive or a JToken.",
+          "type": "object"
+        }
+      }
+    },
     "MemberEntitlement": {
       "type": "object",
       "properties": {
@@ -378,6 +409,26 @@
           "type": "array",
           "items": {
             "$ref": "#/definitions/ProjectEntitlement"
+          }
+        }
+      }
+    },
+    "MemberEntitlementsPatchResponse": {
+      "type": "object",
+      "properties": {
+        "isSuccess": {
+          "description": "True if all operations were successful",
+          "type": "boolean"
+        },
+        "memberEntitlement": {
+          "description": "Result of the member entitlement after the operations have been applied",
+          "$ref": "#/definitions/MemberEntitlement"
+        },
+        "operationResults": {
+          "description": "List of results for each operation",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/OperationResult"
           }
         }
       }
@@ -458,14 +509,22 @@
       "type": "object",
       "allOf": [
         {
-          "type": "string",
-          "format": "VssJsonCollectionWrapperBase"
+          "$ref": "#/definitions/VssJsonCollectionWrapperBase"
         }
       ],
       "properties": {
         "value": {
           "type": "string",
           "format": "T"
+        }
+      }
+    },
+    "VssJsonCollectionWrapperBase": {
+      "type": "object",
+      "properties": {
+        "count": {
+          "type": "integer",
+          "format": "int32"
         }
       }
     }

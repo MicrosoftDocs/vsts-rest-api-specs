@@ -1070,12 +1070,44 @@
       "type": "object",
       "properties": {
         "accessToken": {
-          "type": "string",
-          "format": "JsonWebToken"
+          "$ref": "#/definitions/JsonWebToken"
         },
         "accessTokenError": {
-          "type": "string",
-          "format": "TokenError"
+          "enum": [
+            "none",
+            "grantTypeRequired",
+            "authorizationGrantRequired",
+            "clientSecretRequired",
+            "redirectUriRequired",
+            "invalidAuthorizationGrant",
+            "invalidAuthorizationScopes",
+            "invalidRefreshToken",
+            "authorizationNotFound",
+            "authorizationGrantExpired",
+            "accessAlreadyIssued",
+            "invalidRedirectUri",
+            "accessTokenNotFound",
+            "invalidAccessToken",
+            "accessTokenAlreadyRefreshed",
+            "invalidClientSecret",
+            "clientSecretExpired",
+            "serverError",
+            "accessDenied",
+            "accessTokenKeyRequired",
+            "invalidAccessTokenKey",
+            "failedToGetAccessToken",
+            "invalidClientId",
+            "invalidClient",
+            "invalidValidTo",
+            "invalidUserId",
+            "failedToIssueAccessToken",
+            "authorizationGrantScopeMissing",
+            "invalidPublicAccessTokenKey",
+            "invalidPublicAccessToken"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.VisualStudio.Services.DelegatedAuthorization.TokenError"
+          }
         },
         "authorizationId": {
           "type": "string",
@@ -1088,8 +1120,7 @@
           "type": "boolean"
         },
         "refreshToken": {
-          "type": "string",
-          "format": "RefreshTokenGrant"
+          "$ref": "#/definitions/RefreshTokenGrant"
         },
         "tokenType": {
           "type": "string"
@@ -1097,6 +1128,23 @@
         "validTo": {
           "type": "string",
           "format": "date-time"
+        }
+      }
+    },
+    "AuthorizationGrant": {
+      "type": "object",
+      "properties": {
+        "grantType": {
+          "enum": [
+            "none",
+            "jwtBearer",
+            "refreshToken",
+            "implicit",
+            "clientCredentials"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.VisualStudio.Services.DelegatedAuthorization.GrantType"
+          }
         }
       }
     },
@@ -1456,6 +1504,17 @@
         }
       }
     },
+    "JsonWebToken": {
+      "type": "object",
+      "allOf": [
+        {
+          "type": "string",
+          "format": "IssuedToken"
+        }
+      ],
+      "properties": {
+      }
+    },
     "PropertiesCollection": {
       "type": "object",
       "properties": {
@@ -1481,6 +1540,19 @@
         }
       }
     },
+    "RefreshTokenGrant": {
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/AuthorizationGrant"
+        }
+      ],
+      "properties": {
+        "jwt": {
+          "$ref": "#/definitions/JsonWebToken"
+        }
+      }
+    },
     "TenantInfo": {
       "type": "object",
       "properties": {
@@ -1500,14 +1572,22 @@
       "type": "object",
       "allOf": [
         {
-          "type": "string",
-          "format": "VssJsonCollectionWrapperBase"
+          "$ref": "#/definitions/VssJsonCollectionWrapperBase"
         }
       ],
       "properties": {
         "value": {
           "type": "string",
           "format": "T"
+        }
+      }
+    },
+    "VssJsonCollectionWrapperBase": {
+      "type": "object",
+      "properties": {
+        "count": {
+          "type": "integer",
+          "format": "int32"
         }
       }
     }

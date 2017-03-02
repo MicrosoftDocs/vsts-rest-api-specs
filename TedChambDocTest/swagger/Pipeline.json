@@ -2377,20 +2377,6 @@
         }
       ],
       "properties": {
-        "clean": {
-          "type": "boolean"
-        },
-        "cleanOptions": {
-          "enum": [
-            "source",
-            "sourceAndOutputDir",
-            "sourceDir",
-            "allBuildDir"
-          ],
-          "x-ms-enum": {
-            "name": "Microsoft.VisualStudio.Services.Pipeline.WebApi.Contracts.RepositoryCleanOptions"
-          }
-        },
         "demands": {
           "type": "array",
           "items": {
@@ -2591,8 +2577,18 @@
         },
         "inputMode": {
           "description": "Mode in which the value of this input should be entered",
-          "type": "string",
-          "format": "InputMode"
+          "enum": [
+            "none",
+            "textBox",
+            "passwordBox",
+            "combo",
+            "radioButtons",
+            "checkBox",
+            "textArea"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.VisualStudio.Services.FormInput.InputMode"
+          }
         },
         "isConfidential": {
           "description": "Gets whether this input is confidential, such as for a password or application key",
@@ -2619,8 +2615,7 @@
         },
         "validation": {
           "description": "Information to use to validate this input's value",
-          "type": "string",
-          "format": "InputValidation"
+          "$ref": "#/definitions/InputValidation"
         },
         "valueHint": {
           "description": "A hint for input value. It can be used in the UI as the input placeholder.",
@@ -2628,8 +2623,115 @@
         },
         "values": {
           "description": "Information about possible values for this input",
+          "$ref": "#/definitions/InputValues"
+        }
+      }
+    },
+    "InputValidation": {
+      "type": "object",
+      "properties": {
+        "dataType": {
+          "enum": [
+            "none",
+            "string",
+            "number",
+            "boolean",
+            "guid",
+            "uri"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.VisualStudio.Services.FormInput.InputDataType"
+          }
+        },
+        "isRequired": {
+          "type": "boolean"
+        },
+        "maxLength": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "maxValue": {
           "type": "string",
-          "format": "InputValues"
+          "format": "decimal"
+        },
+        "minLength": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "minValue": {
+          "type": "string",
+          "format": "decimal"
+        },
+        "pattern": {
+          "type": "string"
+        },
+        "patternMismatchErrorMessage": {
+          "type": "string"
+        }
+      }
+    },
+    "InputValue": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "description": "Any other data about this input",
+          "type": "object",
+          "additionalProperties": {
+            "type": "object"
+          }
+        },
+        "displayValue": {
+          "description": "The text to show for the display of this value",
+          "type": "string"
+        },
+        "value": {
+          "description": "The value to store for this input",
+          "type": "string"
+        }
+      }
+    },
+    "InputValues": {
+      "type": "object",
+      "properties": {
+        "defaultValue": {
+          "description": "The default value to use for this input",
+          "type": "string"
+        },
+        "error": {
+          "description": "Errors encountered while computing dynamic values.",
+          "$ref": "#/definitions/InputValuesError"
+        },
+        "inputId": {
+          "description": "The id of the input",
+          "type": "string"
+        },
+        "isDisabled": {
+          "description": "Should this input be disabled",
+          "type": "boolean"
+        },
+        "isLimitedToPossibleValues": {
+          "description": "Should the value be restricted to one of the values in the PossibleValues (True) or are the values in PossibleValues just a suggestion (False)",
+          "type": "boolean"
+        },
+        "isReadOnly": {
+          "description": "Should this input be made read-only",
+          "type": "boolean"
+        },
+        "possibleValues": {
+          "description": "Possible values that this input can take",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/InputValue"
+          }
+        }
+      }
+    },
+    "InputValuesError": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "description": "The error message.",
+          "type": "string"
         }
       }
     },
@@ -4044,14 +4146,22 @@
       "type": "object",
       "allOf": [
         {
-          "type": "string",
-          "format": "VssJsonCollectionWrapperBase"
+          "$ref": "#/definitions/VssJsonCollectionWrapperBase"
         }
       ],
       "properties": {
         "value": {
           "type": "string",
           "format": "T"
+        }
+      }
+    },
+    "VssJsonCollectionWrapperBase": {
+      "type": "object",
+      "properties": {
+        "count": {
+          "type": "integer",
+          "format": "int32"
         }
       }
     },

@@ -658,6 +658,20 @@
         }
       }
     },
+    "EventActor": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "Required: This is the identity of the user for the specified role.",
+          "type": "string",
+          "format": "uuid"
+        },
+        "role": {
+          "description": "Required: The event specific name of a role.",
+          "type": "string"
+        }
+      }
+    },
     "EventScope": {
       "type": "object",
       "properties": {
@@ -819,6 +833,26 @@
         }
       }
     },
+    "InputValue": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "description": "Any other data about this input",
+          "type": "object",
+          "additionalProperties": {
+            "type": "object"
+          }
+        },
+        "displayValue": {
+          "description": "The text to show for the display of this value",
+          "type": "string"
+        },
+        "value": {
+          "description": "The value to store for this input",
+          "type": "string"
+        }
+      }
+    },
     "InputValues": {
       "type": "object",
       "properties": {
@@ -828,8 +862,7 @@
         },
         "error": {
           "description": "Errors encountered while computing dynamic values.",
-          "type": "string",
-          "format": "InputValuesError"
+          "$ref": "#/definitions/InputValuesError"
         },
         "inputId": {
           "description": "The id of the input",
@@ -851,9 +884,17 @@
           "description": "Possible values that this input can take",
           "type": "array",
           "items": {
-            "type": "string",
-            "format": "InputValue"
+            "$ref": "#/definitions/InputValue"
           }
+        }
+      }
+    },
+    "InputValuesError": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "description": "The error message.",
+          "type": "string"
         }
       }
     },
@@ -1737,14 +1778,22 @@
       "type": "object",
       "allOf": [
         {
-          "type": "string",
-          "format": "VssJsonCollectionWrapperBase"
+          "$ref": "#/definitions/VssJsonCollectionWrapperBase"
         }
       ],
       "properties": {
         "value": {
           "type": "string",
           "format": "T"
+        }
+      }
+    },
+    "VssJsonCollectionWrapperBase": {
+      "type": "object",
+      "properties": {
+        "count": {
+          "type": "integer",
+          "format": "int32"
         }
       }
     },
@@ -1755,8 +1804,7 @@
           "description": "Optional: A list of actors which are additional identities with corresponding roles that are relevant to the event.",
           "type": "array",
           "items": {
-            "type": "string",
-            "format": "EventActor"
+            "$ref": "#/definitions/EventActor"
           }
         },
         "artifactUris": {
