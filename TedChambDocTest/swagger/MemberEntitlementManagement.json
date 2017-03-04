@@ -54,7 +54,7 @@
           "200": {
             "description": "successful operation",
             "schema": {
-              "$ref": "#/definitions/MemberEntitlement"
+              "$ref": "#/definitions/MemberEntitlementsPostResponse"
             }
           }
         }
@@ -415,15 +415,12 @@
     },
     "MemberEntitlementsPatchResponse": {
       "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/MemberEntitlementsResponseBase"
+        }
+      ],
       "properties": {
-        "isSuccess": {
-          "description": "True if all operations were successful",
-          "type": "boolean"
-        },
-        "memberEntitlement": {
-          "description": "Result of the member entitlement after the operations have been applied",
-          "$ref": "#/definitions/MemberEntitlement"
-        },
         "operationResults": {
           "description": "List of results for each operation",
           "type": "array",
@@ -433,17 +430,42 @@
         }
       }
     },
+    "MemberEntitlementsPostResponse": {
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/MemberEntitlementsResponseBase"
+        }
+      ],
+      "properties": {
+        "operationResult": {
+          "description": "Operation result",
+          "$ref": "#/definitions/OperationResult"
+        }
+      }
+    },
+    "MemberEntitlementsResponseBase": {
+      "type": "object",
+      "properties": {
+        "isSuccess": {
+          "description": "True if all operations were successful",
+          "type": "boolean"
+        },
+        "memberEntitlement": {
+          "description": "Result of the member entitlement after the operations have been applied",
+          "$ref": "#/definitions/MemberEntitlement"
+        }
+      }
+    },
     "OperationResult": {
       "type": "object",
       "properties": {
-        "errorCode": {
-          "description": "Error code corresponding to the error that occurred",
-          "type": "integer",
-          "format": "int32"
-        },
-        "errorMessage": {
-          "description": "Details about the error that occurred",
-          "type": "string"
+        "errors": {
+          "description": "List of error codes paired with their corresponding error messages",
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
         },
         "isSuccess": {
           "description": "Success status of the operation",
@@ -452,18 +474,6 @@
         "result": {
           "description": "Result of the MemberEntitlement after the operation",
           "$ref": "#/definitions/MemberEntitlement"
-        },
-        "warningCode": {
-          "description": "Warning code corresponding to the warning(s) that occurred",
-          "type": "integer",
-          "format": "int32"
-        },
-        "warningMessages": {
-          "description": "Detils about the error that occured",
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
         }
       }
     },

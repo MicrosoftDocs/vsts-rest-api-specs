@@ -25,6 +25,9 @@
     },
     {
       "name": "products"
+    },
+    {
+      "name": "registrationRequests"
     }
   ],
   "schemes": [
@@ -459,9 +462,176 @@
           }
         }
       }
+    },
+    "/_apis/governance/Products/{productId}/registrationrequests": {
+      "post": {
+        "tags": [
+          "registrationRequests"
+        ],
+        "summary": "CreateRegistrationRequests",
+        "description": "",
+        "operationId": "createRegistrationRequests",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/RegistrationRequest"
+              }
+            }
+          },
+          {
+            "in": "path",
+            "name": "productId",
+            "description": "",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Registration"
+              }
+            }
+          }
+        }
+      }
     }
   },
   "definitions": {
+    "Component": {
+      "type": "object",
+      "properties": {
+        "comparisonName": {
+          "type": "string"
+        },
+        "displayName": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "landingPage": {
+          "type": "string"
+        },
+        "projectHomepage": {
+          "type": "string"
+        },
+        "type": {
+          "enum": [
+            "unknown",
+            "other",
+            "nuGet",
+            "npm"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.VisualStudio.Services.Governance.WebApi.ComponentType"
+          }
+        },
+        "versions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ComponentVersion"
+          }
+        }
+      }
+    },
+    "ComponentVersion": {
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/ComponentVersionRef"
+        }
+      ],
+      "properties": {
+        "comparisonVersion": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "displayVersion": {
+          "type": "string"
+        },
+        "downloadUrl": {
+          "type": "string"
+        },
+        "license": {
+          "$ref": "#/definitions/License"
+        }
+      }
+    },
+    "ComponentVersionRef": {
+      "type": "object",
+      "properties": {
+        "componentId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        }
+      }
+    },
+    "IdentityRef": {
+      "type": "object",
+      "properties": {
+        "displayName": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "imageUrl": {
+          "type": "string"
+        },
+        "inactive": {
+          "type": "boolean"
+        },
+        "isAadIdentity": {
+          "type": "boolean"
+        },
+        "isContainer": {
+          "type": "boolean"
+        },
+        "profileUrl": {
+          "type": "string"
+        },
+        "uniqueName": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        }
+      }
+    },
+    "License": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        }
+      }
+    },
     "Policy": {
       "type": "object",
       "properties": {
@@ -495,6 +665,39 @@
         }
       }
     },
+    "PolicyEvaluationStatus": {
+      "type": "object",
+      "properties": {
+        "errorRetryable": {
+          "type": "boolean"
+        },
+        "evaluationState": {
+          "enum": [
+            "error",
+            "initialized",
+            "processing",
+            "approved",
+            "rejected",
+            "requiresInformation",
+            "intervention"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.VisualStudio.Services.Governance.WebApi.EvaluationState"
+          }
+        },
+        "evaluationStateReason": {
+          "type": "string"
+        },
+        "modificationDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "policyId": {
+          "type": "string",
+          "format": "uuid"
+        }
+      }
+    },
     "Product": {
       "type": "object",
       "properties": {
@@ -519,6 +722,83 @@
         },
         "url": {
           "type": "string"
+        }
+      }
+    },
+    "Registration": {
+      "type": "object",
+      "properties": {
+        "component": {
+          "$ref": "#/definitions/Component"
+        },
+        "createdDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "evaluationStatuses": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PolicyEvaluationStatus"
+          }
+        },
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "metadata": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "productId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "registrationState": {
+          "enum": [
+            "error",
+            "initialized",
+            "processing",
+            "approved",
+            "rejected",
+            "requiresInformation",
+            "intervention"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.VisualStudio.Services.Governance.WebApi.EvaluationState"
+          }
+        },
+        "requestedBy": {
+          "$ref": "#/definitions/IdentityRef"
+        }
+      }
+    },
+    "RegistrationRequest": {
+      "type": "object",
+      "properties": {
+        "componentName": {
+          "type": "string"
+        },
+        "componentType": {
+          "enum": [
+            "unknown",
+            "other",
+            "nuGet",
+            "npm"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.VisualStudio.Services.Governance.WebApi.ComponentType"
+          }
+        },
+        "componentVersion": {
+          "type": "string"
+        },
+        "metadata": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
         }
       }
     },
