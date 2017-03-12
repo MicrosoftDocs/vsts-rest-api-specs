@@ -18,6 +18,12 @@
   "basePath": "/",
   "tags": [
     {
+      "name": "buildInPolicyEvaluators"
+    },
+    {
+      "name": "evaluationStatuses"
+    },
+    {
       "name": "policies"
     },
     {
@@ -34,6 +40,41 @@
     "https"
   ],
   "paths": {
+    "/_apis/governance/buildinpolicyevaluators": {
+      "post": {
+        "tags": [
+          "buildInPolicyEvaluators"
+        ],
+        "summary": "CreateBuiltInPolicyEvaluator",
+        "description": "",
+        "operationId": "createBuiltInPolicyEvaluator",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/BuiltInPolicyEvaluatorEntry"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/BuiltInPolicyEvaluatorEntry"
+            }
+          }
+        }
+      }
+    },
     "/_apis/governance/policies": {
       "post": {
         "tags": [
@@ -510,9 +551,89 @@
           }
         }
       }
+    },
+    "/_apis/governance/Products/{productId}/Registrations/{registrationId}/evaluationstatuses": {
+      "put": {
+        "tags": [
+          "evaluationStatuses"
+        ],
+        "summary": "UpdateRegistrationEvaluationStatus",
+        "description": "",
+        "operationId": "updateRegistrationEvaluationStatus",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/PolicyEvaluationStatus"
+            }
+          },
+          {
+            "in": "path",
+            "name": "productId",
+            "description": "",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "path",
+            "name": "registrationId",
+            "description": "",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/PolicyEvaluationStatus"
+            }
+          }
+        }
+      }
     }
   },
   "definitions": {
+    "BuiltInPolicyEvaluatorEntry": {
+      "type": "object",
+      "properties": {
+        "configurationPropertyDescriptors": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/EvaluatorMetadataPropertyDescriptor"
+          }
+        },
+        "evaluationRequestUrl": {
+          "type": "string"
+        },
+        "metadataPropertyDescriptors": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/EvaluatorMetadataPropertyDescriptor"
+          }
+        },
+        "policyEvaluatorDescription": {
+          "type": "string"
+        },
+        "policyEvaluatorId": {
+          "type": "string"
+        },
+        "policyEvaluatorName": {
+          "type": "string"
+        }
+      }
+    },
     "ComponentVersionReference": {
       "type": "object",
       "properties": {
@@ -546,6 +667,47 @@
         "versionId": {
           "type": "string",
           "format": "uuid"
+        }
+      }
+    },
+    "EvaluatorMetadataPropertyDescriptor": {
+      "type": "object",
+      "properties": {
+        "description": {
+          "description": "Description of the property",
+          "type": "string"
+        },
+        "maxLength": {
+          "description": "The maximum length for a text box type.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "name": {
+          "description": "Name of the property",
+          "type": "string"
+        },
+        "options": {
+          "description": "The possible values for RadioButtonOptions or DropdownOptions types.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "required": {
+          "description": "True if this property is required",
+          "type": "boolean"
+        },
+        "type": {
+          "description": "The type of value used for this property",
+          "enum": [
+            "checkbox",
+            "textBox",
+            "radioButtonOptions",
+            "dropdownOptions"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.VisualStudio.Services.Governance.WebApi.EvaluatorMetadataPropertyType"
+          }
         }
       }
     },

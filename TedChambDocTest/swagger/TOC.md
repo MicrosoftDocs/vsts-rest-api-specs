@@ -21,6 +21,7 @@
 # [Favorite](favorite.json)
 # [Feature Availability](featureavailability.json)
 # [Feature Management](featuremanagement.json)
+# [File Container](filecontainer.json)
 # [Identity](identities.json)
 # [Identity MRU](identitymru.json)
 # [Import](import.json)
