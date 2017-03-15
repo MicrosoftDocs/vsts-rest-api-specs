@@ -3829,18 +3829,26 @@
   "definitions": {
     "AgentPoolQueue": {
       "type": "object",
-      "allOf": [
-        {
-          "$ref": "#/definitions/ShallowReference"
-        }
-      ],
       "properties": {
         "_links": {
           "$ref": "#/definitions/ReferenceLinks"
         },
+        "id": {
+          "description": "Id of the resource",
+          "type": "integer",
+          "format": "int32"
+        },
+        "name": {
+          "description": "Name of the linked resource (definition name, controller name, etc.)",
+          "type": "string"
+        },
         "pool": {
           "description": "The pool used by this queue.",
           "$ref": "#/definitions/TaskAgentPoolReference"
+        },
+        "url": {
+          "description": "Full http link to the resource",
+          "type": "string"
         }
       }
     },
@@ -4123,7 +4131,7 @@
           "type": "string"
         },
         "controller": {
-          "$ref": "#/definitions/ShallowReference"
+          "$ref": "#/definitions/XamlBuildControllerReference"
         },
         "createdDate": {
           "type": "string",
@@ -4149,7 +4157,7 @@
           "type": "string"
         },
         "server": {
-          "$ref": "#/definitions/ShallowReference"
+          "$ref": "#/definitions/XamlBuildServerReference"
         },
         "status": {
           "enum": [
@@ -4172,6 +4180,24 @@
           "type": "string"
         },
         "url": {
+          "type": "string"
+        }
+      }
+    },
+    "BuildAgentReference": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "Id of the resource",
+          "type": "integer",
+          "format": "int32"
+        },
+        "name": {
+          "description": "Name of the linked resource (definition name, controller name, etc.)",
+          "type": "string"
+        },
+        "url": {
+          "description": "Full http link to the resource",
           "type": "string"
         }
       }
@@ -4251,7 +4277,7 @@
       "type": "object",
       "allOf": [
         {
-          "$ref": "#/definitions/ShallowReference"
+          "$ref": "#/definitions/XamlBuildControllerReference"
         }
       ],
       "properties": {
@@ -4658,7 +4684,7 @@
           "$ref": "#/definitions/BuildSummary"
         },
         "sourceBuild": {
-          "$ref": "#/definitions/ShallowReference"
+          "$ref": "#/definitions/XamlBuildReference"
         }
       }
     },
@@ -5099,11 +5125,11 @@
         "agents": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/ShallowReference"
+            "$ref": "#/definitions/BuildAgentReference"
           }
         },
         "controller": {
-          "$ref": "#/definitions/ShallowReference"
+          "$ref": "#/definitions/XamlBuildControllerReference"
         },
         "id": {
           "type": "integer",
@@ -5175,7 +5201,7 @@
       "type": "object",
       "properties": {
         "build": {
-          "$ref": "#/definitions/ShallowReference"
+          "$ref": "#/definitions/XamlBuildReference"
         },
         "finishTime": {
           "type": "string",
@@ -5343,7 +5369,7 @@
         },
         "definition": {
           "description": "The definition associated with the continuous deployment",
-          "$ref": "#/definitions/ShallowReference"
+          "$ref": "#/definitions/XamlDefinitionReference"
         },
         "gitBranch": {
           "type": "string"
@@ -5441,16 +5467,20 @@
     },
     "DefinitionReference": {
       "type": "object",
-      "allOf": [
-        {
-          "$ref": "#/definitions/ShallowReference"
-        }
-      ],
       "properties": {
         "createdDate": {
           "description": "The date the definition was created",
           "type": "string",
           "format": "date-time"
+        },
+        "id": {
+          "description": "Id of the resource",
+          "type": "integer",
+          "format": "int32"
+        },
+        "name": {
+          "description": "Name of the linked resource (definition name, controller name, etc.)",
+          "type": "string"
         },
         "path": {
           "description": "The path this definitions belongs to",
@@ -5488,6 +5518,10 @@
         },
         "uri": {
           "description": "The Uri of the definition",
+          "type": "string"
+        },
+        "url": {
+          "description": "Full http link to the resource",
           "type": "string"
         }
       }
@@ -5764,29 +5798,6 @@
         }
       }
     },
-    "PropertyValue": {
-      "type": "object",
-      "properties": {
-        "changedBy": {
-          "description": "Guid of identity that changed this property value",
-          "type": "string",
-          "format": "uuid"
-        },
-        "changedDate": {
-          "description": "The date this property value was changed",
-          "type": "string",
-          "format": "date-time"
-        },
-        "propertyName": {
-          "description": "Name in the name value mapping",
-          "type": "string"
-        },
-        "value": {
-          "description": "Value in the name value mapping",
-          "type": "object"
-        }
-      }
-    },
     "PullRequestTrigger": {
       "type": "object",
       "allOf": [
@@ -5821,24 +5832,6 @@
           "additionalProperties": {
             "type": "object"
           }
-        }
-      }
-    },
-    "RequestReference": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "description": "Id of the resource",
-          "type": "integer",
-          "format": "int32"
-        },
-        "requestedFor": {
-          "description": "Name of the requestor",
-          "$ref": "#/definitions/IdentityRef"
-        },
-        "url": {
-          "description": "Full http link to the resource",
-          "type": "string"
         }
       }
     },
@@ -5950,24 +5943,6 @@
           "items": {
             "$ref": "#/definitions/Schedule"
           }
-        }
-      }
-    },
-    "ShallowReference": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "description": "Id of the resource",
-          "type": "integer",
-          "format": "int32"
-        },
-        "name": {
-          "description": "Name of the linked resource (definition name, controller name, etc.)",
-          "type": "string"
-        },
-        "url": {
-          "description": "Full http link to the resource",
-          "type": "string"
         }
       }
     },
@@ -6474,6 +6449,24 @@
         }
       }
     },
+    "XamlBuildControllerReference": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "Id of the resource",
+          "type": "integer",
+          "format": "int32"
+        },
+        "name": {
+          "description": "Name of the linked resource (definition name, controller name, etc.)",
+          "type": "string"
+        },
+        "url": {
+          "description": "Full http link to the resource",
+          "type": "string"
+        }
+      }
+    },
     "XamlBuildDefinition": {
       "type": "object",
       "allOf": [
@@ -6517,7 +6510,7 @@
         },
         "lastBuild": {
           "description": "The last build on this definition",
-          "$ref": "#/definitions/ShallowReference"
+          "$ref": "#/definitions/XamlBuildReference"
         },
         "repository": {
           "description": "The repository",
@@ -6557,6 +6550,60 @@
           "x-ms-enum": {
             "name": "Microsoft.TeamFoundation.Build.WebApi.DefinitionTriggerType"
           }
+        }
+      }
+    },
+    "XamlBuildReference": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "Id of the resource",
+          "type": "integer",
+          "format": "int32"
+        },
+        "name": {
+          "description": "Name of the linked resource (definition name, controller name, etc.)",
+          "type": "string"
+        },
+        "url": {
+          "description": "Full http link to the resource",
+          "type": "string"
+        }
+      }
+    },
+    "XamlBuildServerReference": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "Id of the resource",
+          "type": "integer",
+          "format": "int32"
+        },
+        "name": {
+          "description": "Name of the linked resource (definition name, controller name, etc.)",
+          "type": "string"
+        },
+        "url": {
+          "description": "Full http link to the resource",
+          "type": "string"
+        }
+      }
+    },
+    "XamlDefinitionReference": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "Id of the resource",
+          "type": "integer",
+          "format": "int32"
+        },
+        "name": {
+          "description": "Name of the linked resource (definition name, controller name, etc.)",
+          "type": "string"
+        },
+        "url": {
+          "description": "Full http link to the resource",
+          "type": "string"
         }
       }
     }
