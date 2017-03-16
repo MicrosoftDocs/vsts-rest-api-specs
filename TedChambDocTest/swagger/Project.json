@@ -1,0 +1,265 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Project",
+    "description": "",
+    "termsOfService": "https://go.microsoft.com/fwlink/?LinkId=329770",
+    "contact": {
+      "name": "nugetvss",
+      "email": "nugetvss@microsoft.com"
+    },
+    "license": {
+      "name": "MICROSOFT SOFTWARE LICENSE TERMS",
+      "url": "https://go.microsoft.com/fwlink/?LinkId=329770"
+    },
+    "version": "3.2"
+  },
+  "host": "fabrikam-fiber-inc.visualstudio.com",
+  "basePath": "/",
+  "tags": [
+    {
+      "name": "properties"
+    }
+  ],
+  "schemes": [
+    "https"
+  ],
+  "paths": {
+    "/_apis/projects/{projectId}/properties": {
+      "get": {
+        "tags": [
+          "properties"
+        ],
+        "summary": "GetProjectProperties",
+        "description": "Get project properties.",
+        "operationId": "getProjectProperties",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "projectId",
+            "description": "The project ID.",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "query",
+            "name": "projectPropertyFilters",
+            "description": "A collection of project property filters. Defaults to \"all public properties\" if unspecified.",
+            "required": false,
+            "type": "string",
+            "format": "array (ProjectPropertyFilter)"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/ProjectProperty"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.profile",
+              "vso.project"
+            ]
+          }
+        ]
+      },
+      "patch": {
+        "tags": [
+          "properties"
+        ],
+        "summary": "SetProjectProperties",
+        "description": "Create, update, and delete project properties.",
+        "operationId": "setProjectProperties",
+        "consumes": [
+          "application/json-patch+json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "A JSON Patch document that represents an array of property operations. See RFC 6902 for more details on JSON Patch. The accepted operation verbs are Add and Remove, where Add is used for both creating and updating properties. The path consists of a property namespace and a property name, in the format of \"/namespace/name\".",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/JsonPatchDocument"
+            }
+          },
+          {
+            "in": "path",
+            "name": "projectId",
+            "description": "The project ID.",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.project_write"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "JsonPatchDocument": {
+      "type": "object",
+      "allOf": [
+        {
+          "type": "array",
+          "items": {
+          }
+        }
+      ],
+      "properties": {
+      }
+    },
+    "JsonPatchOperation": {
+      "type": "object",
+      "properties": {
+        "from": {
+          "description": "The path to copy from for the Move/Copy operation.",
+          "type": "string"
+        },
+        "op": {
+          "description": "The patch operation",
+          "enum": [
+            "add",
+            "remove",
+            "replace",
+            "move",
+            "copy",
+            "test"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.VisualStudio.Services.WebApi.Patch.Operation"
+          }
+        },
+        "path": {
+          "description": "The path for the operation",
+          "type": "string"
+        },
+        "value": {
+          "description": "The value for the operation. This is either a primitive or a JToken.",
+          "type": "object"
+        }
+      }
+    },
+    "ProjectProperty": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "namespace": {
+          "enum": [
+            "internal",
+            "readOnly",
+            "public",
+            "all"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.TeamFoundation.Core.WebApi.ProjectPropertyNamespaces"
+          }
+        },
+        "value": {
+          "type": "string"
+        }
+      }
+    },
+    "ProjectPropertyFilter": {
+      "type": "object",
+      "properties": {
+        "nameFilter": {
+          "type": "string"
+        },
+        "namespaces": {
+          "enum": [
+            "internal",
+            "readOnly",
+            "public",
+            "all"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.TeamFoundation.Core.WebApi.ProjectPropertyNamespaces"
+          }
+        }
+      }
+    },
+    "VssJsonCollectionWrapper": {
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/VssJsonCollectionWrapperBase"
+        }
+      ],
+      "properties": {
+        "value": {
+          "type": "string",
+          "format": "T"
+        }
+      }
+    },
+    "VssJsonCollectionWrapperBase": {
+      "type": "object",
+      "properties": {
+        "count": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    }
+  },
+  "parameters": {
+    "api-Version": {
+      "name": "api-version",
+      "in": "query",
+      "description": "Version of the API to use.  This should be set to '3.2-preview' to use this version of the api.",
+      "required": true,
+      "type": "string"
+    }
+  },
+  "securityDefinitions": {
+    "accessToken": {
+      "type": "basic",
+      "description": "Personal access token. Use any value for the user name and the token as the password."
+     },
+     "oauth2": {
+      "type": "oauth2",
+      "flow": "accessCode",
+      "authorizationUrl": "https://app.vssps.visualstudio.com/oauth2/authorize&response_type=Assertion",
+      "tokenUrl": "https://app.vssps.visualstudio.com/oauth2/token?client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer&grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer",
+      "scopes": {
+        "vso.profile": "Grants the ability to read your profile, accounts, collections, projects, teams, and other top-level organizational artifacts.",
+        "vso.project": "Grants the ability to read projects and teams.",
+        "vso.project_write": "Grants the ability to read and update projects and teams."
+      }
+    }
+  },
+  "security": [
+    {
+      "accessToken": []
+    }
+  ],
+  "externalDocs": {
+    "description": "Visual Studio Team Services REST APIs",
+    "url": "https://www.visualstudio.com/docs/integrate/api/overview"
+  }
+}

@@ -51,6 +51,7 @@
 # [Policy](policy.json)
 # [Process](process.json)
 # [Profile](profile.json)
+# [Project](project.json)
 # [Proxy](proxy.json)
 # [Recommendation](recommendation.json)
 # [Release](release.json)
