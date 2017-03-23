@@ -36,6 +36,9 @@
       "name": "subjectlookup"
     },
     {
+      "name": "subjects"
+    },
+    {
       "name": "users"
     }
   ],
@@ -596,6 +599,36 @@
         }
       }
     },
+    "/_apis/graph/subjects/{subjectDescriptor}": {
+      "get": {
+        "tags": [
+          "subjects"
+        ],
+        "summary": "GetSubject",
+        "description": "This endpoint returns a result for any subject that has ever been valid in the system, even if the subject has since been deleted or has had all their memberships deleted. The current validity of the subject is indicated through its disabled property, which is omitted when false.",
+        "operationId": "getSubject",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "subjectDescriptor",
+            "description": "The descriptor of the desired subject.",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/GraphSubject"
+            }
+          }
+        }
+      }
+    },
     "/_apis/graph/users": {
       "post": {
         "tags": [
@@ -708,7 +741,7 @@
           {
             "in": "path",
             "name": "userDescriptor",
-            "description": "",
+            "description": "The descriptor of the desired user.",
             "required": true,
             "type": "string"
           }
@@ -830,6 +863,10 @@
           "description": "Used only for internal back-compat scenarios.",
           "type": "integer",
           "format": "int32"
+        },
+        "principalName": {
+          "description": "This is the PrincipalName of this graph member from the source provider. The source provider may change this field over time and it is not guaranteed to be immutable for the life of the graph member by Vsts.",
+          "type": "string"
         }
       }
     },
@@ -951,10 +988,6 @@
           "description": "The unique identifier from the system of origin. Typically a sid, object id or Guid. Linking and unlinking operations can cause this value to change for a user because the user is not backed by a different provider and has a different unique id in the new provider.",
           "type": "string"
         },
-        "principalName": {
-          "description": "This is the PrincipalName of this graph subject from the source provider. The source provider may change this field over time and it is not guaranteed to be immutable for the life of the graph subject by Vsts.",
-          "type": "string"
-        },
         "subjectKind": {
           "description": "This field identifies the type of the graph subject (ex: Group, Scope, User).",
           "type": "string"
@@ -982,6 +1015,16 @@
         "descriptor": {
           "$ref": "#/definitions/SubjectDescriptor"
         }
+      }
+    },
+    "GraphSystemSubject": {
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/GraphSubject"
+        }
+      ],
+      "properties": {
       }
     },
     "GraphUser": {

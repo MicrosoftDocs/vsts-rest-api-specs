@@ -18,13 +18,16 @@
   "basePath": "/",
   "tags": [
     {
-      "name": "buildInPolicyEvaluators"
+      "name": "builtInPolicyEvaluators"
     },
     {
       "name": "evaluationStatuses"
     },
     {
       "name": "policyEvaluatorReferences"
+    },
+    {
+      "name": "policyEvaluators"
     },
     {
       "name": "products"
@@ -37,10 +40,10 @@
     "https"
   ],
   "paths": {
-    "/_apis/governance/buildinpolicyevaluators": {
+    "/_apis/governance/builtinpolicyevaluators": {
       "post": {
         "tags": [
-          "buildInPolicyEvaluators"
+          "builtInPolicyEvaluators"
         ],
         "summary": "CreateBuiltInPolicyEvaluator",
         "description": "",
@@ -67,6 +70,30 @@
             "description": "successful operation",
             "schema": {
               "$ref": "#/definitions/BuiltInPolicyEvaluatorEntry"
+            }
+          }
+        }
+      }
+    },
+    "/_apis/governance/policyevaluators": {
+      "get": {
+        "tags": [
+          "policyEvaluators"
+        ],
+        "summary": "GetPolicyEvaluatorsInfo",
+        "description": "",
+        "operationId": "getPolicyEvaluatorsInfo",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/PolicyEvaluatorInfo"
+              }
             }
           }
         }
@@ -425,29 +452,13 @@
   "definitions": {
     "BuiltInPolicyEvaluatorEntry": {
       "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/PolicyEvaluatorInfo"
+        }
+      ],
       "properties": {
-        "configurationPropertyDescriptors": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/EvaluatorMetadataPropertyDescriptor"
-          }
-        },
         "evaluationRequestUrl": {
-          "type": "string"
-        },
-        "metadataPropertyDescriptors": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/EvaluatorMetadataPropertyDescriptor"
-          }
-        },
-        "policyEvaluatorDescription": {
-          "type": "string"
-        },
-        "policyEvaluatorId": {
-          "type": "string"
-        },
-        "policyEvaluatorName": {
           "type": "string"
         }
       }
@@ -589,6 +600,26 @@
           "format": "date-time"
         },
         "policyEvaluatorId": {
+          "type": "string"
+        }
+      }
+    },
+    "PolicyEvaluatorInfo": {
+      "type": "object",
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "metadataPropertyDescriptors": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/EvaluatorMetadataPropertyDescriptor"
+          }
+        },
+        "name": {
           "type": "string"
         }
       }

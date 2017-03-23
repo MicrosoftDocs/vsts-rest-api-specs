@@ -770,6 +770,45 @@
         }
       }
     },
+    "NotificationCommonViewData": {
+      "type": "object",
+      "properties": {
+        "adminPageUrl": {
+          "description": "The Url to the admin page",
+          "type": "string"
+        },
+        "defaultServiceInstanceType": {
+          "description": "Default service instance type, currently it is Tfs, it used if there is no publisher passed",
+          "type": "string"
+        },
+        "eventsPublishers": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/NotificationEventPublisher"
+          }
+        },
+        "hasManagePermission": {
+          "description": "Indicates whether the current user generally has permissions to manage (create, delete, etc) subscriptions in the view",
+          "type": "boolean"
+        },
+        "isAdminMode": {
+          "description": "Is the subscription view being presented for the purpose of administration (not for managing personal subscriptions)",
+          "type": "boolean"
+        },
+        "isSubscriberEmailPending": {
+          "description": "Indicates whether the user's preferred email address is pending confirmation.",
+          "type": "boolean"
+        },
+        "subscriber": {
+          "description": "Subscriber to use when creating new subscriptions in the view",
+          "$ref": "#/definitions/IdentityRef"
+        },
+        "subscriberEmail": {
+          "description": "Email address that notifications for this user will be sent to by default.",
+          "type": "string"
+        }
+      }
+    },
     "NotificationEventField": {
       "type": "object",
       "properties": {
@@ -1105,6 +1144,7 @@
           "enum": [
             "jailedByNotificationsVolume",
             "pendingDeletion",
+            "disabledInactiveIdentity",
             "disabledMessageQueueNotSupported",
             "disabledMissingIdentity",
             "disabledInvalidRoleExpression",
@@ -1165,42 +1205,12 @@
     "NotificationSubscriptionsViewData": {
       "type": "object",
       "properties": {
-        "adminPageUrl": {
-          "description": "The Url to the admin page",
-          "type": "string"
-        },
-        "defaultServiceInstanceType": {
-          "description": "Default service instance type, currently it is Tfs, it used if there is no publisher passed",
-          "type": "string"
-        },
-        "eventsPublishers": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/NotificationEventPublisher"
-          }
-        },
         "eventTypes": {
           "description": "Supported  event types info, with their fields and field types",
           "type": "object",
           "additionalProperties": {
             "$ref": "#/definitions/NotificationEventType"
           }
-        },
-        "hasManagePermission": {
-          "description": "Indicates whether the current user generally has permissions to manage (create, delete, etc) subscriptions in the view",
-          "type": "boolean"
-        },
-        "hasViewPermission": {
-          "description": "Indicates whether the current user generally has permissions to see subscriptions in the view",
-          "type": "boolean"
-        },
-        "isAdminMode": {
-          "description": "Is the subscription view being presented for the purpose of administration (not for managing personal subscriptions)",
-          "type": "boolean"
-        },
-        "isSubscriberEmailPending": {
-          "description": "Indicates whether the user's preferred email address is pending confirmation.",
-          "type": "boolean"
         },
         "mapCategoryIdToCategoryName": {
           "type": "object",
@@ -1231,14 +1241,6 @@
           "additionalProperties": {
             "$ref": "#/definitions/SubscriptionScope"
           }
-        },
-        "subscriber": {
-          "description": "Subscriber to use when creating new subscriptions in the view",
-          "$ref": "#/definitions/IdentityRef"
-        },
-        "subscriberEmail": {
-          "description": "Email address that notifications for this user will be sent to by default.",
-          "type": "string"
         },
         "subscriptions": {
           "type": "array",
@@ -1308,6 +1310,7 @@
           "enum": [
             "jailedByNotificationsVolume",
             "pendingDeletion",
+            "disabledInactiveIdentity",
             "disabledMessageQueueNotSupported",
             "disabledMissingIdentity",
             "disabledInvalidRoleExpression",
@@ -1489,7 +1492,6 @@
             "includeDeletedSubscriptions",
             "includeFilterDetails",
             "alwaysReturnBasicInformation",
-            "includeRemoteContributedSubscriptions",
             "includeAllSubscriptions"
           ],
           "x-ms-enum": {

@@ -1472,6 +1472,50 @@
       }
     },
     "/_apis/gallery/publishers/{publisherName}/extensions/{extensionName}/qna/{questionId}": {
+      "delete": {
+        "tags": [
+          "qna"
+        ],
+        "summary": "DeleteQuestion",
+        "description": "Deletes an existing question and all its associated responses for an extension. (soft delete)",
+        "operationId": "deleteQuestion",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "publisherName",
+            "description": "Name of the publisher who published the extension.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "extensionName",
+            "description": "Name of the extension.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "questionId",
+            "description": "Identifier of the question to be deleted for the extension.",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.gallery_publish"
+            ]
+          }
+        ]
+      },
       "patch": {
         "tags": [
           "qna"
@@ -1593,6 +1637,58 @@
       }
     },
     "/_apis/gallery/publishers/{publisherName}/extensions/{extensionName}/qna/{questionId}/responses/{responseId}": {
+      "delete": {
+        "tags": [
+          "qna"
+        ],
+        "summary": "DeleteResponse",
+        "description": "Deletes a response for an extension. (soft delete)",
+        "operationId": "deleteResponse",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "publisherName",
+            "description": "Name of the publisher who published the extension.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "extensionName",
+            "description": "Name of the extension.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "questionId",
+            "description": "Identifies the question whose response is to be deleted.",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "in": "path",
+            "name": "responseId",
+            "description": "Identifies the response to be deleted.",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.gallery_publish"
+            ]
+          }
+        ]
+      },
       "patch": {
         "tags": [
           "qna"
@@ -1759,6 +1855,14 @@
             "required": false,
             "type": "integer",
             "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "aggregate",
+            "description": "",
+            "required": false,
+            "type": "string",
+            "format": "ExtensionStatsAggregateType"
           }
         ],
         "responses": {
@@ -1773,6 +1877,70 @@
           {
             "oauth2": [
               "vso.gallery"
+            ]
+          }
+        ]
+      }
+    },
+    "/_apis/gallery/publishers/{pubName}/extensions/{extName}/qna/{questionId}/concern": {
+      "post": {
+        "tags": [
+          "qna"
+        ],
+        "summary": "ReportQuestion",
+        "description": "Flags a concern with an existing question for an extension.",
+        "operationId": "reportQuestion",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "User reported concern with a question for the extension.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Concern"
+            }
+          },
+          {
+            "in": "path",
+            "name": "pubName",
+            "description": "Name of the publisher who published the extension.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "extName",
+            "description": "Name of the extension.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "questionId",
+            "description": "Identifier of the question to be updated for the extension.",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/Concern"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.gallery_publish"
             ]
           }
         ]
@@ -2100,6 +2268,145 @@
             "description": "successful operation",
             "schema": {
               "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "/_apis/public/gallery/{product}/categories/{categoryId}": {
+      "get": {
+        "tags": [
+          "categories"
+        ],
+        "summary": "GetCategoryTree",
+        "description": "",
+        "operationId": "getCategoryTree",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "product",
+            "description": "",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "categoryId",
+            "description": "",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "lcid",
+            "description": "",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "source",
+            "description": "",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "productVersion",
+            "description": "",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "skus",
+            "description": "",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "subSkus",
+            "description": "",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ProductCategory"
+            }
+          }
+        }
+      }
+    },
+    "/_apis/public/gallery/{product}/categories/root": {
+      "get": {
+        "tags": [
+          "categories"
+        ],
+        "summary": "GetRootCategories",
+        "description": "",
+        "operationId": "getRootCategories",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "product",
+            "description": "",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "lcid",
+            "description": "",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "source",
+            "description": "",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "productVersion",
+            "description": "",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "skus",
+            "description": "",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "subSkus",
+            "description": "",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ProductCategoriesResult"
             }
           }
         }
@@ -2666,6 +2973,59 @@
           }
         }
       }
+    },
+    "/_apis/public/gallery/publishers/{pubName}/extensions/{extName}/reviews/summary": {
+      "get": {
+        "tags": [
+          "reviews"
+        ],
+        "summary": "GetReviewsSummary",
+        "description": "Returns a summary of the reviews",
+        "operationId": "getReviewsSummary",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "pubName",
+            "description": "Name of the publisher who published the extension",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "extName",
+            "description": "Name of the extension",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "beforeDate",
+            "description": "Use if you want to fetch summary of reviews older than the specified date, defaults to null",
+            "required": false,
+            "type": "string",
+            "format": "date-time"
+          },
+          {
+            "in": "query",
+            "name": "afterDate",
+            "description": "Use if you want to fetch summary of reviews newer than the specified date, defaults to null",
+            "required": false,
+            "type": "string",
+            "format": "date-time"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ReviewSummary"
+            }
+          }
+        }
+      }
     }
   },
   "definitions": {
@@ -2846,6 +3206,27 @@
         "title": {
           "description": "Actual title to be shown on the UI",
           "type": "string"
+        }
+      }
+    },
+    "Concern": {
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/QnAItem"
+        }
+      ],
+      "properties": {
+        "category": {
+          "description": "Category of the concern",
+          "enum": [
+            "general",
+            "abusive",
+            "spam"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.VisualStudio.Services.Gallery.WebApi.ConcernCategory"
+          }
         }
       }
     },
@@ -3259,6 +3640,7 @@
             "includeLatestVersionOnly",
             "useFallbackAssetUri",
             "includeMetadata",
+            "includeMinimalPayloadForVsIde",
             "allAttributes"
           ],
           "x-ms-enum": {
@@ -3483,6 +3865,41 @@
         },
         "name": {
           "description": "The name of the metadata item",
+          "type": "string"
+        }
+      }
+    },
+    "ProductCategoriesResult": {
+      "type": "object",
+      "properties": {
+        "categories": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ProductCategory"
+          }
+        }
+      }
+    },
+    "ProductCategory": {
+      "type": "object",
+      "properties": {
+        "children": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ProductCategory"
+          }
+        },
+        "hasChildren": {
+          "description": "Indicator whether this is a leaf or there are children under this category",
+          "type": "boolean"
+        },
+        "id": {
+          "description": "Individual Guid of the Category",
+          "type": "string",
+          "format": "uuid"
+        },
+        "title": {
+          "description": "Category Title in the requested language",
           "type": "string"
         }
       }
@@ -3942,6 +4359,83 @@
         },
         "userId": {
           "description": "Id of the user who submitted the review",
+          "type": "string",
+          "format": "uuid"
+        }
+      }
+    },
+    "ReviewEventProperties": {
+      "type": "object",
+      "properties": {
+        "eventOperation": {
+          "description": "Operation performed on Event - Create\\Update",
+          "enum": [
+            "create",
+            "update",
+            "delete"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.VisualStudio.Services.Gallery.WebApi.ReviewEventOperation"
+          }
+        },
+        "isAdminReply": {
+          "description": "Flag to see if reply is admin reply",
+          "type": "boolean"
+        },
+        "isIgnored": {
+          "description": "Flag to record if the reviwe is ignored",
+          "type": "boolean"
+        },
+        "rating": {
+          "description": "Rating at the time of event",
+          "type": "integer",
+          "format": "int32"
+        },
+        "replyDate": {
+          "description": "Reply update date",
+          "type": "string",
+          "format": "date-time"
+        },
+        "replyText": {
+          "description": "Publisher reply text or admin reply text",
+          "type": "string"
+        },
+        "replyUserId": {
+          "description": "User who responded to the review",
+          "type": "string",
+          "format": "uuid"
+        },
+        "resourceType": {
+          "description": "Review Event Type - Review",
+          "enum": [
+            "review",
+            "publisherReply",
+            "adminReply"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.VisualStudio.Services.Gallery.WebApi.ReviewResourceType"
+          }
+        },
+        "reviewDate": {
+          "description": "Review update date",
+          "type": "string",
+          "format": "date-time"
+        },
+        "reviewId": {
+          "description": "ReviewId of the review  on which the operation is performed",
+          "type": "integer",
+          "format": "int64"
+        },
+        "reviewText": {
+          "description": "Text in Review Text",
+          "type": "string"
+        },
+        "userDisplayName": {
+          "description": "User display name at the time of review",
+          "type": "string"
+        },
+        "userId": {
+          "description": "User who gave review",
           "type": "string",
           "format": "uuid"
         }
