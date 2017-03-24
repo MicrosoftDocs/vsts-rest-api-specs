@@ -57,6 +57,9 @@
       "name": "inputvaluesquery"
     },
     {
+      "name": "issues"
+    },
+    {
       "name": "logs"
     },
     {
@@ -2117,6 +2120,47 @@
         }
       }
     },
+    "/{project}/_apis/release/issues/{buildId}": {
+      "get": {
+        "tags": [
+          "issues"
+        ],
+        "summary": "GetIssues",
+        "description": "",
+        "operationId": "getIssues",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "buildId",
+            "description": "",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/ReleaseIssue"
+              }
+            }
+          }
+        }
+      }
+    },
     "/{project}/_apis/release/metrics": {
       "get": {
         "tags": [
@@ -4137,6 +4181,36 @@
           "items": {
             "$ref": "#/definitions/ArtifactVersion"
           }
+        }
+      }
+    },
+    "AutoTriggerIssue": {
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/ReleaseIssue"
+        }
+      ],
+      "properties": {
+        "buildId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "issueMessage": {
+          "type": "string"
+        },
+        "issueSource": {
+          "enum": [
+            "none",
+            "user",
+            "system"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.VisualStudio.Services.ReleaseManagement.WebApi.IssueSource"
+          }
+        },
+        "releaseDefinitionReference": {
+          "$ref": "#/definitions/ReleaseDefinitionShallowReference"
         }
       }
     },
@@ -6670,6 +6744,23 @@
           ],
           "x-ms-enum": {
             "name": "Microsoft.VisualStudio.Services.ReleaseManagement.WebApi.EnvironmentStatus"
+          }
+        }
+      }
+    },
+    "ReleaseIssue": {
+      "type": "object",
+      "properties": {
+        "issue": {
+          "$ref": "#/definitions/Issue"
+        },
+        "issueType": {
+          "enum": [
+            "none",
+            "autoTrigger"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.VisualStudio.Services.ReleaseManagement.WebApi.ReleaseIssueType"
           }
         }
       }
