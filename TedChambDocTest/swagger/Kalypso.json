@@ -46,6 +46,9 @@
     },
     {
       "name": "queryResults"
+    },
+    {
+      "name": "summary"
     }
   ],
   "schemes": [
@@ -776,9 +779,9 @@
         "tags": [
           "queryResultMonitors"
         ],
-        "summary": "GetQueryResultMonitor",
+        "summary": "GetMonitorRunData",
         "description": "",
-        "operationId": "getQueryResultMonitor",
+        "operationId": "getMonitorRunData",
         "produces": [
           "application/json"
         ],
@@ -798,13 +801,21 @@
             "required": true,
             "type": "string",
             "format": "uuid"
+          },
+          {
+            "in": "query",
+            "name": "runId",
+            "description": "",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
           }
         ],
         "responses": {
           "200": {
             "description": "successful operation",
             "schema": {
-              "$ref": "#/definitions/QueryResultMonitorProperties"
+              "$ref": "#/definitions/MonitorRunData"
             }
           }
         }
@@ -849,6 +860,45 @@
         "responses": {
           "200": {
             "description": "successful operation"
+          }
+        }
+      }
+    },
+    "/_apis/health/Containers/{containerId}/summary": {
+      "get": {
+        "tags": [
+          "summary"
+        ],
+        "summary": "GetSummary",
+        "description": "",
+        "operationId": "getSummary",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "containerId",
+            "description": "",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "query",
+            "name": "lastMonitorRuns",
+            "description": "",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ContainerSummary"
+            }
           }
         }
       }
@@ -1272,6 +1322,17 @@
         }
       }
     },
+    "ContainerSummary": {
+      "type": "object",
+      "properties": {
+        "monitorSummary": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/MonitorSummary"
+          }
+        }
+      }
+    },
     "EmailAddress": {
       "type": "object",
       "properties": {
@@ -1286,6 +1347,10 @@
           "x-ms-enum": {
             "name": "Microsoft.VisualStudio.Services.Kalypso.WebApi.EmailAddressType"
           }
+        },
+        "vsid": {
+          "type": "string",
+          "format": "uuid"
         }
       }
     },
@@ -1562,28 +1627,29 @@
         }
       }
     },
-    "MonitorData": {
+    "Log": {
       "type": "object",
       "properties": {
-        "finishTime": {
-          "type": "string",
-          "format": "date-time"
-        },
         "message": {
           "type": "string"
         },
-        "monitorResult": {
-          "enum": [
-            "succeeded",
-            "failed"
-          ],
-          "x-ms-enum": {
-            "name": "Microsoft.VisualStudio.Services.Kalypso.WebApi.MonitorResult"
-          }
+        "runId": {
+          "type": "string",
+          "format": "uuid"
         },
-        "startTime": {
+        "timestamp": {
           "type": "string",
           "format": "date-time"
+        },
+        "verbosity": {
+          "enum": [
+            "info",
+            "warning",
+            "error"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.VisualStudio.Services.Kalypso.WebApi.LoggingVerbosity"
+          }
         }
       }
     },
@@ -1632,15 +1698,140 @@
           "type": "string",
           "format": "uuid"
         },
-        "monitorData": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/MonitorData"
-          }
-        },
         "tsgLink": {
           "description": "TSG Link.",
           "type": "string"
+        }
+      }
+    },
+    "MonitorRunData": {
+      "type": "object",
+      "properties": {
+        "finishTime": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "jobResult": {
+          "enum": [
+            "succeeded",
+            "partiallySucceeded",
+            "failed",
+            "stopped",
+            "blocked"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.VisualStudio.Services.Kalypso.WebApi.JobResult"
+          }
+        },
+        "logs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Log"
+          }
+        },
+        "monitorId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "monitorRunResult": {
+          "enum": [
+            "succeeded",
+            "signalled",
+            "platformError",
+            "userError"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.VisualStudio.Services.Kalypso.WebApi.MonitorRunResult"
+          }
+        },
+        "runId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "startTime": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "stepData": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/MonitorRunStepData"
+          }
+        }
+      }
+    },
+    "MonitorRunStepData": {
+      "type": "object",
+      "properties": {
+        "finishTime": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "message": {
+          "type": "string"
+        },
+        "monitorStepResult": {
+          "enum": [
+            "passed",
+            "passedNonZeroResults",
+            "platformError",
+            "userError"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.VisualStudio.Services.Kalypso.WebApi.MonitorStepResult"
+          }
+        },
+        "ordinal": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "queryContainerId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "queryPath": {
+          "type": "string"
+        },
+        "querySnapshot": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "runId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "stage": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "startTime": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "stepId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "tokenBindings": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TokenBinding"
+          }
+        }
+      }
+    },
+    "MonitorSummary": {
+      "type": "object",
+      "properties": {
+        "monitorId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "monitorRuns": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/MonitorRunData"
+          }
         }
       }
     },
