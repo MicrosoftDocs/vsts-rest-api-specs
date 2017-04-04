@@ -51,6 +51,9 @@
       "name": "options"
     },
     {
+      "name": "properties"
+    },
+    {
       "name": "report"
     },
     {
@@ -2001,6 +2004,114 @@
         ]
       }
     },
+    "/{project}/_apis/build/builds/{buildId}/properties": {
+      "get": {
+        "tags": [
+          "properties"
+        ],
+        "summary": "GetBuildProperties",
+        "description": "Gets properties for a build.",
+        "operationId": "getBuildProperties",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "buildId",
+            "description": "The build id.",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "filter",
+            "description": "Filter to specific properties. Defaults to all properties.",
+            "required": false,
+            "type": "string",
+            "format": "array (string)"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/PropertiesCollection"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.build"
+            ]
+          }
+        ]
+      },
+      "patch": {
+        "tags": [
+          "properties"
+        ],
+        "summary": "UpdateBuildProperties",
+        "description": "Updates properties for a build.",
+        "operationId": "updateBuildProperties",
+        "consumes": [
+          "application/json-patch+json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/JsonPatchDocument"
+            }
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "buildId",
+            "description": "The build id.",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/PropertiesCollection"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.build_execute"
+            ]
+          }
+        ]
+      }
+    },
     "/{project}/_apis/build/builds/{buildId}/report": {
       "get": {
         "tags": [
@@ -2960,6 +3071,107 @@
             ]
           }
         ]
+      }
+    },
+    "/{project}/_apis/build/definitions/{definitionId}/properties": {
+      "get": {
+        "tags": [
+          "properties"
+        ],
+        "summary": "GetDefinitionProperties",
+        "description": "Gets properties for a definition.",
+        "operationId": "getDefinitionProperties",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "definitionId",
+            "description": "The definition id.",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "filter",
+            "description": "Filter to specific properties. Defaults to all properties.",
+            "required": false,
+            "type": "string",
+            "format": "array (string)"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/PropertiesCollection"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.build"
+            ]
+          }
+        ]
+      },
+      "patch": {
+        "tags": [
+          "properties"
+        ],
+        "summary": "UpdateDefinitionProperties",
+        "description": "Updates properties for a definition.",
+        "operationId": "updateDefinitionProperties",
+        "consumes": [
+          "application/json-patch+json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/JsonPatchDocument"
+            }
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "definitionId",
+            "description": "The definition id.",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/PropertiesCollection"
+            }
+          }
+        }
       }
     },
     "/{project}/_apis/build/definitions/{definitionId}/revisions": {
@@ -5738,6 +5950,49 @@
           "x-ms-enum": {
             "name": "Microsoft.TeamFoundation.Build.WebApi.IssueType"
           }
+        }
+      }
+    },
+    "JsonPatchDocument": {
+      "type": "object",
+      "allOf": [
+        {
+          "type": "array",
+          "items": {
+          }
+        }
+      ],
+      "properties": {
+      }
+    },
+    "JsonPatchOperation": {
+      "type": "object",
+      "properties": {
+        "from": {
+          "description": "The path to copy from for the Move/Copy operation.",
+          "type": "string"
+        },
+        "op": {
+          "description": "The patch operation",
+          "enum": [
+            "add",
+            "remove",
+            "replace",
+            "move",
+            "copy",
+            "test"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.VisualStudio.Services.WebApi.Patch.Operation"
+          }
+        },
+        "path": {
+          "description": "The path for the operation",
+          "type": "string"
+        },
+        "value": {
+          "description": "The value for the operation. This is either a primitive or a JToken.",
+          "type": "object"
         }
       }
     },

@@ -33,6 +33,9 @@
       "name": "inputValuesQuery"
     },
     {
+      "name": "insightsQueryResults"
+    },
+    {
       "name": "monitors"
     },
     {
@@ -494,6 +497,64 @@
               "type": "array",
               "items": {
                 "$ref": "#/definitions/MonitorProperties"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/_apis/health/Containers/{containerId}/Monitors/{monitorId}/insightsqueryresults": {
+      "get": {
+        "tags": [
+          "insightsQueryResults"
+        ],
+        "summary": "GetQueryResultData",
+        "description": "",
+        "operationId": "getQueryResultData",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "containerId",
+            "description": "",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "path",
+            "name": "monitorId",
+            "description": "",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "query",
+            "name": "runId",
+            "description": "",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "query",
+            "name": "stepId",
+            "description": "",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/VisualizationQueryResults"
               }
             }
           }
@@ -1322,6 +1383,28 @@
         }
       }
     },
+    "ColumnMetadata": {
+      "type": "object",
+      "properties": {
+        "dataType": {
+          "description": "The data type of the column",
+          "type": "string"
+        },
+        "displayName": {
+          "description": "The display name of the column",
+          "type": "string"
+        }
+      }
+    },
+    "ColumnValue": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "description": "The value of the column",
+          "type": "string"
+        }
+      }
+    },
     "ContainerSummary": {
       "type": "object",
       "properties": {
@@ -1738,7 +1821,8 @@
             "succeeded",
             "signalled",
             "platformError",
-            "userError"
+            "userError",
+            "signalledWithError"
           ],
           "x-ms-enum": {
             "name": "Microsoft.VisualStudio.Services.Kalypso.WebApi.MonitorRunResult"
@@ -2083,6 +2167,25 @@
         }
       }
     },
+    "QueryResults": {
+      "type": "object",
+      "properties": {
+        "columns": {
+          "description": "The schema of the result data",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ColumnMetadata"
+          }
+        },
+        "columnValues": {
+          "description": "The column-store result data All of values of each column is stored as a list",
+          "type": "array",
+          "items": {
+            "type": "array"
+          }
+        }
+      }
+    },
     "ScheduledTrigger": {
       "type": "object",
       "allOf": [
@@ -2148,6 +2251,36 @@
           "items": {
             "$ref": "#/definitions/QueryReference"
           }
+        }
+      }
+    },
+    "VisualizationQueryResults": {
+      "type": "object",
+      "properties": {
+        "containerId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "monitorId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "query": {
+          "$ref": "#/definitions/QueryReference"
+        },
+        "queryText": {
+          "type": "string"
+        },
+        "results": {
+          "$ref": "#/definitions/QueryResults"
+        },
+        "runId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "stepId": {
+          "type": "integer",
+          "format": "int32"
         }
       }
     },

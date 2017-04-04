@@ -18,10 +18,16 @@
   "basePath": "/",
   "tags": [
     {
+      "name": "cachepolicies"
+    },
+    {
       "name": "descriptors"
     },
     {
       "name": "groups"
+    },
+    {
+      "name": "members"
     },
     {
       "name": "memberships"
@@ -46,6 +52,27 @@
     "https"
   ],
   "paths": {
+    "/_apis/graph/cachepolicies": {
+      "get": {
+        "tags": [
+          "cachepolicies"
+        ],
+        "summary": "GetCachePolicies",
+        "description": "",
+        "operationId": "getCachePolicies",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/GraphCachePolicies"
+            }
+          }
+        }
+      }
+    },
     "/_apis/graph/descriptors/{id}": {
       "get": {
         "tags": [
@@ -90,7 +117,7 @@
           "groups"
         ],
         "summary": "CreateGroup",
-        "description": "The body of the request must be a derived type of GraphGroupCreationContext which contains a group reference. A group reference must either:  1. uniquely identify a group that exists in the graph of the instance's identity provider , such as Azure Active Directory (AAD) or Microsoft account (MSA), for a hosted VS Team Services account, or Active Directory (AD), for a TFS server. Use one of these supported creation contexts: - originId(e.g.the AAD object ID) [GraphGroupOriginIdCreationContext] - principalName(e.g.the AAD group principal name or the Microsoft account name) [GraphGroupPrincipalNameCreationContext]  2. Uniquely identify a group that exists in a hosted VS Team Services account and you want to restore that group. Use GraphGroupVstsCreationContext and fill only one of the following peroperties: - id (to reference a specific VS Team Services group in the restore case only) - descriptors (to reference a specific VS Team Services group in the restore case only)  3. Specify properties that should be used to create a new Team Foundation group. Use the GraphGroupVstsCreationContext  - displayName [required] - description - optional test to help understand the pupose of the group - id - optionally specify the internal Guid - descriptor - optionally specify the sid at creation time",
+        "description": "The body of the request must be a derived type of GraphGroupCreationContext which contains a group reference. A group reference must either:  1. uniquely identify a group that exists in the graph of the instance's identity provider , such as Azure Active Directory (AAD) or Microsoft account (MSA), for a hosted VS Team Services account, or Active Directory (AD), for a TFS server. Use one of these supported creation contexts: - originId(e.g.the AAD object ID) [GraphGroupOriginIdCreationContext] - principalName(e.g.the AAD group principal name or the Microsoft account name) [GraphGroupPrincipalNameCreationContext]  2. Uniquely identify a group that exists in a hosted VS Team Services account and you want to restore that group. Use GraphGroupVstsCreationContext and fill only one of the following properties: - id (to reference a specific VS Team Services group in the restore case only) - descriptors (to reference a specific VS Team Services group in the restore case only)  3. Specify properties that should be used to create a new Team Foundation group. Use the GraphGroupVstsCreationContext  - displayName [required] - description - optional test to help understand the purpose of the group - id - optionally specify the internal Guid - descriptor - optionally specify the sid at creation time",
         "operationId": "createGroup",
         "consumes": [
           "application/json"
@@ -267,6 +294,67 @@
             "description": "successful operation",
             "schema": {
               "$ref": "#/definitions/GraphGroup"
+            }
+          }
+        }
+      }
+    },
+    "/_apis/graph/members/{memberCuid}": {
+      "get": {
+        "tags": [
+          "members"
+        ],
+        "summary": "GetMemberByCuid",
+        "description": "This endpoint returns a result for any member that has ever been valid in the system, even if the member has since been deleted or has had all their memberships deleted. The current validity of the member is indicated through its disabled property, which is omitted when false.",
+        "operationId": "getMemberByCuid",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "memberCuid",
+            "description": "The Consistently Unique IDentifier of the desired member.",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/GraphMember"
+            }
+          }
+        }
+      }
+    },
+    "/_apis/graph/members/{memberDescriptor}": {
+      "get": {
+        "tags": [
+          "members"
+        ],
+        "summary": "GetMemberByDescriptor",
+        "description": "This endpoint returns a result for any member that has ever been valid in the system, even if the member has since been deleted or has had all their memberships deleted. The current validity of the member is indicated through its disabled property, which is omitted when false.",
+        "operationId": "getMemberByDescriptor",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "memberDescriptor",
+            "description": "The descriptor of the desired member.",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/GraphMember"
             }
           }
         }
@@ -700,7 +788,7 @@
           {
             "in": "query",
             "name": "continuationToken",
-            "description": "An opaque data blog that allows the next page of data to resume immedately after where the previous page ended. The only reliable way to know if there is more data left is the presence of a continuation token.",
+            "description": "An opaque data blog that allows the next page of data to resume immediately after where the previous page ended. The only reliable way to know if there is more data left is the presence of a continuation token.",
             "required": false,
             "type": "string"
           }
@@ -772,6 +860,16 @@
     }
   },
   "definitions": {
+    "GraphCachePolicies": {
+      "type": "object",
+      "properties": {
+        "cacheSize": {
+          "description": "Size of the cache",
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
     "GraphGroup": {
       "type": "object",
       "allOf": [
@@ -805,7 +903,7 @@
       ],
       "properties": {
         "mailAddress": {
-          "description": "This should be the mail address or the group in the source AD or AAD provider. Vsts will comunicate with the source provider to fill all other fields on creation.",
+          "description": "This should be the mail address or the group in the source AD or AAD provider. Vsts will communicate with the source provider to fill all other fields on creation.",
           "type": "string"
         }
       }
@@ -819,7 +917,7 @@
       ],
       "properties": {
         "originId": {
-          "description": "This should be the object id or sid of the group from the source AD or AAD provider. Vsts will comunicate with the source provider to fill all other fields on creation.",
+          "description": "This should be the object id or sid of the group from the source AD or AAD provider. Vsts will communicate with the source provider to fill all other fields on creation.",
           "type": "string"
         }
       }
@@ -936,15 +1034,15 @@
       "type": "object",
       "properties": {
         "adminGroupDescription": {
-          "description": "Set this field to override the default decription of this scope's admin group.",
+          "description": "Set this field to override the default description of this scope's admin group.",
           "type": "string"
         },
         "adminGroupName": {
-          "description": "All scopes have an Adminstrator Group that controls access to the contents of the scope. Set this field to use a non-default group name for that administrators group.",
+          "description": "All scopes have an Administrator Group that controls access to the contents of the scope. Set this field to use a non-default group name for that administrators group.",
           "type": "string"
         },
         "creatorId": {
-          "description": "Set this optional field if this scope is created on behalf of a user other than the user making the request. This should be the Id of the user that is not the requestor.",
+          "description": "Set this optional field if this scope is created on behalf of a user other than the user making the request. This should be the Id of the user that is not the requester.",
           "type": "string",
           "format": "uuid"
         },
@@ -974,7 +1072,7 @@
       "type": "object",
       "properties": {
         "_links": {
-          "description": "This field contains zero or more iteresting links about the the graph subject. These links may be invoked to obtain additional relationships or more detailed information about this graph subject.",
+          "description": "This field contains zero or more interesting links about the graph subject. These links may be invoked to obtain additional relationships or more detailed information about this graph subject.",
           "$ref": "#/definitions/ReferenceLinks"
         },
         "descriptor": {
@@ -990,7 +1088,7 @@
           "type": "string"
         },
         "id": {
-          "description": "The unique identifier within the subject's scope. This identifier will not change for the lifetime of the subject. If you must perisist a reference to a graph subject within your system, only persist this field. All other fields can change over time.",
+          "description": "The unique identifier within the subject's scope. This identifier will not change for the lifetime of the subject. If you must persist a reference to a graph subject within your system, only persist this field. All other fields can change over time.",
           "type": "string",
           "format": "uuid"
         },
