@@ -30,6 +30,9 @@
       "name": "deploymentgroups"
     },
     {
+      "name": "deploymentmachinejobrequests"
+    },
+    {
       "name": "endpoint"
     },
     {
@@ -2840,7 +2843,112 @@
         }
       }
     },
+    "/{project}/_apis/distributedtask/deploymentgroups/{deploymentGroupId}/deploymentmachinejobrequests": {
+      "get": {
+        "tags": [
+          "deploymentmachinejobrequests"
+        ],
+        "summary": "GetAgentRequestsForDeploymentMachine",
+        "description": "",
+        "operationId": "getAgentRequestsForDeploymentMachine",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "deploymentGroupId",
+            "description": "",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "machineId",
+            "description": "",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "completedRequestCount",
+            "description": "",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/TaskAgentJobRequest"
+              }
+            }
+          }
+        }
+      }
+    },
     "/{project}/_apis/distributedtask/deploymentgroups/{deploymentGroupId}/machines": {
+      "post": {
+        "tags": [
+          "machines"
+        ],
+        "summary": "AddDeploymentMachine",
+        "description": "",
+        "operationId": "addDeploymentMachine",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/DeploymentMachine"
+            }
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "deploymentGroupId",
+            "description": "",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/DeploymentMachine"
+            }
+          }
+        }
+      },
       "get": {
         "tags": [
           "machines"
@@ -2874,6 +2982,21 @@
             "required": false,
             "type": "string",
             "format": "array (string)"
+          },
+          {
+            "in": "query",
+            "name": "name",
+            "description": "",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "expand",
+            "description": "",
+            "required": false,
+            "type": "string",
+            "format": "DeploymentMachineExpands"
           }
         ],
         "responses": {
@@ -2938,6 +3061,210 @@
               "items": {
                 "$ref": "#/definitions/DeploymentMachine"
               }
+            }
+          }
+        }
+      }
+    },
+    "/{project}/_apis/distributedtask/deploymentgroups/{deploymentGroupId}/machines/{machineId}": {
+      "delete": {
+        "tags": [
+          "machines"
+        ],
+        "summary": "DeleteDeploymentMachine",
+        "description": "",
+        "operationId": "deleteDeploymentMachine",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "deploymentGroupId",
+            "description": "",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "path",
+            "name": "machineId",
+            "description": "",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "machines"
+        ],
+        "summary": "GetDeploymentMachine",
+        "description": "",
+        "operationId": "getDeploymentMachine",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "deploymentGroupId",
+            "description": "",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "path",
+            "name": "machineId",
+            "description": "",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "expand",
+            "description": "",
+            "required": false,
+            "type": "string",
+            "format": "DeploymentMachineExpands"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/DeploymentMachine"
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "machines"
+        ],
+        "summary": "ReplaceDeploymentMachine",
+        "description": "",
+        "operationId": "replaceDeploymentMachine",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/DeploymentMachine"
+            }
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "deploymentGroupId",
+            "description": "",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "path",
+            "name": "machineId",
+            "description": "",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/DeploymentMachine"
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "machines"
+        ],
+        "summary": "UpdateDeploymentMachine",
+        "description": "",
+        "operationId": "updateDeploymentMachine",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/DeploymentMachine"
+            }
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "deploymentGroupId",
+            "description": "",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "path",
+            "name": "machineId",
+            "description": "",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/DeploymentMachine"
             }
           }
         }
@@ -4959,7 +5286,7 @@
       "type": "object",
       "properties": {
         "agent": {
-          "$ref": "#/definitions/TaskAgentReference"
+          "$ref": "#/definitions/TaskAgent"
         },
         "tags": {
           "type": "array",
