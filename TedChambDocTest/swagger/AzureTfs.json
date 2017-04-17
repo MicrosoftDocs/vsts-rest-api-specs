@@ -93,6 +93,289 @@
     }
   },
   "definitions": {
+    "Authorization": {
+      "type": "object",
+      "properties": {
+        "parameters": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "scheme": {
+          "type": "string"
+        }
+      }
+    },
+    "AzureAppServiceDeploymentTarget": {
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/AzureDeploymentTarget"
+        }
+      ],
+      "properties": {
+        "appServicePlan": {
+          "type": "string"
+        },
+        "slotSwapConfiguration": {
+          "$ref": "#/definitions/SlotSwapConfiguration"
+        }
+      }
+    },
+    "AzureContainerRegistry": {
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/ContainerRegistry"
+        }
+      ],
+      "properties": {
+        "registryName": {
+          "type": "string"
+        },
+        "resourceGroup": {
+          "type": "string"
+        },
+        "subscriptionId": {
+          "type": "string"
+        },
+        "subscriptionName": {
+          "type": "string"
+        },
+        "tenantId": {
+          "type": "string"
+        }
+      }
+    },
+    "AzureDeploymentTarget": {
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/DeploymentTarget"
+        }
+      ],
+      "properties": {
+        "location": {
+          "type": "string"
+        },
+        "resourceGroupName": {
+          "type": "string"
+        },
+        "resourceIdentifier": {
+          "type": "string"
+        },
+        "subscriptionId": {
+          "type": "string"
+        },
+        "subscriptionName": {
+          "type": "string"
+        },
+        "tenantId": {
+          "type": "string"
+        },
+        "type": {
+          "enum": [
+            "undefined",
+            "windowsAppService",
+            "linuxAppService",
+            "virtualMachineScaleSets"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.VisualStudio.Services.PortalExtension.WebApi.Contracts.AzureResourceType"
+          }
+        }
+      }
+    },
+    "AzureStorageAccount": {
+      "type": "object",
+      "properties": {
+        "authorizationInfo": {
+          "$ref": "#/definitions/Authorization"
+        },
+        "name": {
+          "type": "string"
+        },
+        "resourceGroup": {
+          "type": "string"
+        }
+      }
+    },
+    "AzureVirtualMachineImageBuildConfiguration": {
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/BuildConfiguration"
+        }
+      ],
+      "properties": {
+        "baseImageUrn": {
+          "type": "string"
+        },
+        "deploymentScript": {
+          "type": "string"
+        },
+        "imageStore": {
+          "$ref": "#/definitions/AzureStorageAccount"
+        }
+      }
+    },
+    "BuildConfiguration": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "enum": [
+            "undefined",
+            "aspNetWap",
+            "aspNetCore",
+            "nodeJSWithGulp",
+            "nodeJSWithGrunt",
+            "azureVirtualMachineImage",
+            "dockerImage",
+            "dotNetContainerServices"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.VisualStudio.Services.PortalExtension.WebApi.Contracts.ApplicationType"
+          }
+        },
+        "workingDirectory": {
+          "type": "string"
+        }
+      }
+    },
+    "BuildDefinitionReference": {
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/DefinitionReference"
+        }
+      ],
+      "properties": {
+      }
+    },
+    "BuildReference": {
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/DefinitionReference"
+        }
+      ],
+      "properties": {
+      }
+    },
+    "CiConfiguration": {
+      "type": "object",
+      "properties": {
+        "buildDefinition": {
+          "$ref": "#/definitions/BuildDefinitionReference"
+        },
+        "project": {
+          "$ref": "#/definitions/ProjectReference"
+        },
+        "queuedBuild": {
+          "$ref": "#/definitions/BuildReference"
+        },
+        "releaseDefinition": {
+          "$ref": "#/definitions/ReleaseDefinitionReference"
+        },
+        "result": {
+          "$ref": "#/definitions/CiConfigurationResult"
+        }
+      }
+    },
+    "CiConfigurationResult": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "enum": [
+            "notSet",
+            "queued",
+            "inProgress",
+            "cancelled",
+            "succeeded",
+            "failed"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.VisualStudio.Services.PortalExtension.WebApi.Contracts.CiConfigurationStatus"
+          }
+        },
+        "statusMessage": {
+          "type": "string"
+        }
+      }
+    },
+    "CodeRepository": {
+      "type": "object",
+      "properties": {
+        "authorizationInfo": {
+          "$ref": "#/definitions/Authorization"
+        },
+        "defaultBranch": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "properties": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "type": {
+          "enum": [
+            "undefined",
+            "tfsGit",
+            "tfvc",
+            "gitHub",
+            "localGit"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.VisualStudio.Services.PortalExtension.WebApi.Contracts.CodeRepositoryType"
+          }
+        },
+        "url": {
+          "type": "string"
+        }
+      }
+    },
+    "CodeRepositoryDeploymentSource": {
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/DeploymentSource"
+        }
+      ],
+      "properties": {
+        "repository": {
+          "$ref": "#/definitions/CodeRepository"
+        }
+      }
+    },
+    "ContainerRegistry": {
+      "type": "object",
+      "properties": {
+        "authorizationInfo": {
+          "$ref": "#/definitions/Authorization"
+        },
+        "registryUrl": {
+          "type": "string"
+        },
+        "type": {
+          "enum": [
+            "undefined",
+            "private",
+            "azureContainerRegistry"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.VisualStudio.Services.PortalExtension.WebApi.Contracts.ContainerRegistryType"
+          }
+        }
+      }
+    },
     "ContinuousDeploymentConfiguration": {
       "type": "object",
       "properties": {
@@ -135,6 +418,111 @@
           "items": {
             "$ref": "#/definitions/Property"
           }
+        }
+      }
+    },
+    "DefinitionReference": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "name": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        }
+      }
+    },
+    "DeploymentSource": {
+      "type": "object",
+      "properties": {
+        "buildConfiguration": {
+          "$ref": "#/definitions/BuildConfiguration"
+        },
+        "type": {
+          "enum": [
+            "undefined",
+            "codeRepository",
+            "vstsBuild"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.VisualStudio.Services.PortalExtension.WebApi.Contracts.DeploymentSourceType"
+          }
+        }
+      }
+    },
+    "DeploymentTarget": {
+      "type": "object",
+      "properties": {
+        "authorizationInfo": {
+          "$ref": "#/definitions/Authorization"
+        },
+        "createIfNotFound": {
+          "type": "boolean"
+        },
+        "environmentType": {
+          "enum": [
+            "undefined",
+            "production",
+            "test"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.VisualStudio.Services.PortalExtension.WebApi.Contracts.TargetEnvironmentType"
+          }
+        },
+        "friendlyName": {
+          "type": "string"
+        },
+        "provider": {
+          "enum": [
+            "undefined",
+            "azure",
+            "serviceFabric"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.VisualStudio.Services.PortalExtension.WebApi.Contracts.DeploymentTargetProvider"
+          }
+        }
+      }
+    },
+    "DockerImageBuildConfiguration": {
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/BuildConfiguration"
+        }
+      ],
+      "properties": {
+        "image": {
+          "type": "string"
+        },
+        "registry": {
+          "$ref": "#/definitions/ContainerRegistry"
+        },
+        "startupCommand": {
+          "type": "string"
+        }
+      }
+    },
+    "DotNetContainerServicesBuildConfiguration": {
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/BuildConfiguration"
+        }
+      ],
+      "properties": {
+        "additionalComposeFilePath": {
+          "type": "string"
+        },
+        "composeFilePath": {
+          "type": "string"
+        },
+        "registry": {
+          "$ref": "#/definitions/ContainerRegistry"
         }
       }
     },
@@ -204,6 +592,21 @@
         }
       }
     },
+    "ProjectReference": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "name": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        }
+      }
+    },
     "Property": {
       "type": "object",
       "properties": {
@@ -215,6 +618,26 @@
         }
       }
     },
+    "ProvisioningConfiguration": {
+      "type": "object",
+      "properties": {
+        "ciConfiguration": {
+          "$ref": "#/definitions/CiConfiguration"
+        },
+        "id": {
+          "type": "string"
+        },
+        "source": {
+          "$ref": "#/definitions/DeploymentSource"
+        },
+        "targets": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/DeploymentTarget"
+          }
+        }
+      }
+    },
     "ReferenceLinks": {
       "type": "object",
       "properties": {
@@ -223,6 +646,26 @@
           "type": "object",
           "additionalProperties": {
             "type": "object"
+          }
+        }
+      }
+    },
+    "ReleaseDefinitionReference": {
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/DefinitionReference"
+        }
+      ],
+      "properties": {
+        "source": {
+          "enum": [
+            "undefined",
+            "ibiza",
+            "azureCli"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.VisualStudio.Services.PortalExtension.WebApi.Contracts.ConfigurationSource"
           }
         }
       }
@@ -240,6 +683,14 @@
           }
         },
         "resourceName": {
+          "type": "string"
+        }
+      }
+    },
+    "SlotSwapConfiguration": {
+      "type": "object",
+      "properties": {
+        "slotName": {
           "type": "string"
         }
       }
@@ -274,11 +725,25 @@
             "vstsGit",
             "gitHub",
             "vstsTfvc",
-            "externalGit"
+            "externalGit",
+            "localGit"
           ],
           "x-ms-enum": {
             "name": "Microsoft.VisualStudio.Services.PortalExtension.WebApi.Contracts.SourceRepositoryType"
           }
+        }
+      }
+    },
+    "TfsBuildDeploymentSource": {
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/DeploymentSource"
+        }
+      ],
+      "properties": {
+        "buildDefinitionId": {
+          "type": "string"
         }
       }
     }

@@ -27,6 +27,9 @@
       "name": "groups"
     },
     {
+      "name": "memberlookup"
+    },
+    {
       "name": "members"
     },
     {
@@ -164,34 +167,34 @@
         "tags": [
           "groups"
         ],
-        "summary": "GetGroups",
-        "description": "",
-        "operationId": "getGroups",
+        "summary": "FindGroupsBySearchFactor",
+        "description": "This endpoint returns a result for any group that has ever been valid in the system, even if the group has since been deleted or has had all their memberships deleted. The current validity of the group is indicated through its disabled property, which is omitted when false.",
+        "operationId": "findGroupsBySearchFactor",
         "produces": [
           "application/json"
         ],
         "parameters": [
           {
             "in": "query",
-            "name": "scopeDescriptor",
-            "description": "",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "in": "query",
-            "name": "subjectTypes",
-            "description": "",
-            "required": false,
+            "name": "searchFactor",
+            "description": "The search factor for what it is that you are searching for",
+            "required": true,
             "type": "string",
-            "format": "array (string)"
+            "format": "GraphMemberSearchFactor"
           },
           {
             "in": "query",
-            "name": "continuationToken",
-            "description": "",
+            "name": "searchValue",
+            "description": "The value of the search factor",
             "required": false,
             "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "forceDomainQualification",
+            "description": "In cases that you are searching for principle name, this parameter will specify that system should force the principle name being domain qualified",
+            "required": false,
+            "type": "boolean"
           }
         ],
         "responses": {
@@ -235,7 +238,7 @@
           "groups"
         ],
         "summary": "GetGroup",
-        "description": "This endpoint returns a result for any descriptor that has ever been valid in the system, even if the group has since been deleted or has had all their memberships deleted. The current validity of the group is indicated through its disabled property, which is omitted when false.",
+        "description": "This endpoint returns a result for any group that has ever been valid in the system, even if the group has since been deleted or has had all their memberships deleted. The current validity of the group is indicated through its disabled property, which is omitted when false.",
         "operationId": "getGroup",
         "produces": [
           "application/json"
@@ -294,6 +297,92 @@
             "description": "successful operation",
             "schema": {
               "$ref": "#/definitions/GraphGroup"
+            }
+          }
+        }
+      }
+    },
+    "/_apis/graph/memberlookup": {
+      "post": {
+        "tags": [
+          "memberlookup"
+        ],
+        "summary": "LookupMembers",
+        "description": "",
+        "operationId": "lookupMembers",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/GraphSubjectLookup"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "$ref": "#/definitions/GraphMember"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/_apis/graph/members": {
+      "get": {
+        "tags": [
+          "members"
+        ],
+        "summary": "FindMembersBySearchFactor",
+        "description": "This endpoint returns a result for any member that has ever been valid in the system, even if the member has since been deleted or has had all their memberships deleted. The current validity of the member is indicated through its disabled property, which is omitted when false.",
+        "operationId": "findMembersBySearchFactor",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "searchFactor",
+            "description": "The search factor for what it is that you are searching for",
+            "required": true,
+            "type": "string",
+            "format": "GraphMemberSearchFactor"
+          },
+          {
+            "in": "query",
+            "name": "searchValue",
+            "description": "The value of the search factor",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "forceDomainQualification",
+            "description": "In cases that you are searching for principle name, this parameter will specify that system should force the principle name being domain qualified",
+            "required": false,
+            "type": "boolean"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/GraphMember"
+              }
             }
           }
         }
@@ -685,8 +774,8 @@
           "200": {
             "description": "successful operation",
             "schema": {
-              "type": "array",
-              "items": {
+              "type": "object",
+              "additionalProperties": {
                 "$ref": "#/definitions/GraphSubject"
               }
             }
@@ -770,27 +859,34 @@
         "tags": [
           "users"
         ],
-        "summary": "GetUsers",
-        "description": "Gets all users in the current scope (usually organization or account). The optional parameters are used to filter down the returned results. May truncate exceptionally large result sets. Returned results are in no guaranteed order.",
-        "operationId": "getUsers",
+        "summary": "FindUsersBySearchFactor",
+        "description": "This endpoint returns a result for any user that has ever been valid in the system, even if the user has since been deleted or has had all their memberships deleted. The current validity of the user is indicated through its disabled property, which is omitted when false.",
+        "operationId": "findUsersBySearchFactor",
         "produces": [
           "application/json"
         ],
         "parameters": [
           {
             "in": "query",
-            "name": "subjectTypes",
-            "description": "A comma separated list of user subject subtypes to reduce the retrieved results, e.g. Microsoft.IdentityModel.Claims.ClaimsIdentity>",
-            "required": false,
+            "name": "searchFactor",
+            "description": "The search factor for what it is that you are searching for",
+            "required": true,
             "type": "string",
-            "format": "array (string)"
+            "format": "GraphMemberSearchFactor"
           },
           {
             "in": "query",
-            "name": "continuationToken",
-            "description": "An opaque data blog that allows the next page of data to resume immediately after where the previous page ended. The only reliable way to know if there is more data left is the presence of a continuation token.",
+            "name": "searchValue",
+            "description": "The value of the search factor",
             "required": false,
             "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "forceDomainQualification",
+            "description": "In cases that you are searching for principle name, this parameter will specify that system should force the principle name being domain qualified",
+            "required": false,
+            "type": "boolean"
           }
         ],
         "responses": {

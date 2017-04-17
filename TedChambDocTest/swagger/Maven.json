@@ -18,24 +18,21 @@
   "basePath": "/",
   "tags": [
     {
-      "name": "json"
-    },
-    {
-      "name": "pom"
+      "name": "metadata"
     }
   ],
   "schemes": [
     "https"
   ],
   "paths": {
-    "/_apis/packaging/feeds/{feed}/maven/json/{groupId}/{artifactId}/{version}/{fileName}": {
+    "/_apis/packaging/feeds/{feed}/maven/{groupId}/{artifactId}/{version}/{fileName}": {
       "get": {
         "tags": [
-          "json"
+          "metadata"
         ],
-        "summary": "PackageInfo",
+        "summary": "GetPackageMetadata",
         "description": "",
-        "operationId": "packageInfo",
+        "operationId": "getPackageMetadata",
         "produces": [
           "application/json"
         ],
@@ -74,6 +71,13 @@
             "description": "",
             "required": true,
             "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "includePom",
+            "description": "",
+            "required": false,
+            "type": "boolean"
           }
         ],
         "responses": {
@@ -92,87 +96,44 @@
           }
         ]
       }
-    },
-    "/_apis/packaging/feeds/{feed}/maven/pom/{groupId}/{artifactId}/{version}": {
-      "get": {
-        "tags": [
-          "pom"
-        ],
-        "summary": "PomInfo",
-        "description": "",
-        "operationId": "pomInfo",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "feed",
-            "description": "",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "in": "path",
-            "name": "groupId",
-            "description": "",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "in": "path",
-            "name": "artifactId",
-            "description": "",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "in": "path",
-            "name": "version",
-            "description": "",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "$ref": "#/definitions/MavenPomMetadata"
-            }
-          }
-        },
-        "security": [
-          {
-            "oauth2": [
-              "vso.packaging"
-            ]
-          }
-        ]
-      }
     }
   },
   "definitions": {
     "MavenPackage": {
       "type": "object",
       "properties": {
-        "_info": {
-          "type": "string"
-        },
-        "_links": {
-          "type": "object",
-          "additionalProperties": {
-            "type": "string"
-          }
-        },
         "artifactId": {
           "type": "string"
+        },
+        "artifactIndex": {
+          "$ref": "#/definitions/ReferenceLink"
+        },
+        "artifactMetadata": {
+          "$ref": "#/definitions/ReferenceLink"
+        },
+        "files": {
+          "$ref": "#/definitions/ReferenceLinks"
         },
         "groupId": {
           "type": "string"
         },
+        "pom": {
+          "$ref": "#/definitions/MavenPomMetadata"
+        },
+        "requestedFile": {
+          "$ref": "#/definitions/ReferenceLink"
+        },
+        "snapshotMetadata": {
+          "$ref": "#/definitions/ReferenceLink"
+        },
         "version": {
           "type": "string"
+        },
+        "versions": {
+          "$ref": "#/definitions/ReferenceLinks"
+        },
+        "versionsIndex": {
+          "$ref": "#/definitions/ReferenceLink"
         }
       }
     },
@@ -477,6 +438,26 @@
         },
         "url": {
           "type": "string"
+        }
+      }
+    },
+    "ReferenceLink": {
+      "type": "object",
+      "properties": {
+        "href": {
+          "type": "string"
+        }
+      }
+    },
+    "ReferenceLinks": {
+      "type": "object",
+      "properties": {
+        "links": {
+          "description": "The readonly view of the links.  Because Reference links are readonly, we only want to expose them as read only.",
+          "type": "object",
+          "additionalProperties": {
+            "type": "object"
+          }
         }
       }
     }

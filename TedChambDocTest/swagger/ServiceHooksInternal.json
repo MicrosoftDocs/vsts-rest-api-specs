@@ -1,7 +1,7 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "ServiceHooks",
+    "title": "ServiceHooksInternal",
     "description": "",
     "termsOfService": "https://go.microsoft.com/fwlink/?LinkId=329770",
     "contact": {
@@ -24,10 +24,7 @@
       "name": "consumers"
     },
     {
-      "name": "eventTypes"
-    },
-    {
-      "name": "externalEvents"
+      "name": "events"
     },
     {
       "name": "inputValuesQuery"
@@ -37,15 +34,6 @@
     },
     {
       "name": "notificationsQuery"
-    },
-    {
-      "name": "publisherInputValuesQuery"
-    },
-    {
-      "name": "publishers"
-    },
-    {
-      "name": "publishersQuery"
     },
     {
       "name": "subscriptions"
@@ -61,7 +49,7 @@
     "https"
   ],
   "paths": {
-    "/_apis/hooks/consumers": {
+    "/_apis/hookssvc/consumers": {
       "get": {
         "tags": [
           "consumers"
@@ -71,15 +59,6 @@
         "operationId": "getConsumers",
         "produces": [
           "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "query",
-            "name": "publisherId",
-            "description": "",
-            "required": false,
-            "type": "string"
-          }
         ],
         "responses": {
           "200": {
@@ -94,7 +73,7 @@
         }
       }
     },
-    "/_apis/hooks/consumers/{consumerId}": {
+    "/_apis/hookssvc/consumers/{consumerId}": {
       "get": {
         "tags": [
           "consumers"
@@ -112,13 +91,6 @@
             "description": "",
             "required": true,
             "type": "string"
-          },
-          {
-            "in": "query",
-            "name": "publisherId",
-            "description": "",
-            "required": false,
-            "type": "string"
           }
         ],
         "responses": {
@@ -131,7 +103,7 @@
         }
       }
     },
-    "/_apis/hooks/consumers/{consumerId}/actions": {
+    "/_apis/hookssvc/consumers/{consumerId}/actions": {
       "get": {
         "tags": [
           "actions"
@@ -149,13 +121,6 @@
             "description": "",
             "required": true,
             "type": "string"
-          },
-          {
-            "in": "query",
-            "name": "publisherId",
-            "description": "",
-            "required": false,
-            "type": "string"
           }
         ],
         "responses": {
@@ -171,7 +136,7 @@
         }
       }
     },
-    "/_apis/hooks/consumers/{consumerId}/actions/{consumerActionId}": {
+    "/_apis/hookssvc/consumers/{consumerId}/actions/{consumerActionId}": {
       "get": {
         "tags": [
           "actions"
@@ -196,13 +161,6 @@
             "description": "",
             "required": true,
             "type": "string"
-          },
-          {
-            "in": "query",
-            "name": "publisherId",
-            "description": "",
-            "required": false,
-            "type": "string"
           }
         ],
         "responses": {
@@ -215,14 +173,43 @@
         }
       }
     },
-    "/_apis/hooks/inputvaluesquery": {
+    "/_apis/hookssvc/events": {
+      "post": {
+        "tags": [
+          "events"
+        ],
+        "summary": "CreateEvents",
+        "description": "",
+        "operationId": "createEvents",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/PublishEventsRequestData"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        }
+      }
+    },
+    "/_apis/hookssvc/inputvaluesquery": {
       "post": {
         "tags": [
           "inputValuesQuery"
         ],
-        "summary": "PostInputValuesQuery",
+        "summary": "QueryInputValues",
         "description": "",
-        "operationId": "postInputValuesQuery",
+        "operationId": "queryInputValues",
         "consumes": [
           "application/json"
         ],
@@ -250,14 +237,14 @@
         }
       }
     },
-    "/_apis/hooks/notificationsquery": {
+    "/_apis/hookssvc/notificationsquery": {
       "post": {
         "tags": [
           "notificationsQuery"
         ],
-        "summary": "PostNotificationsQuery",
+        "summary": "QueryNotifications",
         "description": "",
-        "operationId": "postNotificationsQuery",
+        "operationId": "queryNotifications",
         "consumes": [
           "application/json"
         ],
@@ -285,154 +272,14 @@
         }
       }
     },
-    "/_apis/hooks/publishers": {
-      "get": {
-        "tags": [
-          "publishers"
-        ],
-        "summary": "GetPublishers",
-        "description": "",
-        "operationId": "getPublishers",
-        "produces": [
-          "application/json"
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/Publisher"
-              }
-            }
-          }
-        }
-      }
-    },
-    "/_apis/hooks/publishers/{publisherId}": {
-      "get": {
-        "tags": [
-          "publishers"
-        ],
-        "summary": "GetPublisher",
-        "description": "",
-        "operationId": "getPublisher",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "publisherId",
-            "description": "",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "$ref": "#/definitions/Publisher"
-            }
-          }
-        }
-      }
-    },
-    "/_apis/hooks/publishers/{publisherId}/eventtypes": {
-      "get": {
-        "tags": [
-          "eventTypes"
-        ],
-        "summary": "GetEventTypes",
-        "description": "",
-        "operationId": "getEventTypes",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "publisherId",
-            "description": "",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "in": "query",
-            "name": "scope",
-            "description": "",
-            "required": false,
-            "type": "string",
-            "format": "EventScope"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/EventTypeDescriptor"
-              }
-            }
-          }
-        }
-      }
-    },
-    "/_apis/hooks/publishers/{publisherId}/eventtypes/{eventTypeId}": {
-      "get": {
-        "tags": [
-          "eventTypes"
-        ],
-        "summary": "GetEventType",
-        "description": "",
-        "operationId": "getEventType",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "publisherId",
-            "description": "",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "in": "path",
-            "name": "eventTypeId",
-            "description": "",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "in": "query",
-            "name": "scope",
-            "description": "",
-            "required": false,
-            "type": "string",
-            "format": "EventScope"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "$ref": "#/definitions/EventTypeDescriptor"
-            }
-          }
-        }
-      }
-    },
-    "/_apis/hooks/publishers/{publisherId}/inputValuesQuery": {
+    "/_apis/hookssvc/subscriptions": {
       "post": {
         "tags": [
-          "publisherInputValuesQuery"
+          "subscriptions"
         ],
-        "summary": "PostInputValuesQuery",
+        "summary": "CreateSubscription",
         "description": "",
-        "operationId": "postInputValuesQuery",
+        "operationId": "createSubscription",
         "consumes": [
           "application/json"
         ],
@@ -446,49 +293,7 @@
             "description": "",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/InputValuesQuery"
-            }
-          },
-          {
-            "in": "path",
-            "name": "publisherId",
-            "description": "",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "$ref": "#/definitions/InputValuesQuery"
-            }
-          }
-        }
-      }
-    },
-    "/_apis/hooks/publishersquery": {
-      "post": {
-        "tags": [
-          "publishersQuery"
-        ],
-        "summary": "PostPublishersQuery",
-        "description": "",
-        "operationId": "postPublishersQuery",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "body",
-            "name": "body",
-            "description": "",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/PublishersQuery"
+              "$ref": "#/definitions/Subscription"
             }
           }
         ],
@@ -496,20 +301,18 @@
           "200": {
             "description": "successful operation",
             "schema": {
-              "$ref": "#/definitions/PublishersQuery"
+              "$ref": "#/definitions/Subscription"
             }
           }
         }
-      }
-    },
-    "/_apis/hooks/subscriptions": {
+      },
       "get": {
         "tags": [
           "subscriptions"
         ],
-        "summary": "GetSubscriptions",
+        "summary": "ListSubscriptions",
         "description": "",
-        "operationId": "getSubscriptions",
+        "operationId": "listSubscriptions",
         "produces": [
           "application/json"
         ],
@@ -541,14 +344,6 @@
             "description": "",
             "required": false,
             "type": "string"
-          },
-          {
-            "in": "query",
-            "name": "scope",
-            "description": "",
-            "required": false,
-            "type": "string",
-            "format": "EventScope"
           }
         ],
         "responses": {
@@ -563,13 +358,13 @@
           }
         }
       },
-      "post": {
+      "put": {
         "tags": [
           "subscriptions"
         ],
-        "summary": "PostSubscription",
+        "summary": "ReplaceSubscription",
         "description": "",
-        "operationId": "postSubscription",
+        "operationId": "replaceSubscription",
         "consumes": [
           "application/json"
         ],
@@ -597,7 +392,7 @@
         }
       }
     },
-    "/_apis/hooks/subscriptions/{subscriptionId}": {
+    "/_apis/hookssvc/subscriptions/{subscriptionId}": {
       "delete": {
         "tags": [
           "subscriptions"
@@ -605,9 +400,6 @@
         "summary": "DeleteSubscription",
         "description": "",
         "operationId": "deleteSubscription",
-        "produces": [
-          "application/json"
-        ],
         "parameters": [
           {
             "in": "path",
@@ -620,11 +412,7 @@
         ],
         "responses": {
           "200": {
-            "description": "successful operation",
-            "schema": {
-              "type": "string",
-              "format": "HttpResponseMessage"
-            }
+            "description": "successful operation"
           }
         }
       },
@@ -656,50 +444,9 @@
             }
           }
         }
-      },
-      "put": {
-        "tags": [
-          "subscriptions"
-        ],
-        "summary": "PutSubscription",
-        "description": "",
-        "operationId": "putSubscription",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "body",
-            "name": "body",
-            "description": "",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/Subscription"
-            }
-          },
-          {
-            "in": "path",
-            "name": "subscriptionId",
-            "description": "",
-            "required": true,
-            "type": "string",
-            "format": "uuid"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "$ref": "#/definitions/Subscription"
-            }
-          }
-        }
       }
     },
-    "/_apis/hooks/subscriptions/{subscriptionId}/notifications": {
+    "/_apis/hookssvc/subscriptions/{subscriptionId}/notifications": {
       "get": {
         "tags": [
           "notifications"
@@ -757,7 +504,7 @@
         }
       }
     },
-    "/_apis/hooks/subscriptions/{subscriptionId}/notifications/{notificationId}": {
+    "/_apis/hookssvc/subscriptions/{subscriptionId}/notifications/{notificationId}": {
       "get": {
         "tags": [
           "notifications"
@@ -796,14 +543,14 @@
         }
       }
     },
-    "/_apis/hooks/subscriptionsquery": {
+    "/_apis/hookssvc/subscriptionsquery": {
       "post": {
         "tags": [
           "subscriptionsQuery"
         ],
-        "summary": "PostSubscriptionsQuery",
+        "summary": "QuerySubscriptions",
         "description": "",
-        "operationId": "postSubscriptionsQuery",
+        "operationId": "querySubscriptions",
         "consumes": [
           "application/json"
         ],
@@ -831,14 +578,14 @@
         }
       }
     },
-    "/_apis/hooks/testnotifications": {
+    "/_apis/hookssvc/testnotifications": {
       "post": {
         "tags": [
           "testNotifications"
         ],
-        "summary": "PostTestNotification",
+        "summary": "CreateTestNotification",
         "description": "",
-        "operationId": "postTestNotification",
+        "operationId": "createTestNotification",
         "consumes": [
           "application/json"
         ],
@@ -854,13 +601,6 @@
             "schema": {
               "$ref": "#/definitions/Notification"
             }
-          },
-          {
-            "in": "query",
-            "name": "useRealData",
-            "description": "",
-            "required": false,
-            "type": "boolean"
           }
         ],
         "responses": {
@@ -868,46 +608,6 @@
             "description": "successful operation",
             "schema": {
               "$ref": "#/definitions/Notification"
-            }
-          }
-        }
-      }
-    },
-    "/_apis/public/hooks/externalevents": {
-      "post": {
-        "tags": [
-          "externalEvents"
-        ],
-        "summary": "PostExternalEvent",
-        "description": "",
-        "operationId": "postExternalEvent",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "query",
-            "name": "publisherId",
-            "description": "",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "in": "query",
-            "name": "channelId",
-            "description": "",
-            "required": false,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/PublisherEvent"
-              }
             }
           }
         }
@@ -1092,59 +792,6 @@
         "sessionToken": {
           "description": "Gets or sets the Session Token that can be used in further interactions",
           "$ref": "#/definitions/SessionToken"
-        }
-      }
-    },
-    "EventTypeDescriptor": {
-      "type": "object",
-      "properties": {
-        "description": {
-          "description": "A localized description of the event type",
-          "type": "string"
-        },
-        "id": {
-          "description": "A unique id for the event type",
-          "type": "string"
-        },
-        "inputDescriptors": {
-          "description": "Event-specific inputs",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/InputDescriptor"
-          }
-        },
-        "name": {
-          "description": "A localized friendly name for the event type",
-          "type": "string"
-        },
-        "publisherId": {
-          "description": "A unique id for the publisher of this event type",
-          "type": "string"
-        },
-        "scope": {
-          "description": "Gets or sets the scope for this event.",
-          "enum": [
-            "all",
-            "project",
-            "team",
-            "collection",
-            "account",
-            "deployment"
-          ],
-          "x-ms-enum": {
-            "name": "Microsoft.VisualStudio.Services.ServiceHooks.WebApi.EventScope"
-          }
-        },
-        "supportedResourceVersions": {
-          "description": "Supported versions for the event's resource payloads.",
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        },
-        "url": {
-          "description": "The url for this resource",
-          "type": "string"
         }
       }
     },
@@ -1435,28 +1082,6 @@
         }
       }
     },
-    "InputValuesQuery": {
-      "type": "object",
-      "properties": {
-        "currentValues": {
-          "type": "object",
-          "additionalProperties": {
-            "type": "string"
-          }
-        },
-        "inputValues": {
-          "description": "The input values to return on input, and the result from the consumer on output.",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/InputValues"
-          }
-        },
-        "resource": {
-          "description": "Subscription containing information about the publisher/consumer and the current input values",
-          "type": "object"
-        }
-      }
-    },
     "Notification": {
       "type": "object",
       "properties": {
@@ -1727,49 +1352,6 @@
         }
       }
     },
-    "Publisher": {
-      "type": "object",
-      "properties": {
-        "_links": {
-          "description": "Reference Links",
-          "$ref": "#/definitions/ReferenceLinks"
-        },
-        "description": {
-          "description": "Gets this publisher's localized description.",
-          "type": "string"
-        },
-        "id": {
-          "description": "Gets this publisher's identifier.",
-          "type": "string"
-        },
-        "inputDescriptors": {
-          "description": "Publisher-specific inputs",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/InputDescriptor"
-          }
-        },
-        "name": {
-          "description": "Gets this publisher's localized name.",
-          "type": "string"
-        },
-        "serviceInstanceType": {
-          "description": "The service instance type of the first party publisher.",
-          "type": "string"
-        },
-        "supportedEvents": {
-          "description": "Gets this publisher's supported event types.",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/EventTypeDescriptor"
-          }
-        },
-        "url": {
-          "description": "The url for this resource",
-          "type": "string"
-        }
-      }
-    },
     "PublisherEvent": {
       "type": "object",
       "properties": {
@@ -1805,42 +1387,13 @@
         }
       }
     },
-    "PublishersQuery": {
+    "PublishEventsRequestData": {
       "type": "object",
       "properties": {
-        "publisherIds": {
-          "description": "Optional list of publisher ids to restrict the results to",
+        "events": {
           "type": "array",
           "items": {
-            "type": "string"
-          }
-        },
-        "publisherInputs": {
-          "description": "Filter for publisher inputs",
-          "type": "object",
-          "additionalProperties": {
-            "type": "string"
-          }
-        },
-        "results": {
-          "description": "Results from the query",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/Publisher"
-          }
-        },
-        "scope": {
-          "description": "Limit the events associated with this publisher based on the scope.",
-          "enum": [
-            "all",
-            "project",
-            "team",
-            "collection",
-            "account",
-            "deployment"
-          ],
-          "x-ms-enum": {
-            "name": "Microsoft.VisualStudio.Services.ServiceHooks.WebApi.EventScope"
+            "$ref": "#/definitions/PublisherEvent"
           }
         }
       }

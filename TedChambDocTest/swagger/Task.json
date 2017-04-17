@@ -27,6 +27,9 @@
       "name": "logs"
     },
     {
+      "name": "metrics"
+    },
+    {
       "name": "plangroupsqueue"
     },
     {
@@ -76,7 +79,7 @@
             "description": "",
             "required": false,
             "type": "string",
-            "format": "PlanGroupStatusFilter"
+            "format": "PlanGroupStatus"
           },
           {
             "in": "query",
@@ -95,6 +98,92 @@
               "items": {
                 "$ref": "#/definitions/TaskOrchestrationQueuedPlanGroup"
               }
+            }
+          }
+        }
+      }
+    },
+    "/_apis/distributedtask/hubs/{hubName}/plangroupsqueue/metrics": {
+      "get": {
+        "tags": [
+          "metrics"
+        ],
+        "summary": "GetPlanGroupsQueueMetrics",
+        "description": "",
+        "operationId": "getPlanGroupsQueueMetrics",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "scopeIdentifier",
+            "description": "The project GUID to scope the request",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "path",
+            "name": "hubName",
+            "description": "The name of the server hub: \"build\" for the Build server or \"rm\" for the Release Management server",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/TaskOrchestrationPlanGroupsQueueMetrics"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/{scopeIdentifier}/_apis/distributedtask/hubs/{hubName}/plangroupsqueue/{planGroup}": {
+      "get": {
+        "tags": [
+          "plangroupsqueue"
+        ],
+        "summary": "GetQueuedPlanGroup",
+        "description": "",
+        "operationId": "getQueuedPlanGroup",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "scopeIdentifier",
+            "description": "The project GUID to scope the request",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "path",
+            "name": "hubName",
+            "description": "The name of the server hub: \"build\" for the Build server or \"rm\" for the Release Management server",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "planGroup",
+            "description": "",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/TaskOrchestrationQueuedPlanGroup"
             }
           }
         }
@@ -1408,6 +1497,25 @@
         },
         "timeline": {
           "$ref": "#/definitions/TimelineReference"
+        }
+      }
+    },
+    "TaskOrchestrationPlanGroupsQueueMetrics": {
+      "type": "object",
+      "properties": {
+        "count": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "status": {
+          "enum": [
+            "running",
+            "queued",
+            "all"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.TeamFoundation.DistributedTask.WebApi.PlanGroupStatus"
+          }
         }
       }
     },

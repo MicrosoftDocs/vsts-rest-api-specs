@@ -211,7 +211,7 @@
           "subscriptions"
         ],
         "summary": "ListSubscriptions",
-        "description": "Get a list of subscriptions. If no subscriber is specified, subscriptions for the calling user are returned.",
+        "description": "",
         "operationId": "listSubscriptions",
         "produces": [
           "application/json"
@@ -219,11 +219,19 @@
         "parameters": [
           {
             "in": "query",
-            "name": "subscriber",
+            "name": "targetId",
             "description": "",
             "required": false,
             "type": "string",
             "format": "uuid"
+          },
+          {
+            "in": "query",
+            "name": "ids",
+            "description": "",
+            "required": false,
+            "type": "string",
+            "format": "array (string)"
           },
           {
             "in": "query",
@@ -411,7 +419,8 @@
             "name": "userId",
             "description": "ID of the user or \"me\" to indicate the calling user",
             "required": true,
-            "type": "string"
+            "type": "string",
+            "format": "uuid"
           }
         ],
         "responses": {
@@ -770,45 +779,6 @@
         }
       }
     },
-    "NotificationCommonViewData": {
-      "type": "object",
-      "properties": {
-        "adminPageUrl": {
-          "description": "The Url to the admin page",
-          "type": "string"
-        },
-        "defaultServiceInstanceType": {
-          "description": "Default service instance type, currently it is Tfs, it used if there is no publisher passed",
-          "type": "string"
-        },
-        "eventsPublishers": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/NotificationEventPublisher"
-          }
-        },
-        "hasManagePermission": {
-          "description": "Indicates whether the current user generally has permissions to manage (create, delete, etc) subscriptions in the view",
-          "type": "boolean"
-        },
-        "isAdminMode": {
-          "description": "Is the subscription view being presented for the purpose of administration (not for managing personal subscriptions)",
-          "type": "boolean"
-        },
-        "isSubscriberEmailPending": {
-          "description": "Indicates whether the user's preferred email address is pending confirmation.",
-          "type": "boolean"
-        },
-        "subscriber": {
-          "description": "Subscriber to use when creating new subscriptions in the view",
-          "$ref": "#/definitions/IdentityRef"
-        },
-        "subscriberEmail": {
-          "description": "Email address that notifications for this user will be sent to by default.",
-          "type": "string"
-        }
-      }
-    },
     "NotificationEventField": {
       "type": "object",
       "properties": {
@@ -887,6 +857,10 @@
         "name": {
           "description": "Gets or sets the Name for that role, this name is used for UI display.",
           "type": "string"
+        },
+        "supportsGroups": {
+          "description": "Gets or sets whether this role can be a group or just an individual user",
+          "type": "boolean"
         }
       }
     },
@@ -1145,6 +1119,7 @@
           "enum": [
             "jailedByNotificationsVolume",
             "pendingDeletion",
+            "disabledBySystem",
             "disabledInactiveIdentity",
             "disabledMessageQueueNotSupported",
             "disabledMissingIdentity",
@@ -1168,13 +1143,13 @@
           "description": "User or group that will receive notifications for events matching the subscription's filter criteria.",
           "$ref": "#/definitions/IdentityRef"
         },
-        "subscriptionUserSettings": {
-          "description": "User-managed settings for the subscription. Only applies when the subscriber is a group. Typically used to indicate whether the calling user is opted in or out of a group subscription.",
-          "$ref": "#/definitions/SubscriptionUserSettings"
-        },
         "url": {
           "description": "REST API URL of the subscriotion.",
           "type": "string"
+        },
+        "userSettings": {
+          "description": "User-managed settings for the subscription. Only applies when the subscriber is a group. Typically used to indicate whether the calling user is opted in or out of a group subscription.",
+          "$ref": "#/definitions/SubscriptionUserSettings"
         }
       }
     },
@@ -1200,58 +1175,6 @@
         "subscriber": {
           "description": "User or group that will receive notifications for events matching the subscription's filter criteria. If not specified, defaults to the calling user.",
           "$ref": "#/definitions/IdentityRef"
-        }
-      }
-    },
-    "NotificationSubscriptionsViewData": {
-      "type": "object",
-      "properties": {
-        "eventTypes": {
-          "description": "Supported  event types info, with their fields and field types",
-          "type": "object",
-          "additionalProperties": {
-            "$ref": "#/definitions/NotificationEventType"
-          }
-        },
-        "mapCategoryIdToCategoryName": {
-          "type": "object",
-          "additionalProperties": {
-            "type": "string"
-          }
-        },
-        "mapCategoryIdToSubscriptionTemplates": {
-          "type": "object",
-          "additionalProperties": {
-            "type": "array"
-          }
-        },
-        "mapEventTypeToPublisherId": {
-          "type": "object",
-          "additionalProperties": {
-            "type": "string"
-          }
-        },
-        "publishers": {
-          "type": "object",
-          "additionalProperties": {
-            "$ref": "#/definitions/NotificationEventPublisher"
-          }
-        },
-        "scopes": {
-          "type": "object",
-          "additionalProperties": {
-            "$ref": "#/definitions/SubscriptionScope"
-          }
-        },
-        "subscriptions": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/NotificationSubscription"
-          }
-        },
-        "subsEvaluationSettings": {
-          "description": "The subscription evaluation operation settings needed for the UI",
-          "$ref": "#/definitions/SubscriptionEvaluationSettings"
         }
       }
     },
@@ -1311,6 +1234,7 @@
           "enum": [
             "jailedByNotificationsVolume",
             "pendingDeletion",
+            "disabledBySystem",
             "disabledInactiveIdentity",
             "disabledMessageQueueNotSupported",
             "disabledMissingIdentity",
@@ -1334,7 +1258,7 @@
           "description": "User or group that will receive notifications for events matching the subscription's filter criteria.",
           "$ref": "#/definitions/IdentityRef"
         },
-        "subscriptionUserSettings": {
+        "userSettings": {
           "description": "User-managed settings for the subscription. Only applies to subscriptions where the subscriber is a group. Typically used to opt-in or opt-out a user from a group subscription.",
           "$ref": "#/definitions/SubscriptionUserSettings"
         }
@@ -1488,12 +1412,10 @@
           "description": "Flags the refine the types of subscriptions that will be returned from the query.",
           "enum": [
             "none",
-            "includeAllGroupSubscriptions",
             "includeInvalidSubscriptions",
             "includeDeletedSubscriptions",
             "includeFilterDetails",
-            "alwaysReturnBasicInformation",
-            "includeAllSubscriptions"
+            "alwaysReturnBasicInformation"
           ],
           "x-ms-enum": {
             "name": "Microsoft.VisualStudio.Services.Notifications.WebApi.SubscriptionQueryFlags"
@@ -1508,11 +1430,24 @@
           "description": "Filter conditions that matching subscriptions must have. Typically only the filter's type and event type are used for matching.",
           "$ref": "#/definitions/ISubscriptionFilter"
         },
+        "flags": {
+          "description": "Flags to specify the the type subscriptions to query for.",
+          "enum": [
+            "none",
+            "groupSubscription",
+            "contributedSubscription",
+            "canOptOut",
+            "teamSubscription"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.VisualStudio.Services.Notifications.WebApi.SubscriptionFlags"
+          }
+        },
         "scope": {
           "description": "Scope that matching subscriptions must have.",
           "type": "string"
         },
-        "subscriber": {
+        "subscriberId": {
           "description": "ID of the subscriber (user or group) that matching subscriptions must be subscribed to.",
           "type": "string",
           "format": "uuid"
@@ -1520,15 +1455,6 @@
         "subscriptionId": {
           "description": "ID of the subscription to query for.",
           "type": "string"
-        },
-        "subscriptionType": {
-          "enum": [
-            "default",
-            "shared"
-          ],
-          "x-ms-enum": {
-            "name": "Microsoft.VisualStudio.Services.Notifications.WebApi.SubscriptionType"
-          }
         }
       }
     },
@@ -1542,37 +1468,6 @@
       "properties": {
         "name": {
           "type": "string"
-        }
-      }
-    },
-    "SubscriptionStatisticViewData": {
-      "type": "object",
-      "properties": {
-        "events": {
-          "type": "object",
-          "additionalProperties": {
-            "$ref": "#/definitions/NotificationEventType"
-          }
-        },
-        "isAdmin": {
-          "type": "boolean"
-        },
-        "queryDate": {
-          "description": "Date used for querying for those statistics",
-          "type": "string",
-          "format": "date-time"
-        },
-        "statistics": {
-          "type": "object",
-          "additionalProperties": {
-            "type": "array"
-          }
-        },
-        "subscriptions": {
-          "type": "object",
-          "additionalProperties": {
-            "$ref": "#/definitions/NotificationSubscription"
-          }
         }
       }
     },

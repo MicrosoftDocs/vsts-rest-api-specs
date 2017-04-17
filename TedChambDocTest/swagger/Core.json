@@ -39,6 +39,9 @@
       "name": "projects"
     },
     {
+      "name": "properties"
+    },
+    {
       "name": "proxies"
     },
     {
@@ -714,6 +717,98 @@
         ]
       }
     },
+    "/_apis/projects/{projectId}/properties": {
+      "get": {
+        "tags": [
+          "properties"
+        ],
+        "summary": "GetProjectProperties",
+        "description": "Get project properties.",
+        "operationId": "getProjectProperties",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "projectId",
+            "description": "The project ID.",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "query",
+            "name": "keys",
+            "description": "A comma-delimited string of project property names. If unspecified, all properties will be returned.",
+            "required": false,
+            "type": "string",
+            "format": "array (string)"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/ProjectProperty"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.profile",
+              "vso.project"
+            ]
+          }
+        ]
+      },
+      "patch": {
+        "tags": [
+          "properties"
+        ],
+        "summary": "SetProjectProperties",
+        "description": "Create, update, and delete project properties.",
+        "operationId": "setProjectProperties",
+        "consumes": [
+          "application/json-patch+json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "projectId",
+            "description": "The project ID.",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "A JSON Patch document that represents an array of property operations. See RFC 6902 for more details on JSON Patch. The accepted operation verbs are Add and Remove, where Add is used for both creating and updating properties. The path consists of a forward slash and a property name.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/JsonPatchDocument"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.project_write"
+            ]
+          }
+        ]
+      }
+    },
     "/_apis/projects/{projectId}/teams": {
       "post": {
         "tags": [
@@ -1171,6 +1266,49 @@
         }
       }
     },
+    "JsonPatchDocument": {
+      "type": "object",
+      "allOf": [
+        {
+          "type": "array",
+          "items": {
+          }
+        }
+      ],
+      "properties": {
+      }
+    },
+    "JsonPatchOperation": {
+      "type": "object",
+      "properties": {
+        "from": {
+          "description": "The path to copy from for the Move/Copy operation.",
+          "type": "string"
+        },
+        "op": {
+          "description": "The patch operation",
+          "enum": [
+            "add",
+            "remove",
+            "replace",
+            "move",
+            "copy",
+            "test"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.VisualStudio.Services.WebApi.Patch.Operation"
+          }
+        },
+        "path": {
+          "description": "The path for the operation",
+          "type": "string"
+        },
+        "value": {
+          "description": "The value for the operation. This is either a primitive or a JToken.",
+          "type": "object"
+        }
+      }
+    },
     "OperationReference": {
       "type": "object",
       "properties": {
@@ -1322,7 +1460,7 @@
           "type": "string"
         },
         "value": {
-          "type": "string"
+          "type": "object"
         }
       }
     },

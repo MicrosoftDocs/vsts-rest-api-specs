@@ -3941,6 +3941,10 @@
         "requiredApproverCount": {
           "type": "integer",
           "format": "int32"
+        },
+        "timeoutInMintues": {
+          "type": "integer",
+          "format": "int32"
         }
       }
     },
@@ -4234,6 +4238,9 @@
         "sourceRepositoryId": {
           "type": "string"
         },
+        "sourceRepositoryType": {
+          "type": "string"
+        },
         "sourceVersion": {
           "type": "string"
         }
@@ -4438,6 +4445,35 @@
       }
     },
     "DataSourceBinding": {
+      "type": "object",
+      "properties": {
+        "dataSourceName": {
+          "type": "string"
+        },
+        "endpointId": {
+          "type": "string"
+        },
+        "endpointUrl": {
+          "type": "string"
+        },
+        "parameters": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "resultSelector": {
+          "type": "string"
+        },
+        "resultTemplate": {
+          "type": "string"
+        },
+        "target": {
+          "type": "string"
+        }
+      }
+    },
+    "DataSourceBindingBase": {
       "type": "object",
       "properties": {
         "dataSourceName": {
@@ -5072,6 +5108,9 @@
         "enableAccessToken": {
           "type": "boolean"
         },
+        "publishDeploymentStatus": {
+          "type": "boolean"
+        },
         "skipArtifactsDownload": {
           "type": "boolean"
         },
@@ -5632,6 +5671,29 @@
         }
       }
     },
+    "ProcessParameters": {
+      "type": "object",
+      "properties": {
+        "dataSourceBindings": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/DataSourceBindingBase"
+          }
+        },
+        "inputs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TaskInputDefinitionBase"
+          }
+        },
+        "sourceDefinitions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TaskSourceDefinitionBase"
+          }
+        }
+      }
+    },
     "ProjectReference": {
       "type": "object",
       "properties": {
@@ -6065,6 +6127,19 @@
         }
       }
     },
+    "ReleaseCondition": {
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/Condition"
+        }
+      ],
+      "properties": {
+        "result": {
+          "type": "boolean"
+        }
+      }
+    },
     "ReleaseCreatedEvent": {
       "type": "object",
       "properties": {
@@ -6278,6 +6353,9 @@
         },
         "preDeployApprovals": {
           "$ref": "#/definitions/ReleaseDefinitionApprovals"
+        },
+        "processParameters": {
+          "$ref": "#/definitions/ProcessParameters"
         },
         "queueId": {
           "type": "integer",
@@ -6506,7 +6584,7 @@
         "conditions": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/Condition"
+            "$ref": "#/definitions/ReleaseCondition"
           }
         },
         "createdOn": {
@@ -6573,6 +6651,9 @@
           "items": {
             "$ref": "#/definitions/ReleaseApproval"
           }
+        },
+        "processParameters": {
+          "$ref": "#/definitions/ProcessParameters"
         },
         "queueId": {
           "type": "integer",
@@ -6648,12 +6729,6 @@
     "ReleaseEnvironmentCompletedEvent": {
       "type": "object",
       "properties": {
-        "conditions": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/Condition"
-          }
-        },
         "createdByName": {
           "type": "string"
         },
@@ -7097,7 +7172,8 @@
           "enum": [
             "undefined",
             "artifactSource",
-            "schedule"
+            "schedule",
+            "sourceRepo"
           ],
           "x-ms-enum": {
             "name": "Microsoft.VisualStudio.Services.ReleaseManagement.WebApi.ReleaseTriggerType"
@@ -7238,6 +7314,25 @@
         }
       }
     },
+    "SourceRepoTrigger": {
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/ReleaseTriggerBase"
+        }
+      ],
+      "properties": {
+        "alias": {
+          "type": "string"
+        },
+        "branchFilters": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
     "SummaryMailSection": {
       "type": "object",
       "properties": {
@@ -7266,6 +7361,47 @@
         }
       }
     },
+    "TaskInputDefinitionBase": {
+      "type": "object",
+      "properties": {
+        "defaultValue": {
+          "type": "string"
+        },
+        "groupName": {
+          "type": "string"
+        },
+        "helpMarkDown": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "options": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "properties": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "required": {
+          "type": "boolean"
+        },
+        "type": {
+          "type": "string"
+        },
+        "visibleRule": {
+          "type": "string"
+        }
+      }
+    },
     "TaskOrchestrationPlanGroupReference": {
       "type": "object",
       "properties": {
@@ -7286,6 +7422,26 @@
           "items": {
             "$ref": "#/definitions/TaskOrchestrationPlanGroupReference"
           }
+        }
+      }
+    },
+    "TaskSourceDefinitionBase": {
+      "type": "object",
+      "properties": {
+        "authKey": {
+          "type": "string"
+        },
+        "endpoint": {
+          "type": "string"
+        },
+        "keySelector": {
+          "type": "string"
+        },
+        "selector": {
+          "type": "string"
+        },
+        "target": {
+          "type": "string"
         }
       }
     },

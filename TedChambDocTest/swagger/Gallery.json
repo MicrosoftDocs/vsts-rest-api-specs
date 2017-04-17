@@ -60,6 +60,9 @@
       "name": "extensionValidator"
     },
     {
+      "name": "notifications"
+    },
+    {
       "name": "package"
     },
     {
@@ -531,6 +534,35 @@
             "required": true,
             "schema": {
               "$ref": "#/definitions/AzureRestApiRequestModel"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        }
+      }
+    },
+    "/_apis/gallery/notifications": {
+      "post": {
+        "tags": [
+          "notifications"
+        ],
+        "summary": "SendNotifications",
+        "description": "Send Notification",
+        "operationId": "sendNotifications",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Denoting the data needed to send notification",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/NotificationsData"
             }
           }
         ],
@@ -3869,6 +3901,36 @@
         }
       }
     },
+    "NotificationsData": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "description": "Notification data needed",
+          "type": "object",
+          "additionalProperties": {
+            "type": "object"
+          }
+        },
+        "identities": {
+          "description": "List of users who should get the notification",
+          "type": "object",
+          "additionalProperties": {
+            "type": "object"
+          }
+        },
+        "type": {
+          "description": "Type of Mail Notification.Can be Qna , review or CustomerContact",
+          "enum": [
+            "reviewNotification",
+            "qnaNotification",
+            "customerContactNotification"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.VisualStudio.Services.Gallery.WebApi.NotificationTemplateType"
+          }
+        }
+      }
+    },
     "ProductCategoriesResult": {
       "type": "object",
       "properties": {
@@ -4450,7 +4512,9 @@
             "flagReview",
             "updateReview",
             "replyToReview",
-            "adminResponseForReview"
+            "adminResponseForReview",
+            "deleteAdminReply",
+            "deletePublisherReply"
           ],
           "x-ms-enum": {
             "name": "Microsoft.VisualStudio.Services.Gallery.WebApi.ReviewPatchOperation"

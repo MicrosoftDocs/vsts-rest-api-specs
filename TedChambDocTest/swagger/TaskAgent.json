@@ -2143,7 +2143,14 @@
           "200": {
             "description": "successful operation"
           }
-        }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.agentpools_manage"
+            ]
+          }
+        ]
       },
       "get": {
         "tags": [
@@ -2412,7 +2419,14 @@
           "200": {
             "description": "successful operation"
           }
-        }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.agentpools_manage"
+            ]
+          }
+        ]
       },
       "get": {
         "tags": [
@@ -3691,7 +3705,14 @@
           "200": {
             "description": "successful operation"
           }
-        }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.agentpools_manage"
+            ]
+          }
+        ]
       },
       "get": {
         "tags": [
@@ -4522,7 +4543,14 @@
               "$ref": "#/definitions/TaskGroup"
             }
           }
-        }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.taskgroups_add"
+            ]
+          }
+        ]
       },
       "put": {
         "tags": [
@@ -4562,7 +4590,14 @@
               "$ref": "#/definitions/TaskGroup"
             }
           }
-        }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.taskgroups_manage"
+            ]
+          }
+        ]
       }
     },
     "/{project}/_apis/distributedtask/taskgroups/{taskGroupId}": {
@@ -4594,7 +4629,14 @@
           "200": {
             "description": "successful operation"
           }
-        }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.taskgroups_manage"
+            ]
+          }
+        ]
       },
       "get": {
         "tags": [
@@ -4640,7 +4682,14 @@
               "format": "Stream"
             }
           }
-        }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.taskgroups"
+            ]
+          }
+        ]
       }
     },
     "/{project}/_apis/distributedtask/taskgroups/{taskGroupId}/revisions": {
@@ -4681,7 +4730,14 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.taskgroups"
+            ]
+          }
+        ]
       }
     },
     "/{project}/_apis/distributedtask/variablegroups": {
@@ -5382,6 +5438,22 @@
         }
       }
     },
+    "EventsConfig": {
+      "type": "object",
+      "properties": {
+      }
+    },
+    "ExecuteTaskResponse": {
+      "type": "object",
+      "properties": {
+        "taskEvents": {
+          "$ref": "#/definitions/TaskEventsConfig"
+        },
+        "waitForLocalExecutionComplete": {
+          "type": "boolean"
+        }
+      }
+    },
     "HelpLink": {
       "type": "object",
       "properties": {
@@ -5785,6 +5857,11 @@
     },
     "JobEventsConfig": {
       "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/EventsConfig"
+        }
+      ],
       "properties": {
         "jobAssigned": {
           "$ref": "#/definitions/JobEventConfig"
@@ -6107,11 +6184,14 @@
       "type": "object",
       "properties": {
         "events": {
-          "$ref": "#/definitions/JobEventsConfig"
+          "$ref": "#/definitions/EventsConfig"
+        },
+        "handlerName": {
+          "type": "string"
         }
       }
     },
-    "ServerJobRequestMessage": {
+    "ServerTaskRequestMessage": {
       "type": "object",
       "allOf": [
         {
@@ -6709,13 +6789,46 @@
         "targetAgents": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/TaskAgentReference"
+            "$ref": "#/definitions/TaskAgentPoolMaintenanceJobTargetAgent"
           }
         },
         "warningCount": {
           "description": "The total warning counts during the maintenance job",
           "type": "integer",
           "format": "int32"
+        }
+      }
+    },
+    "TaskAgentPoolMaintenanceJobTargetAgent": {
+      "type": "object",
+      "properties": {
+        "agent": {
+          "$ref": "#/definitions/TaskAgentReference"
+        },
+        "jobId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "result": {
+          "enum": [
+            "succeeded",
+            "failed",
+            "canceled"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.TeamFoundation.DistributedTask.WebApi.TaskAgentPoolMaintenanceJobResult"
+          }
+        },
+        "status": {
+          "enum": [
+            "inProgress",
+            "completed",
+            "cancelling",
+            "queued"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.TeamFoundation.DistributedTask.WebApi.TaskAgentPoolMaintenanceJobStatus"
+          }
         }
       }
     },
@@ -6963,6 +7076,16 @@
         }
       }
     },
+    "TaskAssignedEvent": {
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/TaskEvent"
+        }
+      ],
+      "properties": {
+      }
+    },
     "TaskAttachment": {
       "type": "object",
       "properties": {
@@ -7000,6 +7123,29 @@
     "TaskChangeEvent": {
       "type": "object",
       "properties": {
+      }
+    },
+    "TaskCompletedEvent": {
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/TaskEvent"
+        }
+      ],
+      "properties": {
+        "result": {
+          "enum": [
+            "succeeded",
+            "succeededWithIssues",
+            "failed",
+            "canceled",
+            "skipped",
+            "abandoned"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.TeamFoundation.DistributedTask.WebApi.TaskResult"
+          }
+        }
       }
     },
     "TaskDefinition": {
@@ -7175,6 +7321,50 @@
         },
         "versionSpec": {
           "type": "string"
+        }
+      }
+    },
+    "TaskEvent": {
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/JobEvent"
+        }
+      ],
+      "properties": {
+        "taskId": {
+          "type": "string",
+          "format": "uuid"
+        }
+      }
+    },
+    "TaskEventConfig": {
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        },
+        "timeout": {
+          "type": "string"
+        }
+      }
+    },
+    "TaskEventsConfig": {
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/EventsConfig"
+        }
+      ],
+      "properties": {
+        "taskAssigned": {
+          "$ref": "#/definitions/TaskEventConfig"
+        },
+        "taskCompleted": {
+          "$ref": "#/definitions/TaskEventConfig"
+        },
+        "taskStarted": {
+          "$ref": "#/definitions/TaskEventConfig"
         }
       }
     },
@@ -7661,6 +7851,25 @@
         }
       }
     },
+    "TaskOrchestrationPlanGroupsQueueMetrics": {
+      "type": "object",
+      "properties": {
+        "count": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "status": {
+          "enum": [
+            "running",
+            "queued",
+            "all"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.TeamFoundation.DistributedTask.WebApi.PlanGroupStatus"
+          }
+        }
+      }
+    },
     "TaskOrchestrationPlanReference": {
       "type": "object",
       "properties": {
@@ -7824,6 +8033,16 @@
         "target": {
           "type": "string"
         }
+      }
+    },
+    "TaskStartedEvent": {
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/TaskEvent"
+        }
+      ],
+      "properties": {
       }
     },
     "TaskVersion": {
@@ -8081,7 +8300,10 @@
         "vso.agentpools_manage": "Grants the ability to manage pools, queues, and agents",
         "vso.serviceendpoint": "Grants the ability to read service endpoints.",
         "vso.serviceendpoint_manage": "Grants the ability to read, query and manage service endpoints.",
-        "vso.serviceendpoint_query": "Grants the ability to read and query service endpoints."
+        "vso.serviceendpoint_query": "Grants the ability to read and query service endpoints.",
+        "vso.taskgroups": "Grants the ability to read task groups",
+        "vso.taskgroups_add": "Grants the ability to read and create task groups",
+        "vso.taskgroups_manage": "Grants the ability to read, create and manage taskgroups."
       }
     }
   },
