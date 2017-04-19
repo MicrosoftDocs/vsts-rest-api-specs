@@ -305,7 +305,7 @@
         }
       }
     },
-    "/_apis/governance/Products/{productId}/policyevaluatorreferences/{policyEvaluatorId}": {
+    "/_apis/governance/Products/{productId}/policyevaluatorreferences": {
       "post": {
         "tags": [
           "policyEvaluatorReferences"
@@ -326,7 +326,7 @@
             "description": "",
             "required": true,
             "schema": {
-              "type": "string"
+              "$ref": "#/definitions/ProductPolicyEvaluator"
             }
           },
           {
@@ -341,11 +341,13 @@
           "200": {
             "description": "successful operation",
             "schema": {
-              "type": "string"
+              "$ref": "#/definitions/ProductPolicyEvaluator"
             }
           }
         }
-      },
+      }
+    },
+    "/_apis/governance/Products/{productId}/policyevaluatorreferences/{policyEvaluatorId}": {
       "delete": {
         "tags": [
           "policyEvaluatorReferences"
@@ -618,47 +620,6 @@
         }
       }
     },
-    "EvaluatorMetadataPropertyDescriptor": {
-      "type": "object",
-      "properties": {
-        "description": {
-          "description": "Description of the property",
-          "type": "string"
-        },
-        "maxLength": {
-          "description": "The maximum length for a text box type.",
-          "type": "integer",
-          "format": "int32"
-        },
-        "name": {
-          "description": "Name of the property",
-          "type": "string"
-        },
-        "options": {
-          "description": "The possible values for RadioButtonOptions or DropdownOptions types.",
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        },
-        "required": {
-          "description": "True if this property is required",
-          "type": "boolean"
-        },
-        "type": {
-          "description": "The type of value used for this property",
-          "enum": [
-            "checkbox",
-            "textBox",
-            "radioButtonOptions",
-            "dropdownOptions"
-          ],
-          "x-ms-enum": {
-            "name": "Microsoft.VisualStudio.Services.Governance.WebApi.EvaluatorMetadataPropertyType"
-          }
-        }
-      }
-    },
     "IdentityRef": {
       "type": "object",
       "properties": {
@@ -688,6 +649,50 @@
         },
         "url": {
           "type": "string"
+        }
+      }
+    },
+    "MetadataPropertyDescriptor": {
+      "type": "object",
+      "properties": {
+        "description": {
+          "description": "Description of the property",
+          "type": "string"
+        },
+        "id": {
+          "description": "Name of the property",
+          "type": "string"
+        },
+        "maxLength": {
+          "description": "The maximum length for a text box type.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "name": {
+          "type": "string"
+        },
+        "options": {
+          "description": "The possible values for RadioButtonOptions or DropdownOptions types.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "required": {
+          "description": "True if this property is required",
+          "type": "boolean"
+        },
+        "type": {
+          "description": "The type of value used for this property",
+          "enum": [
+            "checkbox",
+            "textbox",
+            "radioButtonOptions",
+            "dropdownOptions"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.VisualStudio.Services.Governance.WebApi.EvaluatorMetadataPropertyType"
+          }
         }
       }
     },
@@ -725,18 +730,34 @@
     },
     "PolicyEvaluatorInfo": {
       "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/PolicyEvaluatorRef"
+        }
+      ],
+      "properties": {
+        "metadataPropertyDescriptors": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/MetadataPropertyDescriptor"
+          }
+        },
+        "reviewerRoleDescriptors": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ReviewerRoleDescriptor"
+          }
+        }
+      }
+    },
+    "PolicyEvaluatorRef": {
+      "type": "object",
       "properties": {
         "description": {
           "type": "string"
         },
         "id": {
           "type": "string"
-        },
-        "metadataPropertyDescriptors": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/EvaluatorMetadataPropertyDescriptor"
-          }
         },
         "name": {
           "type": "string"
@@ -750,23 +771,37 @@
           "type": "string",
           "format": "uuid"
         },
-        "metadata": {
-          "type": "object",
-          "additionalProperties": {
-            "type": "string"
-          }
-        },
         "name": {
           "type": "string"
         },
         "policyEvaluators": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/PolicyEvaluatorInfo"
+            "$ref": "#/definitions/ProductPolicyEvaluator"
           }
         },
         "url": {
           "type": "string"
+        }
+      }
+    },
+    "ProductPolicyEvaluator": {
+      "type": "object",
+      "properties": {
+        "policyEvaluatorRef": {
+          "$ref": "#/definitions/PolicyEvaluatorRef"
+        },
+        "productMetadata": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "reviewerRoleAssignments": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ReviewerRoleAssignment"
+          }
         }
       }
     },
@@ -847,6 +882,31 @@
           "additionalProperties": {
             "type": "string"
           }
+        }
+      }
+    },
+    "ReviewerRoleAssignment": {
+      "type": "object",
+      "properties": {
+        "reviewerRoleName": {
+          "type": "string"
+        },
+        "reviewers": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/IdentityRef"
+          }
+        }
+      }
+    },
+    "ReviewerRoleDescriptor": {
+      "type": "object",
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
         }
       }
     },
