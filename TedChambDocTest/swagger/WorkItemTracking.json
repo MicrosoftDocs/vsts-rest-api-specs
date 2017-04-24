@@ -24,6 +24,9 @@
       "name": "accountMyWorkRecentActivity"
     },
     {
+      "name": "artifactLinkTypes"
+    },
+    {
       "name": "attachments"
     },
     {
@@ -37,6 +40,9 @@
     },
     {
       "name": "queries"
+    },
+    {
+      "name": "queryArtifactUris"
     },
     {
       "name": "recyclebin"
@@ -122,6 +128,37 @@
         "responses": {
           "200": {
             "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.work"
+            ]
+          }
+        ]
+      }
+    },
+    "/_apis/wit/artifactlinktypes": {
+      "get": {
+        "tags": [
+          "artifactLinkTypes"
+        ],
+        "summary": "GetWorkArtifactLinkTypes",
+        "description": "",
+        "operationId": "getWorkArtifactLinkTypes",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/WorkArtifactLink"
+              }
+            }
           }
         },
         "security": [
@@ -325,6 +362,54 @@
             "description": "successful operation",
             "schema": {
               "$ref": "#/definitions/WorkItemField"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.work"
+            ]
+          }
+        ]
+      }
+    },
+    "/_apis/wit/queryartifacturis": {
+      "post": {
+        "tags": [
+          "queryArtifactUris"
+        ],
+        "summary": "GetWorkItemIdsForArtifactUris",
+        "description": "Gets the results of the work item ids linked to the artifact uri",
+        "operationId": "getWorkItemIdsForArtifactUris",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "List of artifact uris.",
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/ArtifactUriQueryResult"
+              }
             }
           }
         },
@@ -3750,6 +3835,20 @@
         }
       }
     },
+    "ArtifactUriQueryResult": {
+      "type": "object",
+      "properties": {
+        "artifactUri": {
+          "type": "string"
+        },
+        "workItems": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/WorkItemReference"
+          }
+        }
+      }
+    },
     "AttachmentReference": {
       "type": "object",
       "properties": {
@@ -4246,6 +4345,20 @@
       "type": "object",
       "properties": {
         "query": {
+          "type": "string"
+        }
+      }
+    },
+    "WorkArtifactLink": {
+      "type": "object",
+      "properties": {
+        "artifactType": {
+          "type": "string"
+        },
+        "linkType": {
+          "type": "string"
+        },
+        "toolType": {
           "type": "string"
         }
       }
@@ -5056,8 +5169,8 @@
       "authorizationUrl": "https://app.vssps.visualstudio.com/oauth2/authorize&response_type=Assertion",
       "tokenUrl": "https://app.vssps.visualstudio.com/oauth2/token?client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer&grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer",
       "scopes": {
-        "vso.work_write": "Grants the ability to read, create, and update work items and queries, update board metadata, read area and iterations paths other work item tracking related metadata, execute queries, and to receive notifications about work item events via service hooks.",
-        "vso.work": "Grants the ability to read work items, queries, boards, area and iterations paths, and other work item tracking related metadata. Also grants the ability to execute queries and to receive notifications about work item events via service hooks."
+        "vso.work": "Grants the ability to read work items, queries, boards, area and iterations paths, and other work item tracking related metadata. Also grants the ability to execute queries and to receive notifications about work item events via service hooks.",
+        "vso.work_write": "Grants the ability to read, create, and update work items and queries, update board metadata, read area and iterations paths other work item tracking related metadata, execute queries, and to receive notifications about work item events via service hooks."
       }
     }
   },

@@ -18,42 +18,40 @@
   "basePath": "/",
   "tags": [
     {
-      "name": "json"
+      "name": "metadata"
     }
   ],
   "schemes": [
     "https"
   ],
   "paths": {
-    "/_apis/packaging/feeds/{feed}/ivy/json/{module}/{revision}": {
-      "get": {
+    "/_apis/packaging/feeds/{feed}/ivy/metadata": {
+      "post": {
         "tags": [
-          "json"
+          "metadata"
         ],
         "summary": "PackageInfo",
         "description": "",
         "operationId": "packageInfo",
+        "consumes": [
+          "application/json"
+        ],
         "produces": [
           "application/json"
         ],
         "parameters": [
           {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/IvyPackageRequest"
+            }
+          },
+          {
             "in": "path",
             "name": "feed",
-            "description": "",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "in": "path",
-            "name": "module",
-            "description": "",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "in": "path",
-            "name": "revision",
             "description": "",
             "required": true,
             "type": "string"
@@ -70,7 +68,7 @@
         "security": [
           {
             "oauth2": [
-              "vso.packaging"
+              "vso.packaging_write"
             ]
           }
         ]
@@ -81,20 +79,126 @@
     "IvyPackage": {
       "type": "object",
       "properties": {
-        "_info": {
+        "files": {
+          "$ref": "#/definitions/ReferenceLinks"
+        },
+        "info": {
+          "$ref": "#/definitions/IvyXmlInfo"
+        },
+        "requestedFile": {
+          "$ref": "#/definitions/ReferenceLink"
+        }
+      }
+    },
+    "IvyPackageRequest": {
+      "type": "object",
+      "properties": {
+        "name": {
           "type": "string"
         },
-        "_links": {
-          "type": "object",
-          "additionalProperties": {
-            "type": "string"
+        "path": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        }
+      }
+    },
+    "IvyXmlBody": {
+      "type": "object",
+      "properties": {
+        "body": {
+          "type": "string"
+        }
+      }
+    },
+    "IvyXmlDescription": {
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/IvyXmlBody"
+        }
+      ],
+      "properties": {
+        "homepage": {
+          "type": "string"
+        }
+      }
+    },
+    "IvyXmlInfo": {
+      "type": "object",
+      "properties": {
+        "branch": {
+          "type": "string"
+        },
+        "description": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/IvyXmlDescription"
+          }
+        },
+        "ivyauthor": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/IvyXmlRef"
+          }
+        },
+        "license": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/IvyXmlRef"
           }
         },
         "module": {
           "type": "string"
         },
+        "organisation": {
+          "type": "string"
+        },
+        "publication": {
+          "type": "string"
+        },
         "revision": {
           "type": "string"
+        },
+        "status": {
+          "type": "string"
+        }
+      }
+    },
+    "IvyXmlRef": {
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/IvyXmlBody"
+        }
+      ],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        }
+      }
+    },
+    "ReferenceLink": {
+      "type": "object",
+      "properties": {
+        "href": {
+          "type": "string"
+        }
+      }
+    },
+    "ReferenceLinks": {
+      "type": "object",
+      "properties": {
+        "links": {
+          "description": "The readonly view of the links.  Because Reference links are readonly, we only want to expose them as read only.",
+          "type": "object",
+          "additionalProperties": {
+            "type": "object"
+          }
         }
       }
     }
@@ -119,7 +223,7 @@
       "authorizationUrl": "https://app.vssps.visualstudio.com/oauth2/authorize&response_type=Assertion",
       "tokenUrl": "https://app.vssps.visualstudio.com/oauth2/token?client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer&grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer",
       "scopes": {
-        "vso.packaging": "Grants the ability to read feeds and packages."
+        "vso.packaging_write": "Grants the ability to create and read feeds and packages."
       }
     }
   },
