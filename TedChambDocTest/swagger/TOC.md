@@ -45,6 +45,7 @@
 # [Operation](operations.json)
 # [Organization Join](organizationjoin.json)
 # [Organization Policy](organizationpolicy.json)
+# [Organization Search](orgsearch.json)
 # [OSS](oss.json)
 # [Partitioning](partitioning.json)
 # [Policy](policy.json)

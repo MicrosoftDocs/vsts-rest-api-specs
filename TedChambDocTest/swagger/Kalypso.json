@@ -18,6 +18,9 @@
   "basePath": "/",
   "tags": [
     {
+      "name": "accountSettings"
+    },
+    {
       "name": "alertEndpoints"
     },
     {
@@ -58,6 +61,60 @@
     "https"
   ],
   "paths": {
+    "/_apis/health/accountsettings": {
+      "get": {
+        "tags": [
+          "accountSettings"
+        ],
+        "summary": "GetAccountSettings",
+        "description": "",
+        "operationId": "getAccountSettings",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/AccountSettings"
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "accountSettings"
+        ],
+        "summary": "SaveAccountSettings",
+        "description": "",
+        "operationId": "saveAccountSettings",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/AccountSettings"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/KustoEndpointProperties"
+            }
+          }
+        }
+      }
+    },
     "/_apis/health/alertendpoints": {
       "post": {
         "tags": [
@@ -1315,6 +1372,29 @@
     }
   },
   "definitions": {
+    "AccountSettings": {
+      "type": "object",
+      "properties": {
+        "finalStageRowLimit": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "healthClientUrl": {
+          "type": "string"
+        },
+        "kustoEndpointProperties": {
+          "$ref": "#/definitions/KustoEndpointProperties"
+        },
+        "monitorRunHistoryRetentionInDays": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "nonFinalStageRowLimit": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
     "AdvancedProperties": {
       "type": "object",
       "properties": {
@@ -2282,6 +2362,10 @@
           "description": "Repository path of the query",
           "type": "string"
         },
+        "includeInNotification": {
+          "description": "Promote the visualization query to notification",
+          "type": "boolean"
+        },
         "queryDeepLink": {
           "description": "Kusto query deep link in Kusto explorer",
           "type": "string"
@@ -2291,7 +2375,7 @@
           "type": "string"
         },
         "visualizationType": {
-          "description": "the visualization type of the query results",
+          "description": "The visualization type of the query results",
           "enum": [
             "timeseries",
             "table"
