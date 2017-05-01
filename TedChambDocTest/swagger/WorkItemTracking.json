@@ -27,6 +27,9 @@
       "name": "artifactLinkTypes"
     },
     {
+      "name": "artifactUriQuery"
+    },
+    {
       "name": "attachments"
     },
     {
@@ -40,9 +43,6 @@
     },
     {
       "name": "queries"
-    },
-    {
-      "name": "queryArtifactUris"
     },
     {
       "name": "recyclebin"
@@ -158,6 +158,48 @@
               "items": {
                 "$ref": "#/definitions/WorkArtifactLink"
               }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.work"
+            ]
+          }
+        ]
+      }
+    },
+    "/_apis/wit/artifacturiquery": {
+      "post": {
+        "tags": [
+          "artifactUriQuery"
+        ],
+        "summary": "GetWorkItemIdsForArtifactUris",
+        "description": "Gets the results of the work item ids linked to the artifact uri",
+        "operationId": "getWorkItemIdsForArtifactUris",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "List of artifact uris.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ArtifactUriQuery"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ArtifactUriQueryResult"
             }
           }
         },
@@ -362,54 +404,6 @@
             "description": "successful operation",
             "schema": {
               "$ref": "#/definitions/WorkItemField"
-            }
-          }
-        },
-        "security": [
-          {
-            "oauth2": [
-              "vso.work"
-            ]
-          }
-        ]
-      }
-    },
-    "/_apis/wit/queryartifacturis": {
-      "post": {
-        "tags": [
-          "queryArtifactUris"
-        ],
-        "summary": "GetWorkItemIdsForArtifactUris",
-        "description": "Gets the results of the work item ids linked to the artifact uri",
-        "operationId": "getWorkItemIdsForArtifactUris",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "body",
-            "name": "body",
-            "description": "List of artifact uris.",
-            "required": true,
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/ArtifactUriQueryResult"
-              }
             }
           }
         },
@@ -3835,16 +3829,24 @@
         }
       }
     },
+    "ArtifactUriQuery": {
+      "type": "object",
+      "properties": {
+        "artifactUris": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
     "ArtifactUriQueryResult": {
       "type": "object",
       "properties": {
-        "artifactUri": {
-          "type": "string"
-        },
-        "workItems": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/WorkItemReference"
+        "artifactUrisQueryResult": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "array"
           }
         }
       }

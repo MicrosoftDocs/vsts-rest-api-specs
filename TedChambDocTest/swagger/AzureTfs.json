@@ -107,6 +107,20 @@
         }
       }
     },
+    "AzureAppServiceCreateOptions": {
+      "type": "object",
+      "properties": {
+        "appServicePlanName": {
+          "type": "string"
+        },
+        "appServicePricingTier": {
+          "type": "string"
+        },
+        "baseAppServiceName": {
+          "type": "string"
+        }
+      }
+    },
     "AzureAppServiceDeploymentTarget": {
       "type": "object",
       "allOf": [
@@ -115,8 +129,8 @@
         }
       ],
       "properties": {
-        "appServicePlan": {
-          "type": "string"
+        "createOptions": {
+          "$ref": "#/definitions/AzureAppServiceCreateOptions"
         },
         "slotSwapConfiguration": {
           "$ref": "#/definitions/SlotSwapConfiguration"
@@ -134,7 +148,7 @@
         "registryName": {
           "type": "string"
         },
-        "resourceGroup": {
+        "resourceGroupName": {
           "type": "string"
         },
         "subscriptionId": {
@@ -220,6 +234,16 @@
         }
       }
     },
+    "AzureVmssDeploymentTarget": {
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/AzureDeploymentTarget"
+        }
+      ],
+      "properties": {
+      }
+    },
     "BuildConfiguration": {
       "type": "object",
       "properties": {
@@ -228,11 +252,11 @@
             "undefined",
             "aspNetWap",
             "aspNetCore",
-            "nodeJSWithGulp",
-            "nodeJSWithGrunt",
+            "nodeJS",
             "azureVirtualMachineImage",
             "dockerImage",
-            "dotNetContainerServices"
+            "dotNetContainerServices",
+            "python"
           ],
           "x-ms-enum": {
             "name": "Microsoft.VisualStudio.Services.PortalExtension.WebApi.Contracts.ApplicationType"
@@ -326,16 +350,7 @@
           }
         },
         "type": {
-          "enum": [
-            "undefined",
-            "tfsGit",
-            "tfvc",
-            "gitHub",
-            "localGit"
-          ],
-          "x-ms-enum": {
-            "name": "Microsoft.VisualStudio.Services.PortalExtension.WebApi.Contracts.CodeRepositoryType"
-          }
+          "type": "string"
         },
         "url": {
           "type": "string"
@@ -460,9 +475,6 @@
         "authorizationInfo": {
           "$ref": "#/definitions/Authorization"
         },
-        "createIfNotFound": {
-          "type": "boolean"
-        },
         "environmentType": {
           "enum": [
             "undefined",
@@ -496,6 +508,9 @@
         }
       ],
       "properties": {
+        "dockerfilePath": {
+          "type": "string"
+        },
         "image": {
           "type": "string"
         },
@@ -523,6 +538,26 @@
         },
         "registry": {
           "$ref": "#/definitions/ContainerRegistry"
+        }
+      }
+    },
+    "NodeJsBuildConfiguration": {
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/BuildConfiguration"
+        }
+      ],
+      "properties": {
+        "nodeJsTaskRunner": {
+          "enum": [
+            "undefined",
+            "gulp",
+            "grunt"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.VisualStudio.Services.PortalExtension.WebApi.Contracts.NodeJsTaskRunnerType"
+          }
         }
       }
     },
@@ -638,6 +673,36 @@
         }
       }
     },
+    "PythonBuildConfiguration": {
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/BuildConfiguration"
+        }
+      ],
+      "properties": {
+        "djangoSettingsModule": {
+          "type": "string"
+        },
+        "flaskProjectName": {
+          "type": "string"
+        },
+        "pythonExtensionId": {
+          "type": "string"
+        },
+        "pythonFramework": {
+          "enum": [
+            "undefined",
+            "bottle",
+            "django",
+            "flask"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.VisualStudio.Services.PortalExtension.WebApi.Contracts.PythonFrameworkType"
+          }
+        }
+      }
+    },
     "ReferenceLinks": {
       "type": "object",
       "properties": {
@@ -683,6 +748,25 @@
           }
         },
         "resourceName": {
+          "type": "string"
+        }
+      }
+    },
+    "ServiceFabricDeploymentTarget": {
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/DeploymentTarget"
+        }
+      ],
+      "properties": {
+        "applicationName": {
+          "type": "string"
+        },
+        "clusterEndpoint": {
+          "type": "string"
+        },
+        "serverCertificateThumbprint": {
           "type": "string"
         }
       }
