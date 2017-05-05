@@ -607,6 +607,61 @@
             }
           }
         }
+      },
+      "patch": {
+        "tags": [
+          "policyStatuses"
+        ],
+        "summary": "UpdateRegistrationPolicyStatusProperties",
+        "description": "",
+        "operationId": "updateRegistrationPolicyStatusProperties",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/PolicyStatus"
+            }
+          },
+          {
+            "in": "path",
+            "name": "productId",
+            "description": "",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "registrationId",
+            "description": "",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "query",
+            "name": "submit",
+            "description": "",
+            "required": false,
+            "type": "boolean"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/PolicyStatus"
+            }
+          }
+        }
       }
     }
   },
@@ -618,6 +673,9 @@
           "$ref": "#/definitions/Policy"
         },
         "processingUrl": {
+          "type": "string"
+        },
+        "propertiesProcessingUrl": {
           "type": "string"
         }
       }
@@ -661,6 +719,9 @@
     "IdentityRef": {
       "type": "object",
       "properties": {
+        "directoryAlias": {
+          "type": "string"
+        },
         "displayName": {
           "type": "string"
         },
@@ -745,7 +806,7 @@
         "policyState": {
           "enum": [
             "error",
-            "initialized",
+            "processingPending",
             "processing",
             "approved",
             "rejected",
@@ -771,6 +832,9 @@
           "items": {
             "$ref": "#/definitions/PropertyDescriptor"
           }
+        },
+        "requestThumbprint": {
+          "type": "string"
         }
       }
     },
@@ -883,16 +947,10 @@
           "type": "string",
           "format": "uuid"
         },
-        "properties": {
-          "type": "object",
-          "additionalProperties": {
-            "type": "string"
-          }
-        },
         "registrationState": {
           "enum": [
             "error",
-            "initialized",
+            "processingPending",
             "processing",
             "approved",
             "rejected",
@@ -932,10 +990,10 @@
         "componentVersion": {
           "type": "string"
         },
-        "properties": {
+        "policyProperties": {
           "type": "object",
           "additionalProperties": {
-            "type": "string"
+            "type": "object"
           }
         }
       }
