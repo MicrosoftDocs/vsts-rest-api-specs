@@ -1,0 +1,330 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "InternalPackaging",
+    "description": "",
+    "termsOfService": "https://go.microsoft.com/fwlink/?LinkId=329770",
+    "contact": {
+      "name": "nugetvss",
+      "email": "nugetvss@microsoft.com"
+    },
+    "license": {
+      "name": "MICROSOFT SOFTWARE LICENSE TERMS",
+      "url": "https://go.microsoft.com/fwlink/?LinkId=329770"
+    },
+    "version": "3.2"
+  },
+  "host": "fabrikam-fiber-inc.visualstudio.com",
+  "basePath": "/",
+  "tags": [
+    {
+      "name": "cachedPackages"
+    },
+    {
+      "name": "indexEntries"
+    }
+  ],
+  "schemes": [
+    "https"
+  ],
+  "paths": {
+    "/_apis/packaging/Feeds/{feedId}/indexentries": {
+      "post": {
+        "tags": [
+          "indexEntries"
+        ],
+        "summary": "SetPackage",
+        "description": "",
+        "operationId": "setPackage",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/PackageIndexEntry"
+            }
+          },
+          {
+            "in": "path",
+            "name": "feedId",
+            "description": "",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/PackageIndexEntryResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.packaging_write"
+            ]
+          }
+        ]
+      },
+      "patch": {
+        "tags": [
+          "indexEntries"
+        ],
+        "summary": "UpdatePackages",
+        "description": "",
+        "operationId": "updatePackages",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/PackageVersionIndexEntryUpdate"
+              }
+            }
+          },
+          {
+            "in": "path",
+            "name": "feedId",
+            "description": "",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.packaging_manage"
+            ]
+          }
+        ]
+      }
+    },
+    "/_apis/packaging/Feeds/{feedId}/Protocols/{protocolType}/UpstreamSources/{upstreamId}/cachedpackages": {
+      "delete": {
+        "tags": [
+          "cachedPackages"
+        ],
+        "summary": "ClearPackageCache",
+        "description": "Clears the package cache for the feed",
+        "operationId": "clearPackageCache",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "feedId",
+            "description": "",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "protocolType",
+            "description": "",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "upstreamId",
+            "description": "",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.packaging_manage"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "PackageIndexEntry": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "description": "The display name of the package",
+          "type": "string"
+        },
+        "normalizedName": {
+          "description": "The normalized name representing the identity of this package for this protocol type",
+          "type": "string"
+        },
+        "packageProtocolMetadata": {
+          "description": "Protocol specific metadata at the package level",
+          "type": "string",
+          "format": "ProtocolMetadata"
+        },
+        "packageVersion": {
+          "$ref": "#/definitions/PackageVersionIndexEntry"
+        },
+        "protocolType": {
+          "type": "string"
+        }
+      }
+    },
+    "PackageIndexEntryResponse": {
+      "type": "object",
+      "properties": {
+        "packageId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "packageVersionId": {
+          "type": "string",
+          "format": "uuid"
+        }
+      }
+    },
+    "PackageVersionIndexEntry": {
+      "type": "object",
+      "properties": {
+        "author": {
+          "type": "string"
+        },
+        "dependencies": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "PackageDependency"
+          }
+        },
+        "description": {
+          "type": "string"
+        },
+        "files": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "PackageFile"
+          }
+        },
+        "isCached": {
+          "type": "boolean"
+        },
+        "isRelease": {
+          "type": "boolean"
+        },
+        "normalizedVersion": {
+          "description": "The normalized version representing the identity of a package version",
+          "type": "string"
+        },
+        "publishDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "sortableVersion": {
+          "description": "A sortable representation of the version. This value will be stored in the database, and will be used for ordering versions during query and update.",
+          "type": "string"
+        },
+        "storageId": {
+          "description": "The identifier representing the indentity of the package in storage",
+          "type": "string"
+        },
+        "summary": {
+          "type": "string"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "version": {
+          "description": "The display version of the package version",
+          "type": "string"
+        },
+        "versionProtocolMetadata": {
+          "type": "string",
+          "format": "ProtocolMetadata"
+        }
+      }
+    },
+    "PackageVersionIndexEntryUpdate": {
+      "type": "object",
+      "properties": {
+        "metadata": {
+          "description": "Protocol specific metadata",
+          "type": "string",
+          "format": "ProtocolMetadata"
+        },
+        "normalizedVersion": {
+          "description": "The normalized version representing the identity of a package version",
+          "type": "string"
+        },
+        "packageId": {
+          "description": "The packageId representing the identity of this package for this protocol type",
+          "type": "string",
+          "format": "uuid"
+        },
+        "sortableVersion": {
+          "description": "A sortable representation of the version. This value will be stored in the database, and will be used for ordering versions during query and update.",
+          "type": "string"
+        }
+      }
+    }
+  },
+  "parameters": {
+    "api-Version": {
+      "name": "api-version",
+      "in": "query",
+      "description": "Version of the API to use.  This should be set to '3.2-preview' to use this version of the api.",
+      "required": true,
+      "type": "string"
+    }
+  },
+  "securityDefinitions": {
+    "accessToken": {
+      "type": "basic",
+      "description": "Personal access token. Use any value for the user name and the token as the password."
+     },
+     "oauth2": {
+      "type": "oauth2",
+      "flow": "accessCode",
+      "authorizationUrl": "https://app.vssps.visualstudio.com/oauth2/authorize&response_type=Assertion",
+      "tokenUrl": "https://app.vssps.visualstudio.com/oauth2/token?client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer&grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer",
+      "scopes": {
+        "vso.packaging_write": "Grants the ability to create and read feeds and packages.",
+        "vso.packaging_manage": "Grants the ability to create, read, update, and delete feeds and packages."
+      }
+    }
+  },
+  "security": [
+    {
+      "accessToken": []
+    }
+  ],
+  "externalDocs": {
+    "description": "Visual Studio Team Services REST APIs",
+    "url": "https://www.visualstudio.com/docs/integrate/api/overview"
+  }
+}

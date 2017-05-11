@@ -54,7 +54,7 @@
           "200": {
             "description": "successful operation",
             "schema": {
-              "$ref": "#/definitions/MemberEntitlementsPostResponse"
+              "$ref": "#/definitions/MemberEntitlementOperationReference"
             }
           }
         }
@@ -112,6 +112,39 @@
             }
           }
         }
+      },
+      "patch": {
+        "tags": [
+          "memberEntitlements"
+        ],
+        "summary": "UpdateMemberEntitlements",
+        "description": "Used to edit multiple members in an account. Edits groups, licenses, and extensions.",
+        "operationId": "updateMemberEntitlements",
+        "consumes": [
+          "application/json-patch+json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "JsonPatch document",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/JsonPatchDocument"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/MemberEntitlementOperationReference"
+            }
+          }
+        }
       }
     },
     "/_apis/memberentitlements/{memberId}": {
@@ -122,6 +155,9 @@
         "summary": "DeleteMemberEntitlement",
         "description": "Deletes members from an account",
         "operationId": "deleteMemberEntitlement",
+        "produces": [
+          "application/json"
+        ],
         "parameters": [
           {
             "in": "path",
@@ -134,7 +170,10 @@
         ],
         "responses": {
           "200": {
-            "description": "successful operation"
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/MemberEntitlementOperationReference"
+            }
           }
         }
       },
@@ -203,7 +242,7 @@
           "200": {
             "description": "successful operation",
             "schema": {
-              "$ref": "#/definitions/MemberEntitlementsPatchResponse"
+              "$ref": "#/definitions/MemberEntitlementOperationReference"
             }
           }
         }
@@ -241,6 +280,21 @@
           ],
           "x-ms-enum": {
             "name": "Microsoft.VisualStudio.Services.Licensing.LicensingSource"
+          }
+        },
+        "msdnLicenseType": {
+          "enum": [
+            "none",
+            "eligible",
+            "professional",
+            "platforms",
+            "testProfessional",
+            "premium",
+            "ultimate",
+            "enterprise"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.VisualStudio.Services.Licensing.MsdnLicenseType"
           }
         },
         "status": {
@@ -454,6 +508,44 @@
         }
       }
     },
+    "MemberEntitlementOperationReference": {
+      "type": "object",
+      "properties": {
+        "haveResultsSucceeded": {
+          "description": "True if all operations were successful",
+          "type": "boolean"
+        },
+        "id": {
+          "description": "Identifier for this operation. Used for checking operation progress if state is \"Pending\"",
+          "type": "string"
+        },
+        "results": {
+          "description": "List of results for each operation",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/OperationResult"
+          }
+        },
+        "status": {
+          "description": "The current status of the operation.",
+          "enum": [
+            "notSet",
+            "queued",
+            "inProgress",
+            "cancelled",
+            "succeeded",
+            "failed"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.VisualStudio.Services.Operations.OperationStatus"
+          }
+        },
+        "url": {
+          "description": "Url to get the full object.",
+          "type": "string"
+        }
+      }
+    },
     "MemberEntitlementsPatchResponse": {
       "type": "object",
       "allOf": [
@@ -511,6 +603,11 @@
         "isSuccess": {
           "description": "Success status of the operation",
           "type": "boolean"
+        },
+        "memberId": {
+          "description": "Identifier of the Member being acted upon",
+          "type": "string",
+          "format": "uuid"
         },
         "result": {
           "description": "Result of the MemberEntitlement after the operation",
