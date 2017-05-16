@@ -19,6 +19,9 @@
   "tags": [
     {
       "name": "install"
+    },
+    {
+      "name": "projectQueryResults"
     }
   ],
   "schemes": [
@@ -45,9 +48,286 @@
           }
         }
       }
+    },
+    "/_apis/orgsearch/projectqueryresults": {
+      "post": {
+        "tags": [
+          "projectQueryResults"
+        ],
+        "summary": "GetProjectSearchQueryResults",
+        "description": "Provides a set of results which match the posted query.",
+        "operationId": "getProjectSearchQueryResults",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "The search query.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ProjectSearchQuery"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ProjectSearchResponse"
+            }
+          }
+        }
+      }
     }
   },
   "definitions": {
+    "EntitySearchQuery": {
+      "type": "object",
+      "properties": {
+        "filters": {
+          "description": "Filters to be passed with query. Set it to null if there are no filters to be applied.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SearchFilter"
+          }
+        },
+        "searchFilters": {
+          "description": "Filters to be passed with query. Set it to null if there are no filters to be applied.",
+          "type": "object",
+          "additionalProperties": {
+            "type": "array"
+          }
+        },
+        "searchText": {
+          "description": "Search Text for which Search is performed.",
+          "type": "string"
+        },
+        "skipResults": {
+          "description": "For supporting pagination. SkipResults tells the number of results to be skipped.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "sortOptions": {
+          "description": "Options for sorting in the search results. If set to null, the results will be sorted by relevance.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/EntitySortOption"
+          }
+        },
+        "takeResults": {
+          "description": "For supporting pagination. TakeResults tells the number of results to be returned.",
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "EntitySearchResponse": {
+      "type": "object",
+      "properties": {
+        "errors": {
+          "description": "List of errors (if any) that needs to be sent to the client",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ErrorData"
+          }
+        },
+        "filterCategories": {
+          "description": "Filter Categories (if any) sent in the response",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/FilterCategory"
+          }
+        }
+      }
+    },
+    "EntitySortOption": {
+      "type": "object",
+      "properties": {
+        "field": {
+          "description": "Field name on which sorting should be done.",
+          "type": "string"
+        },
+        "sortOrder": {
+          "description": "Order in which the results should be sorted. When set it automatically sets sortOrder enum value. This is required since the controller does not allow enum members to be passed by their names.",
+          "type": "string"
+        }
+      }
+    },
+    "ErrorData": {
+      "type": "object",
+      "properties": {
+        "errorCode": {
+          "description": "Error code",
+          "type": "string"
+        },
+        "errorMessage": {
+          "description": "Error message",
+          "type": "string"
+        },
+        "errorType": {
+          "description": "Error type",
+          "enum": [
+            "warning",
+            "error"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.VisualStudio.Services.Search.Shared.WebApi.ErrorType"
+          }
+        }
+      }
+    },
+    "Filter": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "resultCount": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "selected": {
+          "type": "boolean"
+        }
+      }
+    },
+    "FilterCategory": {
+      "type": "object",
+      "properties": {
+        "filters": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Filter"
+          }
+        },
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "Highlight": {
+      "type": "object",
+      "properties": {
+        "field": {
+          "description": "Name of the field higlighted.",
+          "type": "string"
+        },
+        "highlights": {
+          "description": "Highlights on the field.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "ProjectSearchQuery": {
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/EntitySearchQuery"
+        }
+      ],
+      "properties": {
+      }
+    },
+    "ProjectSearchResponse": {
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/EntitySearchResponse"
+        }
+      ],
+      "properties": {
+        "query": {
+          "description": "ProjectSearchQuery object sent as query.",
+          "$ref": "#/definitions/ProjectSearchQuery"
+        },
+        "results": {
+          "description": "ProjectSearchResults returned as part of the response.",
+          "$ref": "#/definitions/ProjectSearchResults"
+        }
+      }
+    },
+    "ProjectSearchResult": {
+      "type": "object",
+      "properties": {
+        "account": {
+          "description": "Account Name for the project.",
+          "type": "string"
+        },
+        "collection": {
+          "description": "Collection name for the project.",
+          "type": "string"
+        },
+        "description": {
+          "description": "Description of the Project/Repository.",
+          "type": "string"
+        },
+        "hits": {
+          "description": "Hit Offsets for highlighting in the description field.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Highlight"
+          }
+        },
+        "id": {
+          "description": "Id of the Project/Repository.",
+          "type": "string"
+        },
+        "name": {
+          "description": "Name of the Project/Repository.",
+          "type": "string"
+        },
+        "parentProjectName": {
+          "description": "Name of Parent Project, useful in case of a type 'Repository'.",
+          "type": "string"
+        },
+        "type": {
+          "description": "Flag which tells if this entity is a 'Project' or 'Repository'.",
+          "type": "string"
+        }
+      }
+    },
+    "ProjectSearchResults": {
+      "type": "object",
+      "properties": {
+        "count": {
+          "description": "Number of matched results in response to Project Search.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "values": {
+          "description": "Array of ProjectSearchResult objects for matched documents.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ProjectSearchResult"
+          }
+        }
+      }
+    },
+    "SearchFilter": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "values": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    }
   },
   "parameters": {
     "api-Version": {
