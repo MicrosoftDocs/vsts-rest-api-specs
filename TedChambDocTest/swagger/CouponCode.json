@@ -12,7 +12,7 @@
       "name": "MICROSOFT SOFTWARE LICENSE TERMS",
       "url": "https://go.microsoft.com/fwlink/?LinkId=329770"
     },
-    "version": "3.2"
+    "version": "4.0"
   },
   "host": "fabrikam-fiber-inc.visualstudio.com",
   "basePath": "/",
@@ -48,6 +48,63 @@
             "schema": {
               "$ref": "#/definitions/AddCouponCodeTypeModel"
             }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/CouponCodeTypeModel"
+            }
+          }
+        }
+      }
+    },
+    "/_apis/couponcode/couponcodebatchbulkupload": {
+      "post": {
+        "tags": [
+          "couponCode"
+        ],
+        "summary": "CouponCodeBatchBulkUpload",
+        "description": "",
+        "operationId": "couponCodeBatchBulkUpload",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "object"
+            }
+          },
+          {
+            "in": "query",
+            "name": "batchName",
+            "description": "",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "expirationDate",
+            "description": "",
+            "required": true,
+            "type": "string",
+            "format": "date-time"
+          },
+          {
+            "in": "query",
+            "name": "benefitID",
+            "description": "",
+            "required": true,
+            "type": "string"
           }
         ],
         "responses": {
@@ -405,7 +462,15 @@
             "error_TheSpecificKeyIsNotAssociatedWithThisLevel",
             "error_GetKeyFailed",
             "error_GetKeys_CWSServiceException",
-            "error_GetKeys_AzureSearchProductKeyException"
+            "error_GetKeys_AzureSearchProductKeyException",
+            "benefits_FteHeader",
+            "benefits_FteBody",
+            "benefits_FteSubmitButtonText",
+            "benefits_StartAzureAdvisoryChat",
+            "benefits_AboutToGetChatAuthToken",
+            "benefits_FailedToGetChatAuthToken",
+            "mySubscriptions_FteViewTnCText",
+            "mySubscriptions_FteViewTnCLink"
           ],
           "x-ms-enum": {
             "name": "Microsoft.VisualStudio.Services.Subscriptions.WebApi.LocalizedStaticPageElement"
@@ -596,6 +661,9 @@
         "defaultSubscriptionGuid": {
           "type": "string",
           "format": "uuid"
+        },
+        "showFteTerms": {
+          "type": "boolean"
         },
         "showTopBarMessage": {
           "type": "boolean"
@@ -919,6 +987,9 @@
     "CouponCodeBatchModel": {
       "type": "object",
       "properties": {
+        "batchBulkUploadStatus": {
+          "type": "string"
+        },
         "batchId": {
           "type": "string",
           "format": "uuid"
@@ -1139,6 +1210,14 @@
           "items": {
             "$ref": "#/definitions/ActionProperty"
           }
+        }
+      }
+    },
+    "DelegateAuthTokenModel": {
+      "type": "object",
+      "properties": {
+        "authToken": {
+          "type": "string"
         }
       }
     },
@@ -1560,6 +1639,9 @@
     "LocalizedStaticPageElementsModel": {
       "type": "object",
       "properties": {
+        "datePattern": {
+          "type": "string"
+        },
         "locale": {
           "type": "string"
         },
@@ -2113,6 +2195,10 @@
     "ProgramInformationModel": {
       "type": "object",
       "properties": {
+        "expirationMaxMonths": {
+          "type": "integer",
+          "format": "int32"
+        },
         "gracePeriod": {
           "type": "integer",
           "format": "int32"
@@ -2185,6 +2271,75 @@
         "subscriptionGuid": {
           "type": "string",
           "format": "uuid"
+        }
+      }
+    },
+    "RetailPksResponseLogsModel": {
+      "type": "object",
+      "properties": {
+        "errorMessage": {
+          "type": "string"
+        },
+        "logs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/RetailPksResponseModel"
+          }
+        }
+      }
+    },
+    "RetailPksResponseModel": {
+      "type": "object",
+      "properties": {
+        "activationId": {
+          "type": "string"
+        },
+        "authorizationCode": {
+          "type": "string"
+        },
+        "errorMessage": {
+          "type": "string"
+        },
+        "key": {
+          "type": "string"
+        },
+        "productId": {
+          "type": "string"
+        },
+        "requestDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "status": {
+          "enum": [
+            "none",
+            "success",
+            "noResultFound",
+            "needOverrideException",
+            "activationException"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.VisualStudio.Services.Subscriptions.WebApi.PksResponseStatus"
+          }
+        },
+        "success": {
+          "type": "string"
+        },
+        "type": {
+          "enum": [
+            "none",
+            "activate",
+            "search"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.VisualStudio.Services.Subscriptions.WebApi.PksRequestType"
+          }
+        },
+        "upn": {
+          "type": "string"
+        },
+        "xmlResponsePayload": {
+          "type": "string"
         }
       }
     },
@@ -2436,6 +2591,18 @@
     "SiteSettingsModel": {
       "type": "object",
       "properties": {
+        "azureAdvisoryAppId": {
+          "type": "string"
+        },
+        "azureAdvisoryEnvironment": {
+          "type": "string"
+        },
+        "azureAdvisoryPartnerId": {
+          "type": "string"
+        },
+        "delegateAuthToken": {
+          "type": "string"
+        },
         "duringImpersonation": {
           "type": "boolean"
         },
@@ -3049,7 +3216,7 @@
     "api-Version": {
       "name": "api-version",
       "in": "query",
-      "description": "Version of the API to use.  This should be set to '3.2-preview' to use this version of the api.",
+      "description": "Version of the API to use.  This should be set to '4.0-preview' to use this version of the api.",
       "required": true,
       "type": "string"
     }

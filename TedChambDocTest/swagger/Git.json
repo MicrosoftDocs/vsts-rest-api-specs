@@ -12,7 +12,7 @@
       "name": "MICROSOFT SOFTWARE LICENSE TERMS",
       "url": "https://go.microsoft.com/fwlink/?LinkId=329770"
     },
-    "version": "3.2"
+    "version": "4.0"
   },
   "host": "fabrikam-fiber-inc.visualstudio.com",
   "basePath": "/",
@@ -1243,6 +1243,13 @@
             "description": "",
             "required": true,
             "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "supportsIterations",
+            "description": "",
+            "required": false,
+            "type": "boolean"
           }
         ],
         "responses": {
@@ -5971,6 +5978,13 @@
             "description": "",
             "required": true,
             "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "supportsIterations",
+            "description": "",
+            "required": false,
+            "type": "boolean"
           }
         ],
         "responses": {
@@ -10518,6 +10532,64 @@
         }
       }
     },
+    "GitCreateForkRequest": {
+      "type": "object",
+      "properties": {
+        "_links": {
+          "$ref": "#/definitions/ReferenceLinks"
+        },
+        "createForkRequestId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "detailedStatus": {
+          "$ref": "#/definitions/GitCreateForkStatusDetail"
+        },
+        "parameters": {
+          "$ref": "#/definitions/GitCreateForkRequestParameters"
+        },
+        "status": {
+          "enum": [
+            "queued",
+            "inProgress",
+            "completed",
+            "failed",
+            "abandoned"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.TeamFoundation.SourceControl.WebApi.GitAsyncOperationStatus"
+          }
+        },
+        "url": {
+          "type": "string"
+        }
+      }
+    },
+    "GitCreateForkRequestParameters": {
+      "type": "object",
+      "properties": {
+      }
+    },
+    "GitCreateForkStatusDetail": {
+      "type": "object",
+      "properties": {
+        "allSteps": {
+          "description": "All valid steps for the forking process",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "currentStep": {
+          "description": "Index into  for the current step",
+          "type": "integer",
+          "format": "int32"
+        },
+        "errorMessage": {
+          "type": "string"
+        }
+      }
+    },
     "GitDeletedRepository": {
       "type": "object",
       "properties": {
@@ -10559,6 +10631,11 @@
         "url": {
           "type": "string"
         }
+      }
+    },
+    "GitForkRelationship": {
+      "type": "object",
+      "properties": {
       }
     },
     "GitImportFailedEvent": {
@@ -10945,9 +11022,26 @@
         "lastMergeTargetCommit": {
           "$ref": "#/definitions/GitCommitRef"
         },
+        "mergeFailureMessage": {
+          "type": "string"
+        },
+        "mergeFailureType": {
+          "enum": [
+            "none",
+            "unknown",
+            "caseSensitive",
+            "objectTooLarge"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.TeamFoundation.SourceControl.WebApi.PullRequestMergeFailureType"
+          }
+        },
         "mergeId": {
           "type": "string",
           "format": "uuid"
+        },
+        "mergeOptions": {
+          "$ref": "#/definitions/GitPullRequestMergeOptions"
         },
         "mergeStatus": {
           "enum": [
@@ -11161,6 +11255,14 @@
         "nextTop": {
           "type": "integer",
           "format": "int32"
+        }
+      }
+    },
+    "GitPullRequestMergeOptions": {
+      "type": "object",
+      "properties": {
+        "disableRenames": {
+          "type": "boolean"
         }
       }
     },
@@ -13229,7 +13331,7 @@
     "api-Version": {
       "name": "api-version",
       "in": "query",
-      "description": "Version of the API to use.  This should be set to '3.2-preview' to use this version of the api.",
+      "description": "Version of the API to use.  This should be set to '4.0-preview' to use this version of the api.",
       "required": true,
       "type": "string"
     }

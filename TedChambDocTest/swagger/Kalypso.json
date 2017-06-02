@@ -12,7 +12,7 @@
       "name": "MICROSOFT SOFTWARE LICENSE TERMS",
       "url": "https://go.microsoft.com/fwlink/?LinkId=329770"
     },
-    "version": "3.2"
+    "version": "4.0"
   },
   "host": "fabrikam-fiber-inc.visualstudio.com",
   "basePath": "/",
@@ -31,6 +31,12 @@
     },
     {
       "name": "deploymentSettings"
+    },
+    {
+      "name": "digest"
+    },
+    {
+      "name": "draftEndpoints"
     },
     {
       "name": "healthAlertMonitors"
@@ -94,9 +100,6 @@
         "consumes": [
           "application/json"
         ],
-        "produces": [
-          "application/json"
-        ],
         "parameters": [
           {
             "in": "body",
@@ -110,10 +113,7 @@
         ],
         "responses": {
           "200": {
-            "description": "successful operation",
-            "schema": {
-              "$ref": "#/definitions/KustoEndpointProperties"
-            }
+            "description": "successful operation"
           }
         }
       }
@@ -439,6 +439,136 @@
         }
       }
     },
+    "/_apis/health/Containers/{containerId}/digest": {
+      "post": {
+        "tags": [
+          "digest"
+        ],
+        "summary": "CreateDigest",
+        "description": "",
+        "operationId": "createDigest",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/DigestProperties"
+            }
+          },
+          {
+            "in": "path",
+            "name": "containerId",
+            "description": "",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/DigestProperties"
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "digest"
+        ],
+        "summary": "DeleteDigest",
+        "description": "",
+        "operationId": "deleteDigest",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "containerId",
+            "description": "",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "digest"
+        ],
+        "summary": "GetDigest",
+        "description": "",
+        "operationId": "getDigest",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "containerId",
+            "description": "",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/DigestProperties"
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "digest"
+        ],
+        "summary": "UpdateDigest",
+        "description": "",
+        "operationId": "updateDigest",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/DigestProperties"
+            }
+          },
+          {
+            "in": "path",
+            "name": "containerId",
+            "description": "",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        }
+      }
+    },
     "/_apis/health/Containers/{containerId}/healthalertmonitors": {
       "post": {
         "tags": [
@@ -550,6 +680,49 @@
             }
           }
         }
+      },
+      "put": {
+        "tags": [
+          "healthAlertMonitors"
+        ],
+        "summary": "UpdateHealthAlertMonitor",
+        "description": "",
+        "operationId": "updateHealthAlertMonitor",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/HealthAlertMonitorProperties"
+            }
+          },
+          {
+            "in": "path",
+            "name": "containerId",
+            "description": "",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "path",
+            "name": "monitorId",
+            "description": "",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        }
       }
     },
     "/_apis/health/Containers/{containerId}/monitors": {
@@ -557,9 +730,9 @@
         "tags": [
           "monitors"
         ],
-        "summary": "GetMonitors",
+        "summary": "GetMonitorRunData",
         "description": "",
-        "operationId": "getMonitors",
+        "operationId": "getMonitorRunData",
         "produces": [
           "application/json"
         ],
@@ -571,16 +744,29 @@
             "required": true,
             "type": "string",
             "format": "uuid"
+          },
+          {
+            "in": "query",
+            "name": "monitorId",
+            "description": "",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "query",
+            "name": "runId",
+            "description": "",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
           }
         ],
         "responses": {
           "200": {
             "description": "successful operation",
             "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/MonitorProperties"
-              }
+              "$ref": "#/definitions/MonitorRunData"
             }
           }
         }
@@ -923,9 +1109,9 @@
         "tags": [
           "queryResultMonitors"
         ],
-        "summary": "GetMonitorRunData",
+        "summary": "GetQueryResultMonitor",
         "description": "",
-        "operationId": "getMonitorRunData",
+        "operationId": "getQueryResultMonitor",
         "produces": [
           "application/json"
         ],
@@ -945,21 +1131,13 @@
             "required": true,
             "type": "string",
             "format": "uuid"
-          },
-          {
-            "in": "query",
-            "name": "runId",
-            "description": "",
-            "required": true,
-            "type": "string",
-            "format": "uuid"
           }
         ],
         "responses": {
           "200": {
             "description": "successful operation",
             "schema": {
-              "$ref": "#/definitions/MonitorRunData"
+              "$ref": "#/definitions/QueryResultMonitorProperties"
             }
           }
         }
@@ -1064,6 +1242,158 @@
             "schema": {
               "$ref": "#/definitions/DeploymentSettings"
             }
+          }
+        }
+      }
+    },
+    "/_apis/health/draftendpoints": {
+      "post": {
+        "tags": [
+          "draftEndpoints"
+        ],
+        "summary": "CreateDraftEndpoint",
+        "description": "",
+        "operationId": "createDraftEndpoint",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/DraftEndpointProperties"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/DraftEndpointProperties"
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "draftEndpoints"
+        ],
+        "summary": "GetDraftEndpoints",
+        "description": "",
+        "operationId": "getDraftEndpoints",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/DraftEndpointProperties"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/_apis/health/draftendpoints/{draftEndpointId}": {
+      "delete": {
+        "tags": [
+          "draftEndpoints"
+        ],
+        "summary": "DeleteDraftEndpoint",
+        "description": "",
+        "operationId": "deleteDraftEndpoint",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "draftEndpointId",
+            "description": "",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/DraftEndpointProperties"
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "draftEndpoints"
+        ],
+        "summary": "GetDraftEndpoint",
+        "description": "",
+        "operationId": "getDraftEndpoint",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "draftEndpointId",
+            "description": "",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/DraftEndpointProperties"
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "draftEndpoints"
+        ],
+        "summary": "UpdateDraftEndpoint",
+        "description": "",
+        "operationId": "updateDraftEndpoint",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/DraftEndpointProperties"
+            }
+          },
+          {
+            "in": "path",
+            "name": "draftEndpointId",
+            "description": "",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
           }
         }
       }
@@ -1422,15 +1752,24 @@
     "AccountSettings": {
       "type": "object",
       "properties": {
+        "dataSourceType": {
+          "enum": [
+            "kusto",
+            "draft"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.VisualStudio.Services.Kalypso.WebApi.DataProviderType"
+          }
+        },
+        "destinationKustoProperties": {
+          "$ref": "#/definitions/KustoEndpointProperties"
+        },
         "finalStageRowLimit": {
           "type": "integer",
           "format": "int32"
         },
         "healthClientUrl": {
           "type": "string"
-        },
-        "kustoEndpointProperties": {
-          "$ref": "#/definitions/KustoEndpointProperties"
         },
         "monitorRunHistoryRetentionInDays": {
           "type": "integer",
@@ -1439,6 +1778,9 @@
         "nonFinalStageRowLimit": {
           "type": "integer",
           "format": "int32"
+        },
+        "sourceKustoProperties": {
+          "$ref": "#/definitions/KustoEndpointProperties"
         }
       }
     },
@@ -1557,6 +1899,106 @@
         }
       }
     },
+    "DigestDataProperties": {
+      "type": "object",
+      "properties": {
+        "containerId": {
+          "description": "Id of the container to which the below metrics are related",
+          "type": "string",
+          "format": "uuid"
+        },
+        "containerName": {
+          "type": "string"
+        },
+        "monitorData": {
+          "description": "Id of the monitor to which the below metrics are related",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/DigestMonitorData"
+          }
+        },
+        "period": {
+          "description": "Human readable period name (e.g. 'Day', 'Week')",
+          "$ref": "#/definitions/Period"
+        }
+      }
+    },
+    "DigestMonitorData": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "name": {
+          "type": "string"
+        },
+        "signaled": {
+          "$ref": "#/definitions/RunCounts"
+        },
+        "totalErrors": {
+          "$ref": "#/definitions/RunCounts"
+        },
+        "totalExecutions": {
+          "$ref": "#/definitions/RunCounts"
+        }
+      }
+    },
+    "DigestProperties": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "Id of the parent container",
+          "type": "string",
+          "format": "uuid"
+        },
+        "recipients": {
+          "description": "List of email addresses to send the digest to",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "subject": {
+          "description": "Subject line of the digest",
+          "type": "string"
+        },
+        "triggerInterval": {
+          "description": "Trigger interval in minutes",
+          "type": "integer",
+          "format": "int32"
+        },
+        "triggerStartTime": {
+          "description": "Trigger datetime of the digest",
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "DraftEndpointProperties": {
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/ItemMetadata"
+        }
+      ],
+      "properties": {
+        "resourceGroupName": {
+          "description": "Resource group name of the Draft ARM resource",
+          "type": "string"
+        },
+        "resourceName": {
+          "description": "Resource name of the Draft ARM resource",
+          "type": "string"
+        },
+        "subscriptionId": {
+          "description": "Subscription ID of the Draft ARM resource",
+          "type": "string",
+          "format": "uuid"
+        }
+      }
+    },
     "EmailAddress": {
       "type": "object",
       "properties": {
@@ -1648,6 +2090,9 @@
           "type": "string",
           "format": "uuid"
         },
+        "allMdmEndpoints": {
+          "type": "boolean"
+        },
         "incidentType": {
           "enum": [
             "preCreateIncident",
@@ -1655,6 +2100,26 @@
           ],
           "x-ms-enum": {
             "name": "Microsoft.VisualStudio.Services.Kalypso.WebApi.HealthAlertMonitorType"
+          }
+        },
+        "mdmEndpointIds": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "mdmEndpointsExclusionList": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "mdmMonitors": {
+          "type": "array",
+          "items": {
+            "type": "string"
           }
         },
         "monitorName": {
@@ -2148,6 +2613,23 @@
         }
       }
     },
+    "Period": {
+      "type": "object",
+      "properties": {
+        "current": {
+          "description": "Dates in short form to which the current period applies e.g. 05/01-05/08",
+          "type": "string"
+        },
+        "name": {
+          "description": "Human-readable name of the period. e.g. 'day' or 'week'",
+          "type": "string"
+        },
+        "past": {
+          "description": "Dates in short form to which the past period applies e.g. 05/01-05/08",
+          "type": "string"
+        }
+      }
+    },
     "Pipeline": {
       "type": "object",
       "properties": {
@@ -2279,6 +2761,11 @@
           "type": "string",
           "format": "uuid"
         },
+        "draftEndpointId": {
+          "description": "Repository path of the query",
+          "type": "string",
+          "format": "uuid"
+        },
         "ordinal": {
           "description": "the stage of the query in the pipeline",
           "type": "integer",
@@ -2391,6 +2878,28 @@
           "items": {
             "type": "array"
           }
+        }
+      }
+    },
+    "RunCounts": {
+      "type": "object",
+      "properties": {
+        "arrow": {
+          "type": "string"
+        },
+        "change": {
+          "type": "string"
+        },
+        "currentPeriod": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "displayName": {
+          "type": "string"
+        },
+        "pastPeriod": {
+          "type": "integer",
+          "format": "int32"
         }
       }
     },
@@ -2553,7 +3062,7 @@
     "api-Version": {
       "name": "api-version",
       "in": "query",
-      "description": "Version of the API to use.  This should be set to '3.2-preview' to use this version of the api.",
+      "description": "Version of the API to use.  This should be set to '4.0-preview' to use this version of the api.",
       "required": true,
       "type": "string"
     }

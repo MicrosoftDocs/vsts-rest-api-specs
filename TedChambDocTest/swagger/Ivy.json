@@ -12,7 +12,7 @@
       "name": "MICROSOFT SOFTWARE LICENSE TERMS",
       "url": "https://go.microsoft.com/fwlink/?LinkId=329770"
     },
-    "version": "3.2"
+    "version": "4.0"
   },
   "host": "fabrikam-fiber-inc.visualstudio.com",
   "basePath": "/",
@@ -26,35 +26,51 @@
   ],
   "paths": {
     "/_apis/packaging/feeds/{feed}/ivy/metadata": {
-      "post": {
+      "get": {
         "tags": [
           "metadata"
         ],
         "summary": "PackageInfo",
         "description": "",
         "operationId": "packageInfo",
-        "consumes": [
-          "application/json"
-        ],
         "produces": [
           "application/json"
         ],
         "parameters": [
-          {
-            "in": "body",
-            "name": "body",
-            "description": "",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/IvyPackageRequest"
-            }
-          },
           {
             "in": "path",
             "name": "feed",
             "description": "",
             "required": true,
             "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "name",
+            "description": "",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "version",
+            "description": "",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "path",
+            "description": "",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "includeMetadata",
+            "description": "",
+            "required": false,
+            "type": "boolean"
           }
         ],
         "responses": {
@@ -68,7 +84,7 @@
         "security": [
           {
             "oauth2": [
-              "vso.packaging_write"
+              "vso.packaging"
             ]
           }
         ]
@@ -82,22 +98,23 @@
         "files": {
           "$ref": "#/definitions/ReferenceLinks"
         },
-        "info": {
-          "$ref": "#/definitions/IvyXmlInfo"
+        "metadata": {
+          "$ref": "#/definitions/IvyXmlMetadata"
         },
-        "requestedFile": {
+        "module": {
+          "type": "string"
+        },
+        "moduleIndex": {
           "$ref": "#/definitions/ReferenceLink"
-        }
-      }
-    },
-    "IvyPackageRequest": {
-      "type": "object",
-      "properties": {
+        },
         "name": {
           "type": "string"
         },
-        "path": {
+        "organisation": {
           "type": "string"
+        },
+        "requestedFile": {
+          "$ref": "#/definitions/ReferenceLink"
         },
         "version": {
           "type": "string"
@@ -109,6 +126,95 @@
       "properties": {
         "body": {
           "type": "string"
+        }
+      }
+    },
+    "IvyXmlConfiguration": {
+      "type": "object",
+      "properties": {
+        "deprecated": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "extends": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "transitive": {
+          "type": "boolean"
+        },
+        "visibility": {
+          "type": "string"
+        }
+      }
+    },
+    "IvyXmlConfigurations": {
+      "type": "object",
+      "properties": {
+        "conf": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/IvyXmlConfiguration"
+          }
+        },
+        "confmappingoverride": {
+          "type": "boolean"
+        },
+        "defaultconf": {
+          "type": "string"
+        },
+        "defaultconfmapping": {
+          "type": "string"
+        }
+      }
+    },
+    "IvyXmlDependencies": {
+      "type": "object",
+      "properties": {
+        "defaultconf": {
+          "type": "string"
+        },
+        "defaultconfmapping": {
+          "type": "string"
+        },
+        "dependency": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/IvyXmlDependency"
+          }
+        }
+      }
+    },
+    "IvyXmlDependency": {
+      "type": "object",
+      "properties": {
+        "branch": {
+          "type": "string"
+        },
+        "changing": {
+          "type": "boolean"
+        },
+        "conf": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "org": {
+          "type": "string"
+        },
+        "rev": {
+          "type": "string"
+        },
+        "revConstraint": {
+          "type": "string"
+        },
+        "transitive": {
+          "type": "boolean"
         }
       }
     },
@@ -166,6 +272,63 @@
         }
       }
     },
+    "IvyXmlMetadata": {
+      "type": "object",
+      "properties": {
+        "configurations": {
+          "$ref": "#/definitions/IvyXmlConfigurations"
+        },
+        "correlationId": {
+          "type": "string"
+        },
+        "dependencies": {
+          "$ref": "#/definitions/IvyXmlDependencies"
+        },
+        "info": {
+          "$ref": "#/definitions/IvyXmlInfo"
+        },
+        "publications": {
+          "$ref": "#/definitions/IvyXmlPublications"
+        }
+      }
+    },
+    "IvyXmlPublication": {
+      "type": "object",
+      "properties": {
+        "conf": {
+          "type": "string"
+        },
+        "ext": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "packaging": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        }
+      }
+    },
+    "IvyXmlPublications": {
+      "type": "object",
+      "properties": {
+        "artifact": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/IvyXmlPublication"
+          }
+        },
+        "defaultconf": {
+          "type": "string"
+        }
+      }
+    },
     "IvyXmlRef": {
       "type": "object",
       "allOf": [
@@ -207,7 +370,7 @@
     "api-Version": {
       "name": "api-version",
       "in": "query",
-      "description": "Version of the API to use.  This should be set to '3.2-preview' to use this version of the api.",
+      "description": "Version of the API to use.  This should be set to '4.0-preview' to use this version of the api.",
       "required": true,
       "type": "string"
     }
@@ -223,7 +386,7 @@
       "authorizationUrl": "https://app.vssps.visualstudio.com/oauth2/authorize&response_type=Assertion",
       "tokenUrl": "https://app.vssps.visualstudio.com/oauth2/token?client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer&grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer",
       "scopes": {
-        "vso.packaging_write": "Grants the ability to create and read feeds and packages."
+        "vso.packaging": "Grants the ability to read feeds and packages."
       }
     }
   },

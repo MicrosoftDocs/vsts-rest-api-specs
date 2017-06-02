@@ -12,7 +12,7 @@
       "name": "MICROSOFT SOFTWARE LICENSE TERMS",
       "url": "https://go.microsoft.com/fwlink/?LinkId=329770"
     },
-    "version": "3.2"
+    "version": "4.0"
   },
   "host": "fabrikam-fiber-inc.visualstudio.com",
   "basePath": "/",
@@ -22,6 +22,9 @@
     },
     {
       "name": "approvals"
+    },
+    {
+      "name": "autotriggerissues"
     },
     {
       "name": "changes"
@@ -106,6 +109,53 @@
     "https"
   ],
   "paths": {
+    "/_apis/release/autotriggerissues": {
+      "get": {
+        "tags": [
+          "autotriggerissues"
+        ],
+        "summary": "GetAutoTriggerIssues",
+        "description": "",
+        "operationId": "getAutoTriggerIssues",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "artifactType",
+            "description": "",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "sourceId",
+            "description": "",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "artifactVersionId",
+            "description": "",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/AutoTriggerIssue"
+              }
+            }
+          }
+        }
+      }
+    },
     "/_apis/release/projects": {
       "get": {
         "tags": [
@@ -803,6 +853,14 @@
             "required": false,
             "type": "string",
             "format": "uuid"
+          },
+          {
+            "in": "query",
+            "name": "propertyFilters",
+            "description": "",
+            "required": false,
+            "type": "string",
+            "format": "array (string)"
           }
         ],
         "responses": {
@@ -961,6 +1019,14 @@
           {
             "in": "query",
             "name": "propertyFilters",
+            "description": "",
+            "required": false,
+            "type": "string",
+            "format": "array (string)"
+          },
+          {
+            "in": "query",
+            "name": "definitionIdFilter",
             "description": "",
             "required": false,
             "type": "string",
@@ -2146,6 +2212,13 @@
             "required": true,
             "type": "integer",
             "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "sourceId",
+            "description": "",
+            "required": false,
+            "type": "string"
           }
         ],
         "responses": {
@@ -2154,7 +2227,7 @@
             "schema": {
               "type": "array",
               "items": {
-                "$ref": "#/definitions/ReleaseIssue"
+                "$ref": "#/definitions/AutoTriggerIssue"
               }
             }
           }
@@ -4190,15 +4263,9 @@
     },
     "AutoTriggerIssue": {
       "type": "object",
-      "allOf": [
-        {
-          "$ref": "#/definitions/ReleaseIssue"
-        }
-      ],
       "properties": {
-        "buildId": {
-          "type": "integer",
-          "format": "int32"
+        "issue": {
+          "$ref": "#/definitions/Issue"
         },
         "issueSource": {
           "enum": [
@@ -4210,8 +4277,22 @@
             "name": "Microsoft.VisualStudio.Services.ReleaseManagement.WebApi.IssueSource"
           }
         },
+        "project": {
+          "$ref": "#/definitions/ProjectReference"
+        },
         "releaseDefinitionReference": {
           "$ref": "#/definitions/ReleaseDefinitionShallowReference"
+        },
+        "releaseTriggerType": {
+          "enum": [
+            "undefined",
+            "artifactSource",
+            "schedule",
+            "sourceRepo"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.VisualStudio.Services.ReleaseManagement.WebApi.ReleaseTriggerType"
+          }
         }
       }
     },
@@ -4267,6 +4348,10 @@
         },
         "shareOutputVariables": {
           "type": "boolean"
+        },
+        "timeoutInMinutes": {
+          "type": "integer",
+          "format": "int32"
         }
       }
     },
@@ -4473,6 +4558,25 @@
           "type": "string"
         },
         "testWebAppName": {
+          "type": "string"
+        }
+      }
+    },
+    "ContinuousDeploymentTriggerIssue": {
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/AutoTriggerIssue"
+        }
+      ],
+      "properties": {
+        "artifactType": {
+          "type": "string"
+        },
+        "artifactVersionId": {
+          "type": "string"
+        },
+        "sourceId": {
           "type": "string"
         }
       }
@@ -4937,10 +5041,6 @@
         },
         "skipArtifactsDownload": {
           "type": "boolean"
-        },
-        "timeoutInMinutes": {
-          "type": "integer",
-          "format": "int32"
         }
       }
     },
@@ -5018,6 +5118,17 @@
           "type": "array",
           "items": {
             "$ref": "#/definitions/DefinitionEnvironmentReference"
+          }
+        },
+        "expands": {
+          "enum": [
+            "all",
+            "deploymentOnly",
+            "approvals",
+            "artifacts"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.VisualStudio.Services.ReleaseManagement.WebApi.Contracts.DeploymentExpands"
           }
         },
         "isDeleted": {
@@ -6416,6 +6527,9 @@
         "processParameters": {
           "$ref": "#/definitions/ProcessParameters"
         },
+        "properties": {
+          "$ref": "#/definitions/PropertiesCollection"
+        },
         "queueId": {
           "type": "integer",
           "format": "int32"
@@ -6885,23 +6999,6 @@
         }
       }
     },
-    "ReleaseIssue": {
-      "type": "object",
-      "properties": {
-        "issue": {
-          "$ref": "#/definitions/Issue"
-        },
-        "issueType": {
-          "enum": [
-            "none",
-            "autoTrigger"
-          ],
-          "x-ms-enum": {
-            "name": "Microsoft.VisualStudio.Services.ReleaseManagement.WebApi.ReleaseIssueType"
-          }
-        }
-      }
-    },
     "ReleaseReference": {
       "type": "object",
       "properties": {
@@ -7324,6 +7421,9 @@
         }
       ],
       "properties": {
+        "deploymentInput": {
+          "$ref": "#/definitions/ServerDeploymentInput"
+        }
       }
     },
     "ScheduledReleaseTrigger": {
@@ -7337,6 +7437,19 @@
         "schedule": {
           "description": "Release schedule for Scheduled Release trigger type",
           "$ref": "#/definitions/ReleaseSchedule"
+        }
+      }
+    },
+    "ServerDeploymentInput": {
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/BaseDeploymentInput"
+        }
+      ],
+      "properties": {
+        "parallelExecution": {
+          "$ref": "#/definitions/ExecutionInput"
         }
       }
     },
@@ -7672,7 +7785,7 @@
     "api-Version": {
       "name": "api-version",
       "in": "query",
-      "description": "Version of the API to use.  This should be set to '3.2-preview' to use this version of the api.",
+      "description": "Version of the API to use.  This should be set to '4.0-preview' to use this version of the api.",
       "required": true,
       "type": "string"
     }

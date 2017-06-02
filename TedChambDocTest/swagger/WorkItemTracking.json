@@ -12,7 +12,7 @@
       "name": "MICROSOFT SOFTWARE LICENSE TERMS",
       "url": "https://go.microsoft.com/fwlink/?LinkId=329770"
     },
-    "version": "3.2"
+    "version": "4.0"
   },
   "host": "fabrikam-fiber-inc.visualstudio.com",
   "basePath": "/",
@@ -61,6 +61,9 @@
     },
     {
       "name": "wiql"
+    },
+    {
+      "name": "workItemIcons"
     },
     {
       "name": "workItemLinks"
@@ -848,6 +851,43 @@
       }
     },
     "/_apis/wit/wiql/{id}": {
+      "head": {
+        "tags": [
+          "wiql"
+        ],
+        "summary": "GetQueryResultCount",
+        "description": "Gets the results of the query by id.",
+        "operationId": "getQueryResultCount",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "description": "The query id.",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "query",
+            "name": "timePrecision",
+            "description": "",
+            "required": false,
+            "type": "boolean"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        }
+      },
       "get": {
         "tags": [
           "wiql"
@@ -890,6 +930,68 @@
             ]
           }
         ]
+      }
+    },
+    "/_apis/wit/workitemicons": {
+      "get": {
+        "tags": [
+          "workItemIcons"
+        ],
+        "summary": "GetWorkItemIcons",
+        "description": "",
+        "operationId": "getWorkItemIcons",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/WorkItemIcon"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/_apis/wit/workitemicons/{icon}": {
+      "get": {
+        "tags": [
+          "workItemIcons"
+        ],
+        "summary": "GetWorkItemIconJson",
+        "description": "Get a work item icon svg by icon friendly name and icon color",
+        "operationId": "getWorkItemIconJson",
+        "produces": [
+          "image/svg+xml",
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "icon",
+            "description": "",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "color",
+            "description": "",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/WorkItemIcon"
+            }
+          }
+        }
       }
     },
     "/_apis/wit/workitemrelationtypes": {
@@ -1142,7 +1244,7 @@
           "workItems"
         ],
         "summary": "UpdateWorkItem",
-        "description": "",
+        "description": "Updates a single work item",
         "operationId": "updateWorkItem",
         "consumes": [
           "application/json-patch+json"
@@ -1154,7 +1256,7 @@
           {
             "in": "body",
             "name": "body",
-            "description": "",
+            "description": "The JSON Patch document representing the update",
             "required": true,
             "schema": {
               "$ref": "#/definitions/JsonPatchDocument"
@@ -1163,7 +1265,7 @@
           {
             "in": "path",
             "name": "id",
-            "description": "",
+            "description": "The id of the work item to update",
             "required": true,
             "type": "integer",
             "format": "int32"
@@ -1171,14 +1273,21 @@
           {
             "in": "query",
             "name": "validateOnly",
-            "description": "",
+            "description": "Indicate if you only want to validate the changes without saving the work item",
             "required": false,
             "type": "boolean"
           },
           {
             "in": "query",
             "name": "bypassRules",
-            "description": "",
+            "description": "Do not enforce the work item type rules on this update",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "suppressNotifications",
+            "description": "Do not fire any notifications for this change",
             "required": false,
             "type": "boolean"
           }
@@ -2785,6 +2894,50 @@
       }
     },
     "/{project}/_apis/wit/wiql/{id}": {
+      "head": {
+        "tags": [
+          "wiql"
+        ],
+        "summary": "GetQueryResultCount",
+        "description": "Gets the results of the query by id.",
+        "operationId": "getQueryResultCount",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "id",
+            "description": "The query id.",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "query",
+            "name": "timePrecision",
+            "description": "",
+            "required": false,
+            "type": "boolean"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        }
+      },
       "get": {
         "tags": [
           "wiql"
@@ -2842,7 +2995,7 @@
           "workItems"
         ],
         "summary": "CreateWorkItem",
-        "description": "",
+        "description": "Creates a single work item",
         "operationId": "createWorkItem",
         "consumes": [
           "application/json-patch+json"
@@ -2854,7 +3007,7 @@
           {
             "in": "body",
             "name": "body",
-            "description": "",
+            "description": "The JSON Patch document representing the work item",
             "required": true,
             "schema": {
               "$ref": "#/definitions/JsonPatchDocument"
@@ -2870,21 +3023,28 @@
           {
             "in": "path",
             "name": "type",
-            "description": "",
+            "description": "The work item type of the work item to create",
             "required": true,
             "type": "string"
           },
           {
             "in": "query",
             "name": "validateOnly",
-            "description": "",
+            "description": "Indicate if you only want to validate the changes without saving the work item",
             "required": false,
             "type": "boolean"
           },
           {
             "in": "query",
             "name": "bypassRules",
-            "description": "",
+            "description": "Do not enforce the work item type rules on this update",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "suppressNotifications",
+            "description": "Do not fire any notifications for this change",
             "required": false,
             "type": "boolean"
           }
@@ -3675,6 +3835,57 @@
       }
     },
     "/{project}/{team}/_apis/wit/wiql/{id}": {
+      "head": {
+        "tags": [
+          "wiql"
+        ],
+        "summary": "GetQueryResultCount",
+        "description": "Gets the results of the query by id.",
+        "operationId": "getQueryResultCount",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "team",
+            "description": "Team ID or team name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "id",
+            "description": "The query id.",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "query",
+            "name": "timePrecision",
+            "description": "",
+            "required": false,
+            "type": "boolean"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        }
+      },
       "get": {
         "tags": [
           "wiql"
@@ -4673,6 +4884,17 @@
         }
       }
     },
+    "WorkItemIcon": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        }
+      }
+    },
     "WorkItemLink": {
       "type": "object",
       "properties": {
@@ -4976,6 +5198,9 @@
             "$ref": "#/definitions/WorkItemTypeFieldInstance"
           }
         },
+        "icon": {
+          "$ref": "#/definitions/WorkItemIcon"
+        },
         "name": {
           "type": "string"
         },
@@ -5171,7 +5396,7 @@
     "api-Version": {
       "name": "api-version",
       "in": "query",
-      "description": "Version of the API to use.  This should be set to '3.2-preview' to use this version of the api.",
+      "description": "Version of the API to use.  This should be set to '4.0-preview' to use this version of the api.",
       "required": true,
       "type": "string"
     }

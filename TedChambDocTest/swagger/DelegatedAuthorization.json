@@ -12,7 +12,7 @@
       "name": "MICROSOFT SOFTWARE LICENSE TERMS",
       "url": "https://go.microsoft.com/fwlink/?LinkId=329770"
     },
-    "version": "3.2"
+    "version": "4.0"
   },
   "host": "fabrikam-fiber-inc.visualstudio.com",
   "basePath": "/",
@@ -42,22 +42,10 @@
         "summary": "Authorize",
         "description": "",
         "operationId": "authorize",
-        "consumes": [
-          "application/json"
-        ],
         "produces": [
           "application/json"
         ],
         "parameters": [
-          {
-            "in": "body",
-            "name": "body",
-            "description": "",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
           {
             "in": "query",
             "name": "responseType",
@@ -76,6 +64,13 @@
           },
           {
             "in": "query",
+            "name": "redirectUri",
+            "description": "",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
             "name": "scopes",
             "description": "",
             "required": true,
@@ -90,6 +85,57 @@
             }
           }
         }
+      },
+      "get": {
+        "tags": [
+          "authorizations"
+        ],
+        "summary": "InitiateAuthorization",
+        "description": "",
+        "operationId": "initiateAuthorization",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "responseType",
+            "description": "",
+            "required": true,
+            "type": "string",
+            "format": "ResponseType"
+          },
+          {
+            "in": "query",
+            "name": "clientId",
+            "description": "",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "query",
+            "name": "redirectUri",
+            "description": "",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "scopes",
+            "description": "",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/AuthorizationDescription"
+            }
+          }
+        }
       }
     },
     "/_apis/delegatedauth/authorizations/{userId}": {
@@ -100,22 +146,10 @@
         "summary": "Authorize",
         "description": "",
         "operationId": "authorize",
-        "consumes": [
-          "application/json"
-        ],
         "produces": [
           "application/json"
         ],
         "parameters": [
-          {
-            "in": "body",
-            "name": "body",
-            "description": "",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
           {
             "in": "path",
             "name": "userId",
@@ -139,6 +173,13 @@
             "required": true,
             "type": "string",
             "format": "uuid"
+          },
+          {
+            "in": "query",
+            "name": "redirectUri",
+            "description": "",
+            "required": true,
+            "type": "string"
           },
           {
             "in": "query",
@@ -195,9 +236,9 @@
         "tags": [
           "hostAuthorization"
         ],
-        "summary": "Host",
+        "summary": "AuthorizeHost",
         "description": "",
-        "operationId": "host",
+        "operationId": "authorizeHost",
         "parameters": [
           {
             "in": "query",
@@ -213,13 +254,44 @@
           }
         }
       },
+      "get": {
+        "tags": [
+          "hostAuthorization"
+        ],
+        "summary": "GetHostAuthorizations",
+        "description": "",
+        "operationId": "getHostAuthorizations",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "hostId",
+            "description": "",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/HostAuthorization"
+              }
+            }
+          }
+        }
+      },
       "delete": {
         "tags": [
           "hostAuthorization"
         ],
-        "summary": "Revoke",
+        "summary": "RevokeHostAuthorization",
         "description": "",
-        "operationId": "revoke",
+        "operationId": "revokeHostAuthorization",
         "parameters": [
           {
             "in": "query",
@@ -248,9 +320,9 @@
         "tags": [
           "registration"
         ],
-        "summary": "Create",
+        "summary": "CreateRegistration",
         "description": "",
-        "operationId": "create",
+        "operationId": "createRegistration",
         "consumes": [
           "application/json"
         ],
@@ -281,9 +353,9 @@
         "tags": [
           "registration"
         ],
-        "summary": "List",
+        "summary": "GetRegistrations",
         "description": "",
-        "operationId": "list",
+        "operationId": "getRegistrations",
         "produces": [
           "application/json"
         ],
@@ -303,9 +375,9 @@
         "tags": [
           "registration"
         ],
-        "summary": "Update",
+        "summary": "UpdateRegistration",
         "description": "",
-        "operationId": "update",
+        "operationId": "updateRegistration",
         "consumes": [
           "application/json"
         ],
@@ -338,9 +410,9 @@
         "tags": [
           "registration"
         ],
-        "summary": "Delete",
+        "summary": "DeleteRegistration",
         "description": "",
-        "operationId": "delete",
+        "operationId": "deleteRegistration",
         "parameters": [
           {
             "in": "path",
@@ -361,9 +433,9 @@
         "tags": [
           "registration"
         ],
-        "summary": "Get",
+        "summary": "GetRegistration",
         "description": "",
-        "operationId": "get",
+        "operationId": "getRegistration",
         "produces": [
           "application/json"
         ],
@@ -374,13 +446,6 @@
             "description": "",
             "required": true,
             "type": "string"
-          },
-          {
-            "in": "query",
-            "name": "includeSecret",
-            "description": "",
-            "required": true,
-            "type": "boolean"
           }
         ],
         "responses": {
@@ -572,6 +637,40 @@
         },
         "isAuthorized": {
           "type": "boolean"
+        }
+      }
+    },
+    "AuthorizationDescription": {
+      "type": "object",
+      "properties": {
+        "clientRegistration": {
+          "$ref": "#/definitions/Registration"
+        },
+        "hasError": {
+          "type": "boolean"
+        },
+        "initiationError": {
+          "enum": [
+            "none",
+            "clientIdRequired",
+            "invalidClientId",
+            "responseTypeRequired",
+            "responseTypeNotSupported",
+            "scopeRequired",
+            "invalidScope",
+            "redirectUriRequired",
+            "insecureRedirectUri",
+            "invalidRedirectUri"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.VisualStudio.Services.DelegatedAuthorization.InitiationError"
+          }
+        },
+        "scopeDescriptions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AuthorizationScopeDescription"
+          }
         }
       }
     },
@@ -773,7 +872,7 @@
     "api-Version": {
       "name": "api-version",
       "in": "query",
-      "description": "Version of the API to use.  This should be set to '3.2-preview' to use this version of the api.",
+      "description": "Version of the API to use.  This should be set to '4.0-preview' to use this version of the api.",
       "required": true,
       "type": "string"
     }
