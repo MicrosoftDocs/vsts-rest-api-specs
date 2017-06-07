@@ -97,6 +97,9 @@
     },
     {
       "name": "stats"
+    },
+    {
+      "name": "verificationlog"
     }
   ],
   "schemes": [
@@ -1328,6 +1331,58 @@
         ]
       }
     },
+    "/_apis/gallery/publishers/{publisherName}/extensions/{extensionName}/{version}/verificationlog": {
+      "get": {
+        "tags": [
+          "verificationlog"
+        ],
+        "summary": "GetVerificationLog",
+        "description": "",
+        "operationId": "getVerificationLog",
+        "produces": [
+          "application/octet-stream"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "publisherName",
+            "description": "",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "extensionName",
+            "description": "",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "version",
+            "description": "",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "string",
+              "format": "Stream"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.gallery"
+            ]
+          }
+        ]
+      }
+    },
     "/_apis/gallery/publishers/{publisherName}/extensions/{extensionName}/certificates/{version}": {
       "get": {
         "tags": [
@@ -1386,7 +1441,7 @@
           "events"
         ],
         "summary": "GetExtensionEvents",
-        "description": "Get install/uninstall events of an extension.",
+        "description": "Get install/uninstall events of an extension. If both count and afterDate parameters are specified, count takes precedence.",
         "operationId": "getExtensionEvents",
         "produces": [
           "application/json"
@@ -1417,7 +1472,7 @@
           {
             "in": "query",
             "name": "afterDate",
-            "description": "Fetch events that occured on or after this value",
+            "description": "Fetch events that occured on or after this date",
             "required": false,
             "type": "string",
             "format": "date-time"
@@ -1425,14 +1480,14 @@
           {
             "in": "query",
             "name": "include",
-            "description": "Filter options. Supported values: includeInstall, includeUninstall. Default is to fetch all types of events",
+            "description": "Filter options. Supported values: install, uninstall, review, acquisition, sales. Default is to fetch all types of events",
             "required": false,
             "type": "string"
           },
           {
             "in": "query",
             "name": "includeProperty",
-            "description": "",
+            "description": "Event properties to include. Currently only 'lastContactDetails' is supported for uninstall events",
             "required": false,
             "type": "string"
           }
@@ -3458,6 +3513,13 @@
         "counts": {
           "description": "Stores the event counts",
           "$ref": "#/definitions/EventCounts"
+        },
+        "extendedStats": {
+          "description": "Generic key/value pair to store extended statistics. Used for sending paid extension stats like Upgrade, Downgrade, Cancel trend etc.",
+          "type": "object",
+          "additionalProperties": {
+            "type": "object"
+          }
         },
         "statisticDate": {
           "description": "Timestamp of this data point",

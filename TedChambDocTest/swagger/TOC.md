@@ -15,6 +15,7 @@
 # [Customer Intelligence](customerIntelligence.json)
 # [Dashboard](dashboard.json)
 # [Data Import](dataimport.json)
+# [Data Import Orchestration](dataimportorchestration.json)
 # [Delegated Authorization](delegatedauthorization.json)
 # [Discussion](discussion.json)
 # [Drop](drop.json)

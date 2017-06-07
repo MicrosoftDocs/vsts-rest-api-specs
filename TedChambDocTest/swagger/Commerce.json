@@ -18,13 +18,210 @@
   "basePath": "/",
   "tags": [
     {
+      "name": "commercePackage"
+    },
+    {
+      "name": "connectedServer"
+    },
+    {
+      "name": "meters"
+    },
+    {
       "name": "offerMeter"
+    },
+    {
+      "name": "offerMeterPrice"
+    },
+    {
+      "name": "offerSubscription"
+    },
+    {
+      "name": "regions"
+    },
+    {
+      "name": "reportingEvents"
+    },
+    {
+      "name": "subscription"
+    },
+    {
+      "name": "usageEvents"
     }
   ],
   "schemes": [
     "https"
   ],
   "paths": {
+    "/_apis/commerce/commercepackage": {
+      "get": {
+        "tags": [
+          "commercePackage"
+        ],
+        "summary": "GetCommercePackage",
+        "description": "",
+        "operationId": "getCommercePackage",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "version",
+            "description": "",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ICommercePackage"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.connected_server"
+            ]
+          }
+        ]
+      }
+    },
+    "/_apis/commerce/connectedserver": {
+      "post": {
+        "tags": [
+          "connectedServer"
+        ],
+        "summary": "CreateConnectedServer",
+        "description": "",
+        "operationId": "createConnectedServer",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ConnectedServer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ConnectedServer"
+            }
+          }
+        }
+      }
+    },
+    "/_apis/commerce/meters": {
+      "get": {
+        "tags": [
+          "meters"
+        ],
+        "summary": "GetResourceStatus",
+        "description": "Returns resource information like status, committed quantity, included quantity, reset date, etc.",
+        "operationId": "getResourceStatus",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "nextBillingPeriod",
+            "description": "True to return next billing cycle committed quantity",
+            "required": false,
+            "type": "boolean"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/ISubscriptionResource"
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "meters"
+        ],
+        "summary": "UpdateMeter",
+        "description": "Sets the maximum and included quantities for a resource",
+        "operationId": "updateMeter",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/SubscriptionResource"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        }
+      }
+    },
+    "/_apis/commerce/meters/{resourceName}": {
+      "get": {
+        "tags": [
+          "meters"
+        ],
+        "summary": "GetResourceStatusByResourceName",
+        "description": "Returns resource information like status, committed quantity, included quantity, reset date, etc.",
+        "operationId": "getResourceStatusByResourceName",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "resourceName",
+            "description": "Name of the resource",
+            "required": true,
+            "type": "string",
+            "format": "ResourceName"
+          },
+          {
+            "in": "query",
+            "name": "nextBillingPeriod",
+            "description": "True to return next billing cycle committed quantity",
+            "required": false,
+            "type": "boolean"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ISubscriptionResource"
+            }
+          }
+        }
+      }
+    },
     "/_apis/commerce/offermeter": {
       "post": {
         "tags": [
@@ -112,6 +309,588 @@
           }
         }
       }
+    },
+    "/_apis/commerce/offermeterprice": {
+      "get": {
+        "tags": [
+          "offerMeterPrice"
+        ],
+        "summary": "GetOfferMeterPrice",
+        "description": "Returns an enumerable of instances of price for the specified offer meter in each region available",
+        "operationId": "getOfferMeterPrice",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "galleryId",
+            "description": "The name of the meter, e.g ms.testmanager-web",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/OfferMeterPrice"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/_apis/commerce/offersubscription": {
+      "patch": {
+        "tags": [
+          "offerSubscription"
+        ],
+        "summary": "CancelOfferSubscription",
+        "description": "",
+        "operationId": "cancelOfferSubscription",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/OfferSubscription"
+            }
+          },
+          {
+            "in": "query",
+            "name": "cancelReason",
+            "description": "",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "offerSubscription"
+        ],
+        "summary": "CreateOfferSubscription",
+        "description": "",
+        "operationId": "createOfferSubscription",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/OfferSubscription"
+            }
+          },
+          {
+            "in": "query",
+            "name": "offerCode",
+            "description": "",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "tenantId",
+            "description": "",
+            "required": false,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "query",
+            "name": "objectId",
+            "description": "",
+            "required": false,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "query",
+            "name": "billingTarget",
+            "description": "",
+            "required": false,
+            "type": "string",
+            "format": "uuid"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "offerSubscription"
+        ],
+        "summary": "GetAllOfferSubscriptionsForUser",
+        "description": "Get all offer subscriptions for user for valid azure subscriptions. This may be span across multiple accounts",
+        "operationId": "getAllOfferSubscriptionsForUser",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "validateAzuresubscription",
+            "description": "",
+            "required": true,
+            "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "nextBillingPeriod",
+            "description": "True to return next billing cycle committed quantity",
+            "required": true,
+            "type": "boolean"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/IOfferSubscription"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/_apis/commerce/regions": {
+      "get": {
+        "tags": [
+          "regions"
+        ],
+        "summary": "GetAccountRegions",
+        "description": "",
+        "operationId": "getAccountRegions",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/AzureRegion"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/_apis/commerce/reportingevents/{viewName}/{resourceName}": {
+      "get": {
+        "tags": [
+          "reportingEvents"
+        ],
+        "summary": "GetReportingEvents",
+        "description": "",
+        "operationId": "getReportingEvents",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "viewName",
+            "description": "",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "resourceName",
+            "description": "",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "startTime",
+            "description": "",
+            "required": true,
+            "type": "string",
+            "format": "date-time"
+          },
+          {
+            "in": "query",
+            "name": "endTime",
+            "description": "",
+            "required": true,
+            "type": "string",
+            "format": "date-time"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/ICommerceEvent"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/_apis/commerce/subscription": {
+      "get": {
+        "tags": [
+          "subscription"
+        ],
+        "summary": "GetAccountsByIdentity",
+        "description": "Gets the accounts owned by identity.",
+        "operationId": "getAccountsByIdentity",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "providerNamespaceId",
+            "description": "The provider namespace identifier.",
+            "required": true,
+            "type": "string",
+            "format": "AccountProviderNamespace"
+          },
+          {
+            "in": "query",
+            "name": "memberId",
+            "description": "The owner identifier.",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "query",
+            "name": "queryOnlyOwnerAccounts",
+            "description": "if set to true [query only owner accounts].",
+            "required": true,
+            "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "inlcudeDisabledAccounts",
+            "description": "if set to true [inlcude disabled accounts].",
+            "required": true,
+            "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "includeMSAAccounts",
+            "description": "",
+            "required": true,
+            "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "serviceOwners",
+            "description": "",
+            "required": true,
+            "type": "string",
+            "format": "array (uuid)"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/ISubscriptionAccount"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/_apis/commerce/subscription/{subscriptionId}": {
+      "patch": {
+        "tags": [
+          "subscription"
+        ],
+        "summary": "ChangeSubscriptionAccount",
+        "description": "Swaps the subscriptions for an account",
+        "operationId": "changeSubscriptionAccount",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "subscriptionId",
+            "description": "The subscription identifier.",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "query",
+            "name": "providerNamespaceId",
+            "description": "The provider namespace identifier.",
+            "required": true,
+            "type": "string",
+            "format": "AccountProviderNamespace"
+          },
+          {
+            "in": "query",
+            "name": "accountId",
+            "description": "The account identifier.",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "query",
+            "name": "hydrate",
+            "description": "Whether or not the hydrate the account into ARM.",
+            "required": false,
+            "type": "boolean"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "subscription"
+        ],
+        "summary": "GetAccounts",
+        "description": "Gets the accounts by subscription.",
+        "operationId": "getAccounts",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "subscriptionId",
+            "description": "The subscription identifier.",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "query",
+            "name": "providerNamespaceId",
+            "description": "The provider namespace identifier.",
+            "required": true,
+            "type": "string",
+            "format": "AccountProviderNamespace"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/ISubscriptionAccount"
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "subscription"
+        ],
+        "summary": "LinkAccount",
+        "description": "Links the account to a subscription.",
+        "operationId": "linkAccount",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "subscriptionId",
+            "description": "The subscription identifier.",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "query",
+            "name": "providerNamespaceId",
+            "description": "The provider namespace identifier.",
+            "required": true,
+            "type": "string",
+            "format": "AccountProviderNamespace"
+          },
+          {
+            "in": "query",
+            "name": "accountId",
+            "description": "The account identifier.",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "query",
+            "name": "ownerId",
+            "description": "The account owner identifier.",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "query",
+            "name": "hydrate",
+            "description": "Whether or not the hydrate the account into ARM.",
+            "required": false,
+            "type": "boolean"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "subscription"
+        ],
+        "summary": "UnlinkAccount",
+        "description": "Unlinks an account from the subscription.",
+        "operationId": "unlinkAccount",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "subscriptionId",
+            "description": "The subscription identifier.",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "query",
+            "name": "providerNamespaceId",
+            "description": "The provider namespace identifier.",
+            "required": true,
+            "type": "string",
+            "format": "AccountProviderNamespace"
+          },
+          {
+            "in": "query",
+            "name": "accountId",
+            "description": "The account identifier.",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "query",
+            "name": "ownerId",
+            "description": "The account owner identifier.",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        }
+      }
+    },
+    "/_apis/commerce/usageevents": {
+      "get": {
+        "tags": [
+          "usageEvents"
+        ],
+        "summary": "GetUsage",
+        "description": "Returns the aggregate resource usage over the specified time range WARNING: The return value of this method is significantly different than the post method on this controller. This is an aggregation of usage events over time rather than individual usage event(s).",
+        "operationId": "getUsage",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "startTime",
+            "description": "Start of the the time range to retrieve, inclusive",
+            "required": true,
+            "type": "string",
+            "format": "date-time"
+          },
+          {
+            "in": "query",
+            "name": "endTime",
+            "description": "End of the time range to retrieve, exclusive",
+            "required": true,
+            "type": "string",
+            "format": "date-time"
+          },
+          {
+            "in": "query",
+            "name": "timeSpan",
+            "description": "Interval of the time to retrieve, should be in a multiple of hour or day",
+            "required": true,
+            "type": "string",
+            "format": "TimeSpan"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/IUsageEventAggregate"
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "usageEvents"
+        ],
+        "summary": "ReportUsage",
+        "description": "Saves usage entry of a resource.",
+        "operationId": "reportUsage",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Detailed usage event",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UsageEvent"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        }
+      }
     }
   },
   "definitions": {
@@ -157,6 +936,555 @@
         },
         "quantity": {
           "description": "The number of users associated with the plan as defined in Azure",
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "AzureRegion": {
+      "type": "object",
+      "properties": {
+        "displayName": {
+          "description": "Display Name of the azure region. Ex: North Central US.",
+          "type": "string"
+        },
+        "id": {
+          "description": "Unique Identifier",
+          "type": "string"
+        },
+        "regionCode": {
+          "description": "Region code of the azure region. Ex: NCUS.",
+          "type": "string"
+        }
+      }
+    },
+    "ConnectedServer": {
+      "type": "object",
+      "properties": {
+        "accountId": {
+          "description": "Hosted AccountId associated with the connected server NOTE: As of S112, this is now the CollectionId. Not changed as this is exposed to client code.",
+          "type": "string",
+          "format": "uuid"
+        },
+        "accountName": {
+          "description": "Hosted AccountName associated with the connected server NOTE: As of S112, this is now the collection name. Not changed as this is exposed to client code.",
+          "type": "string"
+        },
+        "authorization": {
+          "description": "Object used to create credentials to call from OnPrem to hosted service.",
+          "$ref": "#/definitions/ConnectedServerAuthorization"
+        },
+        "serverId": {
+          "description": "OnPrem server id associated with the connected server",
+          "type": "string",
+          "format": "uuid"
+        },
+        "serverName": {
+          "description": "OnPrem server associated with the connected server",
+          "type": "string"
+        },
+        "spsUrl": {
+          "description": "SpsUrl of the hosted account that the onrepm server has been connected to.",
+          "type": "string"
+        },
+        "subscriptionId": {
+          "description": "The id of the subscription used for purchase",
+          "type": "string",
+          "format": "uuid"
+        },
+        "targetId": {
+          "description": "OnPrem target host associated with the connected server.  Typically the collection host id",
+          "type": "string",
+          "format": "uuid"
+        },
+        "targetName": {
+          "description": "OnPrem target associated with the connected server.",
+          "type": "string"
+        }
+      }
+    },
+    "ConnectedServerAuthorization": {
+      "type": "object",
+      "properties": {
+        "authorizationUrl": {
+          "description": "Gets or sets the endpoint used to obtain access tokens from the configured token service.",
+          "type": "string"
+        },
+        "clientId": {
+          "description": "Gets or sets the client identifier for this agent.",
+          "type": "string",
+          "format": "uuid"
+        },
+        "publicKey": {
+          "description": "Gets or sets the public key used to verify the identity of this connected server.",
+          "type": "string"
+        }
+      }
+    },
+    "ICommerceEvent": {
+      "type": "object",
+      "properties": {
+        "collectionId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "collectionName": {
+          "type": "string"
+        },
+        "committedQuantity": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "currentQuantity": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "effectiveDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "environment": {
+          "type": "string"
+        },
+        "eventId": {
+          "type": "string"
+        },
+        "eventName": {
+          "type": "string"
+        },
+        "eventSource": {
+          "type": "string"
+        },
+        "eventTime": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "galleryId": {
+          "type": "string"
+        },
+        "includedQuantity": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "maxQuantity": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "meterName": {
+          "type": "string"
+        },
+        "organizationId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "organizationName": {
+          "type": "string"
+        },
+        "previousQuantity": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "renewalGroup": {
+          "type": "string"
+        },
+        "serviceIdentity": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "subscriptionId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "trialEndDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "trialStartDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "userIdentity": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "version": {
+          "type": "string"
+        }
+      }
+    },
+    "ICommercePackage": {
+      "type": "object",
+      "properties": {
+        "configuration": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "offerMeters": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/OfferMeter"
+          }
+        },
+        "offerSubscriptions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/OfferSubscription"
+          }
+        }
+      }
+    },
+    "IOfferSubscription": {
+      "type": "object",
+      "properties": {
+        "autoAssignOnAccess": {
+          "description": "Indicates whether users get auto assigned this license type duing first access.",
+          "type": "boolean"
+        },
+        "azureSubscriptionId": {
+          "description": "The azure subscription id",
+          "type": "string",
+          "format": "uuid"
+        },
+        "azureSubscriptionName": {
+          "description": "The azure subscription name",
+          "type": "string"
+        },
+        "azureSubscriptionState": {
+          "description": "The azure subscription state",
+          "enum": [
+            "unknown",
+            "active",
+            "disabled",
+            "deleted",
+            "unregistered"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.VisualStudio.Services.Commerce.SubscriptionStatus"
+          }
+        },
+        "committedQuantity": {
+          "description": "Quantity commited by the user, when resources is commitment based.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "disabledReason": {
+          "description": "A enumeration value indicating why the resource was disabled.",
+          "enum": [
+            "none",
+            "noAzureSubscription",
+            "noIncludedQuantityLeft",
+            "subscriptionDisabled",
+            "paidBillingDisabled",
+            "maximumQuantityReached"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.VisualStudio.Services.Commerce.ResourceStatusReason"
+          }
+        },
+        "disabledResourceActionLink": {
+          "description": "Uri pointing to user action on a disabled resource. It is based on  value.",
+          "type": "string"
+        },
+        "includedQuantity": {
+          "description": "Quantity included for free.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "isPaidBillingEnabled": {
+          "description": "Returns true if paid billing is enabled on the resource. Returns false for non-azure subscriptions, disabled azure subscriptions or explicitly disabled by user",
+          "type": "boolean"
+        },
+        "isPreview": {
+          "description": "Gets or sets a value indicating whether this instance is in preview.",
+          "type": "boolean"
+        },
+        "isPurchaseCanceled": {
+          "description": "Gets the value indicating whether the puchase is canceled.",
+          "type": "boolean"
+        },
+        "isPurchasedDuringTrial": {
+          "description": "Gets the value indicating whether current meter was purchased while the meter is still in trial",
+          "type": "boolean"
+        },
+        "isTrialOrPreview": {
+          "description": "Gets or sets a value indicating whether this instance is trial or preview.",
+          "type": "boolean"
+        },
+        "isUseable": {
+          "description": "Returns true if resource is can be used otherwise returns false. can be used to identify why resource is disabled.",
+          "type": "boolean"
+        },
+        "maximumQuantity": {
+          "description": "Returns an integer representing the maximum quantity that can be billed for this resource. Any usage submitted over this number is automatically excluded from being sent to azure.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "offerMeter": {
+          "description": "Gets the name of this resource.",
+          "$ref": "#/definitions/OfferMeter"
+        },
+        "renewalGroup": {
+          "description": "Gets the renewal group.",
+          "enum": [
+            "monthly",
+            "jan",
+            "feb",
+            "mar",
+            "apr",
+            "may",
+            "jun",
+            "jul",
+            "aug",
+            "sep",
+            "oct",
+            "nov",
+            "dec"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.VisualStudio.Services.Commerce.ResourceRenewalGroup"
+          }
+        },
+        "resetDate": {
+          "description": "Returns a Date of UTC kind indicating when the next reset of quantities is going to happen. On this day at UTC 2:00 AM is when the reset will occur.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "startDate": {
+          "description": "Gets or sets the start date for this resource. First install date in any state.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "trialExpiryDate": {
+          "description": "Gets or sets the trial expiry date.",
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "ISubscriptionAccount": {
+      "type": "object",
+      "properties": {
+        "accountHostType": {
+          "description": "Gets or sets the account host type.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "accountId": {
+          "description": "Gets or sets the account identifier. Usually a guid.",
+          "type": "string",
+          "format": "uuid"
+        },
+        "accountName": {
+          "description": "Gets or sets the name of the account.",
+          "type": "string"
+        },
+        "accountTenantId": {
+          "description": "Gets or sets the account tenantId.",
+          "type": "string",
+          "format": "uuid"
+        },
+        "failedPurchaseReason": {
+          "description": "get or set purchase Error Reason",
+          "enum": [
+            "none",
+            "monetaryLimitSet",
+            "invalidOfferCode",
+            "notAdminOrCoAdmin",
+            "invalidRegionPurchase",
+            "paymentInstrumentNotCreditCard",
+            "invalidOfferRegion",
+            "unsupportedSubscription",
+            "disabledSubscription",
+            "invalidUser",
+            "notSubscriptionUser",
+            "unsupportedSubscriptionCsp",
+            "temporarySpendingLimit"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.VisualStudio.Services.Commerce.PurchaseErrorReason"
+          }
+        },
+        "geoLocation": {
+          "description": "Gets or sets the geo location.",
+          "type": "string"
+        },
+        "isAccountOwner": {
+          "description": "Gets or sets a value indicating whether the calling user identity owns the account.",
+          "type": "boolean"
+        },
+        "isEligibleForPurchase": {
+          "description": "Gets or set the flag to enable purchase via subscription.",
+          "type": "boolean"
+        },
+        "isPrepaidFundSubscription": {
+          "description": "get or set IsPrepaidFundSubscription",
+          "type": "boolean"
+        },
+        "isPricingAvailable": {
+          "description": "get or set IsPricingPricingAvailable",
+          "type": "boolean"
+        },
+        "locale": {
+          "description": "Gets or sets the subscription locale",
+          "type": "string"
+        },
+        "regionDisplayName": {
+          "description": "Gets or sets the subscription address country display name",
+          "type": "string"
+        },
+        "resourceGroupName": {
+          "description": "Gets or sets the resource group.",
+          "type": "string"
+        },
+        "resourceName": {
+          "description": "Gets or sets the azure resource name.",
+          "type": "string"
+        },
+        "serviceUrls": {
+          "description": "A dictionary of service urls, mapping the service owner to the service owner url",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "subscriptionId": {
+          "description": "Gets or sets the subscription identifier.",
+          "type": "string",
+          "format": "uuid"
+        },
+        "subscriptionName": {
+          "description": "Gets or sets the azure subscription name",
+          "type": "string"
+        },
+        "subscriptionObjectId": {
+          "description": "get or set object id of subscruption admin",
+          "type": "string",
+          "format": "uuid"
+        },
+        "subscriptionOfferCode": {
+          "description": "get or set subscription offer code",
+          "type": "string"
+        },
+        "subscriptionStatus": {
+          "description": "Gets or sets the subscription status.",
+          "enum": [
+            "unknown",
+            "active",
+            "disabled",
+            "deleted",
+            "unregistered"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.VisualStudio.Services.Commerce.SubscriptionStatus"
+          }
+        },
+        "subscriptionTenantId": {
+          "description": "get or set tenant id of subscription",
+          "type": "string",
+          "format": "uuid"
+        }
+      }
+    },
+    "ISubscriptionResource": {
+      "type": "object",
+      "properties": {
+        "committedQuantity": {
+          "description": "Quantity commited by the user, when resources is commitment based.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "disabledReason": {
+          "description": "A enumeration value indicating why the resource was disabled.",
+          "enum": [
+            "none",
+            "noAzureSubscription",
+            "noIncludedQuantityLeft",
+            "subscriptionDisabled",
+            "paidBillingDisabled",
+            "maximumQuantityReached"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.VisualStudio.Services.Commerce.ResourceStatusReason"
+          }
+        },
+        "disabledResourceActionLink": {
+          "description": "Uri pointing to user action on a disabled resource. It is based on  value.",
+          "type": "string"
+        },
+        "includedQuantity": {
+          "description": "Quantity included for free.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "isPaidBillingEnabled": {
+          "description": "Returns true if paid billing is enabled on the resource. Returns false for non-azure subscriptions, disabled azure subscriptions or explicitly disabled by user",
+          "type": "boolean"
+        },
+        "isUseable": {
+          "description": "Returns true if resource is can be used otherwise returns false. can be used to identify why resource is disabled.",
+          "type": "boolean"
+        },
+        "maximumQuantity": {
+          "description": "Returns an integer representing the maximum quantity that can be billed for this resource. Any usage submitted over this number is automatically excluded from being sent to azure.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "name": {
+          "description": "Gets the name of this resource.",
+          "enum": [
+            "standardLicense",
+            "advancedLicense",
+            "professionalLicense",
+            "build",
+            "loadTest",
+            "premiumBuildAgent",
+            "privateOtherBuildAgent",
+            "privateAzureBuildAgent"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.VisualStudio.Services.Commerce.ResourceName"
+          }
+        },
+        "resetDate": {
+          "description": "Returns a Date of UTC kind indicating when the next reset of quantities is going to happen. On this day at UTC 2:00 AM is when the reset will occur.",
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "IUsageEventAggregate": {
+      "type": "object",
+      "properties": {
+        "endTime": {
+          "description": "Gets or sets end time of the aggregated value, exclusive",
+          "type": "string",
+          "format": "date-time"
+        },
+        "resource": {
+          "description": "Gets or sets resource that the aggregated value represents",
+          "enum": [
+            "standardLicense",
+            "advancedLicense",
+            "professionalLicense",
+            "build",
+            "loadTest",
+            "premiumBuildAgent",
+            "privateOtherBuildAgent",
+            "privateAzureBuildAgent"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.VisualStudio.Services.Commerce.ResourceName"
+          }
+        },
+        "startTime": {
+          "description": "Gets or sets start time of the aggregated value, inclusive",
+          "type": "string",
+          "format": "date-time"
+        },
+        "value": {
+          "description": "Gets or sets quantity of the resource used from start time to end time",
           "type": "integer",
           "format": "int32"
         }
@@ -360,6 +1688,170 @@
         }
       }
     },
+    "OfferMeterPrice": {
+      "type": "object",
+      "properties": {
+        "currencyCode": {
+          "description": "Currency code",
+          "type": "string"
+        },
+        "meterName": {
+          "description": "The meter Name which identifies the offer meter this plan is associated with",
+          "type": "string"
+        },
+        "planName": {
+          "description": "The Name of the plan, which is usually in the format \"{publisher}:{offer}:{plan}\"",
+          "type": "string"
+        },
+        "price": {
+          "description": "Plan Price",
+          "type": "number",
+          "format": "double"
+        },
+        "quantity": {
+          "description": "Plan Quantity",
+          "type": "number",
+          "format": "double"
+        },
+        "region": {
+          "description": "Region price is for",
+          "type": "string"
+        }
+      }
+    },
+    "OfferSubscription": {
+      "type": "object",
+      "properties": {
+        "autoAssignOnAccess": {
+          "description": "Indicates whether users get auto assigned this license type duing first access.",
+          "type": "boolean"
+        },
+        "azureSubscriptionId": {
+          "description": "The azure subscription id",
+          "type": "string",
+          "format": "uuid"
+        },
+        "azureSubscriptionName": {
+          "description": "The azure subscription name",
+          "type": "string"
+        },
+        "azureSubscriptionState": {
+          "description": "The azure subscription state",
+          "enum": [
+            "unknown",
+            "active",
+            "disabled",
+            "deleted",
+            "unregistered"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.VisualStudio.Services.Commerce.SubscriptionStatus"
+          }
+        },
+        "committedQuantity": {
+          "description": "Quantity commited by the user, when resources is commitment based.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "disabledReason": {
+          "description": "A enumeration value indicating why the resource was disabled.",
+          "enum": [
+            "none",
+            "noAzureSubscription",
+            "noIncludedQuantityLeft",
+            "subscriptionDisabled",
+            "paidBillingDisabled",
+            "maximumQuantityReached"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.VisualStudio.Services.Commerce.ResourceStatusReason"
+          }
+        },
+        "disabledResourceActionLink": {
+          "description": "Uri pointing to user action on a disabled resource. It is based on  value.",
+          "type": "string"
+        },
+        "includedQuantity": {
+          "description": "Quantity included for free.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "isPaidBillingEnabled": {
+          "description": "Returns true if paid billing is enabled on the resource. Returns false for non-azure subscriptions, disabled azure subscriptions or explicitly disabled by user",
+          "type": "boolean"
+        },
+        "isPreview": {
+          "description": "Gets or sets a value indicating whether this instance is in preview.",
+          "type": "boolean"
+        },
+        "isPurchaseCanceled": {
+          "description": "Gets the value indicating whether the puchase is canceled.",
+          "type": "boolean"
+        },
+        "isPurchasedDuringTrial": {
+          "description": "Gets the value indicating whether current meter was purchased while the meter is still in trial",
+          "type": "boolean"
+        },
+        "isTrialOrPreview": {
+          "description": "Gets or sets a value indicating whether this instance is trial or preview.",
+          "type": "boolean"
+        },
+        "isUseable": {
+          "description": "Returns true if resource is can be used otherwise returns false. can be used to identify why resource is disabled.",
+          "type": "boolean"
+        },
+        "maximumQuantity": {
+          "description": "Returns an integer representing the maximum quantity that can be billed for this resource. Any usage submitted over this number is automatically excluded from being sent to azure.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "offerMeter": {
+          "description": "Gets or sets the name of this resource.",
+          "$ref": "#/definitions/OfferMeter"
+        },
+        "offerSubscriptionId": {
+          "description": "The unique identifier of this offer subscription",
+          "type": "string",
+          "format": "uuid"
+        },
+        "renewalGroup": {
+          "description": "Gets the renewal group.",
+          "enum": [
+            "monthly",
+            "jan",
+            "feb",
+            "mar",
+            "apr",
+            "may",
+            "jun",
+            "jul",
+            "aug",
+            "sep",
+            "oct",
+            "nov",
+            "dec"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.VisualStudio.Services.Commerce.ResourceRenewalGroup"
+          }
+        },
+        "resetDate": {
+          "description": "Returns a Date of UTC kind indicating when the next reset of quantities is going to happen. On this day at UTC 2:00 AM is when the reset will occur.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "startDate": {
+          "description": "Gets or sets the start date for this resource. First install date in any state.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "trialExpiryDate": {
+          "description": "Gets or sets the trial expiry date.",
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
     "PurchasableOfferMeter": {
       "type": "object",
       "properties": {
@@ -386,6 +1878,150 @@
         "offerMeterDefinition": {
           "description": "Gets or sets the offer meter definition.",
           "$ref": "#/definitions/OfferMeter"
+        }
+      }
+    },
+    "SubscriptionResource": {
+      "type": "object",
+      "properties": {
+        "committedQuantity": {
+          "description": "Quantity commited by the user, when resources is commitment based.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "disabledReason": {
+          "description": "A enumeration value indicating why the resource was disabled.",
+          "enum": [
+            "none",
+            "noAzureSubscription",
+            "noIncludedQuantityLeft",
+            "subscriptionDisabled",
+            "paidBillingDisabled",
+            "maximumQuantityReached"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.VisualStudio.Services.Commerce.ResourceStatusReason"
+          }
+        },
+        "disabledResourceActionLink": {
+          "description": "Uri pointing to user action on a disabled resource. It is based on  value.",
+          "type": "string"
+        },
+        "includedQuantity": {
+          "description": "Quantity included for free.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "isPaidBillingEnabled": {
+          "description": "Returns true if paid billing is enabled on the resource. Returns false for non-azure subscriptions, disabled azure subscriptions or explicitly disabled by user",
+          "type": "boolean"
+        },
+        "isUseable": {
+          "description": "Returns true if resource is can be used otherwise returns false. can be used to identify why resource is disabled.",
+          "type": "boolean"
+        },
+        "maximumQuantity": {
+          "description": "Returns an integer representing the maximum quantity that can be billed for this resource. Any usage submitted over this number is automatically excluded from being sent to azure.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "name": {
+          "description": "Gets or sets the name of this resource.",
+          "enum": [
+            "standardLicense",
+            "advancedLicense",
+            "professionalLicense",
+            "build",
+            "loadTest",
+            "premiumBuildAgent",
+            "privateOtherBuildAgent",
+            "privateAzureBuildAgent"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.VisualStudio.Services.Commerce.ResourceName"
+          }
+        },
+        "resetDate": {
+          "description": "Returns a Date of UTC kind indicating when the next reset of quantities is going to happen. On this day at UTC 2:00 AM is when the reset will occur.",
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "UsageEvent": {
+      "type": "object",
+      "properties": {
+        "accountId": {
+          "description": "Gets or sets account id of the event. Note: This is for backward compat with BI.",
+          "type": "string",
+          "format": "uuid"
+        },
+        "accountName": {
+          "description": "Account name associated with the usage event",
+          "type": "string"
+        },
+        "associatedUser": {
+          "description": "User GUID associated with the usage event",
+          "type": "string",
+          "format": "uuid"
+        },
+        "billableDate": {
+          "description": "Timestamp when this billing event is billable",
+          "type": "string",
+          "format": "date-time"
+        },
+        "eventId": {
+          "description": "Unique event identifier",
+          "type": "string"
+        },
+        "eventTimestamp": {
+          "description": "Recieving Timestamp of the billing event by metering service",
+          "type": "string",
+          "format": "date-time"
+        },
+        "eventUniqueId": {
+          "description": "Gets or sets the event unique identifier.",
+          "type": "string",
+          "format": "uuid"
+        },
+        "meterName": {
+          "description": "Meter Id.",
+          "type": "string"
+        },
+        "partitionId": {
+          "description": "Partition id of the account",
+          "type": "integer",
+          "format": "int32"
+        },
+        "quantity": {
+          "description": "Quantity of the usage event",
+          "type": "integer",
+          "format": "int32"
+        },
+        "resourceBillingMode": {
+          "description": "Gets or sets the billing mode for the resource involved in the usage",
+          "enum": [
+            "committment",
+            "payAsYouGo"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.VisualStudio.Services.Commerce.ResourceBillingMode"
+          }
+        },
+        "serviceIdentity": {
+          "description": "Service context GUID associated with the usage event",
+          "type": "string",
+          "format": "uuid"
+        },
+        "subscriptionAnniversaryDay": {
+          "description": "Gets or sets subscription anniversary day of the subscription",
+          "type": "integer",
+          "format": "int32"
+        },
+        "subscriptionId": {
+          "description": "Gets or sets subscription guid of the associated account of the event",
+          "type": "string",
+          "format": "uuid"
         }
       }
     },
@@ -426,7 +2062,16 @@
     "accessToken": {
       "type": "basic",
       "description": "Personal access token. Use any value for the user name and the token as the password."
-     }
+     },
+     "oauth2": {
+      "type": "oauth2",
+      "flow": "accessCode",
+      "authorizationUrl": "https://app.vssps.visualstudio.com/oauth2/authorize&response_type=Assertion",
+      "tokenUrl": "https://app.vssps.visualstudio.com/oauth2/token?client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer&grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer",
+      "scopes": {
+        "vso.connected_server": "Grants the ability to access endpoints needed from an onprem connected server"
+      }
+    }
   },
   "security": [
     {

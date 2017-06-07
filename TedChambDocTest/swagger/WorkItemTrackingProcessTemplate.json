@@ -1,7 +1,7 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "WorkItemTracking",
+    "title": "WorkItemTrackingProcessTemplate",
     "description": "",
     "termsOfService": "https://go.microsoft.com/fwlink/?LinkId=329770",
     "contact": {
@@ -66,13 +66,81 @@
         }
       }
     },
-    "/_apis/work/processadmin/processes": {
+    "/_apis/work/processadmin/processes/checktemplateexistence": {
+      "post": {
+        "tags": [
+          "processes"
+        ],
+        "summary": "CheckTemplateExistence",
+        "description": "",
+        "operationId": "checkTemplateExistence",
+        "consumes": [
+          "application/octet-stream"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Stream to upload",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "Stream"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/CheckTemplateExistenceResult"
+            }
+          }
+        }
+      }
+    },
+    "/_apis/work/processadmin/processes/export/{id}": {
+      "get": {
+        "tags": [
+          "processes"
+        ],
+        "summary": "ExportProcessTemplate",
+        "description": "Returns requested process template",
+        "operationId": "exportProcessTemplate",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "id",
+            "description": "",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "string",
+              "format": "Stream"
+            }
+          }
+        }
+      }
+    },
+    "/_apis/work/processadmin/processes/import": {
       "post": {
         "tags": [
           "processes"
         ],
         "summary": "ImportProcessTemplate",
-        "description": "Records supplied process template and triggers promote",
+        "description": "",
         "operationId": "importProcessTemplate",
         "consumes": [
           "application/octet-stream"
@@ -109,14 +177,14 @@
         }
       }
     },
-    "/_apis/work/processadmin/processes/{id}": {
+    "/_apis/work/processadmin/processes/status/{id}": {
       "get": {
         "tags": [
           "processes"
         ],
-        "summary": "ExportProcessTemplate",
-        "description": "Returns requested process template",
-        "operationId": "exportProcessTemplate",
+        "summary": "ImportProcessTemplateStatus",
+        "description": "Whether promote has completed for the specified promote job id",
+        "operationId": "importProcessTemplateStatus",
         "produces": [
           "application/json"
         ],
@@ -134,8 +202,7 @@
           "200": {
             "description": "successful operation",
             "schema": {
-              "type": "string",
-              "format": "Stream"
+              "$ref": "#/definitions/ProcessPromoteStatus"
             }
           }
         }
@@ -196,6 +263,24 @@
         }
       }
     },
+    "CheckTemplateExistenceResult": {
+      "type": "object",
+      "properties": {
+        "doesTemplateExist": {
+          "type": "boolean"
+        },
+        "existingTemplateName": {
+          "type": "string"
+        },
+        "existingTemplateTypeId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "requestedTemplateName": {
+          "type": "string"
+        }
+      }
+    },
     "ProcessImportResult": {
       "type": "object",
       "properties": {
@@ -252,6 +337,9 @@
           "type": "string"
         },
         "file": {
+          "type": "string"
+        },
+        "helpLink": {
           "type": "string"
         },
         "issueType": {
