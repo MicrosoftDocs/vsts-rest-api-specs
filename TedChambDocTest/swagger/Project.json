@@ -18,6 +18,9 @@
   "basePath": "/",
   "tags": [
     {
+      "name": "projectHistory"
+    },
+    {
       "name": "properties"
     }
   ],
@@ -25,14 +28,48 @@
     "https"
   ],
   "paths": {
+    "/_apis/projecthistory": {
+      "get": {
+        "tags": [
+          "projectHistory"
+        ],
+        "summary": "GetProjectHistoryEntries",
+        "description": "",
+        "operationId": "GetProjectHistoryEntries",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "minRevision",
+            "description": "",
+            "required": false,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/ProjectInfo"
+              }
+            }
+         }
+        }
+      }
+    },
     "/_apis/projects/{projectId}/properties": {
       "get": {
         "tags": [
           "properties"
         ],
         "summary": "GetProjectProperties",
-        "description": "Get project properties.",
-        "operationId": "getProjectProperties",
+        "description": "Get a collection of team project properties.",
+        "operationId": "GetProjectProperties",
         "produces": [
           "application/json"
         ],
@@ -40,7 +77,7 @@
           {
             "in": "path",
             "name": "projectId",
-            "description": "The project ID.",
+            "description": "The team project ID.",
             "required": true,
             "type": "string",
             "format": "uuid"
@@ -48,7 +85,7 @@
           {
             "in": "query",
             "name": "keys",
-            "description": "A comma-delimited string of project property names. If unspecified, all properties will be returned.",
+            "description": "A comma-delimited string of team project property names. Wildcard characters (\"?\" and \"*\") are supported. If no key is specified, all properties will be returned.",
             "required": false,
             "type": "string",
             "format": "array (string)"
@@ -63,7 +100,7 @@
                 "$ref": "#/definitions/ProjectProperty"
               }
             }
-          }
+         }
         },
         "security": [
           {
@@ -79,8 +116,8 @@
           "properties"
         ],
         "summary": "SetProjectProperties",
-        "description": "Create, update, and delete project properties.",
-        "operationId": "setProjectProperties",
+        "description": "Create, update, and delete team project properties.",
+        "operationId": "SetProjectProperties",
         "consumes": [
           "application/json-patch+json"
         ],
@@ -88,7 +125,7 @@
           {
             "in": "path",
             "name": "projectId",
-            "description": "The project ID.",
+            "description": "The team project ID.",
             "required": true,
             "type": "string",
             "format": "uuid"
@@ -106,7 +143,7 @@
         "responses": {
           "200": {
             "description": "successful operation"
-          }
+         }
         },
         "security": [
           {
@@ -120,6 +157,7 @@
   },
   "definitions": {
     "JsonPatchDocument": {
+      "description": "The JSON model for JSON Patch Operations",
       "type": "object",
       "allOf": [
         {
@@ -132,6 +170,7 @@
       }
     },
     "JsonPatchOperation": {
+      "description": "The JSON model for a JSON Patch operation",
       "type": "object",
       "properties": {
         "from": {
@@ -162,7 +201,74 @@
         }
       }
     },
+    "ProjectInfo": {
+      "description": "Contains information of the project",
+      "type": "object",
+      "properties": {
+        "abbreviation": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "lastUpdateTime": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "name": {
+          "type": "string"
+        },
+        "properties": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ProjectProperty"
+          }
+        },
+        "revision": {
+          "description": "Current revision of the project",
+          "type": "integer",
+          "format": "int64"
+        },
+        "state": {
+          "enum": [
+            "deleting",
+            "new",
+            "wellFormed",
+            "createPending",
+            "all",
+            "unchanged",
+            "deleted"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.TeamFoundation.Core.WebApi.ProjectState"
+          }
+        },
+        "uri": {
+          "type": "string"
+        },
+        "version": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "visibility": {
+          "enum": [
+            "unchanged",
+            "private",
+            "organization",
+            "public"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.TeamFoundation.Core.WebApi.ProjectVisibility"
+          }
+        }
+      }
+    },
     "ProjectProperty": {
+      "description": "",
       "type": "object",
       "properties": {
         "name": {
@@ -173,7 +279,67 @@
         }
       }
     },
+    "TeamProjectReference": {
+      "description": "Represents a shallow reference to a TeamProject.",
+      "type": "object",
+      "properties": {
+        "abbreviation": {
+          "description": "Project abbreviation.",
+          "type": "string"
+        },
+        "description": {
+          "description": "The project's description (if any).",
+          "type": "string"
+        },
+        "id": {
+          "description": "Project identifier.",
+          "type": "string",
+          "format": "uuid"
+        },
+        "name": {
+          "description": "Project name.",
+          "type": "string"
+        },
+        "revision": {
+          "description": "Project revision.",
+          "type": "integer",
+          "format": "int64"
+        },
+        "state": {
+          "description": "Project state.",
+          "enum": [
+            "deleting",
+            "new",
+            "wellFormed",
+            "createPending",
+            "all",
+            "unchanged",
+            "deleted"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.TeamFoundation.Core.WebApi.ProjectState"
+          }
+        },
+        "url": {
+          "description": "Url to the full version of the object.",
+          "type": "string"
+        },
+        "visibility": {
+          "description": "Project visibility.",
+          "enum": [
+            "unchanged",
+            "private",
+            "organization",
+            "public"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.TeamFoundation.Core.WebApi.ProjectVisibility"
+          }
+        }
+      }
+    },
     "VssJsonCollectionWrapper": {
+      "description": "This class is used to serialized collections as a single JSON object on the wire, to avoid serializing JSON arrays directly to the client, which can be a security hole",
       "type": "object",
       "allOf": [
         {
@@ -182,15 +348,18 @@
       ],
       "properties": {
         "value": {
+          "readOnly": true,
           "type": "string",
           "format": "T"
         }
       }
     },
     "VssJsonCollectionWrapperBase": {
+      "description": "",
       "type": "object",
       "properties": {
         "count": {
+          "readOnly": true,
           "type": "integer",
           "format": "int32"
         }

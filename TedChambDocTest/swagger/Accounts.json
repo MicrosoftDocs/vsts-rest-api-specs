@@ -21,12 +21,6 @@
       "name": "accounts"
     },
     {
-      "name": "availability"
-    },
-    {
-      "name": "regions"
-    },
-    {
       "name": "settings"
     }
   ],
@@ -34,74 +28,6 @@
     "https"
   ],
   "paths": {
-    "/_apis/account/availability/{accountName}": {
-      "get": {
-        "tags": [
-          "availability"
-        ],
-        "summary": "IsValidAccountName",
-        "description": "",
-        "operationId": "isValidAccountName",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "accountName",
-            "description": "",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "$ref": "#/definitions/AccountNameAvailability"
-            }
-          }
-        },
-        "security": [
-          {
-            "oauth2": [
-              "vso.profile"
-            ]
-          }
-        ]
-      }
-    },
-    "/_apis/account/regions": {
-      "get": {
-        "tags": [
-          "regions"
-        ],
-        "summary": "GetRegions",
-        "description": "",
-        "operationId": "getRegions",
-        "produces": [
-          "application/json"
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/AccountRegion"
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "oauth2": [
-              "vso.profile"
-            ]
-          }
-        ]
-      }
-    },
     "/_apis/account/settings": {
       "get": {
         "tags": [
@@ -109,7 +35,7 @@
         ],
         "summary": "GetAccountSettings",
         "description": "",
-        "operationId": "getAccountSettings",
+        "operationId": "GetAccountSettings",
         "produces": [
           "application/json"
         ],
@@ -122,7 +48,7 @@
                 "type": "string"
               }
             }
-          }
+         }
         },
         "security": [
           {
@@ -140,7 +66,7 @@
         ],
         "summary": "CreateAccount",
         "description": "",
-        "operationId": "createAccount",
+        "operationId": "CreateAccount",
         "consumes": [
           "application/json"
         ],
@@ -171,7 +97,7 @@
             "schema": {
               "$ref": "#/definitions/Account"
             }
-          }
+         }
         }
       },
       "get": {
@@ -180,7 +106,7 @@
         ],
         "summary": "GetAccounts",
         "description": "A new version GetAccounts API. Only supports limited set of parameters, returns a list of account ref objects that only contains AccountUrl, AccountName and AccountId information, will use collection host Id as the AccountId.",
-        "operationId": "getAccounts",
+        "operationId": "GetAccounts",
         "produces": [
           "application/json"
         ],
@@ -218,7 +144,7 @@
                 "$ref": "#/definitions/Account"
               }
             }
-          }
+         }
         },
         "security": [
           {
@@ -236,7 +162,7 @@
         ],
         "summary": "GetAccount",
         "description": "",
-        "operationId": "getAccount",
+        "operationId": "GetAccount",
         "produces": [
           "application/json"
         ],
@@ -247,13 +173,6 @@
             "description": "",
             "required": true,
             "type": "string"
-          },
-          {
-            "in": "query",
-            "name": "properties",
-            "description": "",
-            "required": false,
-            "type": "string"
           }
         ],
         "responses": {
@@ -262,7 +181,7 @@
             "schema": {
               "$ref": "#/definitions/Account"
             }
-          }
+         }
         },
         "security": [
           {
@@ -276,10 +195,12 @@
   },
   "definitions": {
     "Account": {
+      "description": "",
       "type": "object",
       "properties": {
         "accountId": {
           "description": "Identifier for an Account",
+          "readOnly": true,
           "type": "string",
           "format": "uuid"
         },
@@ -326,19 +247,23 @@
         },
         "createdDate": {
           "description": "Date account was created",
+          "readOnly": true,
           "type": "string",
           "format": "date-time"
         },
         "hasMoved": {
+          "readOnly": true,
           "type": "boolean"
         },
         "lastUpdatedBy": {
           "description": "Identity of last person to update the account",
+          "readOnly": true,
           "type": "string",
           "format": "uuid"
         },
         "lastUpdatedDate": {
           "description": "Date account was last updated",
+          "readOnly": true,
           "type": "string",
           "format": "date-time"
         },
@@ -348,6 +273,7 @@
           "format": "uuid"
         },
         "newCollectionId": {
+          "readOnly": true,
           "type": "string",
           "format": "uuid"
         },
@@ -361,21 +287,26 @@
         },
         "statusReason": {
           "description": "Reason for current status",
+          "readOnly": true,
           "type": "string"
         }
       }
     },
     "AccountCreateInfoInternal": {
+      "description": "",
       "type": "object",
       "properties": {
         "accountName": {
+          "readOnly": true,
           "type": "string"
         },
         "creator": {
+          "readOnly": true,
           "type": "string",
           "format": "uuid"
         },
         "organization": {
+          "readOnly": true,
           "type": "string"
         },
         "preferences": {
@@ -392,57 +323,34 @@
         }
       }
     },
-    "AccountNameAvailability": {
-      "type": "object",
-      "properties": {
-        "isValidName": {
-          "type": "boolean"
-        },
-        "statusReason": {
-          "description": "Reason for current status",
-          "type": "string"
-        }
-      }
-    },
     "AccountPreferencesInternal": {
+      "description": "",
       "type": "object",
       "properties": {
         "culture": {
+          "readOnly": true,
           "type": "string",
           "format": "CultureInfo"
         },
         "language": {
+          "readOnly": true,
           "type": "string",
           "format": "CultureInfo"
         },
         "timeZone": {
+          "readOnly": true,
           "type": "string",
           "format": "TimeZoneInfo"
         }
       }
     },
-    "AccountRegion": {
-      "type": "object",
-      "properties": {
-        "displayName": {
-          "description": "Display name of the account region",
-          "type": "string"
-        },
-        "isDefault": {
-          "description": "Whether the region is default or not",
-          "type": "boolean"
-        },
-        "locationName": {
-          "description": "Azure location name",
-          "type": "string"
-        }
-      }
-    },
     "PropertiesCollection": {
+      "description": "",
       "type": "object",
       "properties": {
         "count": {
           "description": "Implements ICollection<KeyValuePair<String,Object>>.Count/>",
+          "readOnly": true,
           "type": "integer",
           "format": "int32"
         },
@@ -450,12 +358,14 @@
           "type": "object"
         },
         "keys": {
+          "readOnly": true,
           "type": "array",
           "items": {
             "type": "string"
           }
         },
         "values": {
+          "readOnly": true,
           "type": "array",
           "items": {
             "type": "string"
@@ -464,6 +374,7 @@
       }
     },
     "VssJsonCollectionWrapper": {
+      "description": "This class is used to serialized collections as a single JSON object on the wire, to avoid serializing JSON arrays directly to the client, which can be a security hole",
       "type": "object",
       "allOf": [
         {
@@ -472,15 +383,18 @@
       ],
       "properties": {
         "value": {
+          "readOnly": true,
           "type": "string",
           "format": "T"
         }
       }
     },
     "VssJsonCollectionWrapperBase": {
+      "description": "",
       "type": "object",
       "properties": {
         "count": {
+          "readOnly": true,
           "type": "integer",
           "format": "int32"
         }
