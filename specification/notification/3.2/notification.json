@@ -15,31 +15,29 @@
     "version": "4.0"
   },
   "host": "fabrikam-fiber-inc.visualstudio.com",
+  "x-ms-parameterized-host": {
+    "hostTemplate": "{accountName}.visualstudio.com",
+    "parameters": [
+      {
+        "name": "accountName",
+        "description": "The name of the Visual Studio Team Services account.",
+        "required": true,
+        "type": "string",
+        "in": "path"
+      }
+    ]
+  },
+  "x-ms-vss-area": "Notification",
   "basePath": "/",
   "tags": [
     {
-      "name": "batchNotificationOperations"
+      "name": "EventTypes"
     },
     {
-      "name": "events"
+      "name": "Subscribers"
     },
     {
-      "name": "eventTypes"
-    },
-    {
-      "name": "subscribers"
-    },
-    {
-      "name": "subscriptionQuery"
-    },
-    {
-      "name": "subscriptions"
-    },
-    {
-      "name": "subscriptionTemplates"
-    },
-    {
-      "name": "userSettings"
+      "name": "Subscriptions"
     }
   ],
   "schemes": [
@@ -51,7 +49,8 @@
         "tags": [
           "EventTypes"
         ],
-        "summary": "ListEventTypes",
+        "x-ms-vss-resource": "eventTypes",
+        "x-ms-vss-method": "ListEventTypes",
         "description": "List available event types for this service. Optionally filter by only event types for the specified publisher.",
         "operationId": "EventTypes_List",
         "produces": [
@@ -75,7 +74,7 @@
                 "$ref": "#/definitions/NotificationEventType"
               }
             }
-          }
+         }
         },
         "security": [
           {
@@ -85,7 +84,12 @@
           }
         ],
         "x-ms-examples": {
-          "All event types": { "$ref": "./examples/GET__notification_eventTypes.json" }
+            "All": {
+                "$ref": "./examples/eventTypes/GET__notification_eventTypes.json"
+            },
+            "By publisher": {
+                "$ref": "./examples/eventTypes/GET__notification_eventTypes_publisherId-_publisherId_.json"
+            }
         }
       }
     },
@@ -94,7 +98,8 @@
         "tags": [
           "EventTypes"
         ],
-        "summary": "GetEventType",
+        "x-ms-vss-resource": "eventTypes",
+        "x-ms-vss-method": "GetEventType",
         "description": "Get a specific event type.",
         "operationId": "EventTypes_Get",
         "produces": [
@@ -115,7 +120,7 @@
             "schema": {
               "$ref": "#/definitions/NotificationEventType"
             }
-          }
+         }
         },
         "security": [
           {
@@ -125,7 +130,9 @@
           }
         ],
         "x-ms-examples": {
-          "By event type ID": { "$ref": "./examples/GET__notification_eventTypes__eventTypeId_.json" }
+            "": {
+                "$ref": "./examples/eventTypes/GET__notification_eventTypes__eventTypeId_.json"
+            }
         }
       }
     },
@@ -134,7 +141,8 @@
         "tags": [
           "Subscribers"
         ],
-        "summary": "GetSubscriber",
+        "x-ms-vss-resource": "subscribers",
+        "x-ms-vss-method": "GetSubscriber",
         "description": "",
         "operationId": "Subscribers_Get",
         "produces": [
@@ -156,14 +164,15 @@
             "schema": {
               "$ref": "#/definitions/NotificationSubscriber"
             }
-          }
+         }
         }
       },
       "patch": {
         "tags": [
           "Subscribers"
         ],
-        "summary": "UpdateSubscriber",
+        "x-ms-vss-resource": "subscribers",
+        "x-ms-vss-method": "UpdateSubscriber",
         "description": "",
         "operationId": "Subscribers_Update",
         "consumes": [
@@ -197,7 +206,7 @@
             "schema": {
               "$ref": "#/definitions/NotificationSubscriber"
             }
-          }
+         }
         }
       }
     },
@@ -206,7 +215,8 @@
         "tags": [
           "Subscriptions"
         ],
-        "summary": "QuerySubscriptions",
+        "x-ms-vss-resource": "subscriptionQuery",
+        "x-ms-vss-method": "QuerySubscriptions",
         "description": "Query for subscriptions. A subscription is returned if it matches one or more of the specified conditions.",
         "operationId": "Subscriptions_Query",
         "consumes": [
@@ -235,7 +245,7 @@
                 "$ref": "#/definitions/NotificationSubscription"
               }
             }
-          }
+         }
         },
         "security": [
           {
@@ -243,7 +253,12 @@
               "vso.notification"
             ]
           }
-        ]
+        ],
+        "x-ms-examples": {
+            "By subscriber": {
+                "$ref": "./examples/subscriptionQuery/POST__notification_subscriptionQuery.json"
+            }
+        }
       }
     },
     "/_apis/notification/subscriptions": {
@@ -251,7 +266,8 @@
         "tags": [
           "Subscriptions"
         ],
-        "summary": "CreateSubscription",
+        "x-ms-vss-resource": "subscriptions",
+        "x-ms-vss-method": "CreateSubscription",
         "description": "Create a new subscription.",
         "operationId": "Subscriptions_Create",
         "consumes": [
@@ -277,7 +293,7 @@
             "schema": {
               "$ref": "#/definitions/NotificationSubscription"
             }
-          }
+         }
         },
         "security": [
           {
@@ -287,15 +303,20 @@
           }
         ],
         "x-ms-examples": {
-          "For an individual user": { "$ref": "./examples/POST__notification_subscriptions.json" },
-          "For a team": { "$ref": "./examples/POST__notification_subscriptions2.json" }
+            "For a user": {
+                "$ref": "./examples/subscriptions/POST__notification_subscriptions.json"
+            },
+            "For a team": {
+                "$ref": "./examples/subscriptions/POST__notification_subscriptions2.json"
+            }
         }
       },
       "get": {
         "tags": [
           "Subscriptions"
         ],
-        "summary": "ListSubscriptions",
+        "x-ms-vss-resource": "subscriptions",
+        "x-ms-vss-method": "ListSubscriptions",
         "description": "",
         "operationId": "Subscriptions_List",
         "produces": [
@@ -336,7 +357,7 @@
                 "$ref": "#/definitions/NotificationSubscription"
               }
             }
-          }
+         }
         },
         "security": [
           {
@@ -346,7 +367,9 @@
           }
         ],
         "x-ms-examples": {
-          "For me": { "$ref": "./examples/GET__notification_subscriptions.json" }
+            "": {
+                "$ref": "./examples/subscriptions/GET__notification_subscriptions.json"
+            }
         }
       }
     },
@@ -355,7 +378,8 @@
         "tags": [
           "Subscriptions"
         ],
-        "summary": "DeleteSubscription",
+        "x-ms-vss-resource": "subscriptions",
+        "x-ms-vss-method": "DeleteSubscription",
         "description": "Delete a subscription.",
         "operationId": "Subscriptions_Delete",
         "parameters": [
@@ -370,7 +394,7 @@
         "responses": {
           "200": {
             "description": "successful operation"
-          }
+         }
         },
         "security": [
           {
@@ -380,15 +404,17 @@
           }
         ],
         "x-ms-examples": {
-          "User subscription": { "$ref": "./examples/DELETE__notification_subscriptions__subscriptionId_.json" },
-          "Team subscription": { "$ref": "./examples/DELETE__notification_subscriptions__teamSubscriptionId_.json" }
+            "": {
+                "$ref": "./examples/subscriptions/DELETE__notification_subscriptions__subscriptionId_.json"
+            }
         }
       },
       "get": {
         "tags": [
           "Subscriptions"
         ],
-        "summary": "GetSubscription",
+        "x-ms-vss-resource": "subscriptions",
+        "x-ms-vss-method": "GetSubscription",
         "description": "Get a notification subscription by its ID.",
         "operationId": "Subscriptions_Get",
         "produces": [
@@ -417,7 +443,7 @@
             "schema": {
               "$ref": "#/definitions/NotificationSubscription"
             }
-          }
+         }
         },
         "security": [
           {
@@ -425,13 +451,19 @@
               "vso.notification"
             ]
           }
-        ]
+        ],
+        "x-ms-examples": {
+            "": {
+                "$ref": "./examples/subscriptions/GET__notification_subscriptions__subscriptionId_.json"
+            }
+        }
       },
       "patch": {
         "tags": [
           "Subscriptions"
         ],
-        "summary": "UpdateSubscription",
+        "x-ms-vss-resource": "subscriptions",
+        "x-ms-vss-method": "UpdateSubscription",
         "description": "Update an existing subscription. Depending on the type of subscription and permissions, the caller can update the description, filter settings, channel (delivery) settings and more.",
         "operationId": "Subscriptions_Update",
         "consumes": [
@@ -464,7 +496,7 @@
             "schema": {
               "$ref": "#/definitions/NotificationSubscription"
             }
-          }
+         }
         },
         "security": [
           {
@@ -472,7 +504,15 @@
               "vso.notification_write"
             ]
           }
-        ]
+        ],
+        "x-ms-examples": {
+            "Change description": {
+                "$ref": "./examples/subscriptions/PATCH__notification_subscriptions__subscriptionId_.json"
+            },
+            "Disable": {
+                "$ref": "./examples/subscriptions/PATCH__notification_subscriptions__subscriptionId_2.json"
+            }
+        }
       }
     },
     "/_apis/notification/Subscriptions/{subscriptionId}/usersettings/{userId}": {
@@ -480,9 +520,10 @@
         "tags": [
           "Subscriptions"
         ],
-        "summary": "UpdateSubscriptionUserSettings",
+        "x-ms-vss-resource": "userSettings",
+        "x-ms-vss-method": "UpdateSubscriptionUserSettings",
         "description": "Update the specified users' settings for the specified subscription. User settings can only be applied to shared subscriptions, like team subscriptions or default subscriptions. This API is typically used to opt in or out of a shared subscription.",
-        "operationId": "Subscriptions_UpdateUserSettings",
+        "operationId": "Subscriptions_UpdateSubscriptionUserSettings",
         "consumes": [
           "application/json"
         ],
@@ -521,7 +562,7 @@
             "schema": {
               "$ref": "#/definitions/SubscriptionUserSettings"
             }
-          }
+         }
         },
         "security": [
           {
@@ -529,7 +570,12 @@
               "vso.notification_write"
             ]
           }
-        ]
+        ],
+        "x-ms-examples": {
+            "Opt out": {
+                "$ref": "./examples/userSettings/PUT__notification_subscriptions__sharedSubscriptionId__userSettings_me.json"
+            }
+        }
       }
     }
   },
@@ -1152,11 +1198,22 @@
             "unprocessedEventDelayByPublisher",
             "unprocessedNotificationsByChannelByPublisher",
             "unprocessedNotificationDelayByChannelByPublisher",
+            "delayRangeStart",
+            "totalPipelineTime",
+            "notificationPipelineTime",
+            "eventPipelineTime",
             "hourlyRangeStart",
             "hourlyNotificationBySubscription",
             "hourlyEventsByEventTypePerUser",
             "hourlyEvents",
-            "hourlyNotifications"
+            "hourlyNotifications",
+            "hourlyUnprocessedEventsByPublisher",
+            "hourlyUnprocessedEventDelayByPublisher",
+            "hourlyUnprocessedNotificationsByChannelByPublisher",
+            "hourlyUnprocessedNotificationDelayByChannelByPublisher",
+            "hourlyTotalPipelineTime",
+            "hourlyNotificationPipelineTime",
+            "hourlyEventPipelineTime"
           ],
           "x-ms-enum": {
             "name": "Microsoft.VisualStudio.Services.Notifications.WebApi.NotificationStatisticType"
@@ -1183,7 +1240,7 @@
       "description": "",
       "type": "object",
       "properties": {
-        "date": {
+        "endDate": {
           "type": "string",
           "format": "date-time"
         },
@@ -1193,6 +1250,10 @@
         },
         "path": {
           "type": "string"
+        },
+        "startDate": {
+          "type": "string",
+          "format": "date-time"
         },
         "type": {
           "enum": [
@@ -1208,11 +1269,22 @@
             "unprocessedEventDelayByPublisher",
             "unprocessedNotificationsByChannelByPublisher",
             "unprocessedNotificationDelayByChannelByPublisher",
+            "delayRangeStart",
+            "totalPipelineTime",
+            "notificationPipelineTime",
+            "eventPipelineTime",
             "hourlyRangeStart",
             "hourlyNotificationBySubscription",
             "hourlyEventsByEventTypePerUser",
             "hourlyEvents",
-            "hourlyNotifications"
+            "hourlyNotifications",
+            "hourlyUnprocessedEventsByPublisher",
+            "hourlyUnprocessedEventDelayByPublisher",
+            "hourlyUnprocessedNotificationsByChannelByPublisher",
+            "hourlyUnprocessedNotificationDelayByChannelByPublisher",
+            "hourlyTotalPipelineTime",
+            "hourlyNotificationPipelineTime",
+            "hourlyEventPipelineTime"
           ],
           "x-ms-enum": {
             "name": "Microsoft.VisualStudio.Services.Notifications.WebApi.NotificationStatisticType"
@@ -1836,8 +1908,8 @@
     "accessToken": {
       "type": "basic",
       "description": "Personal access token. Use any value for the user name and the token as the password."
-    },
-    "oauth2": {
+     },
+     "oauth2": {
       "type": "oauth2",
       "flow": "accessCode",
       "authorizationUrl": "https://app.vssps.visualstudio.com/oauth2/authorize&response_type=Assertion",

@@ -15,6 +15,19 @@
     "version": "4.0"
   },
   "host": "fabrikam-fiber-inc.visualstudio.com",
+  "x-ms-parameterized-host": {
+    "hostTemplate": "{accountName}.visualstudio.com",
+    "parameters": [
+      {
+        "name": "accountName",
+        "description": "The name of the Visual Studio Team Services account.",
+        "required": true,
+        "type": "string",
+        "in": "path"
+      }
+    ]
+  },
+  "x-ms-vss-area": "Release",
   "basePath": "/",
   "tags": [
     {
@@ -39,9 +52,6 @@
       "name": "deployments"
     },
     {
-      "name": "environments"
-    },
-    {
       "name": "environmenttemplates"
     },
     {
@@ -60,9 +70,6 @@
       "name": "issues"
     },
     {
-      "name": "logs"
-    },
-    {
       "name": "manualInterventions"
     },
     {
@@ -76,9 +83,6 @@
     },
     {
       "name": "releasesettings"
-    },
-    {
-      "name": "revisions"
     },
     {
       "name": "sendmail"
@@ -109,11 +113,12 @@
     "/_apis/release/autotriggerissues": {
       "get": {
         "tags": [
-          "autotriggerissues"
+          "Autotriggerissues"
         ],
-        "summary": "GetAutoTriggerIssues",
+        "x-ms-vss-resource": "autotriggerissues",
+        "x-ms-vss-method": "GetAutoTriggerIssues",
         "description": "",
-        "operationId": "GetAutoTriggerIssues",
+        "operationId": "Autotriggerissues_List",
         "produces": [
           "application/json"
         ],
@@ -156,11 +161,12 @@
     "/_apis/release/projects": {
       "get": {
         "tags": [
-          "projects"
+          "Projects"
         ],
-        "summary": "GetReleaseProjects",
+        "x-ms-vss-resource": "projects",
+        "x-ms-vss-method": "GetReleaseProjects",
         "description": "",
-        "operationId": "GetReleaseProjects",
+        "operationId": "Projects_List",
         "produces": [
           "application/json"
         ],
@@ -196,11 +202,12 @@
     "/_apis/release/releases": {
       "get": {
         "tags": [
-          "releases"
+          "Releases"
         ],
-        "summary": "GetReleases",
+        "x-ms-vss-resource": "releases",
+        "x-ms-vss-method": "GetReleases",
         "description": "Get a list of releases",
-        "operationId": "GetReleases",
+        "operationId": "Releases_GetReleases",
         "produces": [
           "application/json"
         ],
@@ -368,17 +375,26 @@
               "vso.release"
             ]
           }
-        ]
+        ],
+        "x-ms-examples": {
+            "": {
+                "$ref": "./examples/releases/releases/Query_ListAllReleases.json"
+            },
+            "For a release definition": {
+                "$ref": "./examples/releases/releases/GET__ListAllReleasesForAReleaseDefinition.json"
+            }
+        }
       }
     },
     "/{project}/_apis/release/approvals": {
       "get": {
         "tags": [
-          "approvals"
+          "Approvals"
         ],
-        "summary": "GetApprovals",
+        "x-ms-vss-resource": "approvals",
+        "x-ms-vss-method": "GetApprovals",
         "description": "Get a list of approvals",
-        "operationId": "GetApprovals",
+        "operationId": "Approvals_GetApprovals",
         "produces": [
           "application/json"
         ],
@@ -470,17 +486,83 @@
               "vso.release"
             ]
           }
+        ],
+        "x-ms-examples": {
+            "Pending for all users": {
+                "$ref": "./examples/approvals/approvals/GET__ListAllPendingApprovals.json"
+            },
+            "Pending for a specific user": {
+                "$ref": "./examples/approvals/approvals/GET__ListPendingApprovalsForASpecificUser.json"
+            },
+            "Pending for a specific release": {
+                "$ref": "./examples/approvals/approvals/GET__ListPendingApprovalsForASpecificARelease.json"
+            }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Approvals"
+        ],
+        "x-ms-vss-resource": "approvals",
+        "x-ms-vss-method": "UpdateReleaseApprovals",
+        "description": "",
+        "operationId": "Approvals_UpdateReleaseApprovals",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/ReleaseApproval"
+              }
+            }
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/ReleaseApproval"
+              }
+            }
+         }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.release_manage"
+            ]
+          }
         ]
       }
     },
     "/{project}/_apis/release/approvals/{approvalId}": {
       "get": {
         "tags": [
-          "approvals"
+          "Approvals"
         ],
-        "summary": "GetApproval",
+        "x-ms-vss-resource": "approvals",
+        "x-ms-vss-method": "GetApproval",
         "description": "Get an approval.",
-        "operationId": "GetApproval",
+        "operationId": "Approvals_GetApproval",
         "produces": [
           "application/json"
         ],
@@ -526,11 +608,12 @@
       },
       "patch": {
         "tags": [
-          "approvals"
+          "Approvals"
         ],
-        "summary": "UpdateReleaseApproval",
+        "x-ms-vss-resource": "approvals",
+        "x-ms-vss-method": "UpdateReleaseApproval",
         "description": "Update status of an approval",
-        "operationId": "UpdateReleaseApproval",
+        "operationId": "Approvals_UpdateReleaseApproval",
         "consumes": [
           "application/json"
         ],
@@ -577,17 +660,23 @@
               "vso.release_manage"
             ]
           }
-        ]
+        ],
+        "x-ms-examples": {
+            "Approve a release": {
+                "$ref": "./examples/approvals/approvals/PATCH__UpdateStatusOfAnApprovalFromPendingToApproved.json"
+            }
+        }
       }
     },
     "/{project}/_apis/release/approvals/{approvalStepId}/history": {
       "get": {
         "tags": [
-          "approvals"
+          "Approvals"
         ],
-        "summary": "GetApprovalHistory",
+        "x-ms-vss-resource": "approvals",
+        "x-ms-vss-method": "GetApprovalHistory",
         "description": "Get approval history.",
-        "operationId": "GetApprovalHistory",
+        "operationId": "Approvals_GetApprovalHistory",
         "produces": [
           "application/json"
         ],
@@ -628,11 +717,12 @@
     "/{project}/_apis/release/artifacts/inputvaluesquery": {
       "post": {
         "tags": [
-          "inputvaluesquery"
+          "Inputvaluesquery"
         ],
-        "summary": "GetInputValues",
+        "x-ms-vss-resource": "inputvaluesquery",
+        "x-ms-vss-method": "GetInputValues",
         "description": "",
-        "operationId": "GetInputValues",
+        "operationId": "Inputvaluesquery_Get",
         "consumes": [
           "application/json"
         ],
@@ -670,11 +760,12 @@
     "/{project}/_apis/release/artifacts/types": {
       "get": {
         "tags": [
-          "types"
+          "Types"
         ],
-        "summary": "GetArtifactTypeDefinitions",
+        "x-ms-vss-resource": "types",
+        "x-ms-vss-method": "GetArtifactTypeDefinitions",
         "description": "",
-        "operationId": "GetArtifactTypeDefinitions",
+        "operationId": "Types_List",
         "produces": [
           "application/json"
         ],
@@ -703,11 +794,12 @@
     "/{project}/_apis/release/artifacts/versions": {
       "get": {
         "tags": [
-          "versions"
+          "Versions"
         ],
-        "summary": "GetArtifactVersions",
+        "x-ms-vss-resource": "versions",
+        "x-ms-vss-method": "GetArtifactVersions",
         "description": "",
-        "operationId": "GetArtifactVersions",
+        "operationId": "Versions_GetArtifactVersions",
         "produces": [
           "application/json"
         ],
@@ -739,11 +831,12 @@
       },
       "post": {
         "tags": [
-          "versions"
+          "Versions"
         ],
-        "summary": "GetArtifactVersionsForSources",
+        "x-ms-vss-resource": "versions",
+        "x-ms-vss-method": "GetArtifactVersionsForSources",
         "description": "",
-        "operationId": "GetArtifactVersionsForSources",
+        "operationId": "Versions_GetArtifactVersionsForSources",
         "consumes": [
           "application/json"
         ],
@@ -784,11 +877,12 @@
     "/{project}/_apis/release/definitionenvironments": {
       "get": {
         "tags": [
-          "definitionEnvironments"
+          "DefinitionEnvironments"
         ],
-        "summary": "GetDefinitionEnvironments",
+        "x-ms-vss-resource": "definitionEnvironments",
+        "x-ms-vss-method": "GetDefinitionEnvironments",
         "description": "",
-        "operationId": "GetDefinitionEnvironments",
+        "operationId": "DefinitionEnvironments_List",
         "produces": [
           "application/json"
         ],
@@ -833,11 +927,12 @@
     "/{project}/_apis/release/definitions": {
       "post": {
         "tags": [
-          "definitions"
+          "Definitions"
         ],
-        "summary": "CreateReleaseDefinition",
+        "x-ms-vss-resource": "definitions",
+        "x-ms-vss-method": "CreateReleaseDefinition",
         "description": "Create a release definition",
-        "operationId": "CreateReleaseDefinition",
+        "operationId": "Definitions_Create",
         "consumes": [
           "application/json"
         ],
@@ -876,15 +971,21 @@
               "vso.release_execute"
             ]
           }
-        ]
+        ],
+        "x-ms-examples": {
+            "": {
+                "$ref": "./examples/definitions/definitions/POST__CreateAReleaseDefinition.json"
+            }
+        }
       },
       "get": {
         "tags": [
-          "definitions"
+          "Definitions"
         ],
-        "summary": "GetReleaseDefinitions",
+        "x-ms-vss-resource": "definitions",
+        "x-ms-vss-method": "GetReleaseDefinitions",
         "description": "Get a list of release definitions.",
-        "operationId": "GetReleaseDefinitions",
+        "operationId": "Definitions_GetReleaseDefinitions",
         "produces": [
           "application/json"
         ],
@@ -1004,15 +1105,27 @@
               "vso.release"
             ]
           }
-        ]
+        ],
+        "x-ms-examples": {
+            "": {
+                "$ref": "./examples/definitions/definitions/GET__ListAllReleaseDefinitions.json"
+            },
+            "With environments details expanded": {
+                "$ref": "./examples/definitions/definitions/GET__ListAllReleaseDefinitionsWithEnvironmentsExpanded.json"
+            },
+            "With artifacts details expanded": {
+                "$ref": "./examples/definitions/definitions/GET_ListAllReleaseDefinitionsWithArtifactsExpanded.json"
+            }
+        }
       },
       "put": {
         "tags": [
-          "definitions"
+          "Definitions"
         ],
-        "summary": "UpdateReleaseDefinition",
+        "x-ms-vss-resource": "definitions",
+        "x-ms-vss-method": "UpdateReleaseDefinition",
         "description": "Update a release definition.",
-        "operationId": "UpdateReleaseDefinition",
+        "operationId": "Definitions_Update",
         "consumes": [
           "application/json"
         ],
@@ -1051,17 +1164,23 @@
               "vso.release_execute"
             ]
           }
-        ]
+        ],
+        "x-ms-examples": {
+            "": {
+                "$ref": "./examples/definitions/definitions/PUT__UpdateAReleaseDefinition.json"
+            }
+        }
       }
     },
     "/{project}/_apis/release/definitions/{definitionId}": {
       "delete": {
         "tags": [
-          "definitions"
+          "Definitions"
         ],
-        "summary": "DeleteReleaseDefinition",
+        "x-ms-vss-resource": "definitions",
+        "x-ms-vss-method": "DeleteReleaseDefinition",
         "description": "Delete a release definition.",
-        "operationId": "DeleteReleaseDefinition",
+        "operationId": "Definitions_Delete",
         "parameters": [
           {
             "in": "path",
@@ -1090,15 +1209,21 @@
               "vso.release_manage"
             ]
           }
-        ]
+        ],
+        "x-ms-examples": {
+            "": {
+                "$ref": "./examples/definitions/definitions/DELETE__DeleteAReleaseDefinition.json"
+            }
+        }
       },
       "get": {
         "tags": [
-          "definitions"
+          "Definitions"
         ],
-        "summary": "GetReleaseDefinition",
+        "x-ms-vss-resource": "definitions",
+        "x-ms-vss-method": "GetReleaseDefinition",
         "description": "Get a release definition.",
-        "operationId": "GetReleaseDefinition",
+        "operationId": "Definitions_GetReleaseDefinition",
         "produces": [
           "text/plain",
           "application/json"
@@ -1142,17 +1267,23 @@
               "vso.release"
             ]
           }
-        ]
+        ],
+        "x-ms-examples": {
+            "": {
+                "$ref": "./examples/definitions/definitions/GET__GetAReleaseDefinition.json"
+            }
+        }
       }
     },
     "/{project}/_apis/Release/definitions/{definitionId}/revisions": {
       "get": {
         "tags": [
-          "revisions"
+          "Definitions"
         ],
-        "summary": "GetReleaseDefinitionHistory",
+        "x-ms-vss-resource": "revisions",
+        "x-ms-vss-method": "GetReleaseDefinitionHistory",
         "description": "Get revision history for a release definition",
-        "operationId": "GetReleaseDefinitionHistory",
+        "operationId": "Definitions_List",
         "produces": [
           "application/json"
         ],
@@ -1190,17 +1321,23 @@
               "vso.release"
             ]
           }
-        ]
+        ],
+        "x-ms-examples": {
+            "": {
+                "$ref": "./examples/revisions/definitions/GET__GetAReleaseDefinitionRevision.json"
+            }
+        }
       }
     },
     "/{project}/_apis/Release/definitions/{definitionId}/revisions/{revision}": {
       "get": {
         "tags": [
-          "revisions"
+          "Definitions"
         ],
-        "summary": "GetDefinitionRevision",
+        "x-ms-vss-resource": "revisions",
+        "x-ms-vss-method": "GetDefinitionRevision",
         "description": "",
-        "operationId": "GetDefinitionRevision",
+        "operationId": "Definitions_GetDefinitionRevision",
         "produces": [
           "text/plain"
         ],
@@ -1250,11 +1387,12 @@
     "/{project}/_apis/release/definitions/{definitionId}/sourcebranches": {
       "get": {
         "tags": [
-          "sourcebranches"
+          "Sourcebranches"
         ],
-        "summary": "GetSourceBranches",
+        "x-ms-vss-resource": "sourcebranches",
+        "x-ms-vss-method": "GetSourceBranches",
         "description": "",
-        "operationId": "GetSourceBranches",
+        "operationId": "Sourcebranches_List",
         "produces": [
           "application/json"
         ],
@@ -1298,11 +1436,12 @@
     "/{project}/_apis/release/definitions/{releaseDefinitionId}/tags": {
       "post": {
         "tags": [
-          "tags"
+          "Tags"
         ],
-        "summary": "AddDefinitionTags",
+        "x-ms-vss-resource": "tags",
+        "x-ms-vss-method": "AddDefinitionTags",
         "description": "Adds multiple tags to a definition",
-        "operationId": "AddDefinitionTags",
+        "operationId": "Tags_AddDefinitionTags",
         "consumes": [
           "application/json"
         ],
@@ -1359,11 +1498,12 @@
       },
       "get": {
         "tags": [
-          "tags"
+          "Tags"
         ],
-        "summary": "GetDefinitionTags",
+        "x-ms-vss-resource": "tags",
+        "x-ms-vss-method": "GetDefinitionTags",
         "description": "Gets the tags for a definition",
-        "operationId": "GetDefinitionTags",
+        "operationId": "Tags_GetDefinitionTags",
         "produces": [
           "application/json"
         ],
@@ -1407,11 +1547,12 @@
     "/{project}/_apis/release/definitions/{releaseDefinitionId}/tags/{tag}": {
       "patch": {
         "tags": [
-          "tags"
+          "Tags"
         ],
-        "summary": "AddDefinitionTag",
+        "x-ms-vss-resource": "tags",
+        "x-ms-vss-method": "AddDefinitionTag",
         "description": "Adds a tag to a definition",
-        "operationId": "AddDefinitionTag",
+        "operationId": "Tags_AddDefinitionTag",
         "produces": [
           "application/json"
         ],
@@ -1453,11 +1594,12 @@
       },
       "delete": {
         "tags": [
-          "tags"
+          "Tags"
         ],
-        "summary": "DeleteDefinitionTag",
+        "x-ms-vss-resource": "tags",
+        "x-ms-vss-method": "DeleteDefinitionTag",
         "description": "Deletes a tag from a definition",
-        "operationId": "DeleteDefinitionTag",
+        "operationId": "Tags_DeleteDefinitionTag",
         "produces": [
           "application/json"
         ],
@@ -1508,11 +1650,12 @@
     "/{project}/_apis/release/definitions/environmenttemplates": {
       "post": {
         "tags": [
-          "environmenttemplates"
+          "Environmenttemplates"
         ],
-        "summary": "CreateDefinitionEnvironmentTemplate",
+        "x-ms-vss-resource": "environmenttemplates",
+        "x-ms-vss-method": "CreateDefinitionEnvironmentTemplate",
         "description": "",
-        "operationId": "CreateDefinitionEnvironmentTemplate",
+        "operationId": "Environmenttemplates_Create",
         "consumes": [
           "application/json"
         ],
@@ -1555,11 +1698,12 @@
       },
       "delete": {
         "tags": [
-          "environmenttemplates"
+          "Environmenttemplates"
         ],
-        "summary": "DeleteDefinitionEnvironmentTemplate",
+        "x-ms-vss-resource": "environmenttemplates",
+        "x-ms-vss-method": "DeleteDefinitionEnvironmentTemplate",
         "description": "",
-        "operationId": "DeleteDefinitionEnvironmentTemplate",
+        "operationId": "Environmenttemplates_Delete",
         "parameters": [
           {
             "in": "path",
@@ -1592,11 +1736,12 @@
       },
       "get": {
         "tags": [
-          "environmenttemplates"
+          "Environmenttemplates"
         ],
-        "summary": "GetDefinitionEnvironmentTemplate",
+        "x-ms-vss-resource": "environmenttemplates",
+        "x-ms-vss-method": "GetDefinitionEnvironmentTemplate",
         "description": "",
-        "operationId": "GetDefinitionEnvironmentTemplate",
+        "operationId": "Environmenttemplates_Get",
         "produces": [
           "application/json"
         ],
@@ -1637,11 +1782,12 @@
     "/{project}/_apis/release/deployments": {
       "get": {
         "tags": [
-          "deployments"
+          "Deployments"
         ],
-        "summary": "GetDeployments",
+        "x-ms-vss-resource": "deployments",
+        "x-ms-vss-method": "GetDeployments",
         "description": "",
-        "operationId": "GetDeployments",
+        "operationId": "Deployments_Get",
         "produces": [
           "application/json"
         ],
@@ -1768,11 +1914,12 @@
       },
       "post": {
         "tags": [
-          "deployments"
+          "Deployments"
         ],
-        "summary": "GetDeploymentsForMultipleEnvironments",
+        "x-ms-vss-resource": "deployments",
+        "x-ms-vss-method": "GetDeploymentsForMultipleEnvironments",
         "description": "",
-        "operationId": "GetDeploymentsForMultipleEnvironments",
+        "operationId": "Deployments_List",
         "consumes": [
           "application/json"
         ],
@@ -1820,11 +1967,12 @@
     "/{project}/_apis/release/favorites/{scope}": {
       "post": {
         "tags": [
-          "favorites"
+          "Favorites"
         ],
-        "summary": "CreateFavorites",
+        "x-ms-vss-resource": "favorites",
+        "x-ms-vss-method": "CreateFavorites",
         "description": "",
-        "operationId": "CreateFavorites",
+        "operationId": "Favorites_Create",
         "consumes": [
           "application/json"
         ],
@@ -1880,11 +2028,12 @@
       },
       "delete": {
         "tags": [
-          "favorites"
+          "Favorites"
         ],
-        "summary": "DeleteFavorites",
+        "x-ms-vss-resource": "favorites",
+        "x-ms-vss-method": "DeleteFavorites",
         "description": "",
-        "operationId": "DeleteFavorites",
+        "operationId": "Favorites_Delete",
         "parameters": [
           {
             "in": "path",
@@ -1923,11 +2072,12 @@
       },
       "get": {
         "tags": [
-          "favorites"
+          "Favorites"
         ],
-        "summary": "GetFavorites",
+        "x-ms-vss-resource": "favorites",
+        "x-ms-vss-method": "GetFavorites",
         "description": "",
-        "operationId": "GetFavorites",
+        "operationId": "Favorites_List",
         "produces": [
           "application/json"
         ],
@@ -1970,11 +2120,12 @@
     "/{project}/_apis/release/folders/{*path}": {
       "get": {
         "tags": [
-          "folders"
+          "Folders"
         ],
-        "summary": "GetFolders",
+        "x-ms-vss-resource": "folders",
+        "x-ms-vss-method": "GetFolders",
         "description": "Gets folders",
-        "operationId": "GetFolders",
+        "operationId": "Folders_List",
         "produces": [
           "application/json"
         ],
@@ -2018,11 +2169,12 @@
     "/{project}/_apis/release/folders/{path}": {
       "post": {
         "tags": [
-          "folders"
+          "Folders"
         ],
-        "summary": "CreateFolder",
+        "x-ms-vss-resource": "folders",
+        "x-ms-vss-method": "CreateFolder",
         "description": "Creates a new folder",
-        "operationId": "CreateFolder",
+        "operationId": "Folders_Create",
         "consumes": [
           "application/json"
         ],
@@ -2065,11 +2217,12 @@
       },
       "delete": {
         "tags": [
-          "folders"
+          "Folders"
         ],
-        "summary": "DeleteFolder",
+        "x-ms-vss-resource": "folders",
+        "x-ms-vss-method": "DeleteFolder",
         "description": "Deletes a definition folder for given folder name and path and all it's existing definitions",
-        "operationId": "DeleteFolder",
+        "operationId": "Folders_Delete",
         "parameters": [
           {
             "in": "path",
@@ -2094,11 +2247,12 @@
       },
       "patch": {
         "tags": [
-          "folders"
+          "Folders"
         ],
-        "summary": "UpdateFolder",
+        "x-ms-vss-resource": "folders",
+        "x-ms-vss-method": "UpdateFolder",
         "description": "Updates an existing folder at given  existing path",
-        "operationId": "UpdateFolder",
+        "operationId": "Folders_Update",
         "consumes": [
           "application/json"
         ],
@@ -2143,11 +2297,12 @@
     "/{project}/_apis/release/issues/{buildId}": {
       "get": {
         "tags": [
-          "issues"
+          "Issues"
         ],
-        "summary": "GetIssues",
+        "x-ms-vss-resource": "issues",
+        "x-ms-vss-method": "GetIssues",
         "description": "",
-        "operationId": "GetIssues",
+        "operationId": "Issues_List",
         "produces": [
           "application/json"
         ],
@@ -2191,11 +2346,12 @@
     "/{project}/_apis/release/metrics": {
       "get": {
         "tags": [
-          "metrics"
+          "Metrics"
         ],
-        "summary": "GetMetrics",
+        "x-ms-vss-resource": "metrics",
+        "x-ms-vss-method": "GetMetrics",
         "description": "",
-        "operationId": "GetMetrics",
+        "operationId": "Metrics_List",
         "produces": [
           "application/json"
         ],
@@ -2232,11 +2388,12 @@
     "/{project}/_apis/release/releases": {
       "get": {
         "tags": [
-          "releases"
+          "Releases"
         ],
-        "summary": "GetReleases",
+        "x-ms-vss-resource": "releases",
+        "x-ms-vss-method": "GetReleases",
         "description": "Get a list of releases",
-        "operationId": "GetReleases",
+        "operationId": "Releases_GetReleases",
         "produces": [
           "application/json"
         ],
@@ -2411,15 +2568,24 @@
               "vso.release"
             ]
           }
-        ]
+        ],
+        "x-ms-examples": {
+            "": {
+                "$ref": "./examples/releases/releases/Query_ListAllReleases.json"
+            },
+            "For a release definition": {
+                "$ref": "./examples/releases/releases/GET__ListAllReleasesForAReleaseDefinition.json"
+            }
+        }
       },
       "post": {
         "tags": [
-          "releases"
+          "Releases"
         ],
-        "summary": "CreateRelease",
+        "x-ms-vss-resource": "releases",
+        "x-ms-vss-method": "CreateRelease",
         "description": "Create a release.",
-        "operationId": "CreateRelease",
+        "operationId": "Releases_Create",
         "consumes": [
           "application/json"
         ],
@@ -2458,17 +2624,23 @@
               "vso.release_execute"
             ]
           }
-        ]
+        ],
+        "x-ms-examples": {
+            "": {
+                "$ref": "./examples/releases/releases/POST__CreateARelease.json"
+            }
+        }
       }
     },
     "/{project}/_apis/release/releases/{releaseId}": {
       "delete": {
         "tags": [
-          "releases"
+          "Releases"
         ],
-        "summary": "DeleteRelease",
+        "x-ms-vss-resource": "releases",
+        "x-ms-vss-method": "DeleteRelease",
         "description": "Soft delete a release",
-        "operationId": "DeleteRelease",
+        "operationId": "Releases_Delete",
         "parameters": [
           {
             "in": "path",
@@ -2508,11 +2680,12 @@
       },
       "get": {
         "tags": [
-          "releases"
+          "Releases"
         ],
-        "summary": "GetRelease",
+        "x-ms-vss-resource": "releases",
+        "x-ms-vss-method": "GetRelease",
         "description": "Get a Release",
-        "operationId": "GetRelease",
+        "operationId": "Releases_GetRelease",
         "produces": [
           "text/plain",
           "application/json"
@@ -2563,15 +2736,21 @@
               "vso.release"
             ]
           }
-        ]
+        ],
+        "x-ms-examples": {
+            "": {
+                "$ref": "./examples/releases/releases/GET__GetARelease.json"
+            }
+        }
       },
       "put": {
         "tags": [
-          "releases"
+          "Releases"
         ],
-        "summary": "UndeleteRelease",
+        "x-ms-vss-resource": "releases",
+        "x-ms-vss-method": "UndeleteRelease",
         "description": "Undelete a soft deleted release.",
-        "operationId": "UndeleteRelease",
+        "operationId": "Releases_UndeleteRelease",
         "parameters": [
           {
             "in": "path",
@@ -2611,11 +2790,12 @@
       },
       "patch": {
         "tags": [
-          "releases"
+          "Releases"
         ],
-        "summary": "UpdateReleaseResource",
+        "x-ms-vss-resource": "releases",
+        "x-ms-vss-method": "UpdateReleaseResource",
         "description": "Update few properties of a release.",
-        "operationId": "UpdateReleaseResource",
+        "operationId": "Releases_UpdateReleaseResource",
         "consumes": [
           "application/json"
         ],
@@ -2662,17 +2842,23 @@
               "vso.release_execute"
             ]
           }
-        ]
+        ],
+        "x-ms-examples": {
+            "Abandoning an active release": {
+                "$ref": "./examples/releases/releases/PATCH__AbandonAnActiveRelease.json"
+            }
+        }
       }
     },
     "/{project}/_apis/release/releases/{releaseId}/agentartifacts": {
       "get": {
         "tags": [
-          "agentartifacts"
+          "Agentartifacts"
         ],
-        "summary": "GetAgentArtifactDefinitions",
+        "x-ms-vss-resource": "agentartifacts",
+        "x-ms-vss-method": "GetAgentArtifactDefinitions",
         "description": "Returns the artifact details that automation agent requires",
-        "operationId": "GetAgentArtifactDefinitions",
+        "operationId": "Agentartifacts_List",
         "produces": [
           "application/json"
         ],
@@ -2716,11 +2902,12 @@
     "/{project}/_apis/release/releases/{releaseId}/changes": {
       "get": {
         "tags": [
-          "changes"
+          "Changes"
         ],
-        "summary": "GetReleaseChanges",
+        "x-ms-vss-resource": "changes",
+        "x-ms-vss-method": "GetReleaseChanges",
         "description": "",
-        "operationId": "GetReleaseChanges",
+        "operationId": "Changes_List",
         "produces": [
           "application/json"
         ],
@@ -2780,11 +2967,12 @@
     "/{project}/_apis/Release/releases/{releaseId}/environments/{environmentId}": {
       "get": {
         "tags": [
-          "environments"
+          "Releases"
         ],
-        "summary": "GetReleaseEnvironment",
+        "x-ms-vss-resource": "environments",
+        "x-ms-vss-method": "GetReleaseEnvironment",
         "description": "",
-        "operationId": "GetReleaseEnvironment",
+        "operationId": "Releases_GetReleaseEnvironment",
         "produces": [
           "application/json"
         ],
@@ -2831,11 +3019,12 @@
       },
       "patch": {
         "tags": [
-          "environments"
+          "Releases"
         ],
-        "summary": "UpdateReleaseEnvironment",
+        "x-ms-vss-resource": "environments",
+        "x-ms-vss-method": "UpdateReleaseEnvironment",
         "description": "Update the status of a release environment",
-        "operationId": "UpdateReleaseEnvironment",
+        "operationId": "Releases_UpdateReleaseEnvironment",
         "consumes": [
           "application/json"
         ],
@@ -2870,7 +3059,7 @@
           {
             "in": "path",
             "name": "environmentId",
-            "description": "Id of the environment.",
+            "description": "Id of release environment.",
             "required": true,
             "type": "integer",
             "format": "int32"
@@ -2890,17 +3079,23 @@
               "vso.release_execute"
             ]
           }
-        ]
+        ],
+        "x-ms-examples": {
+            "Start deployment on an environment": {
+                "$ref": "./examples/environments/releases/PATCH__UpdateReleaseEnvironment.json"
+            }
+        }
       }
     },
     "/{project}/_apis/release/releases/{releaseId}/environments/{environmentId}/deployPhases/{releaseDeployPhaseId}/tasks": {
       "get": {
         "tags": [
-          "tasks"
+          "Tasks"
         ],
-        "summary": "GetTasksForTaskGroup",
+        "x-ms-vss-resource": "tasks",
+        "x-ms-vss-method": "GetTasksForTaskGroup",
         "description": "",
-        "operationId": "GetTasksForTaskGroup",
+        "operationId": "Tasks_GetTasksForTaskGroup",
         "produces": [
           "application/json"
         ],
@@ -2960,11 +3155,12 @@
     "/{project}/_apis/release/releases/{releaseId}/environments/{environmentId}/deployPhases/{releaseDeployPhaseId}/tasks/{taskId}/logs": {
       "get": {
         "tags": [
-          "logs"
+          "Releases"
         ],
-        "summary": "GetTaskLog",
+        "x-ms-vss-resource": "logs",
+        "x-ms-vss-method": "GetTaskLog",
         "description": "Gets the task log of a release as a plain text file.",
-        "operationId": "GetTaskLog",
+        "operationId": "Releases_GetTaskLog",
         "produces": [
           "text/plain"
         ],
@@ -2987,7 +3183,7 @@
           {
             "in": "path",
             "name": "environmentId",
-            "description": "Id of the environment.",
+            "description": "Id of release environment.",
             "required": true,
             "type": "integer",
             "format": "int32"
@@ -3003,7 +3199,7 @@
           {
             "in": "path",
             "name": "taskId",
-            "description": "Task Id for the log.",
+            "description": "ReleaseTask Id for the log.",
             "required": true,
             "type": "integer",
             "format": "int32"
@@ -3030,11 +3226,12 @@
     "/{project}/_apis/release/releases/{releaseId}/environments/{environmentId}/tasks": {
       "get": {
         "tags": [
-          "tasks"
+          "Tasks"
         ],
-        "summary": "GetTasks",
+        "x-ms-vss-resource": "tasks",
+        "x-ms-vss-method": "GetTasks",
         "description": "",
-        "operationId": "GetTasks",
+        "operationId": "Tasks_GetTasks",
         "produces": [
           "application/json"
         ],
@@ -3094,11 +3291,12 @@
     "/{project}/_apis/release/releases/{releaseId}/environments/{environmentId}/tasks/{taskId}/logs": {
       "get": {
         "tags": [
-          "logs"
+          "Releases"
         ],
-        "summary": "GetLog",
+        "x-ms-vss-resource": "logs",
+        "x-ms-vss-method": "GetLog",
         "description": "Gets logs",
-        "operationId": "GetLog",
+        "operationId": "Releases_GetLog",
         "produces": [
           "text/plain"
         ],
@@ -3121,7 +3319,7 @@
           {
             "in": "path",
             "name": "environmentId",
-            "description": "Id of the environment.",
+            "description": "Id of release environment.",
             "required": true,
             "type": "integer",
             "format": "int32"
@@ -3129,7 +3327,7 @@
           {
             "in": "path",
             "name": "taskId",
-            "description": "Task Id for the log.",
+            "description": "ReleaseTask Id for the log.",
             "required": true,
             "type": "integer",
             "format": "int32"
@@ -3164,11 +3362,12 @@
     "/{project}/_apis/Release/releases/{releaseId}/history": {
       "get": {
         "tags": [
-          "history"
+          "History"
         ],
-        "summary": "GetReleaseHistory",
+        "x-ms-vss-resource": "history",
+        "x-ms-vss-method": "GetReleaseHistory",
         "description": "",
-        "operationId": "GetReleaseHistory",
+        "operationId": "History_List",
         "produces": [
           "application/json"
         ],
@@ -3212,11 +3411,12 @@
     "/{project}/_apis/release/releases/{releaseId}/logs": {
       "get": {
         "tags": [
-          "logs"
+          "Releases"
         ],
-        "summary": "GetLogs",
+        "x-ms-vss-resource": "logs",
+        "x-ms-vss-method": "GetLogs",
         "description": "Get logs for a release Id.",
-        "operationId": "GetLogs",
+        "operationId": "Releases_GetLogs",
         "produces": [
           "application/zip"
         ],
@@ -3258,11 +3458,12 @@
     "/{project}/_apis/Release/releases/{releaseId}/manualinterventions": {
       "get": {
         "tags": [
-          "manualInterventions"
+          "ManualInterventions"
         ],
-        "summary": "GetManualInterventions",
+        "x-ms-vss-resource": "manualInterventions",
+        "x-ms-vss-method": "GetManualInterventions",
         "description": "",
-        "operationId": "GetManualInterventions",
+        "operationId": "ManualInterventions_List",
         "produces": [
           "application/json"
         ],
@@ -3306,11 +3507,12 @@
     "/{project}/_apis/Release/releases/{releaseId}/manualinterventions/{manualInterventionId}": {
       "get": {
         "tags": [
-          "manualInterventions"
+          "ManualInterventions"
         ],
-        "summary": "GetManualIntervention",
+        "x-ms-vss-resource": "manualInterventions",
+        "x-ms-vss-method": "GetManualIntervention",
         "description": "",
-        "operationId": "GetManualIntervention",
+        "operationId": "ManualInterventions_Get",
         "produces": [
           "application/json"
         ],
@@ -3357,11 +3559,12 @@
       },
       "patch": {
         "tags": [
-          "manualInterventions"
+          "ManualInterventions"
         ],
-        "summary": "UpdateManualIntervention",
+        "x-ms-vss-resource": "manualInterventions",
+        "x-ms-vss-method": "UpdateManualIntervention",
         "description": "",
-        "operationId": "UpdateManualIntervention",
+        "operationId": "ManualInterventions_Update",
         "consumes": [
           "application/json"
         ],
@@ -3422,11 +3625,12 @@
     "/{project}/_apis/release/releases/{releaseId}/tags": {
       "post": {
         "tags": [
-          "tags"
+          "Tags"
         ],
-        "summary": "AddReleaseTags",
+        "x-ms-vss-resource": "tags",
+        "x-ms-vss-method": "AddReleaseTags",
         "description": "Adds tag to a release",
-        "operationId": "AddReleaseTags",
+        "operationId": "Tags_AddReleaseTags",
         "consumes": [
           "application/json"
         ],
@@ -3483,11 +3687,12 @@
       },
       "get": {
         "tags": [
-          "tags"
+          "Tags"
         ],
-        "summary": "GetReleaseTags",
+        "x-ms-vss-resource": "tags",
+        "x-ms-vss-method": "GetReleaseTags",
         "description": "Gets the tags for a release",
-        "operationId": "GetReleaseTags",
+        "operationId": "Tags_GetReleaseTags",
         "produces": [
           "application/json"
         ],
@@ -3531,11 +3736,12 @@
     "/{project}/_apis/release/releases/{releaseId}/tags/{tag}": {
       "patch": {
         "tags": [
-          "tags"
+          "Tags"
         ],
-        "summary": "AddReleaseTag",
+        "x-ms-vss-resource": "tags",
+        "x-ms-vss-method": "AddReleaseTag",
         "description": "Adds a tag to a releaseId",
-        "operationId": "AddReleaseTag",
+        "operationId": "Tags_AddReleaseTag",
         "produces": [
           "application/json"
         ],
@@ -3584,11 +3790,12 @@
       },
       "delete": {
         "tags": [
-          "tags"
+          "Tags"
         ],
-        "summary": "DeleteReleaseTag",
+        "x-ms-vss-resource": "tags",
+        "x-ms-vss-method": "DeleteReleaseTag",
         "description": "Deletes a tag from a release",
-        "operationId": "DeleteReleaseTag",
+        "operationId": "Tags_DeleteReleaseTag",
         "produces": [
           "application/json"
         ],
@@ -3639,11 +3846,12 @@
     "/{project}/_apis/release/releases/{releaseId}/workitems": {
       "get": {
         "tags": [
-          "workitems"
+          "Workitems"
         ],
-        "summary": "GetReleaseWorkItemsRefs",
+        "x-ms-vss-resource": "workitems",
+        "x-ms-vss-method": "GetReleaseWorkItemsRefs",
         "description": "",
-        "operationId": "GetReleaseWorkItemsRefs",
+        "operationId": "Workitems_List",
         "produces": [
           "application/json"
         ],
@@ -3703,11 +3911,12 @@
     "/{project}/_apis/release/releasesettings": {
       "get": {
         "tags": [
-          "releasesettings"
+          "Releasesettings"
         ],
-        "summary": "GetReleaseSettings",
+        "x-ms-vss-resource": "releasesettings",
+        "x-ms-vss-method": "GetReleaseSettings",
         "description": "Gets the release settings",
-        "operationId": "GetReleaseSettings",
+        "operationId": "Releasesettings_Get",
         "produces": [
           "application/json"
         ],
@@ -3731,11 +3940,12 @@
       },
       "put": {
         "tags": [
-          "releasesettings"
+          "Releasesettings"
         ],
-        "summary": "UpdateReleaseSettings",
+        "x-ms-vss-resource": "releasesettings",
+        "x-ms-vss-method": "UpdateReleaseSettings",
         "description": "Updates the release settings",
-        "operationId": "UpdateReleaseSettings",
+        "operationId": "Releasesettings_Update",
         "consumes": [
           "application/json"
         ],
@@ -3773,11 +3983,12 @@
     "/{project}/_apis/release/sendmail/{releaseId}": {
       "get": {
         "tags": [
-          "sendmail"
+          "Sendmail"
         ],
-        "summary": "GetSummaryMailSections",
+        "x-ms-vss-resource": "sendmail",
+        "x-ms-vss-method": "GetSummaryMailSections",
         "description": "",
-        "operationId": "GetSummaryMailSections",
+        "operationId": "Sendmail_List",
         "produces": [
           "application/json"
         ],
@@ -3812,11 +4023,12 @@
       },
       "post": {
         "tags": [
-          "sendmail"
+          "Sendmail"
         ],
-        "summary": "SendSummaryMail",
+        "x-ms-vss-resource": "sendmail",
+        "x-ms-vss-method": "SendSummaryMail",
         "description": "",
-        "operationId": "SendSummaryMail",
+        "operationId": "Sendmail_SendSummaryMail",
         "consumes": [
           "application/json"
         ],
@@ -3856,11 +4068,12 @@
     "/{project}/_apis/release/tags": {
       "get": {
         "tags": [
-          "tags"
+          "Tags"
         ],
-        "summary": "GetTags",
+        "x-ms-vss-resource": "tags",
+        "x-ms-vss-method": "GetTags",
         "description": "",
-        "operationId": "GetTags",
+        "operationId": "Tags_GetTags",
         "produces": [
           "application/json"
         ],
@@ -4334,9 +4547,6 @@
           "additionalProperties": {
             "type": "string"
           }
-        },
-        "shareOutputVariables": {
-          "type": "boolean"
         },
         "timeoutInMinutes": {
           "description": "Gets or sets the job execution timeout in minutes for deployment which are queued against this release environment",
@@ -5832,7 +6042,7 @@
       "type": "object",
       "properties": {
         "count": {
-          "description": "Implements ICollection<KeyValuePair<String,Object>>.Count/>",
+          "description": "The count of properties in the collection.",
           "readOnly": true,
           "type": "integer",
           "format": "int32"
@@ -5841,6 +6051,7 @@
           "type": "object"
         },
         "keys": {
+          "description": "The set of keys in the collection.",
           "readOnly": true,
           "type": "array",
           "items": {
@@ -5848,6 +6059,7 @@
           }
         },
         "values": {
+          "description": "The set of values in the collection.",
           "readOnly": true,
           "type": "array",
           "items": {
@@ -5963,7 +6175,7 @@
           "type": "string"
         },
         "environments": {
-          "description": "Gets or sets the list of environments.",
+          "description": "Gets list of environments.",
           "type": "array",
           "items": {
             "$ref": "#/definitions/ReleaseEnvironment"
@@ -5992,11 +6204,11 @@
           "format": "date-time"
         },
         "name": {
-          "description": "Gets or sets name.",
+          "description": "Gets name.",
           "type": "string"
         },
         "poolName": {
-          "description": "Gets or sets pool name.",
+          "description": "Gets pool name.",
           "type": "string"
         },
         "projectReference": {
@@ -6012,9 +6224,7 @@
             "none",
             "manual",
             "continuousIntegration",
-            "schedule",
-            "individualCI",
-            "batchedCI"
+            "schedule"
           ],
           "x-ms-enum": {
             "name": "Microsoft.VisualStudio.Services.ReleaseManagement.WebApi.ReleaseReason"
@@ -6029,7 +6239,7 @@
           "type": "string"
         },
         "status": {
-          "description": "Gets or sets status.",
+          "description": "Gets status.",
           "enum": [
             "undefined",
             "draft",
@@ -6048,11 +6258,10 @@
           }
         },
         "url": {
-          "description": "Gets url to access the release.",
           "type": "string"
         },
         "variableGroups": {
-          "description": "Gets or sets the list of variable groups.",
+          "description": "Gets the list of variable groups.",
           "readOnly": true,
           "type": "array",
           "items": {
@@ -7160,9 +7369,7 @@
             "none",
             "manual",
             "continuousIntegration",
-            "schedule",
-            "individualCI",
-            "batchedCI"
+            "schedule"
           ],
           "x-ms-enum": {
             "name": "Microsoft.VisualStudio.Services.ReleaseManagement.WebApi.ReleaseReason"
@@ -7173,11 +7380,9 @@
           "$ref": "#/definitions/ReleaseDefinitionShallowReference"
         },
         "url": {
-          "description": "Gets url to access the release.",
           "type": "string"
         },
         "webAccessUri": {
-          "description": "Gets web access url.",
           "type": "string"
         }
       }
@@ -7326,9 +7531,7 @@
             "none",
             "manual",
             "continuousIntegration",
-            "schedule",
-            "individualCI",
-            "batchedCI"
+            "schedule"
           ],
           "x-ms-enum": {
             "name": "Microsoft.VisualStudio.Services.ReleaseManagement.WebApi.ReleaseReason"
@@ -7547,7 +7750,16 @@
       "description": "",
       "type": "object",
       "properties": {
+        "assignee": {
+          "type": "string"
+        },
         "id": {
+          "type": "string"
+        },
+        "state": {
+          "type": "string"
+        },
+        "type": {
           "type": "string"
         },
         "url": {
@@ -7725,7 +7937,24 @@
         "type": {
           "type": "string"
         },
+        "validation": {
+          "$ref": "#/definitions/TaskInputValidation"
+        },
         "visibleRule": {
+          "type": "string"
+        }
+      }
+    },
+    "TaskInputValidation": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "expression": {
+          "description": "Conditional expression",
+          "type": "string"
+        },
+        "message": {
+          "description": "Message explaining how user can correct if validation fails",
           "type": "string"
         }
       }

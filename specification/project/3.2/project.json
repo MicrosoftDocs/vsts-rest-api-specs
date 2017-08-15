@@ -15,13 +15,23 @@
     "version": "4.0"
   },
   "host": "fabrikam-fiber-inc.visualstudio.com",
+  "x-ms-parameterized-host": {
+    "hostTemplate": "{accountName}.visualstudio.com",
+    "parameters": [
+      {
+        "name": "accountName",
+        "description": "The name of the Visual Studio Team Services account.",
+        "required": true,
+        "type": "string",
+        "in": "path"
+      }
+    ]
+  },
+  "x-ms-vss-area": "Core",
   "basePath": "/",
   "tags": [
     {
       "name": "projectHistory"
-    },
-    {
-      "name": "properties"
     }
   ],
   "schemes": [
@@ -31,11 +41,12 @@
     "/_apis/projecthistory": {
       "get": {
         "tags": [
-          "projectHistory"
+          "ProjectHistory"
         ],
-        "summary": "GetProjectHistoryEntries",
+        "x-ms-vss-resource": "projectHistory",
+        "x-ms-vss-method": "GetProjectHistoryEntries",
         "description": "",
-        "operationId": "GetProjectHistoryEntries",
+        "operationId": "ProjectHistory_List",
         "produces": [
           "application/json"
         ],
@@ -65,11 +76,12 @@
     "/_apis/projects/{projectId}/properties": {
       "get": {
         "tags": [
-          "properties"
+          "Projects"
         ],
-        "summary": "GetProjectProperties",
+        "x-ms-vss-resource": "properties",
+        "x-ms-vss-method": "GetProjectProperties",
         "description": "Get a collection of team project properties.",
-        "operationId": "GetProjectProperties",
+        "operationId": "Projects_List",
         "produces": [
           "application/json"
         ],
@@ -109,15 +121,24 @@
               "vso.project"
             ]
           }
-        ]
+        ],
+        "x-ms-examples": {
+            "Get all team project properties": {
+                "$ref": "./examples/properties/GET__projects__project__properties.json"
+            },
+            "Get specific team project properties": {
+                "$ref": "./examples/properties/GET__projects__project__properties_keys-_propertyName_,_wildcard_.json"
+            }
+        }
       },
       "patch": {
         "tags": [
-          "properties"
+          "Projects"
         ],
-        "summary": "SetProjectProperties",
+        "x-ms-vss-resource": "properties",
+        "x-ms-vss-method": "SetProjectProperties",
         "description": "Create, update, and delete team project properties.",
-        "operationId": "SetProjectProperties",
+        "operationId": "Projects_SetProjectProperties",
         "consumes": [
           "application/json-patch+json"
         ],
@@ -151,7 +172,15 @@
               "vso.project_write"
             ]
           }
-        ]
+        ],
+        "x-ms-examples": {
+            "Create or update a team project property": {
+                "$ref": "./examples/properties/PATCH__projects__project__properties.json"
+            },
+            "Delete a team project property": {
+                "$ref": "./examples/properties/PATCH__projects__project__properties2.json"
+            }
+        }
       }
     }
   },
