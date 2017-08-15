@@ -15,10 +15,23 @@
     "version": "4.0"
   },
   "host": "fabrikam-fiber-inc.visualstudio.com",
+  "x-ms-parameterized-host": {
+    "hostTemplate": "{accountName}.visualstudio.com",
+    "parameters": [
+      {
+        "name": "accountName",
+        "description": "The name of the Visual Studio Team Services account.",
+        "required": true,
+        "type": "string",
+        "in": "path"
+      }
+    ]
+  },
+  "x-ms-vss-area": "FeedToken",
   "basePath": "/",
   "tags": [
     {
-      "name": "sessionTokens"
+      "name": "SessionTokens"
     }
   ],
   "schemes": [
@@ -28,11 +41,12 @@
     "/_apis/feedtoken/sessiontokens/{feedName}": {
       "get": {
         "tags": [
-          "sessionTokens"
+          "SessionTokens"
         ],
-        "summary": "GetPersonalAccessToken",
+        "x-ms-vss-resource": "sessionTokens",
+        "x-ms-vss-method": "GetPersonalAccessToken",
         "description": "",
-        "operationId": "GetPersonalAccessToken",
+        "operationId": "SessionTokens_Get",
         "produces": [
           "application/json"
         ],
@@ -192,6 +206,20 @@
           "x-ms-enum": {
             "name": "Microsoft.VisualStudio.Services.Feed.WebApi.FeedRole"
           }
+        }
+      }
+    },
+    "FeedRetentionPolicy": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "ageLimitInDays": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "countLimit": {
+          "type": "integer",
+          "format": "int32"
         }
       }
     },
@@ -513,6 +541,73 @@
           "additionalProperties": {
             "type": "object"
           }
+        }
+      }
+    },
+    "SessionToken": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "accessId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "alternateToken": {
+          "description": "This is populated when user requests a compact token. The alternate token value is self describing token.",
+          "type": "string"
+        },
+        "authorizationId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "clientId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "displayName": {
+          "type": "string"
+        },
+        "hostAuthorizationId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "isPublic": {
+          "type": "boolean"
+        },
+        "isValid": {
+          "type": "boolean"
+        },
+        "publicData": {
+          "type": "string"
+        },
+        "scope": {
+          "type": "string"
+        },
+        "source": {
+          "type": "string"
+        },
+        "targetAccounts": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "token": {
+          "description": "This is computed and not returned in Get queries",
+          "type": "string"
+        },
+        "userId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "validFrom": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "validTo": {
+          "type": "string",
+          "format": "date-time"
         }
       }
     }
