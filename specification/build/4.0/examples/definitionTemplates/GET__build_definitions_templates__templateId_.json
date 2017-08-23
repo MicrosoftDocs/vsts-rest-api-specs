@@ -1,0 +1,105 @@
+{
+  "parameters": {
+    "templateId": "vsBuild"
+  },
+  "responses": {
+    "200": {
+      "body": {
+        "id": "vsBuild",
+        "name": "Visual Studio",
+        "canDelete": false,
+        "category": "Build",
+        "iconTaskId": "71a9a2d3-a98a-4caa-96ab-affca411ecda",
+        "description": "Build and run tests using Visual Studio. This template requires that Visual Studio be installed on the build agent.",
+        "template": {
+          "build": [
+            {
+              "enabled": true,
+              "continueOnError": false,
+              "alwaysRun": false,
+              "task": {
+                "id": "71a9a2d3-a98a-4caa-96ab-affca411ecda",
+                "versionSpec": "*"
+              },
+              "inputs": {
+                "solution": "**\\*.sln",
+                "msbuildLocation": "",
+                "vsLocation": "",
+                "msbuildArgs": "",
+                "platform": "$(BuildPlatform)",
+                "configuration": "$(BuildConfiguration)",
+                "clean": "false"
+              }
+            },
+            {
+              "enabled": true,
+              "continueOnError": false,
+              "alwaysRun": false,
+              "task": {
+                "id": "ef087383-ee5e-42c7-9a53-ab56c98420f9",
+                "versionSpec": "*"
+              },
+              "inputs": {
+                "testAssembly": "**\\$(BuildConfiguration)\\*test*.dll;-:**\\obj\\**",
+                "vsTestLocation": "",
+                "platform": "$(BuildPlatform)",
+                "configuration": "$(BuildConfiguration)"
+              }
+            },
+            {
+              "enabled": true,
+              "continueOnError": true,
+              "alwaysRun": false,
+              "task": {
+                "id": "0675668a-7bba-4ccb-901d-5ad6554ca653",
+                "versionSpec": "*"
+              },
+              "inputs": {
+                "SymbolsPath": "",
+                "SearchPattern": "**\\bin\\**\\*.pdb",
+                "SymbolsFolder": "",
+                "SourceFolder": "",
+                "SymbolsMaximumWaitTime": "",
+                "SymbolsProduct": "",
+                "SymbolsVersion": "",
+                "SymbolsArtifactName": "Symbols_$(BuildConfiguration)"
+              }
+            },
+            {
+              "enabled": true,
+              "continueOnError": false,
+              "alwaysRun": true,
+              "task": {
+                "id": "1d341bb0-2106-458c-8422-d00bcea6512a",
+                "versionSpec": "*"
+              },
+              "inputs": {
+                "CopyRoot": "",
+                "Contents": "**\\bin",
+                "ArtifactName": "drop",
+                "ArtifactType": "Container",
+                "TargetPath": "\\\\my\\share\\$(Build.DefinitionName)\\$(Build.BuildNumber)"
+              }
+            }
+          ],
+          "options": [],
+          "triggers": [],
+          "variables": {
+            "BuildConfiguration": {
+              "value": "debug",
+              "allowOverride": true
+            },
+            "BuildPlatform": {
+              "value": "any cpu",
+              "allowOverride": true
+            }
+          },
+          "buildNumberFormat": "$(date:yyyyMMdd)$(rev:.r)",
+          "jobAuthorizationScope": "projectCollection",
+          "type": "build"
+        }
+      }
+    }
+  },
+  "x-ms-vss-migrated": true
+}
