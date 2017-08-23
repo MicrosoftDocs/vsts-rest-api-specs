@@ -12,7 +12,7 @@
       "name": "MICROSOFT SOFTWARE LICENSE TERMS",
       "url": "https://go.microsoft.com/fwlink/?LinkId=329770"
     },
-    "version": "4.0"
+    "version": "4.1"
   },
   "host": "fabrikam-fiber-inc.visualstudio.com",
   "x-ms-parameterized-host": {
@@ -90,6 +90,9 @@
     },
     {
       "name": "PullRequestIterations"
+    },
+    {
+      "name": "PullRequestIterationStatuses"
     },
     {
       "name": "PullRequestLabels"
@@ -201,7 +204,7 @@
             "description": "",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/GitRepository"
+              "$ref": "#/definitions/GitRepositoryCreateOptions"
             }
           }
         ],
@@ -2230,12 +2233,12 @@
     "/_apis/git/repositories/{repositoryId}/pullRequests/{pullRequestId}/iterations/{iterationId}/statuses": {
       "post": {
         "tags": [
-          "PullRequestStatuses"
+          "PullRequestIterationStatuses"
         ],
-        "x-ms-vss-resource": "pullRequestStatuses",
+        "x-ms-vss-resource": "pullRequestIterationStatuses",
         "x-ms-vss-method": "CreatePullRequestIterationStatus",
         "description": "Create a pull request status on the iteration. This method will have the same result as CreatePullRequestStatus with specified iterationId in the request body.",
-        "operationId": "PullRequestStatuses_CreatePullRequestIterationStatus",
+        "operationId": "PullRequestIterationStatuses_CreatePullRequestIterationStatus",
         "consumes": [
           "application/json"
         ],
@@ -2293,19 +2296,19 @@
           }
         ],
         "x-ms-examples": {
-            "Update": {
-                "$ref": "./examples/pullRequestStatuses/POST_git_pullRequestStatuses_iterationStatus.json"
+            "": {
+                "$ref": "./httpExamples/PullRequestIterationStatuses/POST_git_pullRequestStatuses_iterationStatus.json"
             }
         }
       },
       "get": {
         "tags": [
-          "PullRequestStatuses"
+          "PullRequestIterationStatuses"
         ],
-        "x-ms-vss-resource": "pullRequestStatuses",
+        "x-ms-vss-resource": "pullRequestIterationStatuses",
         "x-ms-vss-method": "GetPullRequestIterationStatuses",
         "description": "Get all the statuses associated with a pull request iteration.",
-        "operationId": "PullRequestStatuses_GetPullRequestIterationStatuses",
+        "operationId": "PullRequestIterationStatuses_GetPullRequestIterationStatuses",
         "produces": [
           "application/json"
         ],
@@ -2354,8 +2357,8 @@
           }
         ],
         "x-ms-examples": {
-            "Update": {
-                "$ref": "./examples/pullRequestStatuses/GET_git_pullRequestStatuses_iterationStatuses.json"
+            "": {
+                "$ref": "./httpExamples/PullRequestIterationStatuses/GET_git_pullRequestStatuses_iterationStatuses.json"
             }
         }
       }
@@ -2363,12 +2366,12 @@
     "/_apis/git/repositories/{repositoryId}/pullRequests/{pullRequestId}/iterations/{iterationId}/statuses/{statusId}": {
       "get": {
         "tags": [
-          "PullRequestStatuses"
+          "PullRequestIterationStatuses"
         ],
-        "x-ms-vss-resource": "pullRequestStatuses",
+        "x-ms-vss-resource": "pullRequestIterationStatuses",
         "x-ms-vss-method": "GetPullRequestIterationStatus",
         "description": "Get the specific pull request iteration status by ID. The status ID is unique within the pull request across all iterations.",
-        "operationId": "PullRequestStatuses_GetPullRequestIterationStatus",
+        "operationId": "PullRequestIterationStatuses_GetPullRequestIterationStatus",
         "produces": [
           "application/json"
         ],
@@ -2422,8 +2425,8 @@
           }
         ],
         "x-ms-examples": {
-            "By iteration": {
-                "$ref": "./examples/pullRequestStatuses/GET_git_pullRequestStatuses_iterationStatus.json"
+            "": {
+                "$ref": "./httpExamples/PullRequestIterationStatuses/GET_git_pullRequestStatuses_iterationStatus.json"
             }
         }
       }
@@ -2434,9 +2437,9 @@
           "PullRequestLabels"
         ],
         "x-ms-vss-resource": "pullRequestLabels",
-        "x-ms-vss-method": "CreatePullRequestLabels",
+        "x-ms-vss-method": "CreatePullRequestLabel",
         "description": "",
-        "operationId": "PullRequestLabels_CreatePullRequestLabels",
+        "operationId": "PullRequestLabels_CreatePullRequestLabel",
         "consumes": [
           "application/json"
         ],
@@ -2450,10 +2453,7 @@
             "description": "",
             "required": true,
             "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/WebApiCreateTagRequestData"
-              }
+              "$ref": "#/definitions/WebApiCreateTagRequestData"
             }
           },
           {
@@ -2483,10 +2483,7 @@
           "200": {
             "description": "successful operation",
             "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/WebApiTagDefinition"
-              }
+              "$ref": "#/definitions/WebApiTagDefinition"
             }
          }
         },
@@ -2774,6 +2771,59 @@
             ]
           }
         ]
+      },
+      "patch": {
+        "tags": [
+          "PullRequestReviewers"
+        ],
+        "x-ms-vss-resource": "pullRequestReviewers",
+        "x-ms-vss-method": "UpdatePullRequestReviewers",
+        "description": "Resets multiple reviewer votes in a batch",
+        "operationId": "PullRequestReviewers_UpdatePullRequestReviewers",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/IdentityRefWithVote"
+              }
+            }
+          },
+          {
+            "in": "path",
+            "name": "repositoryId",
+            "description": "",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "pullRequestId",
+            "description": "",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+         }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.code_write"
+            ]
+          }
+        ]
       }
     },
     "/_apis/git/repositories/{repositoryId}/pullRequests/{pullRequestId}/reviewers/{reviewerId}": {
@@ -3048,10 +3098,10 @@
         ],
         "x-ms-examples": {
             "On pull request": {
-                "$ref": "./examples/pullRequestStatuses/POST_git_pullRequestStatuses_status.json"
+                "$ref": "./httpExamples/PullRequestStatuses/POST_git_pullRequestStatuses_status.json"
             },
             "On iteration": {
-                "$ref": "./examples/pullRequestStatuses/POST_git_pullRequestStatuses_statusIterationInBody.json"
+                "$ref": "./httpExamples/PullRequestStatuses/POST_git_pullRequestStatuses_statusIterationInBody.json"
             }
         }
       },
@@ -3103,8 +3153,8 @@
           }
         ],
         "x-ms-examples": {
-            "All": {
-                "$ref": "./examples/pullRequestStatuses/GET_git_pullRequestStatuses_statuses.json"
+            "": {
+                "$ref": "./httpExamples/PullRequestStatuses/GET_git_pullRequestStatuses_statuses.json"
             }
         }
       }
@@ -3163,8 +3213,8 @@
           }
         ],
         "x-ms-examples": {
-            "By status": {
-                "$ref": "./examples/pullRequestStatuses/GET_git_pullRequestStatuses_status.json"
+            "": {
+                "$ref": "./httpExamples/PullRequestStatuses/GET_git_pullRequestStatuses_status.json"
             }
         }
       }
@@ -4537,7 +4587,7 @@
         ],
         "x-ms-vss-resource": "forks",
         "x-ms-vss-method": "GetForks",
-        "description": "Query all forking relationships of this repository.",
+        "description": "Query the child forks of a repository in a particular collection.",
         "operationId": "Forks_GetForks",
         "produces": [
           "application/json"
@@ -4546,14 +4596,14 @@
           {
             "in": "path",
             "name": "repositoryNameOrId",
-            "description": "",
+            "description": "ID or name of the repository.",
             "required": true,
             "type": "string"
           },
           {
             "in": "path",
             "name": "collectionId",
-            "description": "",
+            "description": "Team project collection ID.",
             "required": true,
             "type": "string",
             "format": "uuid"
@@ -4605,7 +4655,7 @@
           {
             "in": "body",
             "name": "body",
-            "description": "",
+            "description": "Source repository and ref mapping.",
             "required": true,
             "schema": {
               "$ref": "#/definitions/GitForkSyncRequestParameters"
@@ -4614,14 +4664,14 @@
           {
             "in": "path",
             "name": "repositoryNameOrId",
-            "description": "",
+            "description": "ID or name of the repository.",
             "required": true,
             "type": "string"
           },
           {
             "in": "query",
             "name": "includeLinks",
-            "description": "",
+            "description": "True to include links",
             "required": false,
             "type": "boolean"
           }
@@ -4637,7 +4687,7 @@
         "security": [
           {
             "oauth2": [
-              "vso.code_manage"
+              "vso.code_write"
             ]
           }
         ]
@@ -4657,21 +4707,21 @@
           {
             "in": "path",
             "name": "repositoryNameOrId",
-            "description": "",
+            "description": "ID or name of the repository.",
             "required": true,
             "type": "string"
           },
           {
             "in": "query",
             "name": "includeAbandoned",
-            "description": "",
+            "description": "True to include abandoned requests.",
             "required": false,
             "type": "boolean"
           },
           {
             "in": "query",
             "name": "includeLinks",
-            "description": "",
+            "description": "True to include links.",
             "required": false,
             "type": "boolean"
           }
@@ -4712,14 +4762,14 @@
           {
             "in": "path",
             "name": "repositoryNameOrId",
-            "description": "",
+            "description": "ID or name of the repository.",
             "required": true,
             "type": "string"
           },
           {
             "in": "path",
             "name": "forkSyncOperationId",
-            "description": "",
+            "description": "OperationId of the sync request.",
             "required": true,
             "type": "integer",
             "format": "int32"
@@ -4727,7 +4777,7 @@
           {
             "in": "query",
             "name": "includeLinks",
-            "description": "",
+            "description": "True to include links.",
             "required": false,
             "type": "boolean"
           }
@@ -4757,7 +4807,7 @@
         "x-ms-vss-resource": "deletedRepositories",
         "x-ms-vss-method": "GetDeletedRepositories",
         "description": "Retrieve deleted git repositories.",
-        "operationId": "DeletedRepositories_Get",
+        "operationId": "DeletedRepositories_List",
         "produces": [
           "application/json"
         ],
@@ -4839,7 +4889,7 @@
         "x-ms-vss-resource": "refsFavorites",
         "x-ms-vss-method": "GetRefFavorites",
         "description": "Gets the refs favorites for a repo and an identity.",
-        "operationId": "RefsFavorites_GetRefFavorites",
+        "operationId": "RefsFavorites_List",
         "produces": [
           "application/json"
         ],
@@ -4925,7 +4975,7 @@
         "x-ms-vss-resource": "refsFavorites",
         "x-ms-vss-method": "GetRefFavorite",
         "description": "",
-        "operationId": "RefsFavorites_GetRefFavorite",
+        "operationId": "RefsFavorites_Get",
         "produces": [
           "application/json"
         ],
@@ -5058,7 +5108,7 @@
             "description": "",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/GitRepository"
+              "$ref": "#/definitions/GitRepositoryCreateOptions"
             }
           },
           {
@@ -7820,12 +7870,12 @@
     "/{project}/_apis/git/repositories/{repositoryId}/pullRequests/{pullRequestId}/iterations/{iterationId}/statuses": {
       "post": {
         "tags": [
-          "PullRequestStatuses"
+          "PullRequestIterationStatuses"
         ],
-        "x-ms-vss-resource": "pullRequestStatuses",
+        "x-ms-vss-resource": "pullRequestIterationStatuses",
         "x-ms-vss-method": "CreatePullRequestIterationStatus",
         "description": "Create a pull request status on the iteration. This method will have the same result as CreatePullRequestStatus with specified iterationId in the request body.",
-        "operationId": "PullRequestStatuses_CreatePullRequestIterationStatus",
+        "operationId": "PullRequestIterationStatuses_CreatePullRequestIterationStatus",
         "consumes": [
           "application/json"
         ],
@@ -7890,19 +7940,19 @@
           }
         ],
         "x-ms-examples": {
-            "Update": {
-                "$ref": "./examples/pullRequestStatuses/POST_git_pullRequestStatuses_iterationStatus.json"
+            "": {
+                "$ref": "./httpExamples/PullRequestIterationStatuses/POST_git_pullRequestStatuses_iterationStatus.json"
             }
         }
       },
       "get": {
         "tags": [
-          "PullRequestStatuses"
+          "PullRequestIterationStatuses"
         ],
-        "x-ms-vss-resource": "pullRequestStatuses",
+        "x-ms-vss-resource": "pullRequestIterationStatuses",
         "x-ms-vss-method": "GetPullRequestIterationStatuses",
         "description": "Get all the statuses associated with a pull request iteration.",
-        "operationId": "PullRequestStatuses_GetPullRequestIterationStatuses",
+        "operationId": "PullRequestIterationStatuses_GetPullRequestIterationStatuses",
         "produces": [
           "application/json"
         ],
@@ -7958,8 +8008,8 @@
           }
         ],
         "x-ms-examples": {
-            "All": {
-                "$ref": "./examples/pullRequestStatuses/GET_git_pullRequestStatuses_iterationStatuses.json"
+            "": {
+                "$ref": "./httpExamples/PullRequestIterationStatuses/GET_git_pullRequestStatuses_iterationStatuses.json"
             }
         }
       }
@@ -7967,12 +8017,12 @@
     "/{project}/_apis/git/repositories/{repositoryId}/pullRequests/{pullRequestId}/iterations/{iterationId}/statuses/{statusId}": {
       "get": {
         "tags": [
-          "PullRequestStatuses"
+          "PullRequestIterationStatuses"
         ],
-        "x-ms-vss-resource": "pullRequestStatuses",
+        "x-ms-vss-resource": "pullRequestIterationStatuses",
         "x-ms-vss-method": "GetPullRequestIterationStatus",
         "description": "Get the specific pull request iteration status by ID. The status ID is unique within the pull request across all iterations.",
-        "operationId": "PullRequestStatuses_GetPullRequestIterationStatus",
+        "operationId": "PullRequestIterationStatuses_GetPullRequestIterationStatus",
         "produces": [
           "application/json"
         ],
@@ -8033,8 +8083,8 @@
           }
         ],
         "x-ms-examples": {
-            "By ID": {
-                "$ref": "./examples/pullRequestStatuses/GET_git_pullRequestStatuses_iterationStatus.json"
+            "": {
+                "$ref": "./httpExamples/PullRequestIterationStatuses/GET_git_pullRequestStatuses_iterationStatus.json"
             }
         }
       }
@@ -8045,9 +8095,9 @@
           "PullRequestLabels"
         ],
         "x-ms-vss-resource": "pullRequestLabels",
-        "x-ms-vss-method": "CreatePullRequestLabels",
+        "x-ms-vss-method": "CreatePullRequestLabel",
         "description": "",
-        "operationId": "PullRequestLabels_CreatePullRequestLabels",
+        "operationId": "PullRequestLabels_CreatePullRequestLabel",
         "consumes": [
           "application/json"
         ],
@@ -8061,10 +8111,7 @@
             "description": "",
             "required": true,
             "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/WebApiCreateTagRequestData"
-              }
+              "$ref": "#/definitions/WebApiCreateTagRequestData"
             }
           },
           {
@@ -8101,10 +8148,7 @@
           "200": {
             "description": "successful operation",
             "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/WebApiTagDefinition"
-              }
+              "$ref": "#/definitions/WebApiTagDefinition"
             }
          }
         },
@@ -8427,6 +8471,66 @@
             ]
           }
         ]
+      },
+      "patch": {
+        "tags": [
+          "PullRequestReviewers"
+        ],
+        "x-ms-vss-resource": "pullRequestReviewers",
+        "x-ms-vss-method": "UpdatePullRequestReviewers",
+        "description": "Resets multiple reviewer votes in a batch",
+        "operationId": "PullRequestReviewers_UpdatePullRequestReviewers",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/IdentityRefWithVote"
+              }
+            }
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "repositoryId",
+            "description": "",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "pullRequestId",
+            "description": "",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+         }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.code_write"
+            ]
+          }
+        ]
       }
     },
     "/{project}/_apis/git/repositories/{repositoryId}/pullRequests/{pullRequestId}/reviewers/{reviewerId}": {
@@ -8736,10 +8840,10 @@
         ],
         "x-ms-examples": {
             "On pull request": {
-                "$ref": "./examples/pullRequestStatuses/POST_git_pullRequestStatuses_status.json"
+                "$ref": "./httpExamples/PullRequestStatuses/POST_git_pullRequestStatuses_status.json"
             },
             "On iteration": {
-                "$ref": "./examples/pullRequestStatuses/POST_git_pullRequestStatuses_statusIterationInBody.json"
+                "$ref": "./httpExamples/PullRequestStatuses/POST_git_pullRequestStatuses_statusIterationInBody.json"
             }
         }
       },
@@ -8798,8 +8902,8 @@
           }
         ],
         "x-ms-examples": {
-            "All": {
-                "$ref": "./examples/pullRequestStatuses/GET_git_pullRequestStatuses_statuses.json"
+            "": {
+                "$ref": "./httpExamples/PullRequestStatuses/GET_git_pullRequestStatuses_statuses.json"
             }
         }
       }
@@ -8865,8 +8969,8 @@
           }
         ],
         "x-ms-examples": {
-            "By status": {
-                "$ref": "./examples/pullRequestStatuses/GET_git_pullRequestStatuses_status.json"
+            "": {
+                "$ref": "./httpExamples/PullRequestStatuses/GET_git_pullRequestStatuses_status.json"
             }
         }
       }
@@ -10560,7 +10664,7 @@
         ],
         "x-ms-vss-resource": "forks",
         "x-ms-vss-method": "GetForks",
-        "description": "Query all forking relationships of this repository.",
+        "description": "Query the child forks of a repository in a particular collection.",
         "operationId": "Forks_GetForks",
         "produces": [
           "application/json"
@@ -10576,14 +10680,14 @@
           {
             "in": "path",
             "name": "repositoryNameOrId",
-            "description": "",
+            "description": "ID or name of the repository.",
             "required": true,
             "type": "string"
           },
           {
             "in": "path",
             "name": "collectionId",
-            "description": "",
+            "description": "Team project collection ID.",
             "required": true,
             "type": "string",
             "format": "uuid"
@@ -10635,7 +10739,7 @@
           {
             "in": "body",
             "name": "body",
-            "description": "",
+            "description": "Source repository and ref mapping.",
             "required": true,
             "schema": {
               "$ref": "#/definitions/GitForkSyncRequestParameters"
@@ -10651,14 +10755,14 @@
           {
             "in": "path",
             "name": "repositoryNameOrId",
-            "description": "",
+            "description": "ID or name of the repository.",
             "required": true,
             "type": "string"
           },
           {
             "in": "query",
             "name": "includeLinks",
-            "description": "",
+            "description": "True to include links",
             "required": false,
             "type": "boolean"
           }
@@ -10674,7 +10778,7 @@
         "security": [
           {
             "oauth2": [
-              "vso.code_manage"
+              "vso.code_write"
             ]
           }
         ]
@@ -10701,21 +10805,21 @@
           {
             "in": "path",
             "name": "repositoryNameOrId",
-            "description": "",
+            "description": "ID or name of the repository.",
             "required": true,
             "type": "string"
           },
           {
             "in": "query",
             "name": "includeAbandoned",
-            "description": "",
+            "description": "True to include abandoned requests.",
             "required": false,
             "type": "boolean"
           },
           {
             "in": "query",
             "name": "includeLinks",
-            "description": "",
+            "description": "True to include links.",
             "required": false,
             "type": "boolean"
           }
@@ -10763,14 +10867,14 @@
           {
             "in": "path",
             "name": "repositoryNameOrId",
-            "description": "",
+            "description": "ID or name of the repository.",
             "required": true,
             "type": "string"
           },
           {
             "in": "path",
             "name": "forkSyncOperationId",
-            "description": "",
+            "description": "OperationId of the sync request.",
             "required": true,
             "type": "integer",
             "format": "int32"
@@ -10778,7 +10882,7 @@
           {
             "in": "query",
             "name": "includeLinks",
-            "description": "",
+            "description": "True to include links.",
             "required": false,
             "type": "boolean"
           }
@@ -12226,7 +12330,7 @@
       }
     },
     "GitForkOperationStatusDetail": {
-      "description": "",
+      "description": "Status information about a requested fork operation.",
       "type": "object",
       "properties": {
         "allSteps": {
@@ -12237,11 +12341,12 @@
           }
         },
         "currentStep": {
-          "description": "Index into  for the current step",
+          "description": "Index into AllSteps for the current step",
           "type": "integer",
           "format": "int32"
         },
         "errorMessage": {
+          "description": "Error message if the operation failed.",
           "type": "string"
         }
       }
@@ -12295,20 +12400,23 @@
       }
     },
     "GitForkSyncRequest": {
-      "description": "",
+      "description": "Request to sync data between two forks.",
       "type": "object",
       "properties": {
         "_links": {
+          "description": "Collection of related links",
           "$ref": "#/definitions/ReferenceLinks"
         },
         "detailedStatus": {
           "$ref": "#/definitions/GitForkOperationStatusDetail"
         },
         "operationId": {
+          "description": "Unique identifier for the operation.",
           "type": "integer",
           "format": "int32"
         },
         "parameters": {
+          "description": "Options for the operation.",
           "$ref": "#/definitions/GitForkSyncRequestParameters"
         },
         "status": {
@@ -12330,10 +12438,11 @@
       "type": "object",
       "properties": {
         "source": {
+          "description": "Fully-qualified identifier for the source repository.",
           "$ref": "#/definitions/GlobalGitRepositoryKey"
         },
         "sourceToTargetRefs": {
-          "description": "If supplied, the set of ref mappings to use when performing a \"sync\" or create If missing, all refs will be synchronized",
+          "description": "If supplied, the set of ref mappings to use when performing a \"sync\" or create. If missing, all refs will be synchronized.",
           "type": "array",
           "items": {
             "$ref": "#/definitions/SourceToTargetRef"
@@ -12599,19 +12708,6 @@
           "readOnly": true,
           "type": "boolean"
         }
-      }
-    },
-    "GitItemsCollection": {
-      "description": "",
-      "type": "object",
-      "allOf": [
-        {
-          "type": "array",
-          "items": {
-          }
-        }
-      ],
-      "properties": {
       }
     },
     "GitLastChangeItem": {
@@ -13567,6 +13663,10 @@
         "_links": {
           "$ref": "#/definitions/ReferenceLinks"
         },
+        "createdByForking": {
+          "description": "True if the repository was created as a fork",
+          "type": "boolean"
+        },
         "defaultBranch": {
           "type": "string"
         },
@@ -13602,6 +13702,22 @@
           "items": {
             "type": "string"
           }
+        }
+      }
+    },
+    "GitRepositoryCreateOptions": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "forkOptions": {
+          "description": "If set, options for creating this repo as a fork of another one. If unset, this repo is unrelated to any existing forks.",
+          "$ref": "#/definitions/GitForkSyncRequestParameters"
+        },
+        "name": {
+          "type": "string"
+        },
+        "project": {
+          "$ref": "#/definitions/TeamProjectReference"
         }
       }
     },
@@ -14125,7 +14241,7 @@
       }
     },
     "GlobalGitRepositoryKey": {
-      "description": "",
+      "description": "Globally unique key for a repository.",
       "type": "object",
       "properties": {
         "collectionId": {
@@ -14440,9 +14556,11 @@
       "type": "object",
       "properties": {
         "sourceRef": {
+          "description": "The source ref to copy. For example, refs/heads/master.",
           "type": "string"
         },
         "targetRef": {
+          "description": "The target ref to update. For example, refs/heads/master",
           "type": "string"
         }
       }
@@ -15331,7 +15449,7 @@
     "api-Version": {
       "name": "api-version",
       "in": "query",
-      "description": "Version of the API to use.  This should be set to '4.0-preview' to use this version of the api.",
+      "description": "Version of the API to use.  This should be set to '4.1-preview' to use this version of the api.",
       "required": true,
       "type": "string"
     }
