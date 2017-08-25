@@ -12,7 +12,7 @@
       "name": "MICROSOFT SOFTWARE LICENSE TERMS",
       "url": "https://go.microsoft.com/fwlink/?LinkId=329770"
     },
-    "version": "4.0"
+    "version": "4.1"
   },
   "host": "fabrikam-fiber-inc.visualstudio.com",
   "x-ms-parameterized-host": {
@@ -32,6 +32,9 @@
   "tags": [
     {
       "name": "content"
+    },
+    {
+      "name": "packagesbatch"
     },
     {
       "name": "readme"
@@ -618,9 +621,74 @@
           }
         ]
       }
+    },
+    "/_apis/packaging/feeds/{feedId}/npm/packagesbatch": {
+      "post": {
+        "tags": [
+          "Packagesbatch"
+        ],
+        "x-ms-vss-resource": "packagesbatch",
+        "x-ms-vss-method": "UpdatePackages",
+        "description": "Update several packages from a single feed in a single request. The updates to the packages do not happen atomically.",
+        "operationId": "Packagesbatch_Update",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Information about the packages to update, the operation to perform, and its associated data.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/NpmPackagesBatchRequest"
+            }
+          },
+          {
+            "in": "path",
+            "name": "feedId",
+            "description": "Feed which contains the packages to update.",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+         }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.packaging_write"
+            ]
+          }
+        ]
+      }
     }
   },
   "definitions": {
+    "BatchDeprecateData": {
+      "description": "Data required to deprecate multiple package versions. Pass this while performing NpmBatchOperationTypes.Deprecate batch operation.",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/BatchOperationData"
+        }
+      ],
+      "properties": {
+        "message": {
+          "description": "Deprecate message that will be added to packages",
+          "type": "string"
+        }
+      }
+    },
+    "BatchOperationData": {
+      "description": "Do not attempt to use this type to create a new BatchOperationData. This type does not contain sufficient fields to create a new batch operation data.",
+      "type": "object",
+      "properties": {
+      }
+    },
     "JsonPatchOperation": {
       "description": "The JSON model for a JSON Patch operation",
       "type": "object",
@@ -650,6 +718,48 @@
         "value": {
           "description": "The value for the operation. This is either a primitive or a JToken.",
           "type": "object"
+        }
+      }
+    },
+    "MinimalPackageDetails": {
+      "description": "Minimal package details required to identify a package within a protocol.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "Package name.",
+          "type": "string"
+        },
+        "version": {
+          "description": "Package version.",
+          "type": "string"
+        }
+      }
+    },
+    "NpmPackagesBatchRequest": {
+      "description": "Request for batch operation on npm packages",
+      "type": "object",
+      "properties": {
+        "data": {
+          "description": "Data required to perform the operation. This is optional based on type of operation. Use BatchPromoteData if performing a promote operation.",
+          "$ref": "#/definitions/BatchOperationData"
+        },
+        "operation": {
+          "description": "Type of operation that needs to be performed on packages.",
+          "enum": [
+            "promote",
+            "deprecate",
+            "unpublish"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.VisualStudio.Services.Npm.WebApi.NpmBatchOperationType"
+          }
+        },
+        "packages": {
+          "description": "The packages onto which the operation will be performed.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/MinimalPackageDetails"
+          }
         }
       }
     },
@@ -715,7 +825,7 @@
     "api-Version": {
       "name": "api-version",
       "in": "query",
-      "description": "Version of the API to use.  This should be set to '4.0-preview' to use this version of the api.",
+      "description": "Version of the API to use.  This should be set to '4.1-preview' to use this version of the api.",
       "required": true,
       "type": "string"
     }
@@ -732,7 +842,8 @@
       "tokenUrl": "https://app.vssps.visualstudio.com/oauth2/token?client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer&grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer",
       "scopes": {
         "vso.packaging": "Grants the ability to read feeds and packages.",
-        "vso.packaging_manage": "Grants the ability to create, read, update, and delete feeds and packages."
+        "vso.packaging_manage": "Grants the ability to create, read, update, and delete feeds and packages.",
+        "vso.packaging_write": "Grants the ability to create and read feeds and packages."
       }
     }
   },

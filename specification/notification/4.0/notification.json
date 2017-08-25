@@ -2,7 +2,7 @@
   "swagger": "2.0",
   "info": {
     "title": "Notification",
-    "description": "Visual Studio Team Services Notification REST APIs",
+    "description": "",
     "termsOfService": "https://go.microsoft.com/fwlink/?LinkId=329770",
     "contact": {
       "name": "nugetvss",
@@ -12,7 +12,7 @@
       "name": "MICROSOFT SOFTWARE LICENSE TERMS",
       "url": "https://go.microsoft.com/fwlink/?LinkId=329770"
     },
-    "version": "4.0"
+    "version": "4.1"
   },
   "host": "fabrikam-fiber-inc.visualstudio.com",
   "x-ms-parameterized-host": {
@@ -32,6 +32,9 @@
   "tags": [
     {
       "name": "EventTypes"
+    },
+    {
+      "name": "NotificationReasons"
     },
     {
       "name": "Subscribers"
@@ -85,10 +88,10 @@
         ],
         "x-ms-examples": {
             "All": {
-                "$ref": "./examples/eventTypes/GET__notification_eventTypes.json"
+                "$ref": "./httpExamples/EventTypes/GET__notification_eventTypes.json"
             },
             "By publisher": {
-                "$ref": "./examples/eventTypes/GET__notification_eventTypes_publisherId-_publisherId_.json"
+                "$ref": "./httpExamples/EventTypes/GET__notification_eventTypes_publisherId-_publisherId_.json"
             }
         }
       }
@@ -130,9 +133,76 @@
           }
         ],
         "x-ms-examples": {
-            "By ID": {
-                "$ref": "./examples/eventTypes/GET__notification_eventTypes__eventTypeId_.json"
+            "": {
+                "$ref": "./httpExamples/EventTypes/GET__notification_eventTypes__eventTypeId_.json"
             }
+        }
+      }
+    },
+    "/_apis/notification/notificationreasons": {
+      "get": {
+        "tags": [
+          "NotificationReasons"
+        ],
+        "x-ms-vss-resource": "notificationReasons",
+        "x-ms-vss-method": "ListNotificationReasons",
+        "description": "",
+        "operationId": "NotificationReasons_List",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "notificationIds",
+            "description": "",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/NotificationReason"
+              }
+            }
+         }
+        }
+      }
+    },
+    "/_apis/notification/notificationreasons/{notificationId}": {
+      "get": {
+        "tags": [
+          "NotificationReasons"
+        ],
+        "x-ms-vss-resource": "notificationReasons",
+        "x-ms-vss-method": "GetNotificationReasons",
+        "description": "",
+        "operationId": "NotificationReasons_Get",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "notificationId",
+            "description": "",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/NotificationReason"
+            }
+         }
         }
       }
     },
@@ -165,7 +235,14 @@
               "$ref": "#/definitions/NotificationSubscriber"
             }
          }
-        }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.notification"
+            ]
+          }
+        ]
       },
       "patch": {
         "tags": [
@@ -207,7 +284,14 @@
               "$ref": "#/definitions/NotificationSubscriber"
             }
          }
-        }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.notification_write"
+            ]
+          }
+        ]
       }
     },
     "/_apis/notification/subscriptionquery": {
@@ -256,7 +340,7 @@
         ],
         "x-ms-examples": {
             "By subscriber": {
-                "$ref": "./examples/subscriptionQuery/POST__notification_subscriptionQuery.json"
+                "$ref": "./httpExamples/SubscriptionQuery/POST__notification_subscriptionQuery.json"
             }
         }
       }
@@ -304,10 +388,10 @@
         ],
         "x-ms-examples": {
             "For a user": {
-                "$ref": "./examples/subscriptions/POST__notification_subscriptions.json"
+                "$ref": "./httpExamples/Subscriptions/POST__notification_subscriptions.json"
             },
             "For a team": {
-                "$ref": "./examples/subscriptions/POST__notification_subscriptions2.json"
+                "$ref": "./httpExamples/Subscriptions/POST__notification_subscriptions2.json"
             }
         }
       },
@@ -367,8 +451,8 @@
           }
         ],
         "x-ms-examples": {
-            "All": {
-                "$ref": "./examples/subscriptions/GET__notification_subscriptions.json"
+            "": {
+                "$ref": "./httpExamples/Subscriptions/GET__notification_subscriptions.json"
             }
         }
       }
@@ -404,8 +488,8 @@
           }
         ],
         "x-ms-examples": {
-            "By ID": {
-                "$ref": "./examples/subscriptions/DELETE__notification_subscriptions__subscriptionId_.json"
+            "": {
+                "$ref": "./httpExamples/Subscriptions/DELETE__notification_subscriptions__subscriptionId_.json"
             }
         }
       },
@@ -453,8 +537,8 @@
           }
         ],
         "x-ms-examples": {
-            "By ID": {
-                "$ref": "./examples/subscriptions/GET__notification_subscriptions__subscriptionId_.json"
+            "": {
+                "$ref": "./httpExamples/Subscriptions/GET__notification_subscriptions__subscriptionId_.json"
             }
         }
       },
@@ -507,10 +591,10 @@
         ],
         "x-ms-examples": {
             "Change description": {
-                "$ref": "./examples/subscriptions/PATCH__notification_subscriptions__subscriptionId_.json"
+                "$ref": "./httpExamples/Subscriptions/PATCH__notification_subscriptions__subscriptionId_.json"
             },
             "Disable": {
-                "$ref": "./examples/subscriptions/PATCH__notification_subscriptions__subscriptionId_2.json"
+                "$ref": "./httpExamples/Subscriptions/PATCH__notification_subscriptions__subscriptionId_2.json"
             }
         }
       }
@@ -573,7 +657,7 @@
         ],
         "x-ms-examples": {
             "Opt out": {
-                "$ref": "./examples/subscriptions/PUT__notification_subscriptions__sharedSubscriptionId__userSettings_me.json"
+                "$ref": "./httpExamples/UserSettings/PUT__notification_subscriptions__sharedSubscriptionId__userSettings_me.json"
             }
         }
       }
@@ -1158,6 +1242,37 @@
         }
       }
     },
+    "NotificationReason": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "notificationReasonType": {
+          "enum": [
+            "unknown",
+            "follows",
+            "personal",
+            "personalAlias",
+            "directMember",
+            "indirectMember",
+            "groupAlias",
+            "subscriptionAlias",
+            "singleRole",
+            "directMemberGroupRole",
+            "inDirectMemberGroupRole",
+            "aliasMemberGroupRole"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.VisualStudio.Services.Notifications.WebApi.NotificationReasonType"
+          }
+        },
+        "targetIdentities": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/IdentityRef"
+          }
+        }
+      }
+    },
     "NotificationsEvaluationResult": {
       "description": "Encapsulates notifications result properties. It defines the number of notifications and the recipients of notifications.",
       "type": "object",
@@ -1315,7 +1430,13 @@
         "flags": {
           "enum": [
             "none",
-            "deliveryPreferencesEditable"
+            "deliveryPreferencesEditable",
+            "supportsPreferredEmailAddressDelivery",
+            "supportsEachMemberDelivery",
+            "supportsNoDelivery",
+            "isUser",
+            "isGroup",
+            "isTeam"
           ],
           "x-ms-enum": {
             "name": "Microsoft.VisualStudio.Services.Notifications.WebApi.SubscriberFlags"
@@ -1899,7 +2020,7 @@
     "api-Version": {
       "name": "api-version",
       "in": "query",
-      "description": "Version of the API to use.  This should be set to '4.0-preview' to use this version of the api.",
+      "description": "Version of the API to use.  This should be set to '4.1-preview' to use this version of the api.",
       "required": true,
       "type": "string"
     }
