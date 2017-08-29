@@ -206,6 +206,13 @@
             "schema": {
               "$ref": "#/definitions/GitRepositoryCreateOptions"
             }
+          },
+          {
+            "in": "query",
+            "name": "sourceRef",
+            "description": "",
+            "required": false,
+            "type": "string"
           }
         ],
         "responses": {
@@ -5226,6 +5233,13 @@
             "name": "project",
             "description": "Project ID or project name",
             "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "sourceRef",
+            "description": "",
+            "required": false,
             "type": "string"
           }
         ],
@@ -12649,9 +12663,16 @@
           "type": "integer",
           "format": "int32"
         },
-        "parameters": {
-          "description": "Options for the operation.",
-          "$ref": "#/definitions/GitForkSyncRequestParameters"
+        "source": {
+          "description": "Fully-qualified identifier for the source repository.",
+          "$ref": "#/definitions/GlobalGitRepositoryKey"
+        },
+        "sourceToTargetRefs": {
+          "description": "If supplied, the set of ref mappings to use when performing a \"sync\" or create. If missing, all refs will be synchronized.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SourceToTargetRef"
+          }
         },
         "status": {
           "enum": [
@@ -13916,6 +13937,10 @@
           "type": "string",
           "format": "uuid"
         },
+        "isFork": {
+          "description": "True if the repository was created as a fork",
+          "type": "boolean"
+        },
         "name": {
           "type": "string"
         },
@@ -13950,6 +13975,9 @@
         "name": {
           "type": "string"
         },
+        "parentRepository": {
+          "$ref": "#/definitions/GitRepositoryRef"
+        },
         "project": {
           "$ref": "#/definitions/TeamProjectReference"
         }
@@ -13972,6 +14000,9 @@
         },
         "project": {
           "$ref": "#/definitions/TeamProjectReference"
+        },
+        "remoteUrl": {
+          "type": "string"
         },
         "url": {
           "type": "string"
