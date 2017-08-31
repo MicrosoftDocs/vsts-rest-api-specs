@@ -59,9 +59,6 @@
       "name": "revisions"
     },
     {
-      "name": "ruleEngine"
-    },
-    {
       "name": "templates"
     },
     {
@@ -105,43 +102,6 @@
     "https"
   ],
   "paths": {
-    "/_apis/wit/$ruleengine": {
-      "post": {
-        "tags": [
-          "RuleEngine"
-        ],
-        "x-ms-vss-resource": "ruleEngine",
-        "x-ms-vss-method": "EvaluateRulesOnField",
-        "description": "Validates the fields values.",
-        "operationId": "RuleEngine_Evaluate",
-        "consumes": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "body",
-            "name": "body",
-            "description": "",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/FieldsToEvaluate"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation"
-         }
-        },
-        "security": [
-          {
-            "oauth2": [
-              "vso.work"
-            ]
-          }
-        ]
-      }
-    },
     "/_apis/wit/artifactlinktypes": {
       "get": {
         "tags": [
@@ -337,7 +297,7 @@
         ],
         "x-ms-vss-resource": "workItemIcons",
         "x-ms-vss-method": "GetWorkItemIcons",
-        "description": "Get a list of all work item icons",
+        "description": "Get a list of all work item icons.",
         "operationId": "WorkItemIcons_List",
         "produces": [
           "application/json"
@@ -352,6 +312,11 @@
               }
             }
          }
+        },
+        "x-ms-examples": {
+            "": {
+                "$ref": "./httpExamples/workItemIcons/GetWorkItemIcons.json"
+            }
         }
       }
     },
@@ -362,7 +327,7 @@
         ],
         "x-ms-vss-resource": "workItemIcons",
         "x-ms-vss-method": "GetWorkItemIconJson",
-        "description": "Get a work item icon svg by icon friendly name and icon color",
+        "description": "Get a work item icon given the friendly name and icon color.",
         "operationId": "WorkItemIcons_GetWorkItemIconJson",
         "produces": [
           "image/svg+xml",
@@ -372,21 +337,21 @@
           {
             "in": "path",
             "name": "icon",
-            "description": "",
+            "description": "The name of the icon",
             "required": true,
             "type": "string"
           },
           {
             "in": "query",
             "name": "color",
-            "description": "",
+            "description": "The 6-digit hex color for the icon",
             "required": false,
             "type": "string"
           },
           {
             "in": "query",
             "name": "v",
-            "description": "",
+            "description": "The version of the icon (used only for cache invalidation)",
             "required": false,
             "type": "integer",
             "format": "int32"
@@ -1529,7 +1494,7 @@
         ],
         "x-ms-vss-resource": "queries",
         "x-ms-vss-method": "GetQueries",
-        "description": "Retrieves all queries the user has access to in the current project",
+        "description": "Gets the root queries and their children",
         "operationId": "Queries_List",
         "produces": [
           "application/json"
@@ -1545,7 +1510,7 @@
           {
             "in": "query",
             "name": "expand",
-            "description": "",
+            "description": "Include the query string (wiql), clauses, query result columns, and sort options in the results.",
             "required": false,
             "type": "string",
             "format": "QueryExpand"
@@ -1553,7 +1518,7 @@
           {
             "in": "query",
             "name": "depth",
-            "description": "",
+            "description": "In the folder of queries, return child queries and folders to this depth.",
             "required": false,
             "type": "integer",
             "format": "int32"
@@ -1561,7 +1526,7 @@
           {
             "in": "query",
             "name": "includeDeleted",
-            "description": "",
+            "description": "Include deleted queries and folders",
             "required": false,
             "type": "boolean"
           }
@@ -1583,7 +1548,21 @@
               "vso.work"
             ]
           }
-        ]
+        ],
+        "x-ms-examples": {
+            "": {
+                "$ref": "./httpExamples/queries/GET__wit_queries__depth-1.json"
+            },
+            "Just the root query folders": {
+                "$ref": "./httpExamples/queries/GET__wit_queries.json"
+            },
+            "With the query string and columns and sort options": {
+                "$ref": "./httpExamples/queries/GET__wit_queries__depth-1__expand-all.json"
+            },
+            "Including deleted queries": {
+                "$ref": "./httpExamples/queries/GET__wit_queries__depth-2__includeDeleted-true.json"
+            }
+        }
       }
     },
     "/{project}/_apis/wit/queries/{query}": {
@@ -1640,7 +1619,18 @@
               "vso.work_write"
             ]
           }
-        ]
+        ],
+        "x-ms-examples": {
+            "Create a query": {
+                "$ref": "./httpExamples/queries/POST__wit_queries_Shared Queries__folderName_.json"
+            },
+            "Create a folder": {
+                "$ref": "./httpExamples/queries/POST__wit_queries_Shared Queries.json"
+            },
+            "Move a query or folder": {
+                "$ref": "./httpExamples/queries/POST__wit_queries_My Queries.json"
+            }
+        }
       },
       "delete": {
         "tags": [
@@ -1648,7 +1638,7 @@
         ],
         "x-ms-vss-resource": "queries",
         "x-ms-vss-method": "DeleteQuery",
-        "description": "",
+        "description": "Delete a query or a folder",
         "operationId": "Queries_Delete",
         "parameters": [
           {
@@ -1661,7 +1651,7 @@
           {
             "in": "path",
             "name": "query",
-            "description": "",
+            "description": "ID or path of the query or folder to delete.",
             "required": true,
             "type": "string"
           }
@@ -1677,7 +1667,18 @@
               "vso.work_write"
             ]
           }
-        ]
+        ],
+        "x-ms-examples": {
+            "By ID": {
+                "$ref": "./httpExamples/queries/DELETE__wit_queries__queryId_.json"
+            },
+            "By folder path": {
+                "$ref": "./httpExamples/queries/DELETE__wit_queries_My Queries__folderNameNew_.json"
+            },
+            "Undelete a query or folder": {
+                "$ref": "./httpExamples/queries/PATCH__wit_queries__folderId___undeleteDescendants-true.json"
+            }
+        }
       },
       "get": {
         "tags": [
@@ -1685,7 +1686,7 @@
         ],
         "x-ms-vss-resource": "queries",
         "x-ms-vss-method": "GetQuery",
-        "description": "Retrieves a single query by project and either id or path",
+        "description": "Retrieves an individual query and its children",
         "operationId": "Queries_Get",
         "produces": [
           "application/json"
@@ -1708,7 +1709,7 @@
           {
             "in": "query",
             "name": "expand",
-            "description": "",
+            "description": "Include the query string (wiql), clauses, query result columns, and sort options in the results.",
             "required": false,
             "type": "string",
             "format": "QueryExpand"
@@ -1716,7 +1717,7 @@
           {
             "in": "query",
             "name": "depth",
-            "description": "",
+            "description": "In the folder of queries, return child queries and folders to this depth.",
             "required": false,
             "type": "integer",
             "format": "int32"
@@ -1724,7 +1725,7 @@
           {
             "in": "query",
             "name": "includeDeleted",
-            "description": "",
+            "description": "Include deleted queries and folders",
             "required": false,
             "type": "boolean"
           }
@@ -1743,7 +1744,30 @@
               "vso.work"
             ]
           }
-        ]
+        ],
+        "x-ms-examples": {
+            "Query by ID": {
+                "$ref": "./httpExamples/queries/GET__wit_queries__queryId_.json"
+            },
+            "Query by Name": {
+                "$ref": "./httpExamples/queries/GET__wit_queries_Shared Queries__folderName___queryName_.json"
+            },
+            "Folder by ID": {
+                "$ref": "./httpExamples/queries/GET__wit_queries__folderId_.json"
+            },
+            "Folder by Name": {
+                "$ref": "./httpExamples/queries/GET__wit_queries_Shared Queries__folderName_.json"
+            },
+            "Deleted query by ID": {
+                "$ref": "./httpExamples/queries/GET__wit_queries__queryId___includeDeleted-true.json"
+            },
+            "Flat query with expanded clauses": {
+                "$ref": "./httpExamples/queries/GET__wit_queries__queryId___expand-clauses.json"
+            },
+            "Hierarchical query with expanded clauses": {
+                "$ref": "./httpExamples/queries/GET__wit_queries__hierarchicalQueryId___expand-clauses.json"
+            }
+        }
       },
       "patch": {
         "tags": [
@@ -1751,7 +1775,7 @@
         ],
         "x-ms-vss-resource": "queries",
         "x-ms-vss-method": "UpdateQuery",
-        "description": "",
+        "description": "Update a query or a folder. This allows you to update, rename and move queries and folders.",
         "operationId": "Queries_Update",
         "consumes": [
           "application/json"
@@ -1763,7 +1787,7 @@
           {
             "in": "body",
             "name": "body",
-            "description": "",
+            "description": "The query to update.",
             "required": true,
             "schema": {
               "$ref": "#/definitions/QueryHierarchyItem"
@@ -1779,14 +1803,14 @@
           {
             "in": "path",
             "name": "query",
-            "description": "",
+            "description": "The path for the query to update.",
             "required": true,
             "type": "string"
           },
           {
             "in": "query",
             "name": "undeleteDescendants",
-            "description": "",
+            "description": "Undelete the children of this folder.",
             "required": false,
             "type": "boolean"
           }
@@ -1805,7 +1829,18 @@
               "vso.work_write"
             ]
           }
-        ]
+        ],
+        "x-ms-examples": {
+            "Update a query": {
+                "$ref": "./httpExamples/queries/PATCH__wit_queries_Shared Queries__folderName___queryNameNew_.json"
+            },
+            "Rename a query": {
+                "$ref": "./httpExamples/queries/PATCH__wit_queries_Shared Queries__folderName_.json"
+            },
+            "Rename a folder": {
+                "$ref": "./httpExamples/queries/PATCH__wit_queries_Shared Queries__folderName_.json"
+            }
+        }
       }
     },
     "/{project}/_apis/wit/recyclebin": {
@@ -2052,7 +2087,12 @@
               "vso.work"
             ]
           }
-        ]
+        ],
+        "x-ms-examples": {
+            "": {
+                "$ref": "./httpExamples/workItemLinks/GET__wit_reporting_workItemLinks.json"
+            }
+        }
       }
     },
     "/{project}/_apis/wit/reporting/workitemrevisions": {
@@ -2165,7 +2205,15 @@
               "vso.work"
             ]
           }
-        ]
+        ],
+        "x-ms-examples": {
+            "Get the first batch of work item revisions": {
+                "$ref": "./httpExamples/workItemRevisions/GET__wit_reporting_workItemRevisions.json"
+            },
+            "Get a batch of work item revisions with identity references": {
+                "$ref": "./httpExamples/workItemRevisions/GET__wit_reporting_workItemRevisions_includeIdentityRef-true_watermark-794.json"
+            }
+        }
       },
       "post": {
         "tags": [
@@ -2173,7 +2221,7 @@
         ],
         "x-ms-vss-resource": "workItemRevisions",
         "x-ms-vss-method": "ReadReportingRevisionsPost",
-        "description": "Get a batch of work item revisions",
+        "description": "Get a batch of work item revisions. This request may be used if your list of fields is large enough that it may run the URL over the length limit.",
         "operationId": "WorkItemRevisions_ReadReportingRevisionsPost",
         "consumes": [
           "application/json"
@@ -2237,7 +2285,12 @@
               "vso.work"
             ]
           }
-        ]
+        ],
+        "x-ms-examples": {
+            "": {
+                "$ref": "./httpExamples/workItemRevisions/POST__wit_reporting_workItemRevisions_watermark-794.json"
+            }
+        }
       }
     },
     "/{project}/_apis/wit/workitems/${type}": {
@@ -3039,7 +3092,7 @@
         ],
         "x-ms-vss-resource": "wiql",
         "x-ms-vss-method": "QueryByWiql",
-        "description": "Gets the results of the query.",
+        "description": "Gets the results of the query given its WIQL.",
         "operationId": "Wiql_QueryByWiql",
         "consumes": [
           "application/json"
@@ -3051,7 +3104,7 @@
           {
             "in": "body",
             "name": "body",
-            "description": "The query containing the wiql.",
+            "description": "The query containing the WIQL.",
             "required": true,
             "schema": {
               "$ref": "#/definitions/Wiql"
@@ -3076,14 +3129,14 @@
           {
             "in": "query",
             "name": "timePrecision",
-            "description": "",
+            "description": "Whether or not to use time precision.",
             "required": false,
             "type": "boolean"
           },
           {
             "in": "query",
             "name": "top",
-            "description": "",
+            "description": "The max number of results to return.",
             "required": false,
             "type": "integer",
             "format": "int32"
@@ -3103,7 +3156,12 @@
               "vso.work"
             ]
           }
-        ]
+        ],
+        "x-ms-examples": {
+            "": {
+                "$ref": "./httpExamples/wiql/POST__wit_wiql.json"
+            }
+        }
       }
     },
     "/{project}/{team}/_apis/wit/wiql/{id}": {
@@ -3113,7 +3171,7 @@
         ],
         "x-ms-vss-resource": "wiql",
         "x-ms-vss-method": "GetQueryResultCount",
-        "description": "Gets the results of the query by id.",
+        "description": "Gets the results of the query given the query ID.",
         "operationId": "Wiql_Get",
         "produces": [
           "application/json"
@@ -3122,7 +3180,7 @@
           {
             "in": "path",
             "name": "id",
-            "description": "The query id.",
+            "description": "The query ID.",
             "required": true,
             "type": "string",
             "format": "uuid"
@@ -3146,7 +3204,7 @@
           {
             "in": "query",
             "name": "timePrecision",
-            "description": "",
+            "description": "Whether or not to use time precision.",
             "required": false,
             "type": "boolean"
           }
@@ -3159,6 +3217,11 @@
               "format": "int32"
             }
          }
+        },
+        "x-ms-examples": {
+            "": {
+                "$ref": "./httpExamples/wiql/GET__wit_wiql__queryId_.json"
+            }
         }
       },
       "get": {
@@ -3167,7 +3230,7 @@
         ],
         "x-ms-vss-resource": "wiql",
         "x-ms-vss-method": "QueryById",
-        "description": "Gets the results of the query by id.",
+        "description": "Gets the results of the query given the query ID.",
         "operationId": "Wiql_QueryById",
         "produces": [
           "application/json"
@@ -3176,7 +3239,7 @@
           {
             "in": "path",
             "name": "id",
-            "description": "The query id.",
+            "description": "The query ID.",
             "required": true,
             "type": "string",
             "format": "uuid"
@@ -3200,7 +3263,7 @@
           {
             "in": "query",
             "name": "timePrecision",
-            "description": "",
+            "description": "Whether or not to use time precision.",
             "required": false,
             "type": "boolean"
           }
@@ -3219,7 +3282,12 @@
               "vso.work"
             ]
           }
-        ]
+        ],
+        "x-ms-examples": {
+            "": {
+                "$ref": "./httpExamples/wiql/GET__wit_wiql__queryId_.json"
+            }
+        }
       }
     }
   },
