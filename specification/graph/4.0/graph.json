@@ -134,7 +134,7 @@
             "description": "A comma separated list of descriptors referencing groups you want the graph group to join",
             "required": false,
             "type": "string",
-            "format": "array (SubjectDescriptor)"
+            "format": "array (string)"
           },
           {
             "$ref": "#/parameters/api-Version"
@@ -209,6 +209,11 @@
               "items": {
                 "$ref": "#/definitions/GraphGroup"
               }
+            },
+            "headers": {
+               "X-MS-ContinuationToken": {
+                 "type": "string"
+               }
             }
          }
         },
@@ -727,7 +732,7 @@
             "description": "A comma separated list of descriptors of groups you want the graph user to join",
             "required": false,
             "type": "string",
-            "format": "array (SubjectDescriptor)"
+            "format": "array (string)"
           },
           {
             "$ref": "#/parameters/api-Version"
@@ -798,6 +803,11 @@
               "items": {
                 "$ref": "#/definitions/GraphUser"
               }
+            },
+            "headers": {
+               "X-MS-ContinuationToken": {
+                 "type": "string"
+               }
             }
          }
         },
@@ -900,7 +910,8 @@
           "$ref": "#/definitions/ReferenceLinks"
         },
         "value": {
-          "$ref": "#/definitions/SubjectDescriptor"
+          "readOnly": true,
+          "type": "string"
         }
       }
     },
@@ -919,7 +930,7 @@
           "readOnly": true,
           "type": "array",
           "items": {
-            "$ref": "#/definitions/SubjectDescriptor"
+            "type": "string"
           }
         }
       }
@@ -1133,7 +1144,7 @@
         },
         "subjectDescriptor": {
           "description": "The traversed subject descriptor",
-          "$ref": "#/definitions/SubjectDescriptor"
+          "type": "string"
         },
         "traversedSubjectIds": {
           "description": "Subject descriptor ids of the traversed members",
@@ -1148,7 +1159,7 @@
           "description": "Subject descriptors of the traversed members",
           "type": "array",
           "items": {
-            "$ref": "#/definitions/SubjectDescriptor"
+            "type": "string"
           }
         }
       }
@@ -1313,7 +1324,8 @@
       "type": "object",
       "properties": {
         "descriptor": {
-          "$ref": "#/definitions/SubjectDescriptor"
+          "readOnly": true,
+          "type": "string"
         }
       }
     },
@@ -1400,6 +1412,20 @@
       "properties": {
         "principalName": {
           "description": "This should be the principal name or upn of the user in the source AD or AAD provider. Example: jamal@contoso.com Team Services will communicate with the source provider to fill all other fields on creation.",
+          "type": "string"
+        }
+      }
+    },
+    "IdentityDescriptor": {
+      "description": "An Identity descriptor is a wrapper for the identity type (Windows SID, Passport) along with a unique identifier such as the SID or PUID.",
+      "type": "object",
+      "properties": {
+        "identifier": {
+          "description": "The unique identifier for this identity, not exceeding 256 chars, which will be persisted.",
+          "type": "string"
+        },
+        "identityType": {
+          "description": "Type of descriptor (for example, Windows, Passport, etc.).",
           "type": "string"
         }
       }
@@ -1538,7 +1564,7 @@
       }
     },
     "ReferenceLinks": {
-      "description": "The class to represent a collection of REST reference links.  Example: { self: { href: \"http://localhost:8080/tfs/DefaultCollection/_apis/wit/workItems/1\" } }",
+      "description": "The class to represent a collection of REST reference links.  Example: `{ self: { href: \"http://localhost:8080/tfs/DefaultCollection/_apis/wit/workItems/1\" } }`",
       "type": "object",
       "properties": {
         "links": {
@@ -1549,12 +1575,6 @@
             "type": "object"
           }
         }
-      }
-    },
-    "SubjectDescriptor": {
-      "description": "",
-      "type": "object",
-      "properties": {
       }
     },
     "VssJsonCollectionWrapper": {

@@ -973,6 +973,44 @@
             }
         }
       },
+      "patch": {
+        "tags": [
+          "Definitions"
+        ],
+        "x-ms-vss-resource": "definitions",
+        "x-ms-vss-method": "UndeleteReleaseDefinition",
+        "description": "Undelete a release definition.",
+        "operationId": "Definitions_UndeleteReleaseDefinition",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Release definition object to undelete.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ReleaseDefinition"
+            }
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+         }
+        }
+      },
       "put": {
         "tags": [
           "Definitions"
@@ -1054,6 +1092,20 @@
             "required": true,
             "type": "integer",
             "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "comment",
+            "description": "Comment for deleting a release definition.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "forceDelete",
+            "description": "",
+            "required": false,
+            "type": "boolean"
           },
           {
             "$ref": "#/parameters/api-Version"
@@ -1807,7 +1859,15 @@
               "vso.release"
             ]
           }
-        ]
+        ],
+        "x-ms-examples": {
+            "Get all deployments for a given definition Id": {
+                "$ref": "./httpExamples/deployments/GET__ListDeploymentsForAGivenDefinitionId.json"
+            },
+            "Get all deployments in the project": {
+                "$ref": "./httpExamples/deployments/GET__ListDeployments.json"
+            }
+        }
       },
       "post": {
         "tags": [
@@ -3439,7 +3499,7 @@
         ],
         "x-ms-vss-resource": "manualInterventions",
         "x-ms-vss-method": "GetManualInterventions",
-        "description": "",
+        "description": "List all manual interventions for a given release.",
         "operationId": "ManualInterventions_List",
         "produces": [
           "application/json"
@@ -3455,7 +3515,7 @@
           {
             "in": "path",
             "name": "releaseId",
-            "description": "",
+            "description": "Id of the release.",
             "required": true,
             "type": "integer",
             "format": "int32"
@@ -3481,7 +3541,12 @@
               "vso.release"
             ]
           }
-        ]
+        ],
+        "x-ms-examples": {
+            "Get manual interventions": {
+                "$ref": "./httpExamples/manualInterventions/GET__GetManualInterventions.json"
+            }
+        }
       }
     },
     "/{project}/_apis/Release/releases/{releaseId}/manualinterventions/{manualInterventionId}": {
@@ -3491,7 +3556,7 @@
         ],
         "x-ms-vss-resource": "manualInterventions",
         "x-ms-vss-method": "GetManualIntervention",
-        "description": "",
+        "description": "Get manual intervention for a given release and manual intervention id.",
         "operationId": "ManualInterventions_Get",
         "produces": [
           "application/json"
@@ -3507,7 +3572,7 @@
           {
             "in": "path",
             "name": "releaseId",
-            "description": "",
+            "description": "Id of the release.",
             "required": true,
             "type": "integer",
             "format": "int32"
@@ -3515,7 +3580,7 @@
           {
             "in": "path",
             "name": "manualInterventionId",
-            "description": "",
+            "description": "Id of the manual intervention.",
             "required": true,
             "type": "integer",
             "format": "int32"
@@ -3538,7 +3603,12 @@
               "vso.release"
             ]
           }
-        ]
+        ],
+        "x-ms-examples": {
+            "Get manual intervention": {
+                "$ref": "./httpExamples/manualInterventions/GET__GetManualIntervention.json"
+            }
+        }
       },
       "patch": {
         "tags": [
@@ -3546,7 +3616,7 @@
         ],
         "x-ms-vss-resource": "manualInterventions",
         "x-ms-vss-method": "UpdateManualIntervention",
-        "description": "",
+        "description": "Update manual intervention.",
         "operationId": "ManualInterventions_Update",
         "consumes": [
           "application/json"
@@ -3558,7 +3628,7 @@
           {
             "in": "body",
             "name": "body",
-            "description": "",
+            "description": "Meta data to update manual intervention.",
             "required": true,
             "schema": {
               "$ref": "#/definitions/ManualInterventionUpdateMetadata"
@@ -3574,7 +3644,7 @@
           {
             "in": "path",
             "name": "releaseId",
-            "description": "",
+            "description": "Id of the release.",
             "required": true,
             "type": "integer",
             "format": "int32"
@@ -3582,7 +3652,7 @@
           {
             "in": "path",
             "name": "manualInterventionId",
-            "description": "",
+            "description": "Id of the manual intervention.",
             "required": true,
             "type": "integer",
             "format": "int32"
@@ -3605,7 +3675,15 @@
               "vso.release_execute"
             ]
           }
-        ]
+        ],
+        "x-ms-examples": {
+            "Resume manual intervention": {
+                "$ref": "./httpExamples/manualInterventions/PATCH__ResumeManualIntervention.json"
+            },
+            "Reject manual intervention": {
+                "$ref": "./httpExamples/manualInterventions/PATCH__RejectManualIntervention.json"
+            }
+        }
       }
     },
     "/{project}/_apis/release/releases/{releaseId}/tags": {
@@ -4284,6 +4362,21 @@
         }
       }
     },
+    "ArtifactDownloadInputBase": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "alias": {
+          "type": "string"
+        },
+        "artifactDownloadMode": {
+          "type": "string"
+        },
+        "artifactType": {
+          "type": "string"
+        }
+      }
+    },
     "ArtifactFilter": {
       "description": "",
       "type": "object",
@@ -4347,6 +4440,19 @@
         },
         "version": {
           "type": "string"
+        }
+      }
+    },
+    "ArtifactsDownloadInput": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "downloadInputs": {
+          "readOnly": true,
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ArtifactDownloadInputBase"
+          }
         }
       }
     },
@@ -4571,6 +4677,23 @@
         }
       }
     },
+    "BuildArtifactDownloadInput": {
+      "description": "",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/ArtifactDownloadInputBase"
+        }
+      ],
+      "properties": {
+        "artifactItems": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
     "BuildVersion": {
       "description": "",
       "type": "object",
@@ -4635,6 +4758,7 @@
       "type": "object",
       "properties": {
         "conditionType": {
+          "description": "Gets or sets the condition type.",
           "enum": [
             "undefined",
             "event",
@@ -4646,9 +4770,11 @@
           }
         },
         "name": {
+          "description": "Gets or sets the name of the condition. e.g. 'ReleaseStarted'.",
           "type": "string"
         },
         "value": {
+          "description": "Gets or set value of the condition.",
           "type": "string"
         }
       }
@@ -4713,6 +4839,17 @@
         "enabled": {
           "type": "boolean"
         }
+      }
+    },
+    "CustomArtifactDownloadInput": {
+      "description": "",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/ArtifactDownloadInputBase"
+        }
+      ],
+      "properties": {
       }
     },
     "DataSourceBinding": {
@@ -4816,13 +4953,16 @@
       "type": "object",
       "properties": {
         "_links": {
+          "description": "Gets links to access the deployment.",
           "$ref": "#/definitions/ReferenceLinks"
         },
         "attempt": {
+          "description": "Gets attempt number.",
           "type": "integer",
           "format": "int32"
         },
         "conditions": {
+          "description": "Gets the list of condition associated with deployment.",
           "readOnly": true,
           "type": "array",
           "items": {
@@ -4830,10 +4970,12 @@
           }
         },
         "definitionEnvironmentId": {
+          "description": "Gets release definition environment id.",
           "type": "integer",
           "format": "int32"
         },
         "deploymentStatus": {
+          "description": "Gets status of the deployment.",
           "enum": [
             "undefined",
             "notDeployed",
@@ -4848,17 +4990,21 @@
           }
         },
         "id": {
+          "description": "Gets the unique identifier for deployment.",
           "type": "integer",
           "format": "int32"
         },
         "lastModifiedBy": {
+          "description": "Gets the identity who last modified the deployment.",
           "$ref": "#/definitions/IdentityRef"
         },
         "lastModifiedOn": {
+          "description": "Gets the date on which deployment is last modified.",
           "type": "string",
           "format": "date-time"
         },
         "operationStatus": {
+          "description": "Gets operation status of deployment.",
           "enum": [
             "undefined",
             "queued",
@@ -4884,22 +5030,26 @@
           }
         },
         "postDeployApprovals": {
+          "description": "Gets list of PostDeployApprovals.",
           "type": "array",
           "items": {
             "$ref": "#/definitions/ReleaseApproval"
           }
         },
         "preDeployApprovals": {
+          "description": "Gets list of PreDeployApprovals.",
           "type": "array",
           "items": {
             "$ref": "#/definitions/ReleaseApproval"
           }
         },
         "queuedOn": {
+          "description": "Gets the date on which deployment is queued.",
           "type": "string",
           "format": "date-time"
         },
         "reason": {
+          "description": "Gets reason of deployment.",
           "enum": [
             "none",
             "manual",
@@ -4911,25 +5061,32 @@
           }
         },
         "release": {
+          "description": "Gets the reference of release.",
           "$ref": "#/definitions/ReleaseReference"
         },
         "releaseDefinition": {
+          "description": "Gets releaseDefinitionReference which specifies the reference of the release definition to which the deployment is associated.",
           "$ref": "#/definitions/ReleaseDefinitionShallowReference"
         },
         "releaseEnvironment": {
+          "description": "Gets releaseEnvironmentReference which specifies the reference of the release environment to which the deployment is associated.",
           "$ref": "#/definitions/ReleaseEnvironmentShallowReference"
         },
         "requestedBy": {
+          "description": "Gets the identity who requested.",
           "$ref": "#/definitions/IdentityRef"
         },
         "requestedFor": {
+          "description": "Gets the identity for whom deployment is requested.",
           "$ref": "#/definitions/IdentityRef"
         },
         "scheduledDeploymentTime": {
+          "description": "Gets the date on which deployment is scheduled.",
           "type": "string",
           "format": "date-time"
         },
         "startedOn": {
+          "description": "Gets the date on which deployment is started.",
           "type": "string",
           "format": "date-time"
         }
@@ -5167,6 +5324,9 @@
         }
       ],
       "properties": {
+        "artifactsDownloadInput": {
+          "$ref": "#/definitions/ArtifactsDownloadInput"
+        },
         "demands": {
           "type": "array",
           "items": {
@@ -5518,6 +5678,28 @@
         }
       }
     },
+    "GitArtifactDownloadInput": {
+      "description": "",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/ArtifactDownloadInputBase"
+        }
+      ],
+      "properties": {
+      }
+    },
+    "GitHubArtifactDownloadInput": {
+      "description": "",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/ArtifactDownloadInputBase"
+        }
+      ],
+      "properties": {
+      }
+    },
     "IdentityRef": {
       "description": "",
       "type": "object",
@@ -5780,6 +5962,23 @@
         }
       }
     },
+    "JenkinsArtifactDownloadInput": {
+      "description": "",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/ArtifactDownloadInputBase"
+        }
+      ],
+      "properties": {
+        "artifactItems": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
     "MachineGroupBasedDeployPhase": {
       "description": "",
       "type": "object",
@@ -5871,39 +6070,50 @@
       "type": "object",
       "properties": {
         "approver": {
+          "description": "Gets or sets the identity who should approve.",
           "$ref": "#/definitions/IdentityRef"
         },
         "comments": {
+          "description": "Gets or sets comments for approval.",
           "type": "string"
         },
         "createdOn": {
+          "description": "Gets date on which it got created.",
           "type": "string",
           "format": "date-time"
         },
         "id": {
+          "description": "Gets the unique identifier for manual intervention.",
           "type": "integer",
           "format": "int32"
         },
         "instructions": {
+          "description": "Gets or sets instructions for approval.",
           "type": "string"
         },
         "modifiedOn": {
+          "description": "Gets date on which it got modified.",
           "type": "string",
           "format": "date-time"
         },
         "name": {
+          "description": "Gets or sets the name.",
           "type": "string"
         },
         "release": {
+          "description": "Gets releaseReference for manual intervention.",
           "$ref": "#/definitions/ReleaseShallowReference"
         },
         "releaseDefinition": {
+          "description": "Gets releaseDefinitionReference for manual intervention.",
           "$ref": "#/definitions/ReleaseDefinitionShallowReference"
         },
         "releaseEnvironment": {
+          "description": "Gets releaseEnvironmentReference for manual intervention.",
           "$ref": "#/definitions/ReleaseEnvironmentShallowReference"
         },
         "status": {
+          "description": "Gets or sets the status of the manual intervention.",
           "enum": [
             "unknown",
             "pending",
@@ -5916,10 +6126,12 @@
           }
         },
         "taskInstanceId": {
+          "description": "Get task instance identifier.",
           "type": "string",
           "format": "uuid"
         },
         "url": {
+          "description": "Gets url to access the manual intervention.",
           "type": "string"
         }
       }
@@ -5929,9 +6141,11 @@
       "type": "object",
       "properties": {
         "comment": {
+          "description": "Sets the comment for manual intervention update.",
           "type": "string"
         },
         "status": {
+          "description": "Sets the status of the manual intervention.",
           "enum": [
             "unknown",
             "pending",
@@ -6143,7 +6357,7 @@
       }
     },
     "ReferenceLinks": {
-      "description": "The class to represent a collection of REST reference links.  Example: { self: { href: \"http://localhost:8080/tfs/DefaultCollection/_apis/wit/workItems/1\" } }",
+      "description": "The class to represent a collection of REST reference links.  Example: `{ self: { href: \"http://localhost:8080/tfs/DefaultCollection/_apis/wit/workItems/1\" } }`",
       "type": "object",
       "properties": {
         "links": {
@@ -6606,6 +6820,10 @@
           "type": "integer",
           "format": "int32"
         },
+        "isDeleted": {
+          "description": "Whether release definition is deleted.",
+          "type": "boolean"
+        },
         "lastRelease": {
           "description": "Gets the reference of last release.",
           "$ref": "#/definitions/ReleaseReference"
@@ -6916,7 +7134,8 @@
           "enum": [
             "add",
             "update",
-            "delete"
+            "delete",
+            "undelete"
           ],
           "x-ms-enum": {
             "name": "Microsoft.VisualStudio.Services.ReleaseManagement.WebApi.Contracts.AuditAction"
@@ -8027,6 +8246,17 @@
         "target": {
           "type": "string"
         }
+      }
+    },
+    "TfvcArtifactDownloadInput": {
+      "description": "",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/ArtifactDownloadInputBase"
+        }
+      ],
+      "properties": {
       }
     },
     "TimeZone": {
