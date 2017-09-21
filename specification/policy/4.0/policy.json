@@ -393,7 +393,7 @@
         ],
         "x-ms-vss-resource": "evaluations",
         "x-ms-vss-method": "GetPolicyEvaluations",
-        "description": "",
+        "description": "Retrieves a list of all the policy evaluation statuses for a specific pull request.\n\nEvaluations are retrieved using an artifact ID which uniquely identifies the pull request.\nTo generate an artifact ID for a pull request, use this template:\n```\nvstfs:///CodeReview/CodeReviewId/{projectId}/{pullRequestId}\n```",
         "operationId": "Evaluations_List",
         "produces": [
           "application/json"
@@ -409,21 +409,21 @@
           {
             "in": "query",
             "name": "artifactId",
-            "description": "",
+            "description": "A string which uniquely identifies the target of a policy evaluation.",
             "required": true,
             "type": "string"
           },
           {
             "in": "query",
             "name": "includeNotApplicable",
-            "description": "",
+            "description": "Some policies might determine that they do not apply to a specific pull request. Setting this parameter to true will return evaluation records even for policies which don't apply to this pull request.",
             "required": false,
             "type": "boolean"
           },
           {
             "in": "query",
             "name": "$top",
-            "description": "",
+            "description": "The number of policy evaluation records to retrieve.",
             "required": false,
             "type": "integer",
             "format": "int32"
@@ -431,7 +431,7 @@
           {
             "in": "query",
             "name": "$skip",
-            "description": "",
+            "description": "The number of policy evaluation records to ignore. For example, to retrieve results 101-150, set top to 50 and skip to 100.",
             "required": false,
             "type": "integer",
             "format": "int32"
@@ -467,7 +467,7 @@
         ],
         "x-ms-vss-resource": "evaluations",
         "x-ms-vss-method": "GetPolicyEvaluation",
-        "description": "",
+        "description": "Gets the present evaluation state of a policy.\n\nEach policy which applies to a pull request will have an evaluation state which is specific to that policy running\nin the context of that pull request. Each evaluation is uniquely identified via a Guid. You can find all the policy\nevaluations for a specific pull request using the List operation of this controller.",
         "operationId": "Evaluations_Get",
         "produces": [
           "application/json"
@@ -483,7 +483,7 @@
           {
             "in": "path",
             "name": "evaluationId",
-            "description": "",
+            "description": "ID of the policy evaluation to be retrieved.",
             "required": true,
             "type": "string",
             "format": "uuid"
@@ -514,7 +514,7 @@
         ],
         "x-ms-vss-resource": "evaluations",
         "x-ms-vss-method": "RequeuePolicyEvaluation",
-        "description": "",
+        "description": "Requeue the policy evaluation.\n\nSome policies define a \"requeue\" action which performs some policy-specific operation.\nYou can trigger this operation by updating an existing policy evaluation and setting the\nPolicyEvaluationRecord.Status field to Queued.\nAlthough any policy evaluation can be requeued, at present only build policies perform any action\nin response. Requeueing a build policy will queue a new build to run (cancelling any existing build which\nis running).",
         "operationId": "Evaluations_RequeuePolicyEvaluation",
         "produces": [
           "application/json"
@@ -530,7 +530,7 @@
           {
             "in": "path",
             "name": "evaluationId",
-            "description": "",
+            "description": "ID of the policy evaluation to be retrieved.",
             "required": true,
             "type": "string",
             "format": "uuid"
@@ -754,34 +754,42 @@
       }
     },
     "PolicyEvaluationRecord": {
-      "description": "",
+      "description": "This record encapsulates the current state of a policy as it applies to one specific pull request. Each pull request has a unique PolicyEvaluationRecord for each pull request which the policy applies to.",
       "type": "object",
       "properties": {
         "_links": {
+          "description": "Links to other related objects",
           "$ref": "#/definitions/ReferenceLinks"
         },
         "artifactId": {
+          "description": "A string which uniquely identifies the target of a policy evaluation.",
           "type": "string"
         },
         "completedDate": {
+          "description": "Time when this policy finished evaluating on this pull request.",
           "type": "string",
           "format": "date-time"
         },
         "configuration": {
+          "description": "Contains all configuration data for the policy which is being evaluated.",
           "$ref": "#/definitions/PolicyConfiguration"
         },
         "context": {
+          "description": "Internal context data of this policy evaluation.",
           "$ref": "#/definitions/JObject"
         },
         "evaluationId": {
+          "description": "Guid which uniquely identifies this evaluation record (one policy running on one pull request).",
           "type": "string",
           "format": "uuid"
         },
         "startedDate": {
+          "description": "Time when this policy was first evaluated on this pull request.",
           "type": "string",
           "format": "date-time"
         },
         "status": {
+          "description": "Status of the policy (Running, Approved, Failed, etc.)",
           "enum": [
             "queued",
             "running",
