@@ -33,10 +33,11 @@
   "tags": [
     {
       "name": "annotatedTags",
-      "description": "Controller to handle annotated tags"
+      "description": "Git annotated tags are tags with additional metadata including the person who created the tag and a comment."
     },
     {
-      "name": "Blobs"
+      "name": "Blobs",
+      "description": "Blobs are files in the Git repository."
     },
     {
       "name": "BranchStats"
@@ -108,6 +109,10 @@
       "description": "Pull Request labels provide extensibility to the pull request experience. \nThird party services or users with read permission in the repository can\ncreate, get, and delete labels associated with a pull request via this REST API.\nLabels are used to provide quick insights into a pull request, an example\ncan be labelling a Pull request as \"WIP\", \"Feature\", or \"Bug\" to let others\nknow the state and purpose of the Pull Request."
     },
     {
+      "name": "PullRequestProperties",
+      "description": "This API provides a way to manage external properties associated with a pull request. Third party services can use this API\nto store additional information on the pull request without maintaining their own storage."
+    },
+    {
       "name": "PullRequestQuery"
     },
     {
@@ -115,7 +120,7 @@
     },
     {
       "name": "PullRequests",
-      "description": "Controller to handle all REST calls against file items"
+      "description": "This API provides a way to create, retrieve, and modify pull requests."
     },
     {
       "name": "PullRequestShare"
@@ -178,7 +183,7 @@
         ],
         "x-ms-vss-resource": "pullRequests",
         "x-ms-vss-method": "GetPullRequestById",
-        "description": "Get a pull request using its ID",
+        "description": "Retrieve a pull request.",
         "operationId": "PullRequests_GetPullRequestById",
         "produces": [
           "application/json"
@@ -187,7 +192,7 @@
           {
             "in": "path",
             "name": "pullRequestId",
-            "description": "the Id of the pull request",
+            "description": "The ID of the pull request to retrieve.",
             "required": true,
             "type": "integer",
             "format": "int32"
@@ -203,6 +208,21 @@
               "$ref": "#/definitions/GitPullRequest"
             }
          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.code"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+            "": {
+                "$ref": "./httpExamples/PullRequests/GET__git_pullRequests__pullRequestId_.json"
+            },
+            "": {
+                "$ref": "./httpExamples/PullRequests/GET__git_repositories__repositoryId__pullRequests__pullRequestId_.json"
+            }
         }
       }
     },
@@ -442,7 +462,7 @@
         ],
         "x-ms-vss-resource": "pullRequests",
         "x-ms-vss-method": "GetPullRequestsByProject",
-        "description": "Query pull requests by project",
+        "description": "Retrieve all pull requests matching a specified criteria.",
         "operationId": "PullRequests_GetPullRequestsByProject",
         "produces": [
           "application/json"
@@ -458,7 +478,7 @@
           {
             "in": "query",
             "name": "searchCriteria",
-            "description": "",
+            "description": "Pull requests will be returned that match this search criteria.",
             "required": true,
             "type": "string",
             "format": "GitPullRequestSearchCriteria"
@@ -466,7 +486,7 @@
           {
             "in": "query",
             "name": "maxCommentLength",
-            "description": "",
+            "description": "Not used.",
             "required": false,
             "type": "integer",
             "format": "int32"
@@ -474,7 +494,7 @@
           {
             "in": "query",
             "name": "$skip",
-            "description": "",
+            "description": "The number of pull requests to ignore. For example, to retrieve results 101-150, set top to 50 and skip to 100.",
             "required": false,
             "type": "integer",
             "format": "int32"
@@ -482,7 +502,7 @@
           {
             "in": "query",
             "name": "$top",
-            "description": "",
+            "description": "The number of pull requests to retrieve.",
             "required": false,
             "type": "integer",
             "format": "int32"
@@ -518,7 +538,7 @@
         ],
         "x-ms-vss-resource": "repositories",
         "x-ms-vss-method": "CreateRepository",
-        "description": "Create a git repository",
+        "description": "Create a git repository in a team project.",
         "operationId": "Repositories_Create",
         "consumes": [
           "application/json"
@@ -530,7 +550,7 @@
           {
             "in": "body",
             "name": "body",
-            "description": "",
+            "description": "Specify the repo name, team project and/or parent repository",
             "required": true,
             "schema": {
               "$ref": "#/definitions/GitRepositoryCreateOptions"
@@ -547,7 +567,7 @@
           {
             "in": "query",
             "name": "sourceRef",
-            "description": "",
+            "description": "[optional] Specify the source refs to use while creating a fork repo",
             "required": false,
             "type": "string"
           },
@@ -569,7 +589,12 @@
               "vso.code_manage"
             ]
           }
-        ]
+        ],
+        "x-ms-examples": {
+            "": {
+                "$ref": "./httpExamples/Repositories/POST__git_repositories.json"
+            }
+        }
       },
       "get": {
         "tags": [
@@ -594,14 +619,21 @@
           {
             "in": "query",
             "name": "includeLinks",
-            "description": "",
+            "description": "[optional] True to include reference links. The default value is false.",
             "required": false,
             "type": "boolean"
           },
           {
             "in": "query",
             "name": "includeAllUrls",
-            "description": "",
+            "description": "[optional] True to include all remote URLs. The default value is false.",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "includeHidden",
+            "description": "[optional] True to include hidden repositories. The default value is false.",
             "required": false,
             "type": "boolean"
           },
@@ -626,7 +658,12 @@
               "vso.code"
             ]
           }
-        ]
+        ],
+        "x-ms-examples": {
+            "": {
+                "$ref": "./httpExamples/Repositories/GET__git_repositories.json"
+            }
+        }
       }
     },
     "/{project}/_apis/git/repositories/{repositoryId}": {
@@ -642,7 +679,7 @@
           {
             "in": "path",
             "name": "repositoryId",
-            "description": "",
+            "description": "The name or ID of the repository.",
             "required": true,
             "type": "string",
             "format": "uuid"
@@ -678,7 +715,7 @@
         ],
         "x-ms-vss-resource": "repositories",
         "x-ms-vss-method": "GetRepository",
-        "description": "",
+        "description": "Retrieve a git repository.",
         "operationId": "Repositories_Get",
         "produces": [
           "application/json"
@@ -687,7 +724,7 @@
           {
             "in": "path",
             "name": "repositoryId",
-            "description": "",
+            "description": "The name or ID of the repository.",
             "required": true,
             "type": "string"
           },
@@ -702,7 +739,7 @@
           {
             "in": "query",
             "name": "includeParent",
-            "description": "",
+            "description": "[optional] True to include parent repository. The default value is false.",
             "required": false,
             "type": "boolean"
           },
@@ -724,7 +761,15 @@
               "vso.code"
             ]
           }
-        ]
+        ],
+        "x-ms-examples": {
+            "": {
+                "$ref": "./httpExamples/Repositories/GET__git_repositories__repositoryId_.json"
+            },
+            "": {
+                "$ref": "./httpExamples/Repositories/GET__git_repositories__remoteurl.json"
+            }
+        }
       },
       "patch": {
         "tags": [
@@ -732,7 +777,7 @@
         ],
         "x-ms-vss-resource": "repositories",
         "x-ms-vss-method": "UpdateRepository",
-        "description": "Updates the Git repository with the single populated change in the specified repository information.",
+        "description": "Updates the Git repository with either a new repo name or a new default branch.",
         "operationId": "Repositories_Update",
         "consumes": [
           "application/json"
@@ -744,7 +789,7 @@
           {
             "in": "body",
             "name": "body",
-            "description": "",
+            "description": "Specify a new repo name or a new default branch of the repository",
             "required": true,
             "schema": {
               "$ref": "#/definitions/GitRepository"
@@ -753,7 +798,7 @@
           {
             "in": "path",
             "name": "repositoryId",
-            "description": "",
+            "description": "The name or ID of the repository.",
             "required": true,
             "type": "string",
             "format": "uuid"
@@ -784,7 +829,12 @@
               "vso.code_manage"
             ]
           }
-        ]
+        ],
+        "x-ms-examples": {
+            "": {
+                "$ref": "./httpExamples/Repositories/PATCH__git_repositories__repositoryId_.json"
+            }
+        }
       }
     },
     "/{project}/_apis/git/repositories/{repositoryId}/annotatedtags": {
@@ -794,7 +844,7 @@
         ],
         "x-ms-vss-resource": "annotatedTags",
         "x-ms-vss-method": "CreateAnnotatedTag",
-        "description": "Create an annotated tag",
+        "description": "Create an annotated tag.\n\nRepositories have both a name and an identifier. Identifiers are globally unique, but several projects\nmay contain a repository of the same name. You don't need to include the project if you specify a\nrepository by ID. However, if you specify a repository by name, you must also specify the project (by name or ID).",
         "operationId": "AnnotatedTags_Create",
         "consumes": [
           "application/json"
@@ -806,7 +856,7 @@
           {
             "in": "body",
             "name": "body",
-            "description": "Object containing details of tag to be created",
+            "description": "Object containing details of tag to be created.",
             "required": true,
             "schema": {
               "$ref": "#/definitions/GitAnnotatedTag"
@@ -822,7 +872,7 @@
           {
             "in": "path",
             "name": "repositoryId",
-            "description": "Friendly name or guid of repository",
+            "description": "ID or name of the repository.",
             "required": true,
             "type": "string"
           },
@@ -844,7 +894,12 @@
               "vso.code_manage"
             ]
           }
-        ]
+        ],
+        "x-ms-examples": {
+            "": {
+                "$ref": "./httpExamples/annotatedTags/POST__git_repositories__annotated__tags.json"
+            }
+        }
       }
     },
     "/{project}/_apis/git/repositories/{repositoryId}/annotatedtags/{objectId}": {
@@ -854,7 +909,7 @@
         ],
         "x-ms-vss-resource": "annotatedTags",
         "x-ms-vss-method": "GetAnnotatedTag",
-        "description": "Get an annotated tag",
+        "description": "Get an annotated tag.\n\nRepositories have both a name and an identifier. Identifiers are globally unique, but several projects\nmay contain a repository of the same name. You don't need to include the project if you specify a\nrepository by ID. However, if you specify a repository by name, you must also specify the project (by name or ID).",
         "operationId": "AnnotatedTags_Get",
         "produces": [
           "application/json"
@@ -870,14 +925,14 @@
           {
             "in": "path",
             "name": "repositoryId",
-            "description": "",
+            "description": "ID or name of the repository.",
             "required": true,
             "type": "string"
           },
           {
             "in": "path",
             "name": "objectId",
-            "description": "Sha1 of annotated tag to be returned",
+            "description": "ObjectId (Sha1Id) of tag to get.",
             "required": true,
             "type": "string"
           },
@@ -899,7 +954,12 @@
               "vso.code"
             ]
           }
-        ]
+        ],
+        "x-ms-examples": {
+            "": {
+                "$ref": "./httpExamples/annotatedTags/GET__git_repositories__annotated__tags.json"
+            }
+        }
       }
     },
     "/{project}/_apis/git/repositories/{repositoryId}/blobs": {
@@ -921,7 +981,7 @@
           {
             "in": "body",
             "name": "body",
-            "description": "",
+            "description": "Blob IDs (SHA1 hashes) to be returned in the zip file.",
             "required": true,
             "schema": {
               "type": "array",
@@ -933,7 +993,7 @@
           {
             "in": "path",
             "name": "repositoryId",
-            "description": "",
+            "description": "The name or ID of the repository.",
             "required": true,
             "type": "string"
           },
@@ -981,7 +1041,7 @@
         ],
         "x-ms-vss-resource": "blobs",
         "x-ms-vss-method": "GetBlob",
-        "description": "Gets a single blob.",
+        "description": "Get a single blob.\n\nRepositories have both a name and an identifier. Identifiers are globally unique,\nbut several projects may contain a repository of the same name. You don't need to include\nthe project if you specify a repository by ID. However, if you specify a repository by name,\nyou must also specify the project (by name or ID).",
         "operationId": "Blobs_GetBlob",
         "produces": [
           "application/octet-stream",
@@ -992,14 +1052,14 @@
           {
             "in": "path",
             "name": "repositoryId",
-            "description": "",
+            "description": "The name or ID of the repository.",
             "required": true,
             "type": "string"
           },
           {
             "in": "path",
             "name": "sha1",
-            "description": "",
+            "description": "SHA1 hash of the file. You can get the SHA1 of a file using the “Git/Items/Get Item” endpoint.",
             "required": true,
             "type": "string"
           },
@@ -1014,14 +1074,21 @@
           {
             "in": "query",
             "name": "download",
-            "description": "",
+            "description": "If true, prompt for a download rather than rendering in a browser. Note: this value defaults to true if $format is zip",
             "required": false,
             "type": "boolean"
           },
           {
             "in": "query",
             "name": "fileName",
-            "description": "",
+            "description": "Provide a fileName to use for a download.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "$format",
+            "description": "Options: json, zip, text, octetstream. If not set, defaults to the MIME type set in the Accept header.",
             "required": false,
             "type": "string"
           },
@@ -1043,7 +1110,12 @@
               "vso.code"
             ]
           }
-        ]
+        ],
+        "x-ms-examples": {
+            "": {
+                "$ref": "./httpExamples/Blobs/GET__git_repositories__repositoryId__blobs__objectId_.json"
+            }
+        }
       }
     },
     "/{project}/_apis/git/repositories/{repositoryId}/cherryPicks": {
@@ -2338,7 +2410,7 @@
         ],
         "x-ms-vss-resource": "pullRequests",
         "x-ms-vss-method": "CreatePullRequest",
-        "description": "Create a git pull request",
+        "description": "Create a pull request.",
         "operationId": "PullRequests_Create",
         "consumes": [
           "application/json"
@@ -2350,7 +2422,7 @@
           {
             "in": "body",
             "name": "body",
-            "description": "",
+            "description": "The pull request to create.",
             "required": true,
             "schema": {
               "$ref": "#/definitions/GitPullRequest"
@@ -2359,7 +2431,7 @@
           {
             "in": "path",
             "name": "repositoryId",
-            "description": "",
+            "description": "The repository ID of the pull request’s target branch.",
             "required": true,
             "type": "string"
           },
@@ -2374,7 +2446,7 @@
           {
             "in": "query",
             "name": "supportsIterations",
-            "description": "",
+            "description": "If true, subsequent pushes to the pull request will be individually reviewable. Set this to false for large pull requests for performance reasons if this functionality is not needed.",
             "required": false,
             "type": "boolean"
           },
@@ -2396,7 +2468,12 @@
               "vso.code_write"
             ]
           }
-        ]
+        ],
+        "x-ms-examples": {
+            "": {
+                "$ref": "./httpExamples/PullRequests/POST__git_repositories__repositoryId__pullRequests.json"
+            }
+        }
       },
       "get": {
         "tags": [
@@ -2404,7 +2481,7 @@
         ],
         "x-ms-vss-resource": "pullRequests",
         "x-ms-vss-method": "GetPullRequests",
-        "description": "Query for pull requests",
+        "description": "Retrieve all pull requests matching a specified criteria.",
         "operationId": "PullRequests_GetPullRequests",
         "produces": [
           "application/json"
@@ -2413,14 +2490,14 @@
           {
             "in": "path",
             "name": "repositoryId",
-            "description": "",
+            "description": "The repository ID of the pull request’s target branch.",
             "required": true,
             "type": "string"
           },
           {
             "in": "query",
             "name": "searchCriteria",
-            "description": "",
+            "description": "Pull requests will be returned that match this search criteria.",
             "required": true,
             "type": "string",
             "format": "GitPullRequestSearchCriteria"
@@ -2436,7 +2513,7 @@
           {
             "in": "query",
             "name": "maxCommentLength",
-            "description": "",
+            "description": "Not used.",
             "required": false,
             "type": "integer",
             "format": "int32"
@@ -2444,7 +2521,7 @@
           {
             "in": "query",
             "name": "$skip",
-            "description": "",
+            "description": "The number of pull requests to ignore. For example, to retrieve results 101-150, set top to 50 and skip to 100.",
             "required": false,
             "type": "integer",
             "format": "int32"
@@ -2452,7 +2529,7 @@
           {
             "in": "query",
             "name": "$top",
-            "description": "",
+            "description": "The number of pull requests to retrieve.",
             "required": false,
             "type": "integer",
             "format": "int32"
@@ -2478,7 +2555,24 @@
               "vso.code"
             ]
           }
-        ]
+        ],
+        "x-ms-examples": {
+            "": {
+                "$ref": "./httpExamples/PullRequests/GET__git_pullRequests.json"
+            },
+            "": {
+                "$ref": "./httpExamples/PullRequests/GET__git_pullRequests2.json"
+            },
+            "": {
+                "$ref": "./httpExamples/PullRequests/GET__git_repositories__repositoryId__pullRequests.json"
+            },
+            "": {
+                "$ref": "./httpExamples/PullRequests/GET__git_repositories__repositoryId__pullRequests_status-completed.json"
+            },
+            "": {
+                "$ref": "./httpExamples/PullRequests/GET__git_repositories__repositoryId__pullRequests_targetRefName-refs_heads_master.json"
+            }
+        }
       }
     },
     "/{project}/_apis/git/repositories/{repositoryId}/pullrequests/{pullRequestId}": {
@@ -2488,7 +2582,7 @@
         ],
         "x-ms-vss-resource": "pullRequests",
         "x-ms-vss-method": "GetPullRequest",
-        "description": "Retrieve a pull request",
+        "description": "Retrieve a pull request.",
         "operationId": "PullRequests_GetPullRequest",
         "produces": [
           "application/json"
@@ -2497,14 +2591,14 @@
           {
             "in": "path",
             "name": "repositoryId",
-            "description": "",
+            "description": "The repository ID of the pull request’s target branch.",
             "required": true,
             "type": "string"
           },
           {
             "in": "path",
             "name": "pullRequestId",
-            "description": "",
+            "description": "The ID of the pull request to retrieve.",
             "required": true,
             "type": "integer",
             "format": "int32"
@@ -2520,7 +2614,7 @@
           {
             "in": "query",
             "name": "maxCommentLength",
-            "description": "",
+            "description": "Not used.",
             "required": false,
             "type": "integer",
             "format": "int32"
@@ -2528,7 +2622,7 @@
           {
             "in": "query",
             "name": "$skip",
-            "description": "",
+            "description": "Not used.",
             "required": false,
             "type": "integer",
             "format": "int32"
@@ -2536,7 +2630,7 @@
           {
             "in": "query",
             "name": "$top",
-            "description": "",
+            "description": "Not used.",
             "required": false,
             "type": "integer",
             "format": "int32"
@@ -2544,14 +2638,14 @@
           {
             "in": "query",
             "name": "includeCommits",
-            "description": "",
+            "description": "If true, the pull request will be returned with the associated commits.",
             "required": false,
             "type": "boolean"
           },
           {
             "in": "query",
             "name": "includeWorkItemRefs",
-            "description": "",
+            "description": "If true, the pull request will be returned with the associated work item references.",
             "required": false,
             "type": "boolean"
           },
@@ -2581,7 +2675,7 @@
         ],
         "x-ms-vss-resource": "pullRequests",
         "x-ms-vss-method": "UpdatePullRequest",
-        "description": "Updates a pull request",
+        "description": "Update a pull request.",
         "operationId": "PullRequests_Update",
         "consumes": [
           "application/json"
@@ -2593,7 +2687,7 @@
           {
             "in": "body",
             "name": "body",
-            "description": "",
+            "description": "The pull request content to update.",
             "required": true,
             "schema": {
               "$ref": "#/definitions/GitPullRequest"
@@ -2602,14 +2696,14 @@
           {
             "in": "path",
             "name": "repositoryId",
-            "description": "",
+            "description": "The repository ID of the pull request’s target branch.",
             "required": true,
             "type": "string"
           },
           {
             "in": "path",
             "name": "pullRequestId",
-            "description": "",
+            "description": "The ID of the pull request to retrieve.",
             "required": true,
             "type": "integer",
             "format": "int32"
@@ -2640,7 +2734,21 @@
               "vso.code_write"
             ]
           }
-        ]
+        ],
+        "x-ms-examples": {
+            "": {
+                "$ref": "./httpExamples/PullRequests/PATCH__git_repositories__repositoryId__pullRequests__pullRequestId_.json"
+            },
+            "": {
+                "$ref": "./httpExamples/PullRequests/PATCH__git_repositories__repositoryId__pullRequests__pullRequestId_2.json"
+            },
+            "": {
+                "$ref": "./httpExamples/PullRequests/PATCH__git_repositories__repositoryId__pullRequests__pullRequestId_3.json"
+            },
+            "": {
+                "$ref": "./httpExamples/PullRequests/PATCH__git_repositories__repositoryId__pullRequests__autoCompletePullRequestId_.json"
+            }
+        }
       }
     },
     "/{project}/_apis/git/repositories/{repositoryId}/pullRequests/{pullRequestId}/attachments": {
@@ -3916,6 +4024,143 @@
             ]
           }
         ]
+      }
+    },
+    "/{project}/_apis/git/repositories/{repositoryId}/pullRequests/{pullRequestId}/properties": {
+      "get": {
+        "tags": [
+          "PullRequestProperties"
+        ],
+        "x-ms-vss-resource": "pullRequestProperties",
+        "x-ms-vss-method": "GetPullRequestProperties",
+        "description": "Get external properties of the pull request.",
+        "operationId": "PullRequestProperties_List",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "repositoryId",
+            "description": "The repository ID of the pull request’s target branch.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "pullRequestId",
+            "description": "ID of the pull request.",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "x-ms-required": false,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/PropertiesCollection"
+            }
+         }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.code"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+            "": {
+                "$ref": "./httpExamples/PullRequestProperties/GetPullRequestProperties.json"
+            }
+        }
+      },
+      "patch": {
+        "tags": [
+          "PullRequestProperties"
+        ],
+        "x-ms-vss-resource": "pullRequestProperties",
+        "x-ms-vss-method": "UpdatePullRequestProperties",
+        "description": "Create or update pull request external properties. The patch operation can be `add`, `replace` or `remove`. For `add` operation, the path can be empty. If the path is empty, the value must be a list of key value pairs. For `replace` operation, the path cannot be empty. If the path does not exist, the property will be added to the collection. For `remove` operation, the path cannot be empty. If the path does not exist, no action will be performed.",
+        "operationId": "PullRequestProperties_Update",
+        "consumes": [
+          "application/json-patch+json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Properties to add, replace or remove in JSON Patch format.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/JsonPatchDocument"
+            }
+          },
+          {
+            "in": "path",
+            "name": "repositoryId",
+            "description": "The repository ID of the pull request’s target branch.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "pullRequestId",
+            "description": "ID of the pull request.",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "x-ms-required": false,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/PropertiesCollection"
+            }
+         }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.code_write"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+            "Add properties": {
+                "$ref": "./httpExamples/PullRequestProperties/AddPullRequestProperties.json"
+            },
+            "Remove and replace properties": {
+                "$ref": "./httpExamples/PullRequestProperties/RemoveAndReplacePullRequestProperties.json"
+            }
+        }
       }
     },
     "/{project}/_apis/git/repositories/{repositoryId}/pullRequests/{pullRequestId}/reviewers": {
@@ -5907,7 +6152,7 @@
         ],
         "x-ms-vss-resource": "refs",
         "x-ms-vss-method": "UpdateRefs",
-        "description": "Creates or updates refs with the given information",
+        "description": "Creating, updating, or deleting refs(branches).\n\nUpdating a ref means making it point at a different commit than it used to. You must specify both the old and new commit to avoid race conditions.",
         "operationId": "Refs_UpdateRefs",
         "consumes": [
           "application/json"
@@ -5931,7 +6176,7 @@
           {
             "in": "path",
             "name": "repositoryId",
-            "description": "The id or friendly name of the repository. To use the friendly name, projectId must also be specified.",
+            "description": "The name or ID of the repository.",
             "required": true,
             "type": "string"
           },
@@ -5946,7 +6191,7 @@
           {
             "in": "query",
             "name": "projectId",
-            "description": "The id of the project.",
+            "description": "ID or name of the team project. Optional if specifying an ID for repository.",
             "required": false,
             "type": "string"
           },
@@ -5971,7 +6216,12 @@
               "vso.code_write"
             ]
           }
-        ]
+        ],
+        "x-ms-examples": {
+            "": {
+                "$ref": "./httpExamples/refs/POST__git_repositories__repositoryId__refs.json"
+            }
+        }
       }
     },
     "/{project}/_apis/git/repositories/{repositoryId}/refs/{*filter}": {
@@ -5990,7 +6240,7 @@
           {
             "in": "path",
             "name": "repositoryId",
-            "description": "The id or friendly name of the repository. To use the friendly name, projectId must also be specified.",
+            "description": "The name or ID of the repository.",
             "required": true,
             "type": "string"
           },
@@ -6019,7 +6269,7 @@
           {
             "in": "query",
             "name": "latestStatusesOnly",
-            "description": "",
+            "description": "[optional] True to include only the tip commit status for each ref. This option requires `includeStatuses` to be true. The default value is false.",
             "required": false,
             "type": "boolean"
           },
@@ -6044,7 +6294,21 @@
               "vso.code"
             ]
           }
-        ]
+        ],
+        "x-ms-examples": {
+            "": {
+                "$ref": "./httpExamples/refs/GET__git_repositories__repositoryId__refs.json"
+            },
+            "": {
+                "$ref": "./httpExamples/refs/GET__git_repositories__repositoryId__refs_heads.json"
+            },
+            "": {
+                "$ref": "./httpExamples/refs/GET__git_repositories__repositoryId__refs_heads_statuses.json"
+            },
+            "": {
+                "$ref": "./httpExamples/refs/GET__git_repositories__repositoryId__refs_tags.json"
+            }
+        }
       }
     },
     "/{project}/_apis/git/repositories/{repositoryId}/refs/{filter}": {
@@ -6054,7 +6318,7 @@
         ],
         "x-ms-vss-resource": "refs",
         "x-ms-vss-method": "UpdateRef",
-        "description": "",
+        "description": "Lock or Unlock a branch.",
         "operationId": "Refs_UpdateRef",
         "consumes": [
           "application/json"
@@ -6066,7 +6330,7 @@
           {
             "in": "body",
             "name": "body",
-            "description": "",
+            "description": "The ref update action (lock/unlock) to perform",
             "required": true,
             "schema": {
               "$ref": "#/definitions/GitRefUpdate"
@@ -6075,14 +6339,14 @@
           {
             "in": "path",
             "name": "repositoryId",
-            "description": "",
+            "description": "The name or ID of the repository.",
             "required": true,
             "type": "string"
           },
           {
             "in": "query",
             "name": "filter",
-            "description": "",
+            "description": "The name of the branch to lock/unlock",
             "required": true,
             "type": "string"
           },
@@ -6097,7 +6361,7 @@
           {
             "in": "query",
             "name": "projectId",
-            "description": "",
+            "description": "ID or name of the team project. Optional if specifying an ID for repository.",
             "required": false,
             "type": "string"
           },
@@ -6119,7 +6383,12 @@
               "vso.code_write"
             ]
           }
-        ]
+        ],
+        "x-ms-examples": {
+            "": {
+                "$ref": "./httpExamples/refs/PATCH__git_repositories__repositoryId__refs.json"
+            }
+        }
       }
     },
     "/{project}/_apis/git/repositories/{repositoryId}/reverts": {
@@ -6476,7 +6745,7 @@
         ],
         "x-ms-vss-resource": "trees",
         "x-ms-vss-method": "GetTree",
-        "description": "",
+        "description": "The Tree endpoint returns the collection of objects underneath the specified tree. Trees are folders in a Git repository.\n\nRepositories have both a name and an identifier. Identifiers are globally unique, but several projects may contain a repository of the same name. You don't need to include the project if you specify a repository by ID. However, if you specify a repository by name, you must also specify the project (by name or ID.",
         "operationId": "Trees_GetTree",
         "produces": [
           "application/zip",
@@ -6486,14 +6755,14 @@
           {
             "in": "path",
             "name": "repositoryId",
-            "description": "",
+            "description": "Repository Id.",
             "required": true,
             "type": "string"
           },
           {
             "in": "path",
             "name": "sha1",
-            "description": "",
+            "description": "SHA1 hash of the tree object.",
             "required": true,
             "type": "string"
           },
@@ -6508,21 +6777,28 @@
           {
             "in": "query",
             "name": "projectId",
-            "description": "",
+            "description": "Project Id.",
             "required": false,
             "type": "string"
           },
           {
             "in": "query",
             "name": "recursive",
-            "description": "",
+            "description": "Search recursively. Include trees underneath this tree. Default is false.",
             "required": false,
             "type": "boolean"
           },
           {
             "in": "query",
             "name": "fileName",
-            "description": "",
+            "description": "Name to use if a .zip file is returned. Default is the object ID.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "$format",
+            "description": "Use \"zip\". Defaults to the MIME type set in the Accept header.",
             "required": false,
             "type": "string"
           },
@@ -6544,7 +6820,15 @@
               "vso.code"
             ]
           }
-        ]
+        ],
+        "x-ms-examples": {
+            "Non-recursive Example": {
+                "$ref": "./httpExamples/Trees/GET__git_repositories__repositoryId__trees__objectId_.json"
+            },
+            "Recursive Example": {
+                "$ref": "./httpExamples/Trees/GET__git_repositories__repositoryId__trees__objectId__recursive-true.json"
+            }
+        }
       }
     },
     "/{project}/_apis/git/repositories/{repositoryNameOrId}/forks/{collectionId}": {
@@ -7414,25 +7698,27 @@
       }
     },
     "GitAnnotatedTag": {
-      "description": "",
+      "description": "A Git annotated tag.",
       "type": "object",
       "properties": {
         "message": {
-          "description": "Tagging Message",
+          "description": "The tagging Message",
           "type": "string"
         },
         "name": {
+          "description": "The name of the annotated tag.",
           "type": "string"
         },
         "objectId": {
+          "description": "The objectId (Sha1Id) of the tag.",
           "type": "string"
         },
         "taggedBy": {
-          "description": "User name, Email and date of tagging",
+          "description": "User info and date of tagging.",
           "$ref": "#/definitions/GitUserDate"
         },
         "taggedObject": {
-          "description": "Tagged git object",
+          "description": "Tagged git object.",
           "$ref": "#/definitions/GitObject"
         },
         "url": {
@@ -8328,7 +8614,7 @@
       }
     },
     "GitForkRef": {
-      "description": "",
+      "description": "Information about a fork ref.",
       "type": "object",
       "allOf": [
         {
@@ -8337,6 +8623,7 @@
       ],
       "properties": {
         "repository": {
+          "description": "The repository ID of the fork.",
           "$ref": "#/definitions/GitRepository"
         }
       }
@@ -8743,11 +9030,11 @@
       }
     },
     "GitObject": {
-      "description": "",
+      "description": "Git object identifier and type information.",
       "type": "object",
       "properties": {
         "objectId": {
-          "description": "Git object id",
+          "description": "Object Id (Sha1Id).",
           "type": "string"
         },
         "objectType": {
@@ -8811,74 +9098,93 @@
       }
     },
     "GitPullRequest": {
-      "description": "",
+      "description": "Represents all the data associated with a pull request.",
       "type": "object",
       "properties": {
         "_links": {
+          "description": "Links to other related objects.",
           "$ref": "#/definitions/ReferenceLinks"
         },
         "artifactId": {
+          "description": "A string which uniquely identifies this pull request. To generate an artifact ID for a pull request, use this template: ```vstfs:///Git/PullRequestId/{projectId}/{repositoryId}/{pullRequestId}```",
           "type": "string"
         },
         "autoCompleteSetBy": {
+          "description": "If set, auto-complete is enabled for this pull request and this is the identity that enabled it.",
           "$ref": "#/definitions/IdentityRef"
         },
         "closedBy": {
+          "description": "The user who closed the pull request.",
           "$ref": "#/definitions/IdentityRef"
         },
         "closedDate": {
+          "description": "The date when the pull request was closed (completed, abandoned, or merged externally).",
           "type": "string",
           "format": "date-time"
         },
         "codeReviewId": {
+          "description": "The code review ID of the pull request. Used internally.",
           "type": "integer",
           "format": "int32"
         },
         "commits": {
+          "description": "The commits contained in the pull request.",
           "type": "array",
           "items": {
             "$ref": "#/definitions/GitCommitRef"
           }
         },
         "completionOptions": {
+          "description": "Options which affect how the pull request will be merged when it is completed.",
           "$ref": "#/definitions/GitPullRequestCompletionOptions"
         },
         "completionQueueTime": {
+          "description": "The most recent date at which the pull request entered the queue to be completed. Used internally.",
           "type": "string",
           "format": "date-time"
         },
         "createdBy": {
+          "description": "The identity of the user who created the pull request.",
           "$ref": "#/definitions/IdentityRef"
         },
         "creationDate": {
+          "description": "The date when the pull request was created.",
           "type": "string",
           "format": "date-time"
         },
         "description": {
+          "description": "The description of the pull request.",
           "type": "string"
         },
         "forkSource": {
+          "description": "If this is a PR from a fork this will contain information about its source.",
           "$ref": "#/definitions/GitForkRef"
         },
         "labels": {
+          "description": "The labels associated with the pull request.",
           "type": "array",
           "items": {
             "$ref": "#/definitions/WebApiTagDefinition"
           }
         },
         "lastMergeCommit": {
+          "description": "The commit of the most recent pull request merge. If empty, the most recent merge is in progress or was unsuccessful.",
           "$ref": "#/definitions/GitCommitRef"
         },
         "lastMergeSourceCommit": {
+          "description": "The commit at the head of the source branch at the time of the last pull request merge.",
           "$ref": "#/definitions/GitCommitRef"
         },
         "lastMergeTargetCommit": {
+          "description": "The commit at the head of the target branch at the time of the last pull request merge.",
           "$ref": "#/definitions/GitCommitRef"
         },
         "mergeFailureMessage": {
+          "description": "If set, pull request merge failed for this reason.",
           "type": "string"
         },
         "mergeFailureType": {
+          "description": "The type of failure (if any) of the pull request merge.",
           "enum": [
             "none",
             "unknown",
@@ -8890,13 +9196,16 @@
           }
         },
         "mergeId": {
+          "description": "The ID of the job used to run the pull request merge. Used internally.",
           "type": "string",
           "format": "uuid"
         },
         "mergeOptions": {
+          "description": "Options used when the pull request merge runs. These are separate from completion options since completion happens only once and a new merge will run every time the source branch of the pull request changes.",
           "$ref": "#/definitions/GitPullRequestMergeOptions"
         },
         "mergeStatus": {
+          "description": "The current status of the pull request merge.",
           "enum": [
             "notSet",
             "queued",
@@ -8910,25 +9219,31 @@
           }
         },
         "pullRequestId": {
+          "description": "The ID of the pull request.",
           "type": "integer",
           "format": "int32"
         },
         "remoteUrl": {
+          "description": "Used internally.",
           "type": "string"
         },
         "repository": {
+          "description": "The repository containing the target branch of the pull request.",
           "$ref": "#/definitions/GitRepository"
         },
         "reviewers": {
+          "description": "A list of reviewers on the pull request along with the state of their votes.",
           "type": "array",
           "items": {
             "$ref": "#/definitions/IdentityRefWithVote"
           }
         },
         "sourceRefName": {
+          "description": "The name of the source branch of the pull request.",
           "type": "string"
         },
         "status": {
+          "description": "The status of the pull request.",
           "enum": [
             "notSet",
             "active",
@@ -8941,18 +9256,23 @@
           }
         },
         "supportsIterations": {
+          "description": "If true, this pull request supports multiple iterations. Iteration support means individual pushes to the source branch of the pull request can be reviewed and comments left in one iteration will be tracked across future iterations.",
           "type": "boolean"
         },
         "targetRefName": {
+          "description": "The name of the target branch of the pull request.",
           "type": "string"
         },
         "title": {
+          "description": "The title of the pull request.",
           "type": "string"
         },
         "url": {
+          "description": "Used internally.",
           "type": "string"
         },
         "workItemRefs": {
+          "description": "Any work item references associated with this pull request.",
           "type": "array",
           "items": {
             "$ref": "#/definitions/ResourceRef"
@@ -9011,25 +9331,31 @@
       }
     },
     "GitPullRequestCompletionOptions": {
-      "description": "",
+      "description": "Preferences about how the pull request should be completed.",
       "type": "object",
       "properties": {
         "bypassPolicy": {
+          "description": "If true, policies will be explicitly bypassed while the pull request is completed.",
           "type": "boolean"
         },
         "bypassReason": {
+          "description": "If policies are bypassed, this reason is stored as to why bypass was used.",
           "type": "string"
         },
         "deleteSourceBranch": {
+          "description": "If true, the source branch of the pull request will be deleted after completion.",
           "type": "boolean"
         },
         "mergeCommitMessage": {
+          "description": "If set, this will be used as the commit message of the merge commit.",
           "type": "string"
         },
         "squashMerge": {
+          "description": "If true, the commits in the pull request will be squash-merged into the specified target branch on completion.",
           "type": "boolean"
         },
         "transitionWorkItems": {
+          "description": "If true, we will attempt to transition any work items linked to the pull request into the next logical state (i.e. Active -> Resolved)",
           "type": "boolean"
         }
       }
@@ -9138,10 +9464,11 @@
       }
     },
     "GitPullRequestMergeOptions": {
-      "description": "",
+      "description": "The options which are used when a pull request merge is created.",
       "type": "object",
       "properties": {
         "disableRenames": {
+          "description": "If true, rename detection will not be performed during the merge.",
           "type": "boolean"
         }
       }
@@ -9208,10 +9535,11 @@
       }
     },
     "GitPullRequestSearchCriteria": {
-      "description": "",
+      "description": "Pull requests can be searched for matching this criteria.",
       "type": "object",
       "properties": {
         "creatorId": {
+          "description": "If set, search for pull requests that were created by this identity.",
           "type": "string",
           "format": "uuid"
         },
@@ -9220,21 +9548,26 @@
           "type": "boolean"
         },
         "repositoryId": {
+          "description": "If set, search for pull requests whose target branch is in this repository.",
           "type": "string",
           "format": "uuid"
         },
         "reviewerId": {
+          "description": "If set, search for pull requests that have this identity as a reviewer.",
           "type": "string",
           "format": "uuid"
         },
         "sourceRefName": {
+          "description": "If set, search for pull requests from this branch.",
           "type": "string"
         },
         "sourceRepositoryId": {
+          "description": "If set, search for pull requests whose source branch is in this repository.",
           "type": "string",
           "format": "uuid"
         },
         "status": {
+          "description": "If set, search for pull requests that are in this state.",
           "enum": [
             "notSet",
             "active",
@@ -9247,6 +9580,7 @@
           }
         },
         "targetRefName": {
+          "description": "If set, search for pull requests into this branch.",
           "type": "string"
         }
       }
@@ -10199,17 +10533,20 @@
       }
     },
     "GitUserDate": {
-      "description": "",
+      "description": "User info and date for Git operations.",
       "type": "object",
       "properties": {
         "date": {
+          "description": "Date of the Git operation.",
           "type": "string",
           "format": "date-time"
         },
         "email": {
+          "description": "Email address of the user performing the Git operation.",
           "type": "string"
         },
         "name": {
+          "description": "Name of the user performing the Git operation.",
           "type": "string"
         }
       }

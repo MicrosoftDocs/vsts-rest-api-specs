@@ -32,7 +32,8 @@
   "basePath": "/",
   "tags": [
     {
-      "name": "Configurations"
+      "name": "Configurations",
+      "description": "This API provides a way to create, list, update, and delete code policy configurations.  For more information, see \n[Improve code quality with branch policies](https://go.microsoft.com/fwlink/?linkid=859025)"
     },
     {
       "name": "Evaluations"
@@ -57,7 +58,7 @@
         ],
         "x-ms-vss-resource": "configurations",
         "x-ms-vss-method": "GetPolicyConfigurations",
-        "description": "",
+        "description": "Get a list of policy configurations in a project.\n\nThe optional `scope` parameter can be used to retrieve a subset of policies from one or more branches\nin one or more repos.  The format of a `scope` is `{repoId}:{branch}` where either the `repoId` or\n`branch` may contain a wildcard.  For example, `*:refs/heads/master` could be used to return all policy\nconfigurations on all branches named \"master\" in all repos in the project.\nSimilarly, `{repoId}:refs/heads/releases/*` could be used to return all policy configurations on all\nbranches that begin with \"releases/\" in a specific repo with the ID `repoID`.  Omitting `scope` entirely\nreturns all policy configurations in the project.  Omitting `branch` from the scope returns all branches.",
         "operationId": "Configurations_List",
         "produces": [
           "application/json"
@@ -73,7 +74,7 @@
           {
             "in": "query",
             "name": "scope",
-            "description": "",
+            "description": "The scope on which a subset of policies is applied.",
             "required": false,
             "type": "string"
           },
@@ -91,6 +92,21 @@
               }
             }
          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.code"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+            "": {
+                "$ref": "./httpExamples/Configurations/GET__policy_configurations.json"
+            },
+            "": {
+                "$ref": "./httpExamples/Configurations/GET__policy_configurations__top-_top___skip-_skip_.json"
+            }
         }
       }
     },
@@ -101,7 +117,7 @@
         ],
         "x-ms-vss-resource": "configurations",
         "x-ms-vss-method": "CreatePolicyConfiguration",
-        "description": "",
+        "description": "Create a policy configuration of a given policy type.",
         "operationId": "Configurations_Create",
         "consumes": [
           "application/json"
@@ -113,7 +129,7 @@
           {
             "in": "body",
             "name": "body",
-            "description": "",
+            "description": "The policy configuration to create.",
             "required": true,
             "schema": {
               "$ref": "#/definitions/PolicyConfiguration"
@@ -146,6 +162,30 @@
               "$ref": "#/definitions/PolicyConfiguration"
             }
          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.code_write"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+            "": {
+                "$ref": "./httpExamples/Configurations/POST__policy_configurations.json"
+            },
+            "": {
+                "$ref": "./httpExamples/Configurations/POST__policy_configurations2.json"
+            },
+            "": {
+                "$ref": "./httpExamples/Configurations/POST__policy_configurations3.json"
+            },
+            "": {
+                "$ref": "./httpExamples/Configurations/POST__policy_configurations4.json"
+            },
+            "": {
+                "$ref": "./httpExamples/Configurations/POST__policy_configurations5.json"
+            }
         }
       },
       "delete": {
@@ -154,7 +194,7 @@
         ],
         "x-ms-vss-resource": "configurations",
         "x-ms-vss-method": "DeletePolicyConfiguration",
-        "description": "",
+        "description": "Delete a policy configuration by its ID.",
         "operationId": "Configurations_Delete",
         "parameters": [
           {
@@ -167,7 +207,7 @@
           {
             "in": "path",
             "name": "configurationId",
-            "description": "",
+            "description": "ID of the policy configuration to delete.",
             "required": true,
             "type": "integer",
             "format": "int32"
@@ -177,9 +217,14 @@
           }
         ],
         "responses": {
-          "200": {
-            "description": "successful operation"
+          "204": {
+            "description": "NoContent"
          }
+        },
+        "x-ms-examples": {
+            "": {
+                "$ref": "./httpExamples/Configurations/DELETE__policy_configurations__configurationId_.json"
+            }
         }
       },
       "get": {
@@ -188,7 +233,7 @@
         ],
         "x-ms-vss-resource": "configurations",
         "x-ms-vss-method": "GetPolicyConfiguration",
-        "description": "",
+        "description": "Get a policy configuration by its ID.",
         "operationId": "Configurations_Get",
         "produces": [
           "application/json"
@@ -204,7 +249,7 @@
           {
             "in": "path",
             "name": "configurationId",
-            "description": "",
+            "description": "ID of the policy configuration",
             "required": true,
             "type": "integer",
             "format": "int32"
@@ -220,6 +265,18 @@
               "$ref": "#/definitions/PolicyConfiguration"
             }
          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.code"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+            "": {
+                "$ref": "./httpExamples/Configurations/GET__policy_configurations__configurationId_.json"
+            }
         }
       },
       "put": {
@@ -228,7 +285,7 @@
         ],
         "x-ms-vss-resource": "configurations",
         "x-ms-vss-method": "UpdatePolicyConfiguration",
-        "description": "",
+        "description": "Update a policy configuration by its ID.",
         "operationId": "Configurations_Update",
         "consumes": [
           "application/json"
@@ -240,7 +297,7 @@
           {
             "in": "body",
             "name": "body",
-            "description": "",
+            "description": "The policy configuration to update.",
             "required": true,
             "schema": {
               "$ref": "#/definitions/PolicyConfiguration"
@@ -256,7 +313,7 @@
           {
             "in": "path",
             "name": "configurationId",
-            "description": "",
+            "description": "ID of the existing policy configuration to be updated.",
             "required": true,
             "type": "integer",
             "format": "int32"
@@ -272,6 +329,18 @@
               "$ref": "#/definitions/PolicyConfiguration"
             }
          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.code_write"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+            "": {
+                "$ref": "./httpExamples/Configurations/PUT__policy_configurations__configurationId_.json"
+            }
         }
       }
     },
@@ -333,7 +402,14 @@
               }
             }
          }
-        }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.code"
+            ]
+          }
+        ]
       }
     },
     "/{project}/_apis/policy/configurations/{configurationId}/revisions/{revisionId}": {
@@ -383,7 +459,14 @@
               "$ref": "#/definitions/PolicyConfiguration"
             }
          }
-        }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.code"
+            ]
+          }
+        ]
       }
     },
     "/{project}/_apis/policy/evaluations": {

@@ -50,27 +50,14 @@
       "description": "Controller to handle all Rest Calls for Changeset Changes"
     },
     {
-      "name": "ItemBatch",
-      "description": "Controller that handles the POST for a transient ItemBatch resource used for retrieving the metadata for a set of item resources."
-    },
-    {
       "name": "Items",
       "description": "Controller that handles REST API calls for Tfvc Items"
-    },
-    {
-      "name": "LabelItems"
     },
     {
       "name": "Labels"
     },
     {
-      "name": "ShelvesetChanges"
-    },
-    {
       "name": "Shelvesets"
-    },
-    {
-      "name": "ShelvesetWorkItems"
     }
   ],
   "schemes": [
@@ -237,12 +224,12 @@
     "/_apis/tfvc/labels/{labelId}/items": {
       "get": {
         "tags": [
-          "LabelItems"
+          "Labels"
         ],
         "x-ms-vss-resource": "labelItems",
         "x-ms-vss-method": "GetLabelItems",
         "description": "Get items under a label.",
-        "operationId": "LabelItems_List",
+        "operationId": "Labels_GetLabelItems",
         "produces": [
           "application/json"
         ],
@@ -291,7 +278,15 @@
               "vso.code"
             ]
           }
-        ]
+        ],
+        "x-ms-examples": {
+            "items": {
+                "$ref": "./httpExamples/LabelItems/GET__tfvc_labels__labelId__items.json"
+            },
+            "top and skip": {
+                "$ref": "./httpExamples/LabelItems/GET__tfvc_labels__labelId__items__top-_top___skip-_skip_.json"
+            }
+        }
       }
     },
     "/_apis/tfvc/shelvesets": {
@@ -340,18 +335,41 @@
               "vso.code"
             ]
           }
-        ]
+        ],
+        "x-ms-examples": {
+            "Basic example": {
+                "$ref": "./httpExamples/Shelvesets/GET__tfvc_shelvesets.json"
+            },
+            "maxCommentLength": {
+                "$ref": "./httpExamples/Shelvesets/GET__tfvc_shelvesets_maxCommentLength-_maxCommentLength_.json"
+            },
+            "Owner": {
+                "$ref": "./httpExamples/Shelvesets/GET__tfvc_shelvesets_owner-_owner_.json"
+            },
+            "ShelvesetId": {
+                "$ref": "./httpExamples/Shelvesets/GET__tfvc_shelvesets__shelvesetId_.json"
+            },
+            "IncludeDetails": {
+                "$ref": "./httpExamples/Shelvesets/GET__tfvc_shelvesets__shelvesetId__includeDetails-true.json"
+            },
+            "maxCommentLength": {
+                "$ref": "./httpExamples/Shelvesets/GET__tfvc_shelvesets__shelvesetId__maxCommentLength-_maxCommentLength_.json"
+            },
+            "top and skip": {
+                "$ref": "./httpExamples/Shelvesets/GET__tfvc_shelvesets__top-_top___skip-_skip_.json"
+            }
+        }
       }
     },
     "/_apis/tfvc/shelvesets/changes": {
       "get": {
         "tags": [
-          "ShelvesetChanges"
+          "Shelvesets"
         ],
         "x-ms-vss-resource": "shelvesetChanges",
         "x-ms-vss-method": "GetShelvesetChanges",
         "description": "Get changes included in a shelveset.",
-        "operationId": "ShelvesetChanges_List",
+        "operationId": "Shelvesets_GetShelvesetChanges",
         "produces": [
           "application/json"
         ],
@@ -400,18 +418,23 @@
               "vso.code"
             ]
           }
-        ]
+        ],
+        "x-ms-examples": {
+            "With changes": {
+                "$ref": "./httpExamples/ShelvesetChanges/GET__tfvc_shelvesets__shelvesetId__maxChangeCount-100.json"
+            }
+        }
       }
     },
     "/_apis/tfvc/shelvesets/workitems": {
       "get": {
         "tags": [
-          "ShelvesetWorkItems"
+          "Shelvesets"
         ],
         "x-ms-vss-resource": "shelvesetWorkItems",
         "x-ms-vss-method": "GetShelvesetWorkItems",
         "description": "Get work items associated with a shelveset.",
-        "operationId": "ShelvesetWorkItems_List",
+        "operationId": "Shelvesets_GetShelvesetWorkItems",
         "produces": [
           "application/json"
         ],
@@ -444,7 +467,12 @@
               "vso.code"
             ]
           }
-        ]
+        ],
+        "x-ms-examples": {
+            "Example with workItems": {
+                "$ref": "./httpExamples/ShelvesetWorkItems/GET__tfvc_shelvesets__shelvesetId__includeWorkItems-true.json"
+            }
+        }
       }
     },
     "/{project}/_apis/tfvc/branches": {
@@ -840,12 +868,12 @@
     "/{project}/_apis/tfvc/itembatch": {
       "post": {
         "tags": [
-          "ItemBatch"
+          "Items"
         ],
         "x-ms-vss-resource": "itemBatch",
         "x-ms-vss-method": "GetItemsBatch",
         "description": "Post for retrieving a set of items given a list of paths or a long path. Allows for specifying the recursionLevel and version descriptors for each path.",
-        "operationId": "ItemBatch_GetItemsBatch",
+        "operationId": "Items_GetItemsBatch",
         "consumes": [
           "application/json"
         ],
@@ -892,7 +920,12 @@
               "vso.code"
             ]
           }
-        ]
+        ],
+        "x-ms-examples": {
+            "Multiple items": {
+                "$ref": "./httpExamples/ItemBatch/POST__tfvc_itembatch.json"
+            }
+        }
       }
     },
     "/{project}/_apis/tfvc/items": {
@@ -919,14 +952,14 @@
           {
             "in": "query",
             "name": "scopePath",
-            "description": "",
+            "description": "Version control path of a folder to return multiple items.",
             "required": false,
             "type": "string"
           },
           {
             "in": "query",
             "name": "recursionLevel",
-            "description": "",
+            "description": "None (just the item), or OneLevel (contents of a folder).",
             "required": false,
             "type": "string",
             "format": "VersionControlRecursionType"
@@ -934,7 +967,7 @@
           {
             "in": "query",
             "name": "includeLinks",
-            "description": "",
+            "description": "True to include links.",
             "required": false,
             "type": "boolean"
           },
@@ -967,7 +1000,18 @@
               "vso.code"
             ]
           }
-        ]
+        ],
+        "x-ms-examples": {
+            "A folder": {
+                "$ref": "./httpExamples/Items/GET__tfvc_items_scopePath-_folder_.json"
+            },
+            "A folder and its children": {
+                "$ref": "./httpExamples/Items/GET__tfvc_items_scopePath-_folder__recursionLevel-_recursionLevel_.json"
+            },
+            "Changeset version": {
+                "$ref": "./httpExamples/Items/GET__tfvc_items__itempath__versionType-Changeset_version-_version_.json"
+            }
+        }
       }
     },
     "/{project}/_apis/tfvc/items/{path}": {
@@ -989,7 +1033,7 @@
           {
             "in": "query",
             "name": "path",
-            "description": "",
+            "description": "Version control path of an individual item to return.",
             "required": true,
             "type": "string"
           },
@@ -1004,28 +1048,28 @@
           {
             "in": "query",
             "name": "fileName",
-            "description": "",
+            "description": "file name of item returned.",
             "required": false,
             "type": "string"
           },
           {
             "in": "query",
             "name": "download",
-            "description": "",
+            "description": "If true, create a downloadable attachment.",
             "required": false,
             "type": "boolean"
           },
           {
             "in": "query",
             "name": "scopePath",
-            "description": "",
+            "description": "Version control path of a folder to return multiple items.",
             "required": false,
             "type": "string"
           },
           {
             "in": "query",
             "name": "recursionLevel",
-            "description": "",
+            "description": "None (just the item), or OneLevel (contents of a folder).",
             "required": false,
             "type": "string",
             "format": "VersionControlRecursionType"
@@ -1125,7 +1169,24 @@
               "vso.code"
             ]
           }
-        ]
+        ],
+        "x-ms-examples": {
+            "Labels": {
+                "$ref": "./httpExamples/Labels/GET__tfvc_labels.json"
+            },
+            "itemLabelFilter": {
+                "$ref": "./httpExamples/Labels/GET__tfvc_labels_itemLabelFilter-_item_.json"
+            },
+            "Name": {
+                "$ref": "./httpExamples/Labels/GET__tfvc_labels_name-_name_.json"
+            },
+            "Owner": {
+                "$ref": "./httpExamples/Labels/GET__tfvc_labels_owner-_person_.json"
+            },
+            "top and skip": {
+                "$ref": "./httpExamples/Labels/GET__tfvc_labels__skip-_skip___top-_top_.json"
+            }
+        }
       }
     },
     "/{project}/_apis/tfvc/labels/{labelId}": {
@@ -1182,7 +1243,15 @@
               "vso.code"
             ]
           }
-        ]
+        ],
+        "x-ms-examples": {
+            "labelId": {
+                "$ref": "./httpExamples/Labels/GET__tfvc_labels__labelId_.json"
+            },
+            "maxItemCount": {
+                "$ref": "./httpExamples/Labels/GET__tfvc_labels__labelId__maxItemCount-100.json"
+            }
+        }
       }
     }
   },
