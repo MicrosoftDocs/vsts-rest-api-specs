@@ -88,7 +88,8 @@
       "name": "messages"
     },
     {
-      "name": "packages"
+      "name": "packages",
+      "description": "At resource version 2, the Packages endpoint returns Package objects and does not support streaming package contents."
     },
     {
       "name": "poolroles"
@@ -347,7 +348,7 @@
           },
           {
             "in": "query",
-            "name": "top",
+            "name": "$top",
             "description": "",
             "required": false,
             "type": "integer",
@@ -2757,7 +2758,7 @@
           },
           {
             "in": "query",
-            "name": "expand",
+            "name": "$expand",
             "description": "",
             "required": false,
             "type": "string",
@@ -2772,7 +2773,7 @@
           },
           {
             "in": "query",
-            "name": "top",
+            "name": "$top",
             "description": "",
             "required": false,
             "type": "integer",
@@ -2875,7 +2876,7 @@
           },
           {
             "in": "query",
-            "name": "expand",
+            "name": "$expand",
             "description": "",
             "required": false,
             "type": "string",
@@ -3141,7 +3142,7 @@
           },
           {
             "in": "query",
-            "name": "expand",
+            "name": "$expand",
             "description": "",
             "required": false,
             "type": "string",
@@ -3302,7 +3303,7 @@
           },
           {
             "in": "query",
-            "name": "expand",
+            "name": "$expand",
             "description": "",
             "required": false,
             "type": "string",
@@ -3478,7 +3479,7 @@
           },
           {
             "in": "query",
-            "name": "top",
+            "name": "$top",
             "description": "",
             "required": false,
             "type": "integer",
@@ -5180,7 +5181,8 @@
         ],
         "x-ms-vss-resource": "taskgroups",
         "x-ms-vss-method": "GetTaskGroup",
-        "description": "Get task group.",
+        "deprecated": true,
+        "description": "This REST API is deprecated and will be removed in a future release. Use GetTasGroupAsync(project, searchText = null, expand = null, artifactType = null, artifactSourceId = null, top = null, continuationToken = null, queryOrder = null, path = null, isExactNameMatch = null, tagFilter = null, propertyFilters = null, definitionIdFilter = null, userState = null, cancellationToken = default(CancellationToken)) instead.",
         "operationId": "Taskgroups_GetTaskGroup",
         "produces": [
           "text/plain",
@@ -5217,6 +5219,14 @@
             "type": "boolean"
           },
           {
+            "in": "query",
+            "name": "$expand",
+            "description": "",
+            "required": false,
+            "type": "string",
+            "format": "TaskGroupExpands"
+          },
+          {
             "$ref": "#/parameters/api-Version"
           }
         ],
@@ -5234,12 +5244,7 @@
               "vso.taskgroups_read"
             ]
           }
-        ],
-        "x-ms-examples": {
-            "Get task group": {
-                "$ref": "./httpExamples/taskgroups/Get__TaskGroup.json"
-            }
-        }
+        ]
       },
       "patch": {
         "tags": [
@@ -5301,6 +5306,71 @@
               }
             }
          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Taskgroups"
+        ],
+        "x-ms-vss-resource": "taskgroups",
+        "x-ms-vss-method": "UpdateTaskGroup",
+        "description": "Update a task group.",
+        "operationId": "Taskgroups_Update",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Task group to update.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/TaskGroup"
+            }
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "taskGroupId",
+            "description": "Id of the task group to update.",
+            "required": true,
+            "x-ms-required": false,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "$ref": "#/parameters/api-Version"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/TaskGroup"
+            }
+         }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.taskgroups_manage"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+            "Update a task group": {
+                "$ref": "./httpExamples/taskgroups/PUT__UpdateTaskGroup.json"
+            }
         }
       }
     },
@@ -7026,7 +7096,7 @@
       }
     },
     "PropertiesCollection": {
-      "description": "",
+      "description": "The class represents a property bag as a collection of key-value pairs. Values of all primitive types (any type with a `TypeCode != TypeCode.Object`) except for `DBNull` are accepted. Values of type Byte[], Int32, Double, DateType and String preserve their type, other primitives are retuned as a String. Byte[] expected as base64 encoded string.",
       "type": "object",
       "properties": {
         "count": {
@@ -7081,7 +7151,7 @@
       }
     },
     "ReferenceLinks": {
-      "description": "The class to represent a collection of REST reference links.  Example: `{ self: { href: \"http://localhost:8080/tfs/DefaultCollection/_apis/wit/workItems/1\" } }`",
+      "description": "The class to represent a collection of REST reference links.",
       "type": "object",
       "properties": {
         "links": {
@@ -7769,12 +7839,6 @@
         },
         "properties": {
           "$ref": "#/definitions/PropertiesCollection"
-        },
-        "size": {
-          "description": "Gets the current size of the pool.",
-          "readOnly": true,
-          "type": "integer",
-          "format": "int32"
         }
       }
     },
@@ -8041,6 +8105,12 @@
         "scope": {
           "type": "string",
           "format": "uuid"
+        },
+        "size": {
+          "description": "Gets the current size of the pool.",
+          "readOnly": true,
+          "type": "integer",
+          "format": "int32"
         }
       }
     },
@@ -8071,16 +8141,20 @@
       "type": "object",
       "properties": {
         "id": {
+          "description": "Id of the queue",
           "type": "integer",
           "format": "int32"
         },
         "name": {
+          "description": "Name of the queue",
           "type": "string"
         },
         "pool": {
+          "description": "Pool reference for this queue",
           "$ref": "#/definitions/TaskAgentPoolReference"
         },
         "projectId": {
+          "description": "Project Id",
           "type": "string",
           "format": "uuid"
         }
@@ -9640,8 +9714,8 @@
         "vso.serviceendpoint_manage": "Grants the ability to read, query and manage service endpoints.",
         "vso.serviceendpoint": "Grants the ability to read service endpoints.",
         "vso.serviceendpoint_query": "Grants the ability to read and query service endpoints.",
-        "vso.taskgroups_read": "Grants the ability to read task groups",
         "vso.taskgroups_manage": "Grants the ability to read, create and manage taskgroups.",
+        "vso.taskgroups_read": "Grants the ability to read task groups",
         "vso.taskgroups_write": "Grants the ability to read and create task groups"
       }
     }
