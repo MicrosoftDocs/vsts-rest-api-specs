@@ -34,22 +34,6 @@
       "name": "Branches"
     },
     {
-      "name": "ChangesetChanges",
-      "description": "Controller to handle all Rest Calls for Changeset Changes"
-    },
-    {
-      "name": "Changesets",
-      "description": "Controller to handle all REST calls against changesets. \nv2.0 adds create (POST) support."
-    },
-    {
-      "name": "ChangesetsBatch",
-      "description": "Retrieve a set of changesets"
-    },
-    {
-      "name": "ChangesetWorkItems",
-      "description": "Controller to handle all Rest Calls for Changeset Changes"
-    },
-    {
       "name": "Items",
       "description": "Controller that handles REST API calls for Tfvc Items"
     },
@@ -67,12 +51,13 @@
     "/_apis/tfvc/changesets/{id}/changes": {
       "get": {
         "tags": [
-          "ChangesetChanges"
+          "Changeset"
         ],
         "x-ms-vss-resource": "changesetChanges",
         "x-ms-vss-method": "GetChangesetChanges",
-        "description": "Retrieve Tfvc changes for a given changeset",
-        "operationId": "ChangesetChanges_List",
+        "x-ms-preview": true,
+        "description": "Retrieve Tfvc changes for a given changeset.",
+        "operationId": "Get Changeset Changes",
         "produces": [
           "application/json"
         ],
@@ -80,7 +65,7 @@
           {
             "in": "path",
             "name": "id",
-            "description": "",
+            "description": "ID of the changeset. Default: null",
             "required": true,
             "x-ms-required": false,
             "type": "integer",
@@ -89,7 +74,7 @@
           {
             "in": "query",
             "name": "$skip",
-            "description": "",
+            "description": "Number of results to skip. Default: null",
             "required": false,
             "type": "integer",
             "format": "int32"
@@ -97,7 +82,7 @@
           {
             "in": "query",
             "name": "$top",
-            "description": "",
+            "description": "The maximum number of results to return. Default: null",
             "required": false,
             "type": "integer",
             "format": "int32"
@@ -129,12 +114,13 @@
     "/_apis/tfvc/changesets/{id}/workItems": {
       "get": {
         "tags": [
-          "ChangesetWorkItems"
+          "Changeset"
         ],
         "x-ms-vss-resource": "changesetWorkItems",
         "x-ms-vss-method": "GetChangesetWorkItems",
-        "description": "",
-        "operationId": "ChangesetWorkItems_List",
+        "x-ms-preview": true,
+        "description": "Retrieves the work items associated with a particular changeset.",
+        "operationId": "Get Changeset Work Items",
         "produces": [
           "application/json"
         ],
@@ -142,7 +128,7 @@
           {
             "in": "path",
             "name": "id",
-            "description": "",
+            "description": "ID of the changeset. Default: null",
             "required": true,
             "x-ms-required": false,
             "type": "integer",
@@ -175,12 +161,13 @@
     "/_apis/tfvc/changesetsbatch": {
       "post": {
         "tags": [
-          "ChangesetsBatch"
+          "Changeset"
         ],
         "x-ms-vss-resource": "changesetsBatch",
         "x-ms-vss-method": "GetBatchedChangesets",
-        "description": "",
-        "operationId": "ChangesetsBatch_List",
+        "x-ms-preview": true,
+        "description": "Returns changesets for a given list of changeset Ids.",
+        "operationId": "Get Batched Changesets",
         "consumes": [
           "application/json"
         ],
@@ -191,7 +178,7 @@
           {
             "in": "body",
             "name": "body",
-            "description": "",
+            "description": "List of changeset IDs.",
             "required": true,
             "schema": {
               "$ref": "#/definitions/TfvcChangesetsRequestData"
@@ -228,8 +215,9 @@
         ],
         "x-ms-vss-resource": "labelItems",
         "x-ms-vss-method": "GetLabelItems",
+        "x-ms-preview": true,
         "description": "Get items under a label.",
-        "operationId": "Labels_GetLabelItems",
+        "operationId": "Get Label Items",
         "produces": [
           "application/json"
         ],
@@ -296,8 +284,9 @@
         ],
         "x-ms-vss-resource": "shelvesets",
         "x-ms-vss-method": "GetShelveset",
+        "x-ms-preview": true,
         "description": "Get a single deep shelveset.",
-        "operationId": "Shelvesets_Get",
+        "operationId": "Get",
         "produces": [
           "application/json"
         ],
@@ -311,11 +300,54 @@
           },
           {
             "in": "query",
-            "name": "requestData",
-            "description": "includeDetails, includeWorkItems, maxChangeCount, and maxCommentLength",
+            "name": "requestData.includeLinks",
+            "description": "Whether to include the _links field on the shallow references. Does not apply when requesting a single deep shelveset object. Links will always be included in the deep shelveset.",
             "required": false,
-            "type": "string",
-            "format": "TfvcShelvesetRequestData"
+            "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "requestData.includeWorkItems",
+            "description": "Whether to include workItems",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "requestData.includeDetails",
+            "description": "Whether to include policyOverride and notes Only applies when requesting a single deep shelveset",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "requestData.maxChangeCount",
+            "description": "Max number of changes to include",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "requestData.maxCommentLength",
+            "description": "Max length of comment",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "requestData.owner",
+            "description": "Owner's ID. Could be a name or a guid.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "requestData.name",
+            "description": "Shelveset's name",
+            "required": false,
+            "type": "string"
           },
           {
             "$ref": "#/parameters/api-Version"
@@ -368,8 +400,9 @@
         ],
         "x-ms-vss-resource": "shelvesetChanges",
         "x-ms-vss-method": "GetShelvesetChanges",
+        "x-ms-preview": true,
         "description": "Get changes included in a shelveset.",
-        "operationId": "Shelvesets_GetShelvesetChanges",
+        "operationId": "Get Shelveset Changes",
         "produces": [
           "application/json"
         ],
@@ -433,8 +466,9 @@
         ],
         "x-ms-vss-resource": "shelvesetWorkItems",
         "x-ms-vss-method": "GetShelvesetWorkItems",
+        "x-ms-preview": true,
         "description": "Get work items associated with a shelveset.",
-        "operationId": "Shelvesets_GetShelvesetWorkItems",
+        "operationId": "Get Shelveset Work Items",
         "produces": [
           "application/json"
         ],
@@ -482,8 +516,9 @@
         ],
         "x-ms-vss-resource": "branches",
         "x-ms-vss-method": "GetBranches",
-        "description": "Get a collection of branch roots -- first-level children, branches with no parents",
-        "operationId": "Branches_GetBranches",
+        "x-ms-preview": true,
+        "description": "Get a collection of branch roots -- first-level children, branches with no parents.",
+        "operationId": "Get Branches",
         "produces": [
           "application/json"
         ],
@@ -499,28 +534,28 @@
           {
             "in": "query",
             "name": "includeParent",
-            "description": "",
+            "description": "Return the parent branch, if there is one. Default: False",
             "required": false,
             "type": "boolean"
           },
           {
             "in": "query",
             "name": "includeChildren",
-            "description": "",
+            "description": "Return the child branches for each root branch. Default: False",
             "required": false,
             "type": "boolean"
           },
           {
             "in": "query",
             "name": "includeDeleted",
-            "description": "",
+            "description": "Return deleted branches. Default: False",
             "required": false,
             "type": "boolean"
           },
           {
             "in": "query",
             "name": "includeLinks",
-            "description": "",
+            "description": "Return links. Default: False",
             "required": false,
             "type": "boolean"
           },
@@ -545,7 +580,18 @@
               "vso.code"
             ]
           }
-        ]
+        ],
+        "x-ms-examples": {
+            "GET a list of root branches": {
+                "$ref": "./httpExamples/Branches/GET__tfvc_branches.json"
+            },
+            "GET a list of root branches with children": {
+                "$ref": "./httpExamples/Branches/GET__tfvc_branches_includeChildren-true.json"
+            },
+            "GET a list of root branches with deleted": {
+                "$ref": "./httpExamples/Branches/GET__tfvc_branches_includeDeleted-true.json"
+            }
+        }
       }
     },
     "/{project}/_apis/tfvc/branches/{path}": {
@@ -555,8 +601,9 @@
         ],
         "x-ms-vss-resource": "branches",
         "x-ms-vss-method": "GetBranch",
-        "description": "Get a single branch hierarchy at the given path with parents or children (if specified)",
-        "operationId": "Branches_Get",
+        "x-ms-preview": true,
+        "description": "Get a single branch hierarchy at the given path with parents or children as specified.",
+        "operationId": "Get",
         "produces": [
           "application/json"
         ],
@@ -564,7 +611,7 @@
           {
             "in": "query",
             "name": "path",
-            "description": "",
+            "description": "Full path to the branch.  Default: $/ Examples: $/, $/MyProject, $/MyProject/SomeFolder.",
             "required": true,
             "type": "string"
           },
@@ -579,14 +626,14 @@
           {
             "in": "query",
             "name": "includeParent",
-            "description": "",
+            "description": "Return the parent branch, if there is one. Default: False",
             "required": false,
             "type": "boolean"
           },
           {
             "in": "query",
             "name": "includeChildren",
-            "description": "",
+            "description": "Return child branches, if there are any. Default: False",
             "required": false,
             "type": "boolean"
           },
@@ -608,18 +655,33 @@
               "vso.code"
             ]
           }
-        ]
+        ],
+        "x-ms-examples": {
+            "GET a branch": {
+                "$ref": "./httpExamples/Branches/GET__tfvc_branches__path_.json"
+            },
+            "GET a branch with children": {
+                "$ref": "./httpExamples/Branches/GET__tfvc_branches__path__includeChildren-true.json"
+            },
+            "GET a branch with parents": {
+                "$ref": "./httpExamples/Branches/GET__tfvc_branches__path__includeParent-true.json"
+            },
+            "GET a branch with deleted": {
+                "$ref": "./httpExamples/Branches/GET__tfvc_branches__deleted__includeDeleted-true.json"
+            }
+        }
       }
     },
     "/{project}/_apis/tfvc/changesets": {
       "post": {
         "tags": [
-          "Changesets"
+          "Changeset"
         ],
         "x-ms-vss-resource": "changesets",
         "x-ms-vss-method": "CreateChangeset",
+        "x-ms-preview": true,
         "description": "Create a new changeset.\n\nAccepts TfvcChangesetToCreate as JSON body",
-        "operationId": "Changesets_Create",
+        "operationId": "Create",
         "consumes": [
           "application/json"
         ],
@@ -666,12 +728,13 @@
       },
       "get": {
         "tags": [
-          "Changesets"
+          "Changeset"
         ],
         "x-ms-vss-resource": "changesets",
         "x-ms-vss-method": "GetChangesets",
-        "description": "Retrieve Tfvc changesets Note: This is a new version of the GetChangesets API that doesn't expose the unneeded queryParams present in the 1.0 version of the API.",
-        "operationId": "Changesets_List",
+        "x-ms-preview": true,
+        "description": "Retrieve Tfvc Changesets\n\nNote: This is a new version of the GetChangesets API that doesn't expose the unneeded queryParams\npresent in the 1.0 version of the API.",
+        "operationId": "Get Changesets",
         "produces": [
           "application/json"
         ],
@@ -687,7 +750,7 @@
           {
             "in": "query",
             "name": "maxCommentLength",
-            "description": "",
+            "description": "Include details about associated work items in the response. Default: null",
             "required": false,
             "type": "integer",
             "format": "int32"
@@ -695,7 +758,7 @@
           {
             "in": "query",
             "name": "$skip",
-            "description": "",
+            "description": "Number of results to skip. Default: null",
             "required": false,
             "type": "integer",
             "format": "int32"
@@ -703,7 +766,7 @@
           {
             "in": "query",
             "name": "$top",
-            "description": "",
+            "description": "The maximum number of results to return. Default: null",
             "required": false,
             "type": "integer",
             "format": "int32"
@@ -711,17 +774,67 @@
           {
             "in": "query",
             "name": "$orderby",
-            "description": "",
+            "description": "Results are sorted by ID in descending order by default. Use id asc to sort by ID in ascending order.",
             "required": false,
             "type": "string"
           },
           {
             "in": "query",
-            "name": "searchCriteria",
-            "description": "",
+            "name": "searchCriteria.includeLinks",
+            "description": "Whether to include the _links field on the shallow references",
             "required": false,
-            "type": "string",
-            "format": "TfvcChangesetSearchCriteria"
+            "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "searchCriteria.followRenames",
+            "description": "Whether or not to follow renames for the given item being queried",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "searchCriteria.toId",
+            "description": "If provided, a version descriptor for the latest change list to include",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "searchCriteria.fromId",
+            "description": "If provided, only include changesets after this changesetID",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "searchCriteria.toDate",
+            "description": "If provided, only include changesets created before this date (string) Think of a better name for this.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "searchCriteria.fromDate",
+            "description": "If provided, only include changesets created after this date (string) Think of a better name for this.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "searchCriteria.author",
+            "description": "Alias or display name of user who made the changes",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "searchCriteria.itemPath",
+            "description": "Path of item to search under",
+            "required": false,
+            "type": "string"
           },
           {
             "$ref": "#/parameters/api-Version"
@@ -744,18 +857,69 @@
               "vso.code"
             ]
           }
-        ]
+        ],
+        "x-ms-examples": {
+            "GET list of changesets": {
+                "$ref": "./httpExamples/Changesets/GET__tfvc_changesets.json"
+            },
+            "GET the changesets that contain changes to the specified item.": {
+                "$ref": "./httpExamples/Changesets/GET__tfvc_changesets_searchCriteria.itemPath-_path_.json"
+            },
+            "GET the changesets filtered by author.": {
+                "$ref": "./httpExamples/Changesets/GET__tfvc_changesets_searchcriteria.author-_author_.json"
+            },
+            "GET the changesets for a range of changeset IDs.": {
+                "$ref": "./httpExamples/Changesets/GET__tfvc_changesets_fromId-_from__toId-_to_.json"
+            },
+            "GET the changesets for a range of dates.": {
+                "$ref": "./httpExamples/Changesets/GET__tfvc_changesets_fromDate-_fromDate__toDate-_toDate_.json"
+            },
+            "GET the changesets a page at a time.": {
+                "$ref": "./httpExamples/Changesets/GET__tfvc_changesets__top-_top___skip-_skip_.json"
+            },
+            "GET the changesets ordering by ID ascending.": {
+                "$ref": "./httpExamples/Changesets/GET__tfvc_changesets__orderBy-_order_.json"
+            },
+            "GET changesets with more or less of each comment. By default 80 characters are returned.": {
+                "$ref": "./httpExamples/Changesets/GET__tfvc_changesets_maxCommentLength-_commentLength_.json"
+            },
+            "GET list of changesets": {
+                "$ref": "./httpExamples/Changesets/GET__tfvc_changesets.json"
+            },
+            "GET the changesets that contain changes to the specified item.": {
+                "$ref": "./httpExamples/Changesets/GET__tfvc_changesets_searchCriteria.itemPath-_path_.json"
+            },
+            "GET the changesets filtered by author.": {
+                "$ref": "./httpExamples/Changesets/GET__tfvc_changesets_searchcriteria.author-_author_.json"
+            },
+            "GET the changesets for a range of changeset IDs.": {
+                "$ref": "./httpExamples/Changesets/GET__tfvc_changesets_fromId-_from__toId-_to_.json"
+            },
+            "GET the changesets for a range of dates.": {
+                "$ref": "./httpExamples/Changesets/GET__tfvc_changesets_fromDate-_fromDate__toDate-_toDate_.json"
+            },
+            "GET the changesets a page at a time.": {
+                "$ref": "./httpExamples/Changesets/GET__tfvc_changesets__top-_top___skip-_skip_.json"
+            },
+            "GET the changesets ordering by ID ascending.": {
+                "$ref": "./httpExamples/Changesets/GET__tfvc_changesets__orderBy-_order_.json"
+            },
+            "GET changesets with more or less of each comment. By default 80 characters are returned.": {
+                "$ref": "./httpExamples/Changesets/GET__tfvc_changesets_maxCommentLength-_commentLength_.json"
+            }
+        }
       }
     },
     "/{project}/_apis/tfvc/changesets/{id}": {
       "get": {
         "tags": [
-          "Changesets"
+          "Changeset"
         ],
         "x-ms-vss-resource": "changesets",
         "x-ms-vss-method": "GetChangeset",
+        "x-ms-preview": true,
         "description": "Retrieve a Tfvc Changeset",
-        "operationId": "Changesets_Get",
+        "operationId": "Get",
         "produces": [
           "application/json"
         ],
@@ -763,7 +927,7 @@
           {
             "in": "path",
             "name": "id",
-            "description": "",
+            "description": "Changeset Id to retrieve.",
             "required": true,
             "type": "integer",
             "format": "int32"
@@ -779,7 +943,7 @@
           {
             "in": "query",
             "name": "maxChangeCount",
-            "description": "",
+            "description": "Number of changes to return (maximum 100 changes) Default: 0",
             "required": false,
             "type": "integer",
             "format": "int32"
@@ -787,21 +951,21 @@
           {
             "in": "query",
             "name": "includeDetails",
-            "description": "",
+            "description": "Include policy details and check-in notes in the response. Default: false",
             "required": false,
             "type": "boolean"
           },
           {
             "in": "query",
             "name": "includeWorkItems",
-            "description": "",
+            "description": "Include workitems. Default: false",
             "required": false,
             "type": "boolean"
           },
           {
             "in": "query",
             "name": "maxCommentLength",
-            "description": "",
+            "description": "Include details about associated work items in the response. Default: null",
             "required": false,
             "type": "integer",
             "format": "int32"
@@ -809,14 +973,14 @@
           {
             "in": "query",
             "name": "includeSourceRename",
-            "description": "",
+            "description": "Include renames.  Default: false",
             "required": false,
             "type": "boolean"
           },
           {
             "in": "query",
             "name": "$skip",
-            "description": "",
+            "description": "Number of results to skip. Default: null",
             "required": false,
             "type": "integer",
             "format": "int32"
@@ -824,7 +988,7 @@
           {
             "in": "query",
             "name": "$top",
-            "description": "",
+            "description": "The maximum number of results to return. Default: null",
             "required": false,
             "type": "integer",
             "format": "int32"
@@ -832,17 +996,67 @@
           {
             "in": "query",
             "name": "$orderby",
-            "description": "",
+            "description": "Results are sorted by ID in descending order by default. Use id asc to sort by ID in ascending order.",
             "required": false,
             "type": "string"
           },
           {
             "in": "query",
-            "name": "searchCriteria",
-            "description": "",
+            "name": "searchCriteria.includeLinks",
+            "description": "Whether to include the _links field on the shallow references",
             "required": false,
-            "type": "string",
-            "format": "TfvcChangesetSearchCriteria"
+            "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "searchCriteria.followRenames",
+            "description": "Whether or not to follow renames for the given item being queried",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "searchCriteria.toId",
+            "description": "If provided, a version descriptor for the latest change list to include",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "searchCriteria.fromId",
+            "description": "If provided, only include changesets after this changesetID",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "searchCriteria.toDate",
+            "description": "If provided, only include changesets created before this date (string) Think of a better name for this.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "searchCriteria.fromDate",
+            "description": "If provided, only include changesets created after this date (string) Think of a better name for this.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "searchCriteria.author",
+            "description": "Alias or display name of user who made the changes",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "searchCriteria.itemPath",
+            "description": "Path of item to search under",
+            "required": false,
+            "type": "string"
           },
           {
             "$ref": "#/parameters/api-Version"
@@ -862,7 +1076,27 @@
               "vso.code"
             ]
           }
-        ]
+        ],
+        "x-ms-examples": {
+            "GET a changeset": {
+                "$ref": "./httpExamples/Changesets/GET__tfvc_changesets__id_.json"
+            },
+            "GET a changeset with policy details and check-in notes.": {
+                "$ref": "./httpExamples/Changesets/GET__tfvc_changesets__id__includeDetails-true.json"
+            },
+            "GET a changeset with workitems.": {
+                "$ref": "./httpExamples/Changesets/GET__tfvc_changesets__id__includeWorkItems-true.json"
+            },
+            "GET a changeset with a max number of changes. ": {
+                "$ref": "./httpExamples/Changesets/GET__tfvc_changesets__id__maxChangeCount.json"
+            },
+            "GET list of associated work items": {
+                "$ref": "./httpExamples/Changesets/GET__tfvc_changesets__id__changes.json"
+            },
+            "GET list of associated work items": {
+                "$ref": "./httpExamples/Changesets/GET__tfvc_changesets__id__workitems.json"
+            }
+        }
       }
     },
     "/{project}/_apis/tfvc/itembatch": {
@@ -872,8 +1106,9 @@
         ],
         "x-ms-vss-resource": "itemBatch",
         "x-ms-vss-method": "GetItemsBatch",
+        "x-ms-preview": true,
         "description": "Post for retrieving a set of items given a list of paths or a long path. Allows for specifying the recursionLevel and version descriptors for each path.",
-        "operationId": "Items_GetItemsBatch",
+        "operationId": "Get Items Batch",
         "consumes": [
           "application/json"
         ],
@@ -935,8 +1170,9 @@
         ],
         "x-ms-vss-resource": "items",
         "x-ms-vss-method": "GetItems",
+        "x-ms-preview": true,
         "description": "Get a list of Tfvc items",
-        "operationId": "Items_List",
+        "operationId": "List",
         "produces": [
           "application/json"
         ],
@@ -973,11 +1209,26 @@
           },
           {
             "in": "query",
-            "name": "versionDescriptor",
+            "name": "versionDescriptor.version",
+            "description": "",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "versionDescriptor.versionType",
             "description": "",
             "required": false,
             "type": "string",
-            "format": "TfvcVersionDescriptor"
+            "format": "TfvcVersionType"
+          },
+          {
+            "in": "query",
+            "name": "versionDescriptor.versionOption",
+            "description": "",
+            "required": false,
+            "type": "string",
+            "format": "TfvcVersionOption"
           },
           {
             "$ref": "#/parameters/api-Version"
@@ -1021,11 +1272,12 @@
         ],
         "x-ms-vss-resource": "items",
         "x-ms-vss-method": "GetItem",
+        "x-ms-preview": true,
         "description": "Get Item Metadata and/or Content for a single item. The download parameter is to indicate whether the content should be available as a download or just sent as a stream in the response. Doesn't apply to zipped content which is always returned as a download.",
-        "operationId": "Items_GetItem",
+        "operationId": "Get",
         "produces": [
-          "application/octet-stream",
           "text/plain",
+          "application/octet-stream",
           "application/zip",
           "application/json"
         ],
@@ -1076,11 +1328,26 @@
           },
           {
             "in": "query",
-            "name": "versionDescriptor",
+            "name": "versionDescriptor.version",
+            "description": "",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "versionDescriptor.versionType",
             "description": "",
             "required": false,
             "type": "string",
-            "format": "TfvcVersionDescriptor"
+            "format": "TfvcVersionType"
+          },
+          {
+            "in": "query",
+            "name": "versionDescriptor.versionOption",
+            "description": "",
+            "required": false,
+            "type": "string",
+            "format": "TfvcVersionOption"
           },
           {
             "$ref": "#/parameters/api-Version"
@@ -1110,26 +1377,62 @@
         ],
         "x-ms-vss-resource": "labels",
         "x-ms-vss-method": "GetLabels",
+        "x-ms-preview": true,
         "description": "Get a collection of shallow label references.",
-        "operationId": "Labels_List",
+        "operationId": "List",
         "produces": [
           "application/json"
         ],
         "parameters": [
-          {
-            "in": "query",
-            "name": "requestData",
-            "description": "labelScope, name, owner, and itemLabelFilter",
-            "required": true,
-            "type": "string",
-            "format": "TfvcLabelRequestData"
-          },
           {
             "in": "path",
             "name": "project",
             "description": "Project ID or project name",
             "required": true,
             "x-ms-required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "requestData.includeLinks",
+            "description": "Whether to include the _links field on the shallow references",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "requestData.maxItemCount",
+            "description": "labelScope, name, owner, and itemLabelFilter",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "requestData.itemLabelFilter",
+            "description": "labelScope, name, owner, and itemLabelFilter",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "requestData.owner",
+            "description": "labelScope, name, owner, and itemLabelFilter",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "requestData.name",
+            "description": "labelScope, name, owner, and itemLabelFilter",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "requestData.labelScope",
+            "description": "labelScope, name, owner, and itemLabelFilter",
+            "required": false,
             "type": "string"
           },
           {
@@ -1196,8 +1499,9 @@
         ],
         "x-ms-vss-resource": "labels",
         "x-ms-vss-method": "GetLabel",
+        "x-ms-preview": true,
         "description": "Get a single deep label.",
-        "operationId": "Labels_Get",
+        "operationId": "Get",
         "produces": [
           "application/json"
         ],
@@ -1210,19 +1514,54 @@
             "type": "string"
           },
           {
-            "in": "query",
-            "name": "requestData",
-            "description": "maxItemCount",
-            "required": true,
-            "type": "string",
-            "format": "TfvcLabelRequestData"
-          },
-          {
             "in": "path",
             "name": "project",
             "description": "Project ID or project name",
             "required": true,
             "x-ms-required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "requestData.includeLinks",
+            "description": "Whether to include the _links field on the shallow references",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "requestData.maxItemCount",
+            "description": "maxItemCount",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "requestData.itemLabelFilter",
+            "description": "maxItemCount",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "requestData.owner",
+            "description": "maxItemCount",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "requestData.name",
+            "description": "maxItemCount",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "requestData.labelScope",
+            "description": "maxItemCount",
+            "required": false,
             "type": "string"
           },
           {
@@ -1624,21 +1963,25 @@
       ],
       "properties": {
         "children": {
+          "description": "List of children for the branch.",
           "type": "array",
           "items": {
             "$ref": "#/definitions/TfvcBranch"
           }
         },
         "mappings": {
+          "description": "List of branch mappings.",
           "type": "array",
           "items": {
             "$ref": "#/definitions/TfvcBranchMapping"
           }
         },
         "parent": {
+          "description": "Path of the branch's parent.",
           "$ref": "#/definitions/TfvcShallowBranchRef"
         },
         "relatedBranches": {
+          "description": "List of paths of the related branches.",
           "type": "array",
           "items": {
             "$ref": "#/definitions/TfvcShallowBranchRef"
@@ -1651,12 +1994,15 @@
       "type": "object",
       "properties": {
         "depth": {
+          "description": "Depth of the branch.",
           "type": "string"
         },
         "serverItem": {
+          "description": "Server item for the branch.",
           "type": "string"
         },
         "type": {
+          "description": "Type of the branch.",
           "type": "string"
         }
       }
@@ -1671,22 +2017,28 @@
       ],
       "properties": {
         "_links": {
+          "description": "A collection of REST reference links.",
           "$ref": "#/definitions/ReferenceLinks"
         },
         "createdDate": {
+          "description": "Creation date of the branch.",
           "type": "string",
           "format": "date-time"
         },
         "description": {
+          "description": "Description of the branch.",
           "type": "string"
         },
         "isDeleted": {
+          "description": "Is the branch deleted?",
           "type": "boolean"
         },
         "owner": {
+          "description": "Alias or display name of user",
           "$ref": "#/definitions/IdentityRef"
         },
         "url": {
+          "description": "URL to retrieve the item.",
           "type": "string"
         }
       }
@@ -1724,32 +2076,39 @@
       ],
       "properties": {
         "accountId": {
+          "description": "Account Id of the changeset.",
           "type": "string",
           "format": "uuid"
         },
         "changes": {
+          "description": "List of associated changes.",
           "type": "array",
           "items": {
             "$ref": "#/definitions/TfvcChange"
           }
         },
         "checkinNotes": {
+          "description": "Checkin Notes for the changeset.",
           "type": "array",
           "items": {
             "$ref": "#/definitions/CheckinNote"
           }
         },
         "collectionId": {
+          "description": "Collection Id of the changeset.",
           "type": "string",
           "format": "uuid"
         },
         "hasMoreChanges": {
+          "description": "Are more changes available.",
           "type": "boolean"
         },
         "policyOverride": {
+          "description": "Policy Override for the changeset.",
           "$ref": "#/definitions/TfvcPolicyOverrideInfo"
         },
         "teamProjectIds": {
+          "description": "Team Project Ids for the changeset.",
           "type": "array",
           "items": {
             "type": "string",
@@ -1757,6 +2116,7 @@
           }
         },
         "workItems": {
+          "description": "List of work items associated with the changeset.",
           "type": "array",
           "items": {
             "$ref": "#/definitions/AssociatedWorkItem"
@@ -1769,29 +2129,37 @@
       "type": "object",
       "properties": {
         "_links": {
+          "description": "A collection of REST reference links.",
           "$ref": "#/definitions/ReferenceLinks"
         },
         "author": {
+          "description": "Alias or display name of user",
           "$ref": "#/definitions/IdentityRef"
         },
         "changesetId": {
+          "description": "Id of the changeset.",
           "type": "integer",
           "format": "int32"
         },
         "checkedInBy": {
+          "description": "Alias or display name of user",
           "$ref": "#/definitions/IdentityRef"
         },
         "comment": {
+          "description": "Comment for the changeset.",
           "type": "string"
         },
         "commentTruncated": {
+          "description": "Was the Comment result truncated?",
           "type": "boolean"
         },
         "createdDate": {
+          "description": "Creation date of the changeset.",
           "type": "string",
           "format": "date-time"
         },
         "url": {
+          "description": "URL to retrieve the item.",
           "type": "string"
         }
       }
@@ -1841,6 +2209,7 @@
       "type": "object",
       "properties": {
         "changesetIds": {
+          "description": "List of changeset Ids.",
           "readOnly": true,
           "type": "array",
           "items": {
@@ -1849,6 +2218,7 @@
           }
         },
         "commentLength": {
+          "description": "Length of the comment.",
           "readOnly": true,
           "type": "integer",
           "format": "int32"
@@ -2096,6 +2466,7 @@
       "type": "object",
       "properties": {
         "path": {
+          "description": "Path for the branch.",
           "type": "string"
         }
       }
