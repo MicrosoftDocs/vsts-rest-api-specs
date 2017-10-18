@@ -1,0 +1,545 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Team",
+    "description": "",
+    "termsOfService": "https://go.microsoft.com/fwlink/?LinkId=329770",
+    "contact": {
+      "name": "nugetvss",
+      "email": "nugetvss@microsoft.com"
+    },
+    "license": {
+      "name": "MICROSOFT SOFTWARE LICENSE TERMS",
+      "url": "https://go.microsoft.com/fwlink/?LinkId=329770"
+    },
+    "version": "4.1"
+  },
+  "host": "fabrikam-fiber-inc.visualstudio.com",
+  "x-ms-parameterized-host": {
+    "hostTemplate": "{accountName}.visualstudio.com",
+    "parameters": [
+      {
+        "name": "accountName",
+        "description": "The name of the Visual Studio Team Services account.",
+        "required": true,
+        "type": "string",
+        "in": "path"
+      }
+    ]
+  },
+  "x-ms-vss-area": "Core",
+  "basePath": "/",
+  "tags": [
+    {
+      "name": "Teams",
+      "description": "Manage teams in Visual Studio Team Services (VSTS). A VSTS account has one or more team projects. Each team project has one or more teams that contribute to that project."
+    }
+  ],
+  "schemes": [
+    "https"
+  ],
+  "paths": {
+    "/_apis/projects/{projectId}/teams": {
+      "post": {
+        "tags": [
+          "Teams"
+        ],
+        "x-ms-vss-resource": "teams",
+        "x-ms-vss-method": "CreateTeam",
+        "x-ms-preview": true,
+        "description": "Create a team in a team project.\n\nPossible failure scenarios\nInvalid project name/ID (project doesn't exist) 404\nInvalid team name or description 400\nTeam already exists 400\nInsufficient privileges 400",
+        "operationId": "Create",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "The team data used to create the team.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/WebApiTeam"
+            }
+          },
+          {
+            "in": "path",
+            "name": "projectId",
+            "description": "The name or ID (GUID) of the team project in which to create the team.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/WebApiTeam"
+            }
+         }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.project_manage"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+            "": {
+                "$ref": "./httpExamples/teams/POST__projects__projectId__teams.json"
+            }
+        }
+      },
+      "get": {
+        "tags": [
+          "Teams"
+        ],
+        "x-ms-vss-resource": "teams",
+        "x-ms-vss-method": "GetTeams",
+        "x-ms-preview": true,
+        "description": "Get a list of teams.",
+        "operationId": "List",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "projectId",
+            "description": "",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "$top",
+            "description": "Maximum number of teams to return.",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "$skip",
+            "description": "Number of teams to skip.",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "$ref": "#/parameters/api-Version"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/WebApiTeam"
+              }
+            }
+         }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.profile",
+              "vso.project"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+            "": {
+                "$ref": "./httpExamples/teams/GET__projects__projectId__teams.json"
+            }
+        }
+      }
+    },
+    "/_apis/projects/{projectId}/teams/{teamId}": {
+      "delete": {
+        "tags": [
+          "Teams"
+        ],
+        "x-ms-vss-resource": "teams",
+        "x-ms-vss-method": "DeleteTeam",
+        "x-ms-preview": true,
+        "description": "Delete a team.",
+        "operationId": "Delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "projectId",
+            "description": "The name or ID (GUID) of the team project containing the team to delete.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "teamId",
+            "description": "The name of ID of the team to delete.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+         }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.project_manage"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+            "": {
+                "$ref": "./httpExamples/teams/DELETE__projects__projectId__teams__newTeamId_.json"
+            }
+        }
+      },
+      "get": {
+        "tags": [
+          "Teams"
+        ],
+        "x-ms-vss-resource": "teams",
+        "x-ms-vss-method": "GetTeam",
+        "x-ms-preview": true,
+        "description": "Get a specific team.",
+        "operationId": "Get",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "projectId",
+            "description": "The name or ID (GUID) of the team project containing the team.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "teamId",
+            "description": "The name or ID (GUID) of the team.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/WebApiTeam"
+            }
+         }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.profile",
+              "vso.project"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+            "": {
+                "$ref": "./httpExamples/teams/GET__projects__projectId__teams__teamId_.json"
+            }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Teams"
+        ],
+        "x-ms-vss-resource": "teams",
+        "x-ms-vss-method": "UpdateTeam",
+        "x-ms-preview": true,
+        "description": "Update a team's name and/or description.",
+        "operationId": "Update",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/WebApiTeam"
+            }
+          },
+          {
+            "in": "path",
+            "name": "projectId",
+            "description": "The name or ID (GUID) of the team project containing the team to update.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "teamId",
+            "description": "The name of ID of the team to update.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/WebApiTeam"
+            }
+         }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.project_write"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+            "": {
+                "$ref": "./httpExamples/teams/PATCH__projects__projectId__teams.json"
+            }
+        }
+      }
+    },
+    "/_apis/projects/{projectId}/teams/{teamId}/members": {
+      "get": {
+        "tags": [
+          "Teams"
+        ],
+        "x-ms-vss-resource": "members",
+        "x-ms-vss-method": "GetTeamMembers",
+        "x-ms-preview": true,
+        "description": "Get a list of members for a specific team.",
+        "operationId": "Get Team Members",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "projectId",
+            "description": "The name or ID (GUID) of the team project the team belongs to.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "teamId",
+            "description": "The name or ID (GUID) of the team .",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "$top",
+            "description": "",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "$skip",
+            "description": "",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "$ref": "#/parameters/api-Version"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/IdentityRef"
+              }
+            }
+         }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.profile",
+              "vso.project"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+            "": {
+                "$ref": "./httpExamples/members/GET__projects__projectId__teams__teamId__members_.json"
+            }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "IdentityRef": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "directoryAlias": {
+          "type": "string"
+        },
+        "displayName": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "imageUrl": {
+          "type": "string"
+        },
+        "inactive": {
+          "type": "boolean"
+        },
+        "isAadIdentity": {
+          "type": "boolean"
+        },
+        "isContainer": {
+          "type": "boolean"
+        },
+        "profileUrl": {
+          "type": "string"
+        },
+        "uniqueName": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        }
+      }
+    },
+    "VssJsonCollectionWrapper": {
+      "description": "This class is used to serialized collections as a single JSON object on the wire, to avoid serializing JSON arrays directly to the client, which can be a security hole",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/VssJsonCollectionWrapperBase"
+        }
+      ],
+      "properties": {
+        "value": {
+          "readOnly": true,
+          "type": "string",
+          "format": "T"
+        }
+      }
+    },
+    "VssJsonCollectionWrapperBase": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "count": {
+          "readOnly": true,
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "WebApiTeam": {
+      "description": "",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/WebApiTeamRef"
+        }
+      ],
+      "properties": {
+        "description": {
+          "description": "Team description",
+          "type": "string"
+        },
+        "identityUrl": {
+          "description": "Identity REST API Url to this team",
+          "type": "string"
+        }
+      }
+    },
+    "WebApiTeamRef": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "Team (Identity) Guid. A Team Foundation ID.",
+          "type": "string",
+          "format": "uuid"
+        },
+        "name": {
+          "description": "Team name",
+          "type": "string"
+        },
+        "url": {
+          "description": "Team REST API Url",
+          "type": "string"
+        }
+      }
+    }
+  },
+  "parameters": {
+    "api-Version": {
+      "name": "api-version",
+      "in": "query",
+      "description": "Version of the API to use.  This should be set to '4.1-preview' to use this version of the api.",
+      "required": true,
+      "type": "string"
+    }
+  },
+  "securityDefinitions": {
+    "accessToken": {
+      "type": "basic",
+      "description": "Personal access token. Use any value for the user name and the token as the password."
+     },
+     "oauth2": {
+      "type": "oauth2",
+      "flow": "accessCode",
+      "authorizationUrl": "https://app.vssps.visualstudio.com/oauth2/authorize&response_type=Assertion",
+      "tokenUrl": "https://app.vssps.visualstudio.com/oauth2/token?client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer&grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer",
+      "scopes": {
+        "vso.profile": "Grants the ability to read your profile, accounts, collections, projects, teams, and other top-level organizational artifacts.",
+        "vso.project": "Grants the ability to read projects and teams.",
+        "vso.project_manage": "Grants the ability to create, read, update, and delete projects and teams.",
+        "vso.project_write": "Grants the ability to read and update projects and teams."
+      }
+    }
+  },
+  "security": [
+    {
+      "accessToken": []
+    }
+  ],
+  "externalDocs": {
+    "description": "Visual Studio Team Services REST APIs",
+    "url": "https://www.visualstudio.com/docs/integrate/api/overview"
+  }
+}

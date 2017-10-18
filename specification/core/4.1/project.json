@@ -1,0 +1,443 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Project",
+    "description": "",
+    "termsOfService": "https://go.microsoft.com/fwlink/?LinkId=329770",
+    "contact": {
+      "name": "nugetvss",
+      "email": "nugetvss@microsoft.com"
+    },
+    "license": {
+      "name": "MICROSOFT SOFTWARE LICENSE TERMS",
+      "url": "https://go.microsoft.com/fwlink/?LinkId=329770"
+    },
+    "version": "4.1"
+  },
+  "host": "fabrikam-fiber-inc.visualstudio.com",
+  "x-ms-parameterized-host": {
+    "hostTemplate": "{accountName}.visualstudio.com",
+    "parameters": [
+      {
+        "name": "accountName",
+        "description": "The name of the Visual Studio Team Services account.",
+        "required": true,
+        "type": "string",
+        "in": "path"
+      }
+    ]
+  },
+  "x-ms-vss-area": "Core",
+  "basePath": "/",
+  "tags": [
+    {
+      "name": "Project History"
+    }
+  ],
+  "schemes": [
+    "https"
+  ],
+  "paths": {
+    "/_apis/projecthistory": {
+      "get": {
+        "tags": [
+          "Project History"
+        ],
+        "x-ms-vss-resource": "projectHistory",
+        "x-ms-vss-method": "GetProjectHistoryEntries",
+        "x-ms-preview": true,
+        "description": "",
+        "operationId": "List",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "minRevision",
+            "description": "",
+            "required": false,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "$ref": "#/parameters/api-Version"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/ProjectInfo"
+              }
+            }
+         }
+        }
+      }
+    },
+    "/_apis/projects/{projectId}/properties": {
+      "get": {
+        "tags": [
+          "Projects"
+        ],
+        "x-ms-vss-resource": "properties",
+        "x-ms-vss-method": "GetProjectProperties",
+        "x-ms-preview": true,
+        "description": "Get a collection of team project properties.",
+        "operationId": "List",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "projectId",
+            "description": "The team project ID.",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "query",
+            "name": "keys",
+            "description": "A comma-delimited string of team project property names. Wildcard characters (\"?\" and \"*\") are supported. If no key is specified, all properties will be returned.",
+            "required": false,
+            "type": "string",
+            "format": "array (string)"
+          },
+          {
+            "$ref": "#/parameters/api-Version"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/ProjectProperty"
+              }
+            }
+         }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.profile",
+              "vso.project"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+            "Get all team project properties": {
+                "$ref": "./httpExamples/properties/GET__projects__project__properties.json"
+            },
+            "Get specific team project properties": {
+                "$ref": "./httpExamples/properties/GET__projects__project__properties_keys-_propertyName_,_wildcard_.json"
+            }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Projects"
+        ],
+        "x-ms-vss-resource": "properties",
+        "x-ms-vss-method": "SetProjectProperties",
+        "x-ms-preview": true,
+        "description": "Create, update, and delete team project properties.",
+        "operationId": "Set Project Properties",
+        "consumes": [
+          "application/json-patch+json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "projectId",
+            "description": "The team project ID.",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "A JSON Patch document that represents an array of property operations. See RFC 6902 for more details on JSON Patch. The accepted operation verbs are Add and Remove, where Add is used for both creating and updating properties. The path consists of a forward slash and a property name.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/JsonPatchDocument"
+            }
+          },
+          {
+            "$ref": "#/parameters/api-Version"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+         }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.project_write"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+            "Create or update a team project property": {
+                "$ref": "./httpExamples/properties/PATCH__projects__project__properties.json"
+            },
+            "Delete a team project property": {
+                "$ref": "./httpExamples/properties/PATCH__projects__project__properties2.json"
+            }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "JsonPatchDocument": {
+      "description": "The JSON model for JSON Patch Operations",
+      "type": "object",
+      "allOf": [
+        {
+          "type": "array",
+          "items": {
+          }
+        }
+      ],
+      "properties": {
+      }
+    },
+    "JsonPatchOperation": {
+      "description": "The JSON model for a JSON Patch operation",
+      "type": "object",
+      "properties": {
+        "from": {
+          "description": "The path to copy from for the Move/Copy operation.",
+          "type": "string"
+        },
+        "op": {
+          "description": "The patch operation",
+          "enum": [
+            "add",
+            "remove",
+            "replace",
+            "move",
+            "copy",
+            "test"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.VisualStudio.Services.WebApi.Patch.Operation"
+          }
+        },
+        "path": {
+          "description": "The path for the operation",
+          "type": "string"
+        },
+        "value": {
+          "description": "The value for the operation. This is either a primitive or a JToken.",
+          "type": "object"
+        }
+      }
+    },
+    "ProjectInfo": {
+      "description": "Contains information of the project",
+      "type": "object",
+      "properties": {
+        "abbreviation": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "lastUpdateTime": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "name": {
+          "type": "string"
+        },
+        "properties": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ProjectProperty"
+          }
+        },
+        "revision": {
+          "description": "Current revision of the project",
+          "type": "integer",
+          "format": "int64"
+        },
+        "state": {
+          "enum": [
+            "deleting",
+            "new",
+            "wellFormed",
+            "createPending",
+            "all",
+            "unchanged",
+            "deleted"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.TeamFoundation.Core.WebApi.ProjectState"
+          }
+        },
+        "uri": {
+          "type": "string"
+        },
+        "version": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "visibility": {
+          "enum": [
+            "unchanged",
+            "private",
+            "organization"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.TeamFoundation.Core.WebApi.ProjectVisibility"
+          }
+        }
+      }
+    },
+    "ProjectProperty": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "value": {
+          "type": "object"
+        }
+      }
+    },
+    "TeamProjectReference": {
+      "description": "Represents a shallow reference to a TeamProject.",
+      "type": "object",
+      "properties": {
+        "abbreviation": {
+          "description": "Project abbreviation.",
+          "type": "string"
+        },
+        "description": {
+          "description": "The project's description (if any).",
+          "type": "string"
+        },
+        "id": {
+          "description": "Project identifier.",
+          "type": "string",
+          "format": "uuid"
+        },
+        "name": {
+          "description": "Project name.",
+          "type": "string"
+        },
+        "revision": {
+          "description": "Project revision.",
+          "type": "integer",
+          "format": "int64"
+        },
+        "state": {
+          "description": "Project state.",
+          "enum": [
+            "deleting",
+            "new",
+            "wellFormed",
+            "createPending",
+            "all",
+            "unchanged",
+            "deleted"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.TeamFoundation.Core.WebApi.ProjectState"
+          }
+        },
+        "url": {
+          "description": "Url to the full version of the object.",
+          "type": "string"
+        },
+        "visibility": {
+          "description": "Project visibility.",
+          "enum": [
+            "unchanged",
+            "private",
+            "organization"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.TeamFoundation.Core.WebApi.ProjectVisibility"
+          }
+        }
+      }
+    },
+    "VssJsonCollectionWrapper": {
+      "description": "This class is used to serialized collections as a single JSON object on the wire, to avoid serializing JSON arrays directly to the client, which can be a security hole",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/VssJsonCollectionWrapperBase"
+        }
+      ],
+      "properties": {
+        "value": {
+          "readOnly": true,
+          "type": "string",
+          "format": "T"
+        }
+      }
+    },
+    "VssJsonCollectionWrapperBase": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "count": {
+          "readOnly": true,
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    }
+  },
+  "parameters": {
+    "api-Version": {
+      "name": "api-version",
+      "in": "query",
+      "description": "Version of the API to use.  This should be set to '4.1-preview' to use this version of the api.",
+      "required": true,
+      "type": "string"
+    }
+  },
+  "securityDefinitions": {
+    "accessToken": {
+      "type": "basic",
+      "description": "Personal access token. Use any value for the user name and the token as the password."
+     },
+     "oauth2": {
+      "type": "oauth2",
+      "flow": "accessCode",
+      "authorizationUrl": "https://app.vssps.visualstudio.com/oauth2/authorize&response_type=Assertion",
+      "tokenUrl": "https://app.vssps.visualstudio.com/oauth2/token?client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer&grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer",
+      "scopes": {
+        "vso.profile": "Grants the ability to read your profile, accounts, collections, projects, teams, and other top-level organizational artifacts.",
+        "vso.project": "Grants the ability to read projects and teams.",
+        "vso.project_write": "Grants the ability to read and update projects and teams."
+      }
+    }
+  },
+  "security": [
+    {
+      "accessToken": []
+    }
+  ],
+  "externalDocs": {
+    "description": "Visual Studio Team Services REST APIs",
+    "url": "https://www.visualstudio.com/docs/integrate/api/overview"
+  }
+}
