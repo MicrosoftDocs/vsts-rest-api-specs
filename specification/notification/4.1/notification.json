@@ -31,15 +31,8 @@
   "basePath": "/",
   "tags": [
     {
-      "name": "Events",
-      "description": "APIs for publishing notification events."
-    },
-    {
       "name": "Event Types",
       "description": "Discover notification event types, filterable fields, and related metadata."
-    },
-    {
-      "name": "Notification Reasons"
     },
     {
       "name": "Subscribers"
@@ -53,46 +46,6 @@
     "https"
   ],
   "paths": {
-    "/_apis/notification/events": {
-      "post": {
-        "tags": [
-          "Events"
-        ],
-        "x-ms-vss-resource": "events",
-        "x-ms-vss-method": "PublishEvent",
-        "x-ms-preview": true,
-        "description": "Publish an event.",
-        "operationId": "Publish Event",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "body",
-            "name": "body",
-            "description": "",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/VssNotificationEvent"
-            }
-          },
-          {
-            "$ref": "#/parameters/api-Version"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "$ref": "#/definitions/VssNotificationEvent"
-            }
-         }
-        }
-      }
-    },
     "/_apis/notification/eventtypes": {
       "get": {
         "tags": [
@@ -190,81 +143,6 @@
             "": {
                 "$ref": "./httpExamples/EventTypes/GET__notification_eventTypes__eventTypeId_.json"
             }
-        }
-      }
-    },
-    "/_apis/notification/notificationreasons": {
-      "get": {
-        "tags": [
-          "Notification Reasons"
-        ],
-        "x-ms-vss-resource": "notificationReasons",
-        "x-ms-vss-method": "ListNotificationReasons",
-        "x-ms-preview": true,
-        "description": "",
-        "operationId": "List",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "query",
-            "name": "notificationIds",
-            "description": "",
-            "required": false,
-            "type": "integer",
-            "format": "int32"
-          },
-          {
-            "$ref": "#/parameters/api-Version"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/NotificationReason"
-              }
-            }
-         }
-        }
-      }
-    },
-    "/_apis/notification/notificationreasons/{notificationId}": {
-      "get": {
-        "tags": [
-          "Notification Reasons"
-        ],
-        "x-ms-vss-resource": "notificationReasons",
-        "x-ms-vss-method": "GetNotificationReasons",
-        "x-ms-preview": true,
-        "description": "",
-        "operationId": "Get",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "notificationId",
-            "description": "",
-            "required": true,
-            "type": "integer",
-            "format": "int32"
-          },
-          {
-            "$ref": "#/parameters/api-Version"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "$ref": "#/definitions/NotificationReason"
-            }
-         }
         }
       }
     },
@@ -465,10 +343,10 @@
           }
         ],
         "x-ms-examples": {
-            "For a user": {
+            "Create a personal subscription": {
                 "$ref": "./httpExamples/Subscriptions/POST__notification_subscriptions.json"
             },
-            "For a team": {
+            "Create a team subscription": {
                 "$ref": "./httpExamples/Subscriptions/POST__notification_subscriptions2.json"
             },
             "Follow a work item": {
@@ -580,7 +458,7 @@
             "Delete a subscription": {
                 "$ref": "./httpExamples/Subscriptions/DELETE__notification_subscriptions__subscriptionId_.json"
             },
-            "Unfollow a work item by deleting the corresponding subscription": {
+            "Unfollow a work item": {
                 "$ref": "./httpExamples/Subscriptions/DELETE__notification_UnollowWorkItem.json"
             }
         }
@@ -693,7 +571,7 @@
             "Change description": {
                 "$ref": "./httpExamples/Subscriptions/PATCH__notification_subscriptions__subscriptionId_.json"
             },
-            "Disable": {
+            "Disable a subscription": {
                 "$ref": "./httpExamples/Subscriptions/PATCH__notification_subscriptions__subscriptionId_2.json"
             }
         }
@@ -707,7 +585,7 @@
         "x-ms-vss-resource": "userSettings",
         "x-ms-vss-method": "UpdateSubscriptionUserSettings",
         "x-ms-preview": true,
-        "description": "Update the specified users' settings for the specified subscription. User settings can only be applied to shared subscriptions, like team subscriptions or default subscriptions. This API is typically used to opt in or out of a shared subscription.",
+        "description": "Update the specified user's settings for the specified subscription. This API is typically used to opt in or out of a shared subscription. User settings can only be applied to shared subscriptions, like team subscriptions or default subscriptions.",
         "operationId": "Update Subscription User Settings",
         "consumes": [
           "application/json"
@@ -735,9 +613,8 @@
           {
             "in": "path",
             "name": "userId",
-            "description": "ID of the user or \"me\" to indicate the calling user",
+            "description": "ID of the user",
             "required": true,
-            "x-ms-required": false,
             "type": "string",
             "format": "uuid"
           },
@@ -765,6 +642,44 @@
                 "$ref": "./httpExamples/UserSettings/PUT__notification_subscriptions__sharedSubscriptionId__userSettings_me.json"
             }
         }
+      }
+    },
+    "/_apis/notification/subscriptiontemplates": {
+      "get": {
+        "tags": [
+          "Subscriptions"
+        ],
+        "x-ms-vss-resource": "subscriptionTemplates",
+        "x-ms-vss-method": "GetSubscriptionTemplates",
+        "x-ms-preview": true,
+        "description": "Get available subscription templates.",
+        "operationId": "Get Subscription Templates",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/parameters/api-Version"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/NotificationSubscriptionTemplate"
+              }
+            }
+         }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.notification"
+            ]
+          }
+        ]
       }
     }
   },
