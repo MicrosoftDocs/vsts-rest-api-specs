@@ -1,0 +1,918 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Symbol",
+    "description": "",
+    "termsOfService": "https://go.microsoft.com/fwlink/?LinkId=329770",
+    "contact": {
+      "name": "nugetvss",
+      "email": "nugetvss@microsoft.com"
+    },
+    "license": {
+      "name": "MICROSOFT SOFTWARE LICENSE TERMS",
+      "url": "https://go.microsoft.com/fwlink/?LinkId=329770"
+    },
+    "version": "4.1-preview"
+  },
+  "host": "fabrikam-fiber-inc.visualstudio.com",
+  "x-ms-parameterized-host": {
+    "hostTemplate": "{accountName}.visualstudio.com",
+    "parameters": [
+      {
+        "name": "accountName",
+        "description": "The name of the Visual Studio Team Services account.",
+        "required": true,
+        "type": "string",
+        "in": "path"
+      }
+    ]
+  },
+  "x-ms-vss-area": "Symbol",
+  "basePath": "/",
+  "tags": [
+    {
+      "name": "Availability",
+      "description": "An endpoint for clients to determine the availability of symbol service for the current VSTS account."
+    },
+    {
+      "name": "Client",
+      "description": "The endpoint to query and retrieve symbol client."
+    },
+    {
+      "name": "Requests",
+      "description": "The endpoints to perfrom CRUD operations on symbol requests and debug entries."
+    },
+    {
+      "name": "Symsrv",
+      "description": "The endpoint to query debug entries using a \"client key\". This is intended to be called by a client that implements \nMicrosoft's symbol protocol (symsrv)."
+    }
+  ],
+  "schemes": [
+    "https"
+  ],
+  "paths": {
+    "/_apis/symbol/availability": {
+      "get": {
+        "tags": [
+          "Availability"
+        ],
+        "x-ms-vss-resource": "availability",
+        "x-ms-vss-method": "CheckAvailabilityAsync",
+        "x-ms-preview": true,
+        "description": "Check the availability of symbol service. This includes checking for feature flag, and possibly license in future. Note this is NOT an anonymous endpoint, and the caller will be redirected to authentication before hitting it.",
+        "operationId": "Check Availability",
+        "parameters": [
+          {
+            "$ref": "#/parameters/api-Version"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The symbol service is available"
+         },
+          "404": {
+            "description": "The symbol service is unavailable"
+         }
+        }
+      }
+    },
+    "/_apis/symbol/client": {
+      "head": {
+        "tags": [
+          "Client"
+        ],
+        "x-ms-vss-resource": "client",
+        "x-ms-vss-method": "HeadClient",
+        "x-ms-preview": true,
+        "description": "Get client version information.",
+        "operationId": "Head Client",
+        "parameters": [
+          {
+            "$ref": "#/parameters/api-Version"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operation successful. The information about the client version can be found in the response headers. Note this doesn't guarantee a retrieval to be successful."
+         }
+        }
+      }
+    },
+    "/_apis/symbol/client/{clientType}": {
+      "get": {
+        "tags": [
+          "Client"
+        ],
+        "x-ms-vss-resource": "client",
+        "x-ms-vss-method": "GetClient",
+        "x-ms-preview": true,
+        "description": "Get the client package.",
+        "operationId": "Get",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "clientType",
+            "description": "Either \"EXE\" for a zip file containing a Windows symbol client (a.k.a. symbol.exe) along with dependencies, or \"TASK\" for a VSTS task that can be run on a VSTS build agent. All the other values are invalid. The parameter is case-insensitive.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved the client package. The user agent may read response body to get the package.",
+            "schema": {
+              "type": "string",
+              "format": "Stream"
+            }
+         },
+          "404": {
+            "description": "The client as specified by the client type is not found.",
+            "schema": {
+              "type": "string",
+              "format": "Stream"
+            }
+         }
+        }
+      }
+    },
+    "/_apis/symbol/requests": {
+      "post": {
+        "tags": [
+          "Requests"
+        ],
+        "x-ms-vss-resource": "requests",
+        "x-ms-vss-method": "CreateRequestsAsync",
+        "x-ms-preview": true,
+        "description": "Create a new symbol request.",
+        "operationId": "Create Requests",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "The symbol request to create.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Request"
+            }
+          },
+          {
+            "$ref": "#/parameters/api-Version"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Successfully created a new symbol request.",
+            "schema": {
+              "$ref": "#/definitions/Request"
+            }
+         },
+          "409": {
+            "description": "The symbol request couldn't be created due to a server-side conflict.",
+            "schema": {
+              "$ref": "#/definitions/Request"
+            }
+         }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.symbols_write"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+            "": {
+                "$ref": "./httpExamples/requests/POST__symbol_requests.json"
+            }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Requests"
+        ],
+        "x-ms-vss-resource": "requests",
+        "x-ms-vss-method": "DeleteRequestsRequestNameAsync",
+        "x-ms-preview": true,
+        "description": "Delete a symbol request by request name.",
+        "operationId": "Delete Requests Request Name",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "requestName",
+            "description": "",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "synchronous",
+            "description": "If true, delete all the debug entries under this request synchronously in the current session. If false, the deletion will be postponed to a later point and be executed automatically by the system.",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "$ref": "#/parameters/api-Version"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The request no longer exists."
+         }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.symbols_manage"
+            ]
+          }
+        ]
+      },
+      "get": {
+        "tags": [
+          "Requests"
+        ],
+        "x-ms-vss-resource": "requests",
+        "x-ms-vss-method": "GetRequestsRequestNameAsync",
+        "x-ms-preview": true,
+        "description": "Get a symbol request by request name.",
+        "operationId": "Get Requests Request Name",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "requestName",
+            "description": "",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved the symbol request as specified by the request name.",
+            "schema": {
+              "$ref": "#/definitions/Request"
+            }
+         },
+          "404": {
+            "description": "The symbol request as specified by the request name was not found.",
+            "schema": {
+              "$ref": "#/definitions/Request"
+            }
+         }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.symbols"
+            ]
+          }
+        ]
+      },
+      "patch": {
+        "tags": [
+          "Requests"
+        ],
+        "x-ms-vss-resource": "requests",
+        "x-ms-vss-method": "UpdateRequestsRequestNameAsync",
+        "x-ms-preview": true,
+        "description": "Update a symbol request by request name.",
+        "operationId": "Update Requests Request Name",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "The symbol request.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Request"
+            }
+          },
+          {
+            "in": "query",
+            "name": "requestName",
+            "description": "",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully updated the symbol request as specified by the request name.",
+            "schema": {
+              "$ref": "#/definitions/Request"
+            }
+         },
+          "404": {
+            "description": "The symbol request as specified by the request name was not found.",
+            "schema": {
+              "$ref": "#/definitions/Request"
+            }
+         },
+          "409": {
+            "description": "The symbol request as specified by the request name could not be updated due to a server-side conflict, for exmaple, an unmatched etag.",
+            "schema": {
+              "$ref": "#/definitions/Request"
+            }
+         }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.symbols_write"
+            ]
+          }
+        ]
+      }
+    },
+    "/_apis/symbol/requests/{requestId}": {
+      "post": {
+        "tags": [
+          "Requests"
+        ],
+        "x-ms-vss-resource": "requests",
+        "x-ms-vss-method": "CreateRequestsRequestIdDebugEntriesAsync",
+        "x-ms-preview": true,
+        "description": "Create debug entries for a symbol request as specified by its identifier.",
+        "operationId": "Create Requests Request Id Debug Entries",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "A batch that contains debug entries to create.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/DebugEntryCreateBatch"
+            }
+          },
+          {
+            "in": "path",
+            "name": "requestId",
+            "description": "The symbol request identifier.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "collection",
+            "description": "A valid debug entry collection name. Must be \"debugentries\".",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully created debug entries for the specified request.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/DebugEntry"
+              }
+            }
+         },
+          "400": {
+            "description": "Could not create debug entries since the specified create behavior is not recognized.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/DebugEntry"
+              }
+            }
+         },
+          "409": {
+            "description": "Could not create debug entries since at least one entry already exists and the specified create behavior is ThrowIfExists.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/DebugEntry"
+              }
+            }
+         }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.symbols_write"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+            "": {
+                "$ref": "./httpExamples/requests/POST__symbol_requests__requestId__debugentries.json"
+            }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Requests"
+        ],
+        "x-ms-vss-resource": "requests",
+        "x-ms-vss-method": "DeleteRequestsRequestIdAsync",
+        "x-ms-preview": true,
+        "description": "Delete a symbol request by request identifier.",
+        "operationId": "Delete Requests Request Id",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "requestId",
+            "description": "The symbol request identifier.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "synchronous",
+            "description": "If true, delete all the debug entries under this request synchronously in the current session. If false, the deletion will be postponed to a later point and be executed automatically by the system.",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "$ref": "#/parameters/api-Version"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The request no longer exists."
+         }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.symbols_manage"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+            "": {
+                "$ref": "./httpExamples/requests/DELETE__symbol_requests__requestId_.json"
+            }
+        }
+      },
+      "get": {
+        "tags": [
+          "Requests"
+        ],
+        "x-ms-vss-resource": "requests",
+        "x-ms-vss-method": "GetRequestsRequestIdAsync",
+        "x-ms-preview": true,
+        "description": "Get a symbol request by request identifier.",
+        "operationId": "Get Requests Request Id",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "requestId",
+            "description": "The symbol request identifier.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved the symbol request as specified by the request identifier.",
+            "schema": {
+              "$ref": "#/definitions/Request"
+            }
+         },
+          "404": {
+            "description": "The symbol request as specified by the request identifier was not found.",
+            "schema": {
+              "$ref": "#/definitions/Request"
+            }
+         }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.symbols"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+            "": {
+                "$ref": "./httpExamples/requests/GET__symbol_requests__requestId_.json"
+            }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Requests"
+        ],
+        "x-ms-vss-resource": "requests",
+        "x-ms-vss-method": "UpdateRequestsRequestIdAsync",
+        "x-ms-preview": true,
+        "description": "Update a symbol request by request identifier.",
+        "operationId": "Update Requests Request Id",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "The symbol request.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Request"
+            }
+          },
+          {
+            "in": "path",
+            "name": "requestId",
+            "description": "The symbol request identifier.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully updated the symbol request as specified by the request identifier.",
+            "schema": {
+              "$ref": "#/definitions/Request"
+            }
+         },
+          "404": {
+            "description": "The symbol request as specified by the request identifier was not found.",
+            "schema": {
+              "$ref": "#/definitions/Request"
+            }
+         },
+          "409": {
+            "description": "The symbol request as specified by the request identifier could not be updated due to a server-side conflict, for exmaple, an unmatched etag.",
+            "schema": {
+              "$ref": "#/definitions/Request"
+            }
+         }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.symbols_write"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+            "": {
+                "$ref": "./httpExamples/requests/PATCH__symbol_requests__requestId_.json"
+            }
+        }
+      }
+    },
+    "/_apis/symbol/symsrv/{debugEntryClientKey}": {
+      "get": {
+        "tags": [
+          "Symsrv"
+        ],
+        "x-ms-vss-resource": "symsrv",
+        "x-ms-vss-method": "GetSymSrvDebugEntryClientKeyAsync",
+        "x-ms-preview": true,
+        "description": "Given a client key, returns the best matched debug entry.",
+        "operationId": "Get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "debugEntryClientKey",
+            "description": "A \"client key\" used by both ends of Microsoft's symbol protocol to identify a debug entry. The semantics of client key is governed by symsrv and is beyond the scope of this documentation.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version"
+          }
+        ],
+        "responses": {
+          "302": {
+            "description": "The debug entry is found and its URI is placed in the Location header."
+         },
+          "404": {
+            "description": "No debug entry was found for this client key."
+         }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.symbols"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "BlobBlockHash": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "hashBytes": {
+          "readOnly": true,
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "byte"
+          }
+        },
+        "hashString": {
+          "readOnly": true,
+          "type": "string"
+        }
+      }
+    },
+    "BlobIdentifier": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "algorithmId": {
+          "readOnly": true,
+          "type": "string",
+          "format": "byte"
+        },
+        "algorithmResultBytes": {
+          "readOnly": true,
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "byte"
+          }
+        },
+        "algorithmResultString": {
+          "readOnly": true,
+          "type": "string"
+        },
+        "bytes": {
+          "readOnly": true,
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "byte"
+          }
+        },
+        "isOfNothing": {
+          "readOnly": true,
+          "type": "boolean"
+        },
+        "valueString": {
+          "readOnly": true,
+          "type": "string"
+        }
+      }
+    },
+    "BlobIdentifierWithBlocks": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "blobId": {
+          "$ref": "#/definitions/BlobIdentifier"
+        },
+        "blockHashes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/BlobBlockHash"
+          }
+        }
+      }
+    },
+    "DebugEntry": {
+      "description": "A dual-purpose data object, the debug entry is used by the client to publish the symbol file (with file's blob identifier, which can be calculated from VSTS hashing algorithm) or query the file (with a client key). Since the symbol server tries to return a matched symbol file with the richest information level, it may not always point to the same symbol file for different queries with same client key.",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/ResourceBase"
+        }
+      ],
+      "properties": {
+        "blobDetails": {
+          "$ref": "#/definitions/BlobIdentifierWithBlocks"
+        },
+        "blobIdentifier": {
+          "$ref": "#/definitions/BlobIdentifier"
+        },
+        "blobUri": {
+          "description": "The URI to get the symbol file. Provided by the server, the URI contains authentication information and is readily accessible by plain HTTP GET request. The client is recommended to retrieve the file as soon as it can since the URI will expire in a short period.",
+          "type": "string"
+        },
+        "clientKey": {
+          "description": "A key the client (debugger, for example) uses to find the debug entry. Note it is not unique for each different symbol file as it does not distinguish between those which only differ by information level.",
+          "type": "string"
+        },
+        "informationLevel": {
+          "description": "The information level this debug entry contains.",
+          "enum": [
+            "none",
+            "binary",
+            "publics",
+            "traceFormatPresent",
+            "typeInfo",
+            "lineNumbers",
+            "globalSymbols",
+            "private",
+            "sourceIndexed"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.VisualStudio.Services.Symbol.Common.DebugInformationLevel"
+          }
+        },
+        "requestId": {
+          "description": "The identifier of symbol request to which this debug entry belongs.",
+          "type": "string"
+        },
+        "status": {
+          "description": "The status of debug entry.",
+          "enum": [
+            "none",
+            "created",
+            "blobMissing"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.VisualStudio.Services.Symbol.WebApi.DebugEntryStatus"
+          }
+        }
+      }
+    },
+    "DebugEntryCreateBatch": {
+      "description": "A batch of debug entry to create.",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/JsonSerializeableObject"
+        }
+      ],
+      "properties": {
+        "createBehavior": {
+          "description": "Defines what to do when a debug entry in the batch already exists.",
+          "readOnly": true,
+          "enum": [
+            "throwIfExists",
+            "skipIfExists",
+            "overwriteIfExists"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.VisualStudio.Services.Symbol.WebApi.DebugEntryCreateBehavior"
+          }
+        },
+        "debugEntries": {
+          "description": "The debug entries.",
+          "readOnly": true,
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/DebugEntry"
+          }
+        }
+      }
+    },
+    "JsonSerializeableObject": {
+      "description": "",
+      "type": "object",
+      "properties": {
+      }
+    },
+    "Request": {
+      "description": "Symbol request.",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/ResourceBase"
+        }
+      ],
+      "properties": {
+        "description": {
+          "description": "An optional human-facing description.",
+          "type": "string"
+        },
+        "expirationDate": {
+          "description": "An optional expiration date for the request. The request will become inaccessible and get deleted after the date, regardless of its status.  On an HTTP POST, if expiration date is null/missing, the server will assign a default expiration data (30 days unless overwridden in the registry at the account level). On PATCH, if expiration date is null/missing, the behavior is to not change whatever the request's current expiration date is.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "name": {
+          "description": "A human-facing name for the request. Required on POST, ignored on PATCH.",
+          "type": "string"
+        },
+        "status": {
+          "description": "The status for this request.",
+          "enum": [
+            "none",
+            "created",
+            "sealed",
+            "unavailable"
+          ],
+          "x-ms-enum": {
+            "name": "Microsoft.VisualStudio.Services.Symbol.WebApi.RequestStatus"
+          }
+        }
+      }
+    },
+    "ResourceBase": {
+      "description": "",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/JsonSerializeableObject"
+        }
+      ],
+      "properties": {
+        "createdBy": {
+          "description": "The ID of user who created this item. Optional.",
+          "type": "string",
+          "format": "uuid"
+        },
+        "createdDate": {
+          "description": "The date time when this item is created. Optional.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "id": {
+          "description": "An identifier for this item. Optional.",
+          "type": "string"
+        },
+        "storageETag": {
+          "description": "An opaque ETag used to synchronize with the version stored at server end. Optional.",
+          "type": "string"
+        },
+        "url": {
+          "description": "A URI which can be used to retrieve this item in its raw format. Optional. Note this is distinguished from other URIs that are present in a derived resource.",
+          "type": "string"
+        }
+      }
+    }
+  },
+  "parameters": {
+    "api-Version": {
+      "name": "api-version",
+      "in": "query",
+      "description": "Version of the API to use.  This should be set to '4.1-preview' to use this version of the api.",
+      "required": true,
+      "type": "string"
+    }
+  },
+  "securityDefinitions": {
+    "accessToken": {
+      "type": "basic",
+      "description": "Personal access token. Use any value for the user name and the token as the password."
+     },
+     "oauth2": {
+      "type": "oauth2",
+      "flow": "accessCode",
+      "authorizationUrl": "https://app.vssps.visualstudio.com/oauth2/authorize&response_type=Assertion",
+      "tokenUrl": "https://app.vssps.visualstudio.com/oauth2/token?client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer&grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer",
+      "scopes": {
+        "vso.symbols": "Grants the ability to read symbols.",
+        "vso.symbols_write": "Grants the ability to read and write symbols.",
+        "vso.symbols_manage": "Grants the ability to read, write and manage symbols."
+      }
+    }
+  },
+  "security": [
+    {
+      "accessToken": []
+    }
+  ],
+  "externalDocs": {
+    "description": "Visual Studio Team Services REST APIs",
+    "url": "https://www.visualstudio.com/docs/integrate/api/overview"
+  }
+}
