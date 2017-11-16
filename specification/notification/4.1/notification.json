@@ -684,6 +684,34 @@
     }
   },
   "definitions": {
+    "ActorFilter": {
+      "description": "",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/RoleBasedFilter"
+        }
+      ],
+      "properties": {
+      }
+    },
+    "ActorNotificationReason": {
+      "description": "",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/NotificationReason"
+        }
+      ],
+      "properties": {
+        "matchedRoles": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
     "ArtifactFilter": {
       "description": "",
       "type": "object",
@@ -742,6 +770,57 @@
         }
       }
     },
+    "BlockFilter": {
+      "description": "",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/RoleBasedFilter"
+        }
+      ],
+      "properties": {
+      }
+    },
+    "BlockSubscriptionChannel": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "type": {
+          "readOnly": true,
+          "type": "string"
+        }
+      }
+    },
+    "EmailHtmlSubscriptionChannel": {
+      "description": "",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/SubscriptionChannelWithAddress"
+        }
+      ],
+      "properties": {
+        "type": {
+          "readOnly": true,
+          "type": "string"
+        }
+      }
+    },
+    "EmailPlaintextSubscriptionChannel": {
+      "description": "",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/SubscriptionChannelWithAddress"
+        }
+      ],
+      "properties": {
+        "type": {
+          "readOnly": true,
+          "type": "string"
+        }
+      }
+    },
     "EventActor": {
       "description": "Defines an \"actor\" for an event.",
       "type": "object",
@@ -754,6 +833,27 @@
         "role": {
           "description": "Required: The event specific name of a role.",
           "type": "string"
+        }
+      }
+    },
+    "EventBacklogStatus": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "maxUnprocessedEventAgeMs": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "publisher": {
+          "type": "string"
+        },
+        "timeSinceLastProcessedEventMs": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "unprocessedEvents": {
+          "type": "integer",
+          "format": "int32"
         }
       }
     },
@@ -789,6 +889,24 @@
           "description": "Count of matched events.",
           "type": "integer",
           "format": "int32"
+        }
+      }
+    },
+    "ExpressionFilter": {
+      "description": "",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/BaseSubscriptionFilter"
+        }
+      ],
+      "properties": {
+        "criteria": {
+          "$ref": "#/definitions/ExpressionFilterModel"
+        },
+        "type": {
+          "readOnly": true,
+          "type": "string"
         }
       }
     },
@@ -896,6 +1014,21 @@
           }
         },
         "scope": {
+          "type": "string"
+        }
+      }
+    },
+    "GroupSubscriptionChannel": {
+      "description": "",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/SubscriptionChannelWithAddress"
+        }
+      ],
+      "properties": {
+        "type": {
+          "readOnly": true,
           "type": "string"
         }
       }
@@ -1047,6 +1180,58 @@
         "type": {
           "readOnly": true,
           "type": "string"
+        }
+      }
+    },
+    "MessageQueueSubscriptionChannel": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "type": {
+          "readOnly": true,
+          "type": "string"
+        }
+      }
+    },
+    "NotificationBacklogStatus": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "channel": {
+          "type": "string"
+        },
+        "maxUnprocessedNotificationAgeMs": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "publisher": {
+          "type": "string"
+        },
+        "timeSinceLastProcessedNotificationMs": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "unprocessedNotifications": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "NotificationEventBacklogStatus": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "eventBacklogStatus": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/EventBacklogStatus"
+          }
+        },
+        "notificationBacklogStatus": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/NotificationBacklogStatus"
+          }
         }
       }
     },
@@ -1754,6 +1939,66 @@
         }
       }
     },
+    "RoleBasedFilter": {
+      "description": "",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/ExpressionFilter"
+        }
+      ],
+      "properties": {
+        "exclusions": {
+          "readOnly": true,
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "inclusions": {
+          "readOnly": true,
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "ServiceBusSubscriptionChannel": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "type": {
+          "readOnly": true,
+          "type": "string"
+        }
+      }
+    },
+    "ServiceHooksSubscriptionChannel": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "type": {
+          "readOnly": true,
+          "type": "string"
+        }
+      }
+    },
+    "SoapSubscriptionChannel": {
+      "description": "",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/SubscriptionChannelWithAddress"
+        }
+      ],
+      "properties": {
+        "type": {
+          "readOnly": true,
+          "type": "string"
+        }
+      }
+    },
     "SubscriptionAdminSettings": {
       "description": "Admin-managed settings for a group subscription.",
       "type": "object",
@@ -1949,6 +2194,61 @@
         "optedOut": {
           "description": "Indicates whether the user will receive notifications for the associated group subscription.",
           "type": "boolean"
+        }
+      }
+    },
+    "UnsupportedFilter": {
+      "description": "",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/BaseSubscriptionFilter"
+        }
+      ],
+      "properties": {
+        "type": {
+          "readOnly": true,
+          "type": "string"
+        }
+      }
+    },
+    "UnsupportedSubscriptionChannel": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "type": {
+          "readOnly": true,
+          "type": "string"
+        }
+      }
+    },
+    "UserSubscriptionChannel": {
+      "description": "",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/SubscriptionChannelWithAddress"
+        }
+      ],
+      "properties": {
+        "type": {
+          "readOnly": true,
+          "type": "string"
+        }
+      }
+    },
+    "UserSystemSubscriptionChannel": {
+      "description": "",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/SubscriptionChannelWithAddress"
+        }
+      ],
+      "properties": {
+        "type": {
+          "readOnly": true,
+          "type": "string"
         }
       }
     },
