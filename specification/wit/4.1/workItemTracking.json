@@ -60,6 +60,14 @@
       "description": "The controller that services request for Recycle bin"
     },
     {
+      "name": "Reporting Work Item Links",
+      "description": "This API provides access to all work item links in your project or collection and allows you to build a warehouse.\n\nThe response of the API contains a batch of work item links (\"values\"), a URL to the next batch of work item links (\"nextLink\") and a boolean that tells you whether you have read all currently available work item links (\"isLastBatch\").\n\nThe workflow for building your warehouse is as follows:\n  1. Make a request to the API without providing a watermark parameter\n  2. Process the work item links returned by the API\n  3. Persist \"nextLink\" and check \"isLastBatch\"\n    * If \"isLastBatch\" is true, pause for a period of time (varies depending on your target latency)\n  4. Make the next request using the URL from \"nextLink\"\n  5. Go to step 2"
+    },
+    {
+      "name": "Reporting Work Item Revisions",
+      "description": "This API provides access to all work item revisions in your project or collection and allows you to build a warehouse.\n\nThe response of the API contains a batch of work item revisions(\"values\"), a URL to the next batch of work item revisions(\"nextLink\") and a boolean that tells you whether you have read all currently available work item revisions(\"isLastBatch\").\n\nThe workflow for building your warehouse is as follows:\n1. Make a request to the API without providing a continuationToken parameter\n2. Process the work item revisions returned by the API\n3. Persist \"nextLink\" and check \"isLastBatch\"\n    * If \"isLastBatch\" is true, pause for a period of time(varies depending on your target latency)\n4. Make the next request using the URL from \"nextLink\"\n5. Go to step 2\n\n## Note\nThe results of this API are impacted when using Move Work Item and/or Change Work Item Type features in conjunction with \"project\" in the url and/or \"types\" in the query string.<br />\n - Project-scoped requests will only return work item revisions from the specified project.\n - Types-scoped requests will only return work item revisions of the specified type(s)\n\n## Sample Projects\n[C# Example](https://github.com/sferg-msft/vsts-wit-reporting-example)"
+    },
+    {
       "name": "Revisions",
       "description": "The controller that services requests for Work Item Revisions"
     },
@@ -79,15 +87,7 @@
       "description": "Discover the list of work item icons and view individual icons."
     },
     {
-      "name": "Work Item Links",
-      "description": "This API provides access to all work item links in your project or collection and allows you to build a warehouse.\n\nThe response of the API contains a batch of work item links (\"values\"), a URL to the next batch of work item links (\"nextLink\") and a boolean that tells you whether you have read all currently available work item links (\"isLastBatch\").\n\nThe workflow for building your warehouse is as follows:\n  1. Make a request to the API without providing a watermark parameter\n  2. Process the work item links returned by the API\n  3. Persist \"nextLink\" and check \"isLastBatch\"\n    * If \"isLastBatch\" is true, pause for a period of time (varies depending on your target latency)\n  4. Make the next request using the URL from \"nextLink\"\n  5. Go to step 2"
-    },
-    {
       "name": "Work Item Relation Types"
-    },
-    {
-      "name": "Work Item Revisions",
-      "description": "This API provides access to all work item revisions in your project or collection and allows you to build a warehouse.\n\nThe response of the API contains a batch of work item revisions(\"values\"), a URL to the next batch of work item revisions(\"nextLink\") and a boolean that tells you whether you have read all currently available work item revisions(\"isLastBatch\").\n\nThe workflow for building your warehouse is as follows:\n1. Make a request to the API without providing a continuationToken parameter\n2. Process the work item revisions returned by the API\n3. Persist \"nextLink\" and check \"isLastBatch\"\n    * If \"isLastBatch\" is true, pause for a period of time(varies depending on your target latency)\n4. Make the next request using the URL from \"nextLink\"\n5. Go to step 2\n\n## Note\nThe results of this API are impacted when using Move Work Item and/or Change Work Item Type features in conjunction with \"project\" in the url and/or \"types\" in the query string.<br />\n - Project-scoped requests will only return work item revisions from the specified project.\n - Types-scoped requests will only return work item revisions of the specified type(s)\n\n## Sample Projects\n[C# Example](https://github.com/sferg-msft/vsts-wit-reporting-example)"
     },
     {
       "name": "Work Items",
@@ -2479,7 +2479,7 @@
     "/{project}/_apis/wit/reporting/workitemlinks": {
       "get": {
         "tags": [
-          "Work Item Links"
+          "Reporting Work Item Links"
         ],
         "x-ms-vss-resource": "workItemLinks",
         "x-ms-vss-method": "GetReportingLinks",
@@ -2550,7 +2550,7 @@
     "/{project}/_apis/wit/reporting/workitemrevisions": {
       "get": {
         "tags": [
-          "Work Item Revisions"
+          "Reporting Work Item Revisions"
         ],
         "x-ms-vss-resource": "workItemRevisions",
         "x-ms-vss-method": "ReadReportingRevisionsGet",
@@ -2681,7 +2681,7 @@
       },
       "post": {
         "tags": [
-          "Work Item Revisions"
+          "Reporting Work Item Revisions"
         ],
         "x-ms-vss-resource": "workItemRevisions",
         "x-ms-vss-method": "ReadReportingRevisionsPost",
