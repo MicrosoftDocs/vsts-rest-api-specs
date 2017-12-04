@@ -107,7 +107,7 @@
     },
     {
       "name": "Work Item Types Field",
-      "description": "The controller that services the requests for Work Item Type Fields"
+      "description": "Project specific field definition API."
     },
     {
       "name": "Work Item Type States",
@@ -3172,6 +3172,75 @@
         }
       }
     },
+    "/{project}/_apis/wit/workitemtypes/{type}/fields": {
+      "get": {
+        "tags": [
+          "Work Item Types Field"
+        ],
+        "x-ms-vss-api-version": "4.1-preview.2",
+        "x-ms-vss-resource": "workItemTypesField",
+        "x-ms-vss-method": "GetWorkItemTypeFields",
+        "x-ms-preview": true,
+        "description": "Get a list of fields for a work Item type.",
+        "operationId": "List",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "type",
+            "description": "Work item type.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "$expand",
+            "description": "Expand level for the API response. Properties: to include allowedvalues, default value, isRequired etc. as a part of response; None: to skip these properties.",
+            "required": false,
+            "type": "string",
+            "format": "WorkItemTypeFieldsExpandLevel"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.2"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/WorkItemTypeFieldInstance"
+              }
+            }
+         }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.work"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+            "1. Get list of project scoped work item type fields data": {
+                "$ref": "./httpExamples/workItemTypesField/GET__workItemType_fields.json"
+            },
+            "2. Get list of project scoped work item type fields data with expand option": {
+                "$ref": "./httpExamples/workItemTypesField/GET__workItemType_fields_expand.json"
+            }
+        }
+      }
+    },
     "/{project}/_apis/wit/workitemtypes/{type}/fields/{field}": {
       "get": {
         "tags": [
@@ -3179,9 +3248,9 @@
         ],
         "x-ms-vss-api-version": "4.1-preview.2",
         "x-ms-vss-resource": "workItemTypesField",
-        "x-ms-vss-method": "GetDependentFields",
+        "x-ms-vss-method": "GetWorkItemTypeField",
         "x-ms-preview": true,
-        "description": "Returns the dependent fields for the corresponding workitem type and fieldname.",
+        "description": "Get field of a work item type.",
         "operationId": "Get",
         "produces": [
           "application/json"
@@ -3197,7 +3266,7 @@
           {
             "in": "path",
             "name": "type",
-            "description": "The work item type name",
+            "description": "Work item type",
             "required": true,
             "type": "string"
           },
@@ -3209,6 +3278,14 @@
             "type": "string"
           },
           {
+            "in": "query",
+            "name": "$expand",
+            "description": "Expand level for the API response. Properties: to include allowedvalues, default value, isRequired etc. as a part of response; None: to skip these properties.",
+            "required": false,
+            "type": "string",
+            "format": "WorkItemTypeFieldsExpandLevel"
+          },
+          {
             "$ref": "#/parameters/api-Version-preview.2"
           }
         ],
@@ -3216,7 +3293,7 @@
           "200": {
             "description": "successful operation",
             "schema": {
-              "$ref": "#/definitions/FieldDependentRule"
+              "$ref": "#/definitions/WorkItemTypeFieldInstance"
             }
          }
         },
@@ -3228,7 +3305,13 @@
           }
         ],
         "x-ms-examples": {
-            "Get the work item relation types": {
+            "Get project scoped work item type field data": {
+                "$ref": "./httpExamples/workItemTypesField/GET__workItemType_field.json"
+            },
+            "Get project scoped work item type field data with expand option": {
+                "$ref": "./httpExamples/workItemTypesField/GET__workItemType_field_expand.json"
+            },
+            "Get the work item relation types (use API version <= 4.0)": {
                 "$ref": "./httpExamples/workItemTypesField/GET__dependent_fields.json"
             }
         }
@@ -5442,7 +5525,7 @@
       }
     },
     "WorkItemTypeFieldInstance": {
-      "description": "",
+      "description": "Field instance of a work item type.",
       "type": "object",
       "allOf": [
         {
@@ -5450,9 +5533,23 @@
         }
       ],
       "properties": {
+        "allowedValues": {
+          "description": "The list of field allowed values.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
         "alwaysRequired": {
           "description": "Indicates whether field value is always required.",
           "type": "boolean"
+        },
+        "dependentFields": {
+          "description": "The list of dependent fields.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/WorkItemFieldReference"
+          }
         },
         "helpText": {
           "description": "Gets the help text for the field.",
