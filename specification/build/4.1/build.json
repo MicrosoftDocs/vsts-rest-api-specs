@@ -3588,7 +3588,7 @@
           {
             "in": "query",
             "name": "serviceEndpointId",
-            "description": "If specified, the ID of the service endpoint to query. Can only be omitted for providers that do use service endpoints, e.g. TFVC or TFGit.",
+            "description": "If specified, the ID of the service endpoint to query. Can only be omitted for providers that do not use service endpoints, e.g. TFVC or TFGit.",
             "required": false,
             "type": "string",
             "format": "uuid"
@@ -3649,7 +3649,7 @@
           {
             "in": "query",
             "name": "serviceEndpointId",
-            "description": "If specified, the ID of the service endpoint to query. Can only be omitted for providers that do use service endpoints, e.g. TFVC or TFGit.",
+            "description": "If specified, the ID of the service endpoint to query. Can only be omitted for providers that do not use service endpoints, e.g. TFVC or TFGit.",
             "required": false,
             "type": "string",
             "format": "uuid"
@@ -3672,6 +3672,67 @@
               "type": "array",
               "items": {
                 "$ref": "#/definitions/SourceRepository"
+              }
+            }
+         }
+        }
+      }
+    },
+    "/{project}/_apis/sourceProviders/{providerName}/webhooks": {
+      "get": {
+        "tags": [
+          "Source Providers"
+        ],
+        "x-ms-vss-api-version": "4.1-preview.1",
+        "x-ms-vss-resource": "webhooks",
+        "x-ms-vss-method": "ListWebhooks",
+        "x-ms-preview": true,
+        "description": "Gets a list of webhooks installed in the given source code repository.",
+        "operationId": "List Webhooks",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "providerName",
+            "description": "The name of the source provider.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "serviceEndpointId",
+            "description": "If specified, the ID of the service endpoint to query. Can only be omitted for providers that do not use service endpoints, e.g. TFVC or TFGit.",
+            "required": false,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "query",
+            "name": "repository",
+            "description": "If specified, the vendor-specific identifier or the name of the repository to get webhooks. Can only be omitted for providers that do not support multiple repositories.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/RepositoryWebhook"
               }
             }
          }
@@ -6451,6 +6512,24 @@
           "additionalProperties": {
             "type": "object"
           }
+        }
+      }
+    },
+    "RepositoryWebhook": {
+      "description": "Represents a repository's webhook returned from a source provider.",
+      "type": "object",
+      "properties": {
+        "name": {
+          "description": "The friendly name of the repository.",
+          "type": "string"
+        },
+        "type": {
+          "description": "The type of the webhook.",
+          "type": "string"
+        },
+        "url": {
+          "description": "The URL of the repository.",
+          "type": "string"
         }
       }
     },
