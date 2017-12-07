@@ -46,7 +46,7 @@
     },
     {
       "name": "Comments",
-      "description": "Work item comments controller"
+      "description": "New work item comments controller (supports both collection-scoped and project-scoped access)\nResource version 2"
     },
     {
       "name": "Fields"
@@ -881,136 +881,6 @@
             },
             "Make an update bypassing rules": {
                 "$ref": "./httpExamples/workItems/PATCH__wit_workitems__taskId__bypassRules-true.json"
-            }
-        }
-      }
-    },
-    "/_apis/wit/workItems/{id}/comments": {
-      "get": {
-        "tags": [
-          "Comments"
-        ],
-        "x-ms-vss-api-version": "4.1-preview.1",
-        "x-ms-vss-resource": "comments",
-        "x-ms-vss-method": "GetComments",
-        "x-ms-preview": true,
-        "description": "Gets the specified number of comments for a work item from the specified revision.",
-        "operationId": "Get Comments",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "id",
-            "description": "Work item id",
-            "required": true,
-            "type": "integer",
-            "format": "int32"
-          },
-          {
-            "in": "query",
-            "name": "fromRevision",
-            "description": "Revision from which comments are to be fetched",
-            "required": false,
-            "type": "integer",
-            "format": "int32"
-          },
-          {
-            "in": "query",
-            "name": "$top",
-            "description": "The number of comments to return",
-            "required": false,
-            "type": "integer",
-            "format": "int32"
-          },
-          {
-            "in": "query",
-            "name": "order",
-            "description": "Ascending or descending by revision id",
-            "required": false,
-            "type": "string",
-            "format": "CommentSortOrder"
-          },
-          {
-            "$ref": "#/parameters/api-Version-preview.1"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "$ref": "#/definitions/WorkItemComments"
-            }
-         }
-        },
-        "security": [
-          {
-            "oauth2": [
-              "vso.work"
-            ]
-          }
-        ],
-        "x-ms-examples": {
-            "Get a page of comments": {
-                "$ref": "./httpExamples/comments/GET__wit_workitems__taskId__comments_2.json"
-            }
-        }
-      }
-    },
-    "/_apis/wit/workItems/{id}/comments/{revision}": {
-      "get": {
-        "tags": [
-          "Comments"
-        ],
-        "x-ms-vss-api-version": "4.1-preview.1",
-        "x-ms-vss-resource": "comments",
-        "x-ms-vss-method": "GetComment",
-        "x-ms-preview": true,
-        "description": "Gets a comment for a work item at the specified revision.",
-        "operationId": "Get Comment",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "id",
-            "description": "Work item id",
-            "required": true,
-            "type": "integer",
-            "format": "int32"
-          },
-          {
-            "in": "path",
-            "name": "revision",
-            "description": "Revision for which the comment need to be fetched",
-            "required": true,
-            "type": "integer",
-            "format": "int32"
-          },
-          {
-            "$ref": "#/parameters/api-Version-preview.1"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "$ref": "#/definitions/WorkItemComment"
-            }
-         }
-        },
-        "security": [
-          {
-            "oauth2": [
-              "vso.work"
-            ]
-          }
-        ],
-        "x-ms-examples": {
-            "Get a single comment": {
-                "$ref": "./httpExamples/comments/GET__wit_workitems__taskId__comments_1.json"
             }
         }
       }
@@ -2960,6 +2830,152 @@
         ]
       }
     },
+    "/{project}/_apis/wit/workItems/{id}/comments": {
+      "get": {
+        "tags": [
+          "Comments"
+        ],
+        "x-ms-vss-api-version": "4.1-preview.2",
+        "x-ms-vss-resource": "comments",
+        "x-ms-vss-method": "GetComments",
+        "x-ms-preview": true,
+        "description": "Gets the specified number of comments for a work item from the specified revision.",
+        "operationId": "Get Comments",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "description": "Work item id",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "x-ms-required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "fromRevision",
+            "description": "Revision from which comments are to be fetched",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "$top",
+            "description": "The number of comments to return",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "order",
+            "description": "Ascending or descending by revision id",
+            "required": false,
+            "type": "string",
+            "format": "CommentSortOrder"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.2"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/WorkItemComments"
+            }
+         }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.work"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+            "Get a page of comments scoped to project": {
+                "$ref": "./httpExamples/comments/GET__wit_workitems__taskId__comments_4.json"
+            }
+        }
+      }
+    },
+    "/{project}/_apis/wit/workItems/{id}/comments/{revision}": {
+      "get": {
+        "tags": [
+          "Comments"
+        ],
+        "x-ms-vss-api-version": "4.1-preview.2",
+        "x-ms-vss-resource": "comments",
+        "x-ms-vss-method": "GetComment",
+        "x-ms-preview": true,
+        "description": "Gets a comment for a work item at the specified revision.",
+        "operationId": "Get Comment",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "description": "Work item id",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "path",
+            "name": "revision",
+            "description": "Revision for which the comment need to be fetched",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "x-ms-required": false,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.2"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/WorkItemComment"
+            }
+         }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.work"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+            "Get a single comment scoped to project": {
+                "$ref": "./httpExamples/comments/GET__wit_workitems__taskId__comments_3.json"
+            }
+        }
+      }
+    },
     "/{project}/_apis/wit/workitemtypecategories": {
       "get": {
         "tags": [
@@ -4076,6 +4092,12 @@
         "url": {
           "type": "string"
         }
+      }
+    },
+    "BaseSecuredObject": {
+      "description": "",
+      "type": "object",
+      "properties": {
       }
     },
     "FieldDependentRule": {
@@ -5392,6 +5414,11 @@
     "WorkItemTrackingResourceReference": {
       "description": "Base class for work item tracking resource references.",
       "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/BaseSecuredObject"
+        }
+      ],
       "properties": {
         "url": {
           "type": "string"
