@@ -36,6 +36,10 @@
       "description": "Provides methods for working with artifacts produced by builds."
     },
     {
+      "name": "Attachments",
+      "description": "Provides methods for retrieving attachments to builds."
+    },
+    {
       "name": "Badge",
       "description": "Provides methods to generate SVG images representing the status of builds."
     },
@@ -91,8 +95,7 @@
       "description": "Provides methods for working with build definition templates."
     },
     {
-      "name": "Timeline",
-      "description": "Provides methods for working with build timelines."
+      "name": "Timeline"
     }
   ],
   "schemes": [
@@ -720,7 +723,7 @@
         "x-ms-vss-resource": "builds",
         "x-ms-vss-method": "GetBuild",
         "x-ms-preview": true,
-        "description": "Gets a build.",
+        "description": "Gets a build",
         "operationId": "Get",
         "produces": [
           "application/json"
@@ -729,7 +732,7 @@
           {
             "in": "path",
             "name": "buildId",
-            "description": "The ID of the build.",
+            "description": "",
             "required": true,
             "type": "integer",
             "format": "int32"
@@ -745,7 +748,7 @@
           {
             "in": "query",
             "name": "propertyFilters",
-            "description": "A comma-delimited list of properties to include in the results.",
+            "description": "",
             "required": false,
             "type": "string"
           },
@@ -827,6 +830,88 @@
           {
             "oauth2": [
               "vso.build_execute"
+            ]
+          }
+        ]
+      }
+    },
+    "/{project}/_apis/build/builds/{buildId}/{timelineId}/{recordId}/attachments/{type}/{name}": {
+      "get": {
+        "tags": [
+          "Attachments"
+        ],
+        "x-ms-vss-api-version": "4.1-preview.1",
+        "x-ms-vss-resource": "attachments",
+        "x-ms-vss-method": "GetAttachment",
+        "x-ms-preview": true,
+        "description": "Gets a specific attachment.",
+        "operationId": "Get",
+        "produces": [
+          "application/octet-stream"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "buildId",
+            "description": "The ID of the build.",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "path",
+            "name": "timelineId",
+            "description": "The ID of the timeline.",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "path",
+            "name": "recordId",
+            "description": "The ID of the timeline record.",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "path",
+            "name": "type",
+            "description": "The type of the attachment.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "name",
+            "description": "The name of the attachment.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "string",
+              "format": "Stream"
+            }
+         }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.build"
             ]
           }
         ]
@@ -1009,6 +1094,67 @@
         ]
       }
     },
+    "/{project}/_apis/build/builds/{buildId}/attachments/{type}": {
+      "get": {
+        "tags": [
+          "Attachments"
+        ],
+        "x-ms-vss-api-version": "4.1-preview.1",
+        "x-ms-vss-resource": "attachments",
+        "x-ms-vss-method": "GetAttachments",
+        "x-ms-preview": true,
+        "description": "Gets the list of attachments of a specific type that are associated with a build.",
+        "operationId": "List",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "buildId",
+            "description": "The ID of the build.",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "path",
+            "name": "type",
+            "description": "The type of attachment.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Attachment"
+              }
+            }
+         }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.build"
+            ]
+          }
+        ]
+      }
+    },
     "/{project}/_apis/build/builds/{buildId}/changes": {
       "get": {
         "tags": [
@@ -1018,7 +1164,7 @@
         "x-ms-vss-resource": "changes",
         "x-ms-vss-method": "GetBuildChanges",
         "x-ms-preview": true,
-        "description": "Gets the changes associated with a build.",
+        "description": "Gets the changes associated with a build",
         "operationId": "Get Build Changes",
         "produces": [
           "application/json"
@@ -1034,7 +1180,7 @@
           {
             "in": "path",
             "name": "buildId",
-            "description": "The build ID.",
+            "description": "",
             "required": true,
             "type": "integer",
             "format": "int32"
@@ -1049,7 +1195,7 @@
           {
             "in": "query",
             "name": "$top",
-            "description": "The maximum number of changes to return.",
+            "description": "The maximum number of changes to return",
             "required": false,
             "type": "integer",
             "format": "int32"
@@ -1646,7 +1792,7 @@
         "x-ms-vss-resource": "timeline",
         "x-ms-vss-method": "GetBuildTimeline",
         "x-ms-preview": true,
-        "description": "Gets a timeline for a build.",
+        "description": "Gets details for a build",
         "operationId": "Get",
         "produces": [
           "application/json"
@@ -1662,7 +1808,7 @@
           {
             "in": "path",
             "name": "buildId",
-            "description": "The ID of the build.",
+            "description": "",
             "required": true,
             "type": "integer",
             "format": "int32"
@@ -1670,7 +1816,7 @@
           {
             "in": "path",
             "name": "timelineId",
-            "description": "The ID of the timeline. If not specified, uses the main timeline for the plan.",
+            "description": "",
             "required": true,
             "x-ms-required": false,
             "type": "string",
@@ -1687,7 +1833,7 @@
           {
             "in": "query",
             "name": "planId",
-            "description": "The ID of the plan. If not specified, uses the primary plan for the build.",
+            "description": "",
             "required": false,
             "type": "string",
             "format": "uuid"
@@ -3816,6 +3962,11 @@
     "AgentTargetExecutionOptions": {
       "description": "Additional options for running phases against an agent queue.",
       "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/ChildObject"
+        }
+      ],
       "properties": {
         "type": {
           "description": "Indicates the type of execution options.",
@@ -3857,9 +4008,32 @@
         }
       }
     },
+    "Attachment": {
+      "description": "Represents an attachment to a build.",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/ChildObject"
+        }
+      ],
+      "properties": {
+        "_links": {
+          "$ref": "#/definitions/ReferenceLinks"
+        },
+        "name": {
+          "description": "The name of the attachment.",
+          "type": "string"
+        }
+      }
+    },
     "AuthorizationHeader": {
       "description": "",
       "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/ChildObject"
+        }
+      ],
       "properties": {
         "name": {
           "type": "string"
@@ -4818,6 +4992,11 @@
     "BuildDefinitionStep": {
       "description": "Represents a step in a build phase.",
       "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/ChildObject"
+        }
+      ],
       "properties": {
         "alwaysRun": {
           "description": "Indicates whether this step should run even if a previous step fails.",
@@ -4948,6 +5127,11 @@
     "BuildDefinitionVariable": {
       "description": "Represents a variable used by a build definition.",
       "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/ChildObject"
+        }
+      ],
       "properties": {
         "allowOverride": {
           "description": "Indicates whether the value can be set at queue time.",
@@ -5032,6 +5216,11 @@
     "BuildLogReference": {
       "description": "Represents a reference to a build log.",
       "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/ChildObject"
+        }
+      ],
       "properties": {
         "id": {
           "description": "The ID of the log.",
@@ -5051,6 +5240,11 @@
     "BuildMetric": {
       "description": "Represents metadata about builds in the system.",
       "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/ChildObject"
+        }
+      ],
       "properties": {
         "date": {
           "description": "The date for the scope.",
@@ -5075,6 +5269,11 @@
     "BuildOption": {
       "description": "Represents the application of an optional behavior to a build definition.",
       "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/ChildObject"
+        }
+      ],
       "properties": {
         "definition": {
           "description": "A reference to the build option.",
@@ -5136,6 +5335,11 @@
     "BuildOptionDefinitionReference": {
       "description": "Represents a reference to a build option definition.",
       "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/ChildObject"
+        }
+      ],
       "properties": {
         "id": {
           "description": "The ID of the referenced build option.",
@@ -5147,6 +5351,11 @@
     "BuildOptionGroupDefinition": {
       "description": "Represents a group of inputs for a build option.",
       "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/ChildObject"
+        }
+      ],
       "properties": {
         "displayName": {
           "description": "The name of the group to display in the UI.",
@@ -5165,6 +5374,11 @@
     "BuildOptionInputDefinition": {
       "description": "Represents an input for a build option.",
       "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/ChildObject"
+        }
+      ],
       "properties": {
         "defaultValue": {
           "description": "The default value.",
@@ -5230,6 +5444,11 @@
     "BuildProcess": {
       "description": "Represents a build process.",
       "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/ChildObject"
+        }
+      ],
       "properties": {
         "type": {
           "description": "The type of the process.",
@@ -5339,6 +5558,11 @@
     "BuildReference": {
       "description": "Represents a reference to a build.",
       "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/ChildObject"
+        }
+      ],
       "properties": {
         "_links": {
           "$ref": "#/definitions/ReferenceLinks"
@@ -5427,6 +5651,11 @@
     "BuildRepository": {
       "description": "Represents a repository used by a build definition.",
       "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/ChildObject"
+        }
+      ],
       "properties": {
         "checkoutSubmodules": {
           "description": "Indicates whether to checkout submodules.",
@@ -5472,6 +5701,11 @@
     "BuildRequestValidationResult": {
       "description": "Represents the result of validating a build request.",
       "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/ChildObject"
+        }
+      ],
       "properties": {
         "message": {
           "description": "The message associated with the result.",
@@ -5665,6 +5899,11 @@
     "BuildTrigger": {
       "description": "Represents a trigger for a buld definition.",
       "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/ChildObject"
+        }
+      ],
       "properties": {
         "triggerType": {
           "description": "The type of the trigger.",
@@ -5715,6 +5954,11 @@
     "Change": {
       "description": "Represents a change associated with a build.",
       "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/ChildObject"
+        }
+      ],
       "properties": {
         "author": {
           "description": "The author of the change.",
@@ -5753,6 +5997,12 @@
           "description": "The type of change. \"commit\", \"changeset\", etc.",
           "type": "string"
         }
+      }
+    },
+    "ChildObject": {
+      "description": "",
+      "type": "object",
+      "properties": {
       }
     },
     "ConsoleLogEvent": {
@@ -5868,6 +6118,11 @@
     "DataSourceBindingBase": {
       "description": "",
       "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/ChildObject"
+        }
+      ],
       "properties": {
         "dataSourceName": {
           "type": "string"
@@ -5967,6 +6222,11 @@
     "Demand": {
       "description": "Represents a demand used by a definition or build.",
       "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/ChildObject"
+        }
+      ],
       "properties": {
         "name": {
           "description": "The name of the capability referenced by the demand.",
@@ -5983,6 +6243,11 @@
     "Dependency": {
       "description": "Represents a dependency.",
       "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/ChildObject"
+        }
+      ],
       "properties": {
         "event": {
           "description": "The event. The dependency is satisfied when the referenced object emits this event.",
@@ -6068,6 +6333,11 @@
     "Folder": {
       "description": "Represents a folder that contains build definitions.",
       "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/ChildObject"
+        }
+      ],
       "properties": {
         "createdBy": {
           "description": "The process or person who created the folder.",
@@ -6105,6 +6375,11 @@
     "Forks": {
       "description": "Represents the ability to build forks of the selected repository.",
       "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/ChildObject"
+        }
+      ],
       "properties": {
         "allowSecrets": {
           "description": "Indicates whether a build should use secrets when building forks of the selected repository.",
@@ -6217,6 +6492,11 @@
     "Issue": {
       "description": "Represents an issue (error, warning) associated with a build.",
       "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/ChildObject"
+        }
+      ],
       "properties": {
         "category": {
           "description": "The category.",
@@ -6331,6 +6611,11 @@
     "Phase": {
       "description": "Represents a phase of a build definition.",
       "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/ChildObject"
+        }
+      ],
       "properties": {
         "condition": {
           "description": "The condition that must be true for this phase to execute.",
@@ -6390,6 +6675,11 @@
     "PhaseTarget": {
       "description": "Represents the target of a phase.",
       "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/ChildObject"
+        }
+      ],
       "properties": {
         "type": {
           "description": "The type of the target.",
@@ -6402,6 +6692,11 @@
     "ProcessParameters": {
       "description": "",
       "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/ChildObject"
+        }
+      ],
       "properties": {
         "dataSourceBindings": {
           "readOnly": true,
@@ -6558,6 +6853,11 @@
     "RetentionPolicy": {
       "description": "Represents a retention policy for a build definition.",
       "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/ChildObject"
+        }
+      ],
       "properties": {
         "artifacts": {
           "readOnly": true,
@@ -6603,6 +6903,11 @@
     "Schedule": {
       "description": "",
       "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/ChildObject"
+        }
+      ],
       "properties": {
         "branchFilters": {
           "readOnly": true,
@@ -6705,6 +7010,11 @@
     "ServerTargetExecutionOptions": {
       "description": "Represents options for running a phase on the server.",
       "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/ChildObject"
+        }
+      ],
       "properties": {
         "type": {
           "description": "The type.",
@@ -6895,6 +7205,11 @@
     "TaskAgentPoolReference": {
       "description": "Represents a reference to an agent pool.",
       "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/ChildObject"
+        }
+      ],
       "properties": {
         "id": {
           "description": "The pool ID.",
@@ -6914,6 +7229,11 @@
     "TaskDefinitionReference": {
       "description": "A reference to a task definition.",
       "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/ChildObject"
+        }
+      ],
       "properties": {
         "definitionType": {
           "description": "The type of task (task or task group).",
@@ -6933,6 +7253,11 @@
     "TaskInputDefinitionBase": {
       "description": "",
       "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/ChildObject"
+        }
+      ],
       "properties": {
         "aliases": {
           "readOnly": true,
@@ -6987,6 +7312,11 @@
     "TaskInputValidation": {
       "description": "",
       "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/ChildObject"
+        }
+      ],
       "properties": {
         "expression": {
           "description": "Conditional expression",
@@ -7029,6 +7359,11 @@
     "TaskOrchestrationPlanReference": {
       "description": "Represents a reference to an orchestration plan.",
       "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/ChildObject"
+        }
+      ],
       "properties": {
         "orchestrationType": {
           "description": "The type of the plan.",
@@ -7045,6 +7380,11 @@
     "TaskReference": {
       "description": "Represents a reference to a task.",
       "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/ChildObject"
+        }
+      ],
       "properties": {
         "id": {
           "description": "The ID of the task definition.",
@@ -7064,6 +7404,11 @@
     "TaskSourceDefinitionBase": {
       "description": "",
       "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/ChildObject"
+        }
+      ],
       "properties": {
         "authKey": {
           "type": "string"
@@ -7173,6 +7518,11 @@
     "TimelineRecord": {
       "description": "Represents an entry in a build's timeline.",
       "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/ChildObject"
+        }
+      ],
       "properties": {
         "_links": {
           "$ref": "#/definitions/ReferenceLinks"
@@ -7318,6 +7668,11 @@
     "TimelineReference": {
       "description": "Represents a reference to a timeline.",
       "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/ChildObject"
+        }
+      ],
       "properties": {
         "changeId": {
           "description": "The change ID.",
@@ -7370,6 +7725,11 @@
     "VariableGroupReference": {
       "description": "Represents a reference to a variable group.",
       "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/ChildObject"
+        }
+      ],
       "properties": {
         "id": {
           "description": "The ID of the variable group.",
