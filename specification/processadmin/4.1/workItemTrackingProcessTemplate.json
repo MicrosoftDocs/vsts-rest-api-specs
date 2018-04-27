@@ -47,12 +47,12 @@
         "tags": [
           "Behaviors"
         ],
-        "x-ms-vss-api-version": "4.1-preview.1",
+        "x-ms-docs-override-version": "4.1-preview.1",
         "x-ms-vss-resource": "behaviors",
-        "x-ms-vss-method": "GetBehavior",
+        "x-ms-vss-method": "GetBehaviors",
         "x-ms-preview": true,
-        "description": "",
-        "operationId": "Get",
+        "description": "Returns a list of behaviors for the process.",
+        "operationId": "List",
         "produces": [
           "application/json"
         ],
@@ -60,17 +60,10 @@
           {
             "in": "path",
             "name": "processId",
-            "description": "",
+            "description": "The ID of the process",
             "required": true,
             "type": "string",
             "format": "uuid"
-          },
-          {
-            "in": "query",
-            "name": "behaviorRefName",
-            "description": "",
-            "required": true,
-            "type": "string"
           },
           {
             "$ref": "#/parameters/api-Version-preview.1"
@@ -80,14 +73,17 @@
           "200": {
             "description": "successful operation",
             "schema": {
-              "$ref": "#/definitions/AdminBehavior"
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/AdminBehavior"
+              }
             }
-         }
+          }
         },
         "x-ms-examples": {
-            "": {
-                "$ref": "./httpExamples/behaviors/GET__admin_behavior.json"
-            }
+          "": {
+            "$ref": "./httpExamples/behaviors/GET__admin_behaviors_list.json"
+          }
         }
       }
     },
@@ -96,11 +92,11 @@
         "tags": [
           "Processes"
         ],
-        "x-ms-vss-api-version": "4.1-preview.1",
+        "x-ms-docs-override-version": "4.1-preview.1",
         "x-ms-vss-resource": "processes",
         "x-ms-vss-method": "CheckTemplateExistence",
         "x-ms-preview": true,
-        "description": "Check if process template exists",
+        "description": "Check if process template exists.",
         "operationId": "Check Template Existence",
         "consumes": [
           "application/octet-stream"
@@ -129,12 +125,12 @@
             "schema": {
               "$ref": "#/definitions/CheckTemplateExistenceResult"
             }
-         }
+          }
         },
         "x-ms-examples": {
-            "": {
-                "$ref": "./httpExamples/processes/POST__check_template_existence.json"
-            }
+          "": {
+            "$ref": "./httpExamples/processes/POST__check_template_existence.json"
+          }
         }
       }
     },
@@ -143,20 +139,20 @@
         "tags": [
           "Processes"
         ],
-        "x-ms-vss-api-version": "4.1-preview.1",
+        "x-ms-docs-override-version": "4.1-preview.1",
         "x-ms-vss-resource": "processes",
         "x-ms-vss-method": "Export",
         "x-ms-preview": true,
-        "description": "Returns requested process template",
+        "description": "Returns requested process template.",
         "operationId": "Export Process Template",
         "produces": [
           "application/zip"
         ],
         "parameters": [
           {
-            "in": "query",
+            "in": "path",
             "name": "id",
-            "description": "",
+            "description": "The ID of the process",
             "required": true,
             "type": "string",
             "format": "uuid"
@@ -172,12 +168,12 @@
               "type": "string",
               "format": "Stream"
             }
-         }
+          }
         },
         "x-ms-examples": {
-            "": {
-                "$ref": "./httpExamples/processes/GET__export_template.json"
-            }
+          "": {
+            "$ref": "./httpExamples/processes/GET__export_template.json"
+          }
         }
       }
     },
@@ -186,11 +182,11 @@
         "tags": [
           "Processes"
         ],
-        "x-ms-vss-api-version": "4.1-preview.1",
+        "x-ms-docs-override-version": "4.1-preview.1",
         "x-ms-vss-resource": "processes",
         "x-ms-vss-method": "Import",
         "x-ms-preview": true,
-        "description": "",
+        "description": "Imports a process from zip file.",
         "operationId": "Import Process Template",
         "consumes": [
           "application/octet-stream"
@@ -212,7 +208,7 @@
           {
             "in": "query",
             "name": "ignoreWarnings",
-            "description": "",
+            "description": "Default value is false",
             "required": false,
             "type": "boolean"
           },
@@ -226,12 +222,12 @@
             "schema": {
               "$ref": "#/definitions/ProcessImportResult"
             }
-         }
+          }
         },
         "x-ms-examples": {
-            "": {
-                "$ref": "./httpExamples/processes/POST__import_process.json"
-            }
+          "": {
+            "$ref": "./httpExamples/processes/POST__import_process.json"
+          }
         }
       }
     },
@@ -240,20 +236,20 @@
         "tags": [
           "Processes"
         ],
-        "x-ms-vss-api-version": "4.1-preview.1",
+        "x-ms-docs-override-version": "4.1-preview.1",
         "x-ms-vss-resource": "processes",
         "x-ms-vss-method": "Status",
         "x-ms-preview": true,
-        "description": "Whether promote has completed for the specified promote job id",
+        "description": "Tells whether promote has completed for the specified promote job ID.",
         "operationId": "Import Process Template Status",
         "produces": [
           "application/json"
         ],
         "parameters": [
           {
-            "in": "query",
+            "in": "path",
             "name": "id",
-            "description": "",
+            "description": "The ID of the promote job operation",
             "required": true,
             "type": "string",
             "format": "uuid"
@@ -268,7 +264,63 @@
             "schema": {
               "$ref": "#/definitions/ProcessPromoteStatus"
             }
-         }
+          }
+        },
+        "x-ms-examples": {
+          "": {
+            "$ref": "./httpExamples/processes/GET__import_process_status_template.json"
+          }
+        }
+      }
+    }
+  },
+  "x-ms-paths": {
+    "/_apis/work/processadmin/{processId}/behaviors?behaviorRefName={behaviorRefName}": {
+      "get": {
+        "tags": [
+          "Behaviors"
+        ],
+        "x-ms-docs-override-version": "4.1-preview.1",
+        "x-ms-vss-resource": "behaviors",
+        "x-ms-vss-method": "GetBehavior",
+        "x-ms-preview": true,
+        "description": "Returns a behavior for the process.",
+        "operationId": "Get",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "processId",
+            "description": "The ID of the process",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "query",
+            "name": "behaviorRefName",
+            "description": "The reference name of the behavior",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/AdminBehavior"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "": {
+            "$ref": "./httpExamples/behaviors/GET__admin_behavior.json"
+          }
         }
       }
     }
@@ -411,7 +463,7 @@
           "format": "uuid"
         },
         "message": {
-          "description": "The error message assoicated with the promote operation.",
+          "description": "The error message assoicated with the promote operation. The string will be empty if there are no errors.",
           "type": "string"
         },
         "pending": {
@@ -425,7 +477,7 @@
           "format": "int32"
         },
         "successful": {
-          "description": "Indicates whether this promote operation is successful.",
+          "description": "True if promote finished all the projects successfully. False if still inprogress or any project promote failed.",
           "type": "boolean"
         }
       }
@@ -449,7 +501,17 @@
             "error"
           ],
           "x-ms-enum": {
-            "name": "Microsoft.TeamFoundation.WorkItemTracking.ProcessTemplate.WebApi.Models.ValidationIssueType"
+            "name": "ValidationIssueType",
+            "values": [
+              {
+                "value": "warning",
+                "description": ""
+              },
+              {
+                "value": "error",
+                "description": ""
+              }
+            ]
           }
         },
         "line": {
@@ -468,7 +530,6 @@
       ],
       "properties": {
         "value": {
-          "readOnly": true,
           "type": "string",
           "format": "T"
         }
@@ -479,7 +540,6 @@
       "type": "object",
       "properties": {
         "count": {
-          "readOnly": true,
           "type": "integer",
           "format": "int32"
         }
@@ -499,7 +559,7 @@
     "accessToken": {
       "type": "basic",
       "description": "Personal access token. Use any value for the user name and the token as the password."
-     }
+    }
   },
   "security": [
     {
