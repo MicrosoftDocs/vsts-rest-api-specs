@@ -31,6 +31,16 @@
   "basePath": "/",
   "tags": [
     {
+      "name": "Diagnostic Logs"
+    },
+    {
+      "name": "Diagnostics"
+    },
+    {
+      "name": "Events",
+      "description": "APIs for publishing notification events."
+    },
+    {
       "name": "Event Types",
       "description": "Discover notification event types, filterable fields, and related metadata."
     },
@@ -46,12 +56,125 @@
     "https"
   ],
   "paths": {
+    "/_apis/notification/diagnosticlogs/{source}/entries/{entryId}": {
+      "get": {
+        "tags": [
+          "Diagnostic Logs"
+        ],
+        "x-ms-docs-override-version": "4.1-preview.1",
+        "x-ms-vss-resource": "diagnosticLogs",
+        "x-ms-vss-method": "ListLogs",
+        "x-ms-preview": true,
+        "description": "List diagnostic logs this service.",
+        "operationId": "List",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "source",
+            "description": "",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "path",
+            "name": "entryId",
+            "description": "",
+            "required": true,
+            "x-ms-required": false,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "query",
+            "name": "startTime",
+            "description": "",
+            "required": false,
+            "type": "string",
+            "format": "date-time"
+          },
+          {
+            "in": "query",
+            "name": "endTime",
+            "description": "",
+            "required": false,
+            "type": "string",
+            "format": "date-time"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/INotificationDiagnosticLog"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.notification_diagnostics"
+            ]
+          }
+        ]
+      }
+    },
+    "/_apis/notification/events": {
+      "post": {
+        "tags": [
+          "Events"
+        ],
+        "x-ms-docs-override-version": "4.1-preview.1",
+        "x-ms-vss-resource": "events",
+        "x-ms-vss-method": "PublishEvent",
+        "x-ms-preview": true,
+        "description": "Publish an event.",
+        "operationId": "Publish Event",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/VssNotificationEvent"
+            }
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/VssNotificationEvent"
+            }
+          }
+        }
+      }
+    },
     "/_apis/notification/eventtypes": {
       "get": {
         "tags": [
           "Event Types"
         ],
-        "x-ms-vss-api-version": "4.1-preview.1",
+        "x-ms-docs-override-version": "4.1-preview.1",
         "x-ms-vss-resource": "eventTypes",
         "x-ms-vss-method": "ListEventTypes",
         "x-ms-preview": true,
@@ -81,7 +204,7 @@
                 "$ref": "#/definitions/NotificationEventType"
               }
             }
-         }
+          }
         },
         "security": [
           {
@@ -91,12 +214,12 @@
           }
         ],
         "x-ms-examples": {
-            "All": {
-                "$ref": "./httpExamples/EventTypes/GET__notification_eventTypes.json"
-            },
-            "By publisher": {
-                "$ref": "./httpExamples/EventTypes/GET__notification_eventTypes_publisherId-_publisherId_.json"
-            }
+          "All": {
+            "$ref": "./httpExamples/EventTypes/GET__notification_eventTypes.json"
+          },
+          "By publisher": {
+            "$ref": "./httpExamples/EventTypes/GET__notification_eventTypes_publisherId-_publisherId_.json"
+          }
         }
       }
     },
@@ -105,7 +228,7 @@
         "tags": [
           "Event Types"
         ],
-        "x-ms-vss-api-version": "4.1-preview.1",
+        "x-ms-docs-override-version": "4.1-preview.1",
         "x-ms-vss-resource": "eventTypes",
         "x-ms-vss-method": "GetEventType",
         "x-ms-preview": true,
@@ -132,7 +255,7 @@
             "schema": {
               "$ref": "#/definitions/NotificationEventType"
             }
-         }
+          }
         },
         "security": [
           {
@@ -142,9 +265,9 @@
           }
         ],
         "x-ms-examples": {
-            "": {
-                "$ref": "./httpExamples/EventTypes/GET__notification_eventTypes__eventTypeId_.json"
-            }
+          "": {
+            "$ref": "./httpExamples/EventTypes/GET__notification_eventTypes__eventTypeId_.json"
+          }
         }
       }
     },
@@ -153,7 +276,7 @@
         "tags": [
           "Subscribers"
         ],
-        "x-ms-vss-api-version": "4.1-preview.1",
+        "x-ms-docs-override-version": "4.1-preview.1",
         "x-ms-vss-resource": "subscribers",
         "x-ms-vss-method": "GetSubscriber",
         "x-ms-preview": true,
@@ -181,7 +304,7 @@
             "schema": {
               "$ref": "#/definitions/NotificationSubscriber"
             }
-         }
+          }
         },
         "security": [
           {
@@ -195,7 +318,7 @@
         "tags": [
           "Subscribers"
         ],
-        "x-ms-vss-api-version": "4.1-preview.1",
+        "x-ms-docs-override-version": "4.1-preview.1",
         "x-ms-vss-resource": "subscribers",
         "x-ms-vss-method": "UpdateSubscriber",
         "x-ms-preview": true,
@@ -235,7 +358,7 @@
             "schema": {
               "$ref": "#/definitions/NotificationSubscriber"
             }
-         }
+          }
         },
         "security": [
           {
@@ -251,7 +374,7 @@
         "tags": [
           "Subscriptions"
         ],
-        "x-ms-vss-api-version": "4.1-preview.1",
+        "x-ms-docs-override-version": "4.1-preview.1",
         "x-ms-vss-resource": "subscriptionQuery",
         "x-ms-vss-method": "QuerySubscriptions",
         "x-ms-preview": true,
@@ -286,7 +409,7 @@
                 "$ref": "#/definitions/NotificationSubscription"
               }
             }
-         }
+          }
         },
         "security": [
           {
@@ -296,9 +419,9 @@
           }
         ],
         "x-ms-examples": {
-            "By subscriber": {
-                "$ref": "./httpExamples/SubscriptionQuery/POST__notification_subscriptionQuery.json"
-            }
+          "By subscriber": {
+            "$ref": "./httpExamples/SubscriptionQuery/POST__notification_subscriptionQuery.json"
+          }
         }
       }
     },
@@ -307,7 +430,7 @@
         "tags": [
           "Subscriptions"
         ],
-        "x-ms-vss-api-version": "4.1-preview.1",
+        "x-ms-docs-override-version": "4.1-preview.1",
         "x-ms-vss-resource": "subscriptions",
         "x-ms-vss-method": "CreateSubscription",
         "x-ms-preview": true,
@@ -339,7 +462,7 @@
             "schema": {
               "$ref": "#/definitions/NotificationSubscription"
             }
-         }
+          }
         },
         "security": [
           {
@@ -349,22 +472,22 @@
           }
         ],
         "x-ms-examples": {
-            "Create a personal subscription": {
-                "$ref": "./httpExamples/Subscriptions/POST__notification_subscriptions.json"
-            },
-            "Create a team subscription": {
-                "$ref": "./httpExamples/Subscriptions/POST__notification_subscriptions2.json"
-            },
-            "Follow a work item": {
-                "$ref": "./httpExamples/Subscriptions/POST__notification_FollowWorkItem.json"
-            }
+          "Create a personal subscription": {
+            "$ref": "./httpExamples/Subscriptions/POST__notification_subscriptions.json"
+          },
+          "Create a team subscription": {
+            "$ref": "./httpExamples/Subscriptions/POST__notification_subscriptions2.json"
+          },
+          "Follow a work item": {
+            "$ref": "./httpExamples/Subscriptions/POST__notification_FollowWorkItem.json"
+          }
         }
       },
       "get": {
         "tags": [
           "Subscriptions"
         ],
-        "x-ms-vss-api-version": "4.1-preview.1",
+        "x-ms-docs-override-version": "4.1-preview.1",
         "x-ms-vss-resource": "subscriptions",
         "x-ms-vss-method": "ListSubscriptions",
         "x-ms-preview": true,
@@ -396,7 +519,38 @@
             "description": "",
             "required": false,
             "type": "string",
-            "format": "SubscriptionQueryFlags"
+            "enum": [
+              "none",
+              "includeInvalidSubscriptions",
+              "includeDeletedSubscriptions",
+              "includeFilterDetails",
+              "alwaysReturnBasicInformation"
+            ],
+            "x-ms-enum": {
+              "name": "SubscriptionQueryFlags",
+              "values": [
+                {
+                  "value": "none",
+                  "description": ""
+                },
+                {
+                  "value": "includeInvalidSubscriptions",
+                  "description": "Include subscriptions with invalid subscribers."
+                },
+                {
+                  "value": "includeDeletedSubscriptions",
+                  "description": "Include subscriptions marked for deletion."
+                },
+                {
+                  "value": "includeFilterDetails",
+                  "description": "Include the full filter details with each subscription."
+                },
+                {
+                  "value": "alwaysReturnBasicInformation",
+                  "description": "For a subscription the caller does not have permission to view, return basic (non-confidential) information."
+                }
+              ]
+            }
           },
           {
             "$ref": "#/parameters/api-Version-preview.1"
@@ -411,7 +565,7 @@
                 "$ref": "#/definitions/NotificationSubscription"
               }
             }
-         }
+          }
         },
         "security": [
           {
@@ -421,9 +575,9 @@
           }
         ],
         "x-ms-examples": {
-            "": {
-                "$ref": "./httpExamples/Subscriptions/GET__notification_subscriptions.json"
-            }
+          "": {
+            "$ref": "./httpExamples/Subscriptions/GET__notification_subscriptions.json"
+          }
         }
       }
     },
@@ -432,7 +586,7 @@
         "tags": [
           "Subscriptions"
         ],
-        "x-ms-vss-api-version": "4.1-preview.1",
+        "x-ms-docs-override-version": "4.1-preview.1",
         "x-ms-vss-resource": "subscriptions",
         "x-ms-vss-method": "DeleteSubscription",
         "x-ms-preview": true,
@@ -453,7 +607,7 @@
         "responses": {
           "200": {
             "description": "successful operation"
-         }
+          }
         },
         "security": [
           {
@@ -463,19 +617,19 @@
           }
         ],
         "x-ms-examples": {
-            "Delete a subscription": {
-                "$ref": "./httpExamples/Subscriptions/DELETE__notification_subscriptions__subscriptionId_.json"
-            },
-            "Unfollow a work item": {
-                "$ref": "./httpExamples/Subscriptions/DELETE__notification_UnollowWorkItem.json"
-            }
+          "Delete a subscription": {
+            "$ref": "./httpExamples/Subscriptions/DELETE__notification_subscriptions__subscriptionId_.json"
+          },
+          "Unfollow a work item": {
+            "$ref": "./httpExamples/Subscriptions/DELETE__notification_UnollowWorkItem.json"
+          }
         }
       },
       "get": {
         "tags": [
           "Subscriptions"
         ],
-        "x-ms-vss-api-version": "4.1-preview.1",
+        "x-ms-docs-override-version": "4.1-preview.1",
         "x-ms-vss-resource": "subscriptions",
         "x-ms-vss-method": "GetSubscription",
         "x-ms-preview": true,
@@ -498,7 +652,38 @@
             "description": "",
             "required": false,
             "type": "string",
-            "format": "SubscriptionQueryFlags"
+            "enum": [
+              "none",
+              "includeInvalidSubscriptions",
+              "includeDeletedSubscriptions",
+              "includeFilterDetails",
+              "alwaysReturnBasicInformation"
+            ],
+            "x-ms-enum": {
+              "name": "SubscriptionQueryFlags",
+              "values": [
+                {
+                  "value": "none",
+                  "description": ""
+                },
+                {
+                  "value": "includeInvalidSubscriptions",
+                  "description": "Include subscriptions with invalid subscribers."
+                },
+                {
+                  "value": "includeDeletedSubscriptions",
+                  "description": "Include subscriptions marked for deletion."
+                },
+                {
+                  "value": "includeFilterDetails",
+                  "description": "Include the full filter details with each subscription."
+                },
+                {
+                  "value": "alwaysReturnBasicInformation",
+                  "description": "For a subscription the caller does not have permission to view, return basic (non-confidential) information."
+                }
+              ]
+            }
           },
           {
             "$ref": "#/parameters/api-Version-preview.1"
@@ -510,7 +695,7 @@
             "schema": {
               "$ref": "#/definitions/NotificationSubscription"
             }
-         }
+          }
         },
         "security": [
           {
@@ -520,16 +705,16 @@
           }
         ],
         "x-ms-examples": {
-            "": {
-                "$ref": "./httpExamples/Subscriptions/GET__notification_subscriptions__subscriptionId_.json"
-            }
+          "": {
+            "$ref": "./httpExamples/Subscriptions/GET__notification_subscriptions__subscriptionId_.json"
+          }
         }
       },
       "patch": {
         "tags": [
           "Subscriptions"
         ],
-        "x-ms-vss-api-version": "4.1-preview.1",
+        "x-ms-docs-override-version": "4.1-preview.1",
         "x-ms-vss-resource": "subscriptions",
         "x-ms-vss-method": "UpdateSubscription",
         "x-ms-preview": true,
@@ -568,7 +753,7 @@
             "schema": {
               "$ref": "#/definitions/NotificationSubscription"
             }
-         }
+          }
         },
         "security": [
           {
@@ -578,13 +763,110 @@
           }
         ],
         "x-ms-examples": {
-            "Change description": {
-                "$ref": "./httpExamples/Subscriptions/PATCH__notification_subscriptions__subscriptionId_.json"
-            },
-            "Disable a subscription": {
-                "$ref": "./httpExamples/Subscriptions/PATCH__notification_subscriptions__subscriptionId_2.json"
-            }
+          "Change description": {
+            "$ref": "./httpExamples/Subscriptions/PATCH__notification_subscriptions__subscriptionId_.json"
+          },
+          "Disable a subscription": {
+            "$ref": "./httpExamples/Subscriptions/PATCH__notification_subscriptions__subscriptionId_2.json"
+          }
         }
+      }
+    },
+    "/_apis/notification/subscriptions/{subscriptionId}/diagnostics": {
+      "get": {
+        "tags": [
+          "Diagnostics"
+        ],
+        "x-ms-docs-override-version": "4.1-preview.1",
+        "x-ms-vss-resource": "diagnostics",
+        "x-ms-vss-method": "GetSubscriptionDiagnostics",
+        "x-ms-preview": true,
+        "description": "",
+        "operationId": "Get",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "subscriptionId",
+            "description": "",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/SubscriptionDiagnostics"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.notification"
+            ]
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "Diagnostics"
+        ],
+        "x-ms-docs-override-version": "4.1-preview.1",
+        "x-ms-vss-resource": "diagnostics",
+        "x-ms-vss-method": "UpdateSubscriptionDiagnostics",
+        "x-ms-preview": true,
+        "description": "",
+        "operationId": "Update",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UpdateSubscripitonDiagnosticsParameters"
+            }
+          },
+          {
+            "in": "path",
+            "name": "subscriptionId",
+            "description": "",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/SubscriptionDiagnostics"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.notification_write",
+              "vso.notification_diagnostics"
+            ]
+          }
+        ]
       }
     },
     "/_apis/notification/Subscriptions/{subscriptionId}/usersettings/{userId}": {
@@ -592,7 +874,7 @@
         "tags": [
           "Subscriptions"
         ],
-        "x-ms-vss-api-version": "4.1-preview.1",
+        "x-ms-docs-override-version": "4.1-preview.1",
         "x-ms-vss-resource": "userSettings",
         "x-ms-vss-method": "UpdateSubscriptionUserSettings",
         "x-ms-preview": true,
@@ -639,7 +921,7 @@
             "schema": {
               "$ref": "#/definitions/SubscriptionUserSettings"
             }
-         }
+          }
         },
         "security": [
           {
@@ -649,9 +931,9 @@
           }
         ],
         "x-ms-examples": {
-            "Opt out": {
-                "$ref": "./httpExamples/UserSettings/PUT__notification_subscriptions__sharedSubscriptionId__userSettings_me.json"
-            }
+          "Opt out": {
+            "$ref": "./httpExamples/UserSettings/PUT__notification_subscriptions__sharedSubscriptionId__userSettings_me.json"
+          }
         }
       }
     },
@@ -660,7 +942,7 @@
         "tags": [
           "Subscriptions"
         ],
-        "x-ms-vss-api-version": "4.1-preview.1",
+        "x-ms-docs-override-version": "4.1-preview.1",
         "x-ms-vss-resource": "subscriptionTemplates",
         "x-ms-vss-method": "GetSubscriptionTemplates",
         "x-ms-preview": true,
@@ -683,7 +965,7 @@
                 "$ref": "#/definitions/NotificationSubscriptionTemplate"
               }
             }
-         }
+          }
         },
         "security": [
           {
@@ -704,8 +986,7 @@
           "$ref": "#/definitions/RoleBasedFilter"
         }
       ],
-      "properties": {
-      }
+      "properties": {}
     },
     "ActorNotificationReason": {
       "description": "",
@@ -743,7 +1024,6 @@
           "type": "string"
         },
         "type": {
-          "readOnly": true,
           "type": "string"
         }
       }
@@ -756,7 +1036,6 @@
           "type": "string"
         },
         "type": {
-          "readOnly": true,
           "type": "string"
         }
       }
@@ -771,7 +1050,17 @@
             "suspendUnprocessed"
           ],
           "x-ms-enum": {
-            "name": "Microsoft.VisualStudio.Services.Notifications.WebApi.NotificationOperation"
+            "name": "NotificationOperation",
+            "values": [
+              {
+                "value": "none",
+                "description": ""
+              },
+              {
+                "value": "suspendUnprocessed",
+                "description": ""
+              }
+            ]
           }
         },
         "notificationQueryConditions": {
@@ -790,15 +1079,76 @@
           "$ref": "#/definitions/RoleBasedFilter"
         }
       ],
-      "properties": {
-      }
+      "properties": {}
     },
     "BlockSubscriptionChannel": {
       "description": "",
       "type": "object",
       "properties": {
         "type": {
-          "readOnly": true,
+          "type": "string"
+        }
+      }
+    },
+    "DiagnosticIdentity": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "displayName": {
+          "type": "string"
+        },
+        "emailAddress": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        }
+      }
+    },
+    "DiagnosticNotification": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "eventId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "eventType": {
+          "type": "string"
+        },
+        "id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "messages": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/NotificationDiagnosticLogMessage"
+          }
+        },
+        "recipients": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/DiagnosticRecipient"
+          }
+        },
+        "result": {
+          "type": "string"
+        },
+        "subscriptionId": {
+          "type": "string"
+        }
+      }
+    },
+    "DiagnosticRecipient": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "recipient": {
+          "$ref": "#/definitions/DiagnosticIdentity"
+        },
+        "status": {
           "type": "string"
         }
       }
@@ -813,7 +1163,6 @@
       ],
       "properties": {
         "type": {
-          "readOnly": true,
           "type": "string"
         }
       }
@@ -828,7 +1177,6 @@
       ],
       "properties": {
         "type": {
-          "readOnly": true,
           "type": "string"
         }
       }
@@ -866,6 +1214,68 @@
         "unprocessedEvents": {
           "type": "integer",
           "format": "int32"
+        }
+      }
+    },
+    "EventBatch": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "endTime": {
+          "type": "string",
+          "format": "TimeSpan"
+        },
+        "eventCounts": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "firstEventId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "notificationCounts": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "startTime": {
+          "type": "string",
+          "format": "TimeSpan"
+        },
+        "subscriptionCounts": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      }
+    },
+    "EventProcessingLog": {
+      "description": "",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/NotificationJobDiagnosticLog"
+        }
+      ],
+      "properties": {
+        "batches": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/EventBatch"
+          }
+        },
+        "matcherResults": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/MatcherResult"
+          }
         }
       }
     },
@@ -917,7 +1327,6 @@
           "$ref": "#/definitions/ExpressionFilterModel"
         },
         "type": {
-          "readOnly": true,
           "type": "string"
         }
       }
@@ -1030,6 +1439,40 @@
         }
       }
     },
+    "GeneratedNotification": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "recipients": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/DiagnosticIdentity"
+          }
+        }
+      }
+    },
+    "GraphSubjectBase": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "_links": {
+          "description": "This field contains zero or more interesting links about the graph subject. These links may be invoked to obtain additional relationships or more detailed information about this graph subject.",
+          "$ref": "#/definitions/ReferenceLinks"
+        },
+        "descriptor": {
+          "description": "The descriptor is the primary way to reference the graph subject while the system is running. This field will uniquely identify the same graph subject across both Accounts and Organizations.",
+          "type": "string"
+        },
+        "displayName": {
+          "description": "This is the non-unique display name of the graph subject. To change this field, you must alter its value in the source provider.",
+          "type": "string"
+        },
+        "url": {
+          "description": "This url is the full route to the source resource of this graph subject.",
+          "type": "string"
+        }
+      }
+    },
     "GroupSubscriptionChannel": {
       "description": "",
       "type": "object",
@@ -1040,7 +1483,6 @@
       ],
       "properties": {
         "type": {
-          "readOnly": true,
           "type": "string"
         }
       }
@@ -1048,11 +1490,13 @@
     "IdentityRef": {
       "description": "",
       "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/GraphSubjectBase"
+        }
+      ],
       "properties": {
         "directoryAlias": {
-          "type": "string"
-        },
-        "displayName": {
           "type": "string"
         },
         "id": {
@@ -1075,9 +1519,50 @@
         },
         "uniqueName": {
           "type": "string"
+        }
+      }
+    },
+    "INotificationDiagnosticLog": {
+      "description": "Abstraction interface for the diagnostic log.  Primarily for deserialization.",
+      "type": "object",
+      "properties": {
+        "activityId": {
+          "type": "string",
+          "format": "uuid"
         },
-        "url": {
+        "description": {
           "type": "string"
+        },
+        "endTime": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "logType": {
+          "type": "string"
+        },
+        "messages": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/NotificationDiagnosticLogMessage"
+          }
+        },
+        "properties": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "source": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "startTime": {
+          "type": "string",
+          "format": "date-time"
         }
       }
     },
@@ -1177,7 +1662,6 @@
       "type": "object",
       "properties": {
         "type": {
-          "readOnly": true,
           "type": "string"
         }
       }
@@ -1190,8 +1674,25 @@
           "type": "string"
         },
         "type": {
-          "readOnly": true,
           "type": "string"
+        }
+      }
+    },
+    "MatcherResult": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "matcher": {
+          "type": "string"
+        },
+        "stats": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "int32"
+            }
+          }
         }
       }
     },
@@ -1200,7 +1701,6 @@
       "type": "object",
       "properties": {
         "type": {
-          "readOnly": true,
           "type": "string"
         }
       }
@@ -1226,6 +1726,124 @@
         "unprocessedNotifications": {
           "type": "integer",
           "format": "int32"
+        }
+      }
+    },
+    "NotificationBatch": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "endTime": {
+          "type": "string",
+          "format": "TimeSpan"
+        },
+        "firstNotificationId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "notificationCount": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "problematicNotifications": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/DiagnosticNotification"
+          }
+        },
+        "startTime": {
+          "type": "string",
+          "format": "TimeSpan"
+        }
+      }
+    },
+    "NotificationDeliveryLog": {
+      "description": "",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/NotificationJobDiagnosticLog"
+        }
+      ],
+      "properties": {
+        "batches": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/NotificationBatch"
+          }
+        }
+      }
+    },
+    "NotificationDiagnosticLog": {
+      "description": "Abstract base class for all of the diagnostic logs.",
+      "type": "object",
+      "properties": {
+        "activityId": {
+          "description": "Identifier used for correlating to other diagnostics that may have been recorded elsewhere.",
+          "type": "string",
+          "format": "uuid"
+        },
+        "description": {
+          "type": "string"
+        },
+        "endTime": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "errors": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "id": {
+          "description": "Unique instance identifier.",
+          "type": "string",
+          "format": "uuid"
+        },
+        "logType": {
+          "type": "string"
+        },
+        "messages": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/NotificationDiagnosticLogMessage"
+          }
+        },
+        "properties": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "source": {
+          "description": "This identifier depends on the logType.  For notification jobs, this will be the job Id. For subscription tracing, this will be a special root Guid with the subscription Id encoded.",
+          "type": "string",
+          "format": "uuid"
+        },
+        "startTime": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "warnings": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "NotificationDiagnosticLogMessage": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "level": {
+          "description": "Corresponds to .Net TraceLevel enumeration",
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "time": {
+          "type": "string",
+          "format": "TimeSpan"
         }
       }
     },
@@ -1330,7 +1948,69 @@
             "teamProject"
           ],
           "x-ms-enum": {
-            "name": "Microsoft.VisualStudio.Services.Notifications.WebApi.SubscriptionFieldType"
+            "name": "SubscriptionFieldType",
+            "values": [
+              {
+                "value": "string",
+                "description": ""
+              },
+              {
+                "value": "integer",
+                "description": ""
+              },
+              {
+                "value": "dateTime",
+                "description": ""
+              },
+              {
+                "value": "plainText",
+                "description": ""
+              },
+              {
+                "value": "html",
+                "description": ""
+              },
+              {
+                "value": "treePath",
+                "description": ""
+              },
+              {
+                "value": "history",
+                "description": ""
+              },
+              {
+                "value": "double",
+                "description": ""
+              },
+              {
+                "value": "guid",
+                "description": ""
+              },
+              {
+                "value": "boolean",
+                "description": ""
+              },
+              {
+                "value": "identity",
+                "description": ""
+              },
+              {
+                "value": "picklistInteger",
+                "description": ""
+              },
+              {
+                "value": "picklistString",
+                "description": ""
+              },
+              {
+                "value": "picklistDouble",
+                "description": ""
+              },
+              {
+                "value": "teamProject",
+                "description": ""
+              }
+            ]
           }
         },
         "value": {
@@ -1443,6 +2123,29 @@
         }
       }
     },
+    "NotificationJobDiagnosticLog": {
+      "description": "",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/NotificationDiagnosticLog"
+        }
+      ],
+      "properties": {
+        "result": {
+          "type": "string"
+        },
+        "stats": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "int32"
+            }
+          }
+        }
+      }
+    },
     "NotificationQueryCondition": {
       "description": "",
       "type": "object",
@@ -1483,7 +2186,57 @@
             "aliasMemberGroupRole"
           ],
           "x-ms-enum": {
-            "name": "Microsoft.VisualStudio.Services.Notifications.WebApi.NotificationReasonType"
+            "name": "NotificationReasonType",
+            "values": [
+              {
+                "value": "unknown",
+                "description": ""
+              },
+              {
+                "value": "follows",
+                "description": ""
+              },
+              {
+                "value": "personal",
+                "description": ""
+              },
+              {
+                "value": "personalAlias",
+                "description": ""
+              },
+              {
+                "value": "directMember",
+                "description": ""
+              },
+              {
+                "value": "indirectMember",
+                "description": ""
+              },
+              {
+                "value": "groupAlias",
+                "description": ""
+              },
+              {
+                "value": "subscriptionAlias",
+                "description": ""
+              },
+              {
+                "value": "singleRole",
+                "description": ""
+              },
+              {
+                "value": "directMemberGroupRole",
+                "description": ""
+              },
+              {
+                "value": "inDirectMemberGroupRole",
+                "description": ""
+              },
+              {
+                "value": "aliasMemberGroupRole",
+                "description": ""
+              }
+            ]
           }
         },
         "targetIdentities": {
@@ -1553,7 +2306,125 @@
             "hourlyEventPipelineTime"
           ],
           "x-ms-enum": {
-            "name": "Microsoft.VisualStudio.Services.Notifications.WebApi.NotificationStatisticType"
+            "name": "NotificationStatisticType",
+            "values": [
+              {
+                "value": "notificationBySubscription",
+                "description": ""
+              },
+              {
+                "value": "eventsByEventType",
+                "description": ""
+              },
+              {
+                "value": "notificationByEventType",
+                "description": ""
+              },
+              {
+                "value": "eventsByEventTypePerUser",
+                "description": ""
+              },
+              {
+                "value": "notificationByEventTypePerUser",
+                "description": ""
+              },
+              {
+                "value": "events",
+                "description": ""
+              },
+              {
+                "value": "notifications",
+                "description": ""
+              },
+              {
+                "value": "notificationFailureBySubscription",
+                "description": ""
+              },
+              {
+                "value": "unprocessedRangeStart",
+                "description": ""
+              },
+              {
+                "value": "unprocessedEventsByPublisher",
+                "description": ""
+              },
+              {
+                "value": "unprocessedEventDelayByPublisher",
+                "description": ""
+              },
+              {
+                "value": "unprocessedNotificationsByChannelByPublisher",
+                "description": ""
+              },
+              {
+                "value": "unprocessedNotificationDelayByChannelByPublisher",
+                "description": ""
+              },
+              {
+                "value": "delayRangeStart",
+                "description": ""
+              },
+              {
+                "value": "totalPipelineTime",
+                "description": ""
+              },
+              {
+                "value": "notificationPipelineTime",
+                "description": ""
+              },
+              {
+                "value": "eventPipelineTime",
+                "description": ""
+              },
+              {
+                "value": "hourlyRangeStart",
+                "description": ""
+              },
+              {
+                "value": "hourlyNotificationBySubscription",
+                "description": ""
+              },
+              {
+                "value": "hourlyEventsByEventTypePerUser",
+                "description": ""
+              },
+              {
+                "value": "hourlyEvents",
+                "description": ""
+              },
+              {
+                "value": "hourlyNotifications",
+                "description": ""
+              },
+              {
+                "value": "hourlyUnprocessedEventsByPublisher",
+                "description": ""
+              },
+              {
+                "value": "hourlyUnprocessedEventDelayByPublisher",
+                "description": ""
+              },
+              {
+                "value": "hourlyUnprocessedNotificationsByChannelByPublisher",
+                "description": ""
+              },
+              {
+                "value": "hourlyUnprocessedNotificationDelayByChannelByPublisher",
+                "description": ""
+              },
+              {
+                "value": "hourlyTotalPipelineTime",
+                "description": ""
+              },
+              {
+                "value": "hourlyNotificationPipelineTime",
+                "description": ""
+              },
+              {
+                "value": "hourlyEventPipelineTime",
+                "description": ""
+              }
+            ]
           }
         },
         "user": {
@@ -1625,7 +2496,125 @@
             "hourlyEventPipelineTime"
           ],
           "x-ms-enum": {
-            "name": "Microsoft.VisualStudio.Services.Notifications.WebApi.NotificationStatisticType"
+            "name": "NotificationStatisticType",
+            "values": [
+              {
+                "value": "notificationBySubscription",
+                "description": ""
+              },
+              {
+                "value": "eventsByEventType",
+                "description": ""
+              },
+              {
+                "value": "notificationByEventType",
+                "description": ""
+              },
+              {
+                "value": "eventsByEventTypePerUser",
+                "description": ""
+              },
+              {
+                "value": "notificationByEventTypePerUser",
+                "description": ""
+              },
+              {
+                "value": "events",
+                "description": ""
+              },
+              {
+                "value": "notifications",
+                "description": ""
+              },
+              {
+                "value": "notificationFailureBySubscription",
+                "description": ""
+              },
+              {
+                "value": "unprocessedRangeStart",
+                "description": ""
+              },
+              {
+                "value": "unprocessedEventsByPublisher",
+                "description": ""
+              },
+              {
+                "value": "unprocessedEventDelayByPublisher",
+                "description": ""
+              },
+              {
+                "value": "unprocessedNotificationsByChannelByPublisher",
+                "description": ""
+              },
+              {
+                "value": "unprocessedNotificationDelayByChannelByPublisher",
+                "description": ""
+              },
+              {
+                "value": "delayRangeStart",
+                "description": ""
+              },
+              {
+                "value": "totalPipelineTime",
+                "description": ""
+              },
+              {
+                "value": "notificationPipelineTime",
+                "description": ""
+              },
+              {
+                "value": "eventPipelineTime",
+                "description": ""
+              },
+              {
+                "value": "hourlyRangeStart",
+                "description": ""
+              },
+              {
+                "value": "hourlyNotificationBySubscription",
+                "description": ""
+              },
+              {
+                "value": "hourlyEventsByEventTypePerUser",
+                "description": ""
+              },
+              {
+                "value": "hourlyEvents",
+                "description": ""
+              },
+              {
+                "value": "hourlyNotifications",
+                "description": ""
+              },
+              {
+                "value": "hourlyUnprocessedEventsByPublisher",
+                "description": ""
+              },
+              {
+                "value": "hourlyUnprocessedEventDelayByPublisher",
+                "description": ""
+              },
+              {
+                "value": "hourlyUnprocessedNotificationsByChannelByPublisher",
+                "description": ""
+              },
+              {
+                "value": "hourlyUnprocessedNotificationDelayByChannelByPublisher",
+                "description": ""
+              },
+              {
+                "value": "hourlyTotalPipelineTime",
+                "description": ""
+              },
+              {
+                "value": "hourlyNotificationPipelineTime",
+                "description": ""
+              },
+              {
+                "value": "hourlyEventPipelineTime",
+                "description": ""
+              }
+            ]
           }
         },
         "user": {
@@ -1647,7 +2636,29 @@
             "notSet"
           ],
           "x-ms-enum": {
-            "name": "Microsoft.VisualStudio.Services.Notifications.WebApi.NotificationSubscriberDeliveryPreference"
+            "name": "NotificationSubscriberDeliveryPreference",
+            "values": [
+              {
+                "value": "none",
+                "description": ""
+              },
+              {
+                "value": "preferredEmailAddress",
+                "description": "Deliver notifications to the subscriber's preferred email address."
+              },
+              {
+                "value": "eachMember",
+                "description": ""
+              },
+              {
+                "value": "noDelivery",
+                "description": ""
+              },
+              {
+                "value": "notSet",
+                "description": ""
+              }
+            ]
           }
         },
         "flags": {
@@ -1662,7 +2673,41 @@
             "isTeam"
           ],
           "x-ms-enum": {
-            "name": "Microsoft.VisualStudio.Services.Notifications.WebApi.SubscriberFlags"
+            "name": "SubscriberFlags",
+            "values": [
+              {
+                "value": "none",
+                "description": ""
+              },
+              {
+                "value": "deliveryPreferencesEditable",
+                "description": "Subscriber's delivery preferences could be updated"
+              },
+              {
+                "value": "supportsPreferredEmailAddressDelivery",
+                "description": "Subscriber's delivery preferences supports email delivery"
+              },
+              {
+                "value": "supportsEachMemberDelivery",
+                "description": "Subscriber's delivery preferences supports individual members delivery(group expansion)"
+              },
+              {
+                "value": "supportsNoDelivery",
+                "description": "Subscriber's delivery preferences supports no delivery"
+              },
+              {
+                "value": "isUser",
+                "description": "Subscriber is a user"
+              },
+              {
+                "value": "isGroup",
+                "description": "Subscriber is a group"
+              },
+              {
+                "value": "isTeam",
+                "description": "Subscriber is a team"
+              }
+            ]
           }
         },
         "id": {
@@ -1690,7 +2735,29 @@
             "notSet"
           ],
           "x-ms-enum": {
-            "name": "Microsoft.VisualStudio.Services.Notifications.WebApi.NotificationSubscriberDeliveryPreference"
+            "name": "NotificationSubscriberDeliveryPreference",
+            "values": [
+              {
+                "value": "none",
+                "description": ""
+              },
+              {
+                "value": "preferredEmailAddress",
+                "description": "Deliver notifications to the subscriber's preferred email address."
+              },
+              {
+                "value": "eachMember",
+                "description": ""
+              },
+              {
+                "value": "noDelivery",
+                "description": ""
+              },
+              {
+                "value": "notSet",
+                "description": ""
+              }
+            ]
           }
         },
         "preferredEmailAddress": {
@@ -1719,6 +2786,10 @@
           "description": "Description of the subscription. Typically describes filter criteria which helps identity the subscription.",
           "type": "string"
         },
+        "diagnostics": {
+          "description": "Diagnostics for this subscription.",
+          "$ref": "#/definitions/SubscriptionDiagnostics"
+        },
         "extendedProperties": {
           "description": "Any extra properties like detailed description for different contexts, user/group contexts",
           "type": "object",
@@ -1740,7 +2811,29 @@
             "teamSubscription"
           ],
           "x-ms-enum": {
-            "name": "Microsoft.VisualStudio.Services.Notifications.WebApi.SubscriptionFlags"
+            "name": "SubscriptionFlags",
+            "values": [
+              {
+                "value": "none",
+                "description": "None"
+              },
+              {
+                "value": "groupSubscription",
+                "description": "Subscription's subscriber is a group, not a user"
+              },
+              {
+                "value": "contributedSubscription",
+                "description": "Subscription is contributed and not persisted. This means certain fields of the subscription, like Filter, are read-only."
+              },
+              {
+                "value": "canOptOut",
+                "description": "A user that is member of the subscription's subscriber group can opt in/out of the subscription."
+              },
+              {
+                "value": "teamSubscription",
+                "description": "If the subscriber is a group, is it a team."
+              }
+            ]
           }
         },
         "id": {
@@ -1765,7 +2858,25 @@
             "delete"
           ],
           "x-ms-enum": {
-            "name": "Microsoft.VisualStudio.Services.Notifications.WebApi.SubscriptionPermissions"
+            "name": "SubscriptionPermissions",
+            "values": [
+              {
+                "value": "none",
+                "description": "None"
+              },
+              {
+                "value": "view",
+                "description": "full view of description, filters, etc. Not limited."
+              },
+              {
+                "value": "edit",
+                "description": "update subscription"
+              },
+              {
+                "value": "delete",
+                "description": "delete subscription"
+              }
+            ]
           }
         },
         "scope": {
@@ -1790,7 +2901,61 @@
             "enabledOnProbation"
           ],
           "x-ms-enum": {
-            "name": "Microsoft.VisualStudio.Services.Notifications.WebApi.SubscriptionStatus"
+            "name": "SubscriptionStatus",
+            "values": [
+              {
+                "value": "jailedByNotificationsVolume",
+                "description": "Subscription is disabled because it generated a high volume of notifications."
+              },
+              {
+                "value": "pendingDeletion",
+                "description": "Subscription is disabled and will be deleted."
+              },
+              {
+                "value": "disabledBySystem",
+                "description": "Subscription is disabled service due to failures."
+              },
+              {
+                "value": "disabledInactiveIdentity",
+                "description": "Subscription is disabled because the identity is no longer active"
+              },
+              {
+                "value": "disabledMessageQueueNotSupported",
+                "description": "Subscription is disabled because message queue is not supported."
+              },
+              {
+                "value": "disabledMissingIdentity",
+                "description": "Subscription is disabled because its subscriber is unknown."
+              },
+              {
+                "value": "disabledInvalidRoleExpression",
+                "description": "Subscription is disabled because it has an invalid role expression."
+              },
+              {
+                "value": "disabledInvalidPathClause",
+                "description": "Subscription is disabled because it has an invalid filter expression."
+              },
+              {
+                "value": "disabledAsDuplicateOfDefault",
+                "description": "Subscription is disabled because it is a duplicate of a default subscription."
+              },
+              {
+                "value": "disabledByAdmin",
+                "description": "Subscription is disabled by an administrator, not the subscription's subscriber."
+              },
+              {
+                "value": "disabled",
+                "description": "Subscription is disabled, typically by the owner of the subscription, and will not produce any notifications."
+              },
+              {
+                "value": "enabled",
+                "description": "Subscription is active."
+              },
+              {
+                "value": "enabledOnProbation",
+                "description": "Subscription is active, but is on probation due to failed deliveries or other issues with the subscription."
+              }
+            ]
           }
         },
         "statusMessage": {
@@ -1861,7 +3026,25 @@
             "none"
           ],
           "x-ms-enum": {
-            "name": "Microsoft.VisualStudio.Services.Notifications.WebApi.SubscriptionTemplateType"
+            "name": "SubscriptionTemplateType",
+            "values": [
+              {
+                "value": "user",
+                "description": ""
+              },
+              {
+                "value": "team",
+                "description": ""
+              },
+              {
+                "value": "both",
+                "description": ""
+              },
+              {
+                "value": "none",
+                "description": ""
+              }
+            ]
           }
         }
       }
@@ -1908,7 +3091,61 @@
             "enabledOnProbation"
           ],
           "x-ms-enum": {
-            "name": "Microsoft.VisualStudio.Services.Notifications.WebApi.SubscriptionStatus"
+            "name": "SubscriptionStatus",
+            "values": [
+              {
+                "value": "jailedByNotificationsVolume",
+                "description": "Subscription is disabled because it generated a high volume of notifications."
+              },
+              {
+                "value": "pendingDeletion",
+                "description": "Subscription is disabled and will be deleted."
+              },
+              {
+                "value": "disabledBySystem",
+                "description": "Subscription is disabled service due to failures."
+              },
+              {
+                "value": "disabledInactiveIdentity",
+                "description": "Subscription is disabled because the identity is no longer active"
+              },
+              {
+                "value": "disabledMessageQueueNotSupported",
+                "description": "Subscription is disabled because message queue is not supported."
+              },
+              {
+                "value": "disabledMissingIdentity",
+                "description": "Subscription is disabled because its subscriber is unknown."
+              },
+              {
+                "value": "disabledInvalidRoleExpression",
+                "description": "Subscription is disabled because it has an invalid role expression."
+              },
+              {
+                "value": "disabledInvalidPathClause",
+                "description": "Subscription is disabled because it has an invalid filter expression."
+              },
+              {
+                "value": "disabledAsDuplicateOfDefault",
+                "description": "Subscription is disabled because it is a duplicate of a default subscription."
+              },
+              {
+                "value": "disabledByAdmin",
+                "description": "Subscription is disabled by an administrator, not the subscription's subscriber."
+              },
+              {
+                "value": "disabled",
+                "description": "Subscription is disabled, typically by the owner of the subscription, and will not produce any notifications."
+              },
+              {
+                "value": "enabled",
+                "description": "Subscription is active."
+              },
+              {
+                "value": "enabledOnProbation",
+                "description": "Subscription is active, but is on probation due to failed deliveries or other issues with the subscription."
+              }
+            ]
           }
         },
         "statusMessage": {
@@ -1937,13 +3174,62 @@
         }
       }
     },
+    "ProcessedEvent": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "actors": {
+          "description": "All of the users that were associtated with this event and their role.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/EventActor"
+          }
+        },
+        "allowedChannels": {
+          "type": "string"
+        },
+        "artifactUri": {
+          "type": "string"
+        },
+        "evaluations": {
+          "description": "Evaluations for each user",
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/SubscriptionEvaluation"
+          }
+        },
+        "eventId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "exclusions": {
+          "description": "Which members were excluded from evaluation (only applies to ActorMatcher subscriptions)",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/EventActor"
+          }
+        },
+        "inclusions": {
+          "description": "Which members were included for evaluation (only applies to ActorMatcher subscriptions)",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/EventActor"
+          }
+        },
+        "notifications": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/GeneratedNotification"
+          }
+        }
+      }
+    },
     "ReferenceLinks": {
       "description": "The class to represent a collection of REST reference links.",
       "type": "object",
       "properties": {
         "links": {
           "description": "The readonly view of the links.  Because Reference links are readonly, we only want to expose them as read only.",
-          "readOnly": true,
           "type": "object",
           "additionalProperties": {
             "type": "object"
@@ -1961,14 +3247,12 @@
       ],
       "properties": {
         "exclusions": {
-          "readOnly": true,
           "type": "array",
           "items": {
             "type": "string"
           }
         },
         "inclusions": {
-          "readOnly": true,
           "type": "array",
           "items": {
             "type": "string"
@@ -1981,7 +3265,6 @@
       "type": "object",
       "properties": {
         "type": {
-          "readOnly": true,
           "type": "string"
         }
       }
@@ -1991,7 +3274,6 @@
       "type": "object",
       "properties": {
         "type": {
-          "readOnly": true,
           "type": "string"
         }
       }
@@ -2006,7 +3288,6 @@
       ],
       "properties": {
         "type": {
-          "readOnly": true,
           "type": "string"
         }
       }
@@ -2029,10 +3310,55 @@
           "type": "string"
         },
         "type": {
-          "readOnly": true,
           "type": "string"
         },
         "useCustomAddress": {
+          "type": "boolean"
+        }
+      }
+    },
+    "SubscriptionDiagnostics": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "deliveryResults": {
+          "$ref": "#/definitions/SubscriptionTracing"
+        },
+        "deliveryTracing": {
+          "$ref": "#/definitions/SubscriptionTracing"
+        },
+        "evaluationTracing": {
+          "$ref": "#/definitions/SubscriptionTracing"
+        }
+      }
+    },
+    "SubscriptionEvaluation": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "clauses": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SubscriptionEvaluationClause"
+          }
+        },
+        "user": {
+          "$ref": "#/definitions/DiagnosticIdentity"
+        }
+      }
+    },
+    "SubscriptionEvaluationClause": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "clause": {
+          "type": "string"
+        },
+        "order": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "result": {
           "type": "boolean"
         }
       }
@@ -2058,7 +3384,6 @@
       "properties": {
         "evaluationJobStatus": {
           "description": "Subscription evaluation job status",
-          "readOnly": true,
           "enum": [
             "notSet",
             "queued",
@@ -2070,7 +3395,41 @@
             "notFound"
           ],
           "x-ms-enum": {
-            "name": "Microsoft.VisualStudio.Services.Notifications.WebApi.EvaluationOperationStatus"
+            "name": "EvaluationOperationStatus",
+            "values": [
+              {
+                "value": "notSet",
+                "description": "The operation object does not have the status set."
+              },
+              {
+                "value": "queued",
+                "description": "The operation has been queued."
+              },
+              {
+                "value": "inProgress",
+                "description": "The operation is in progress."
+              },
+              {
+                "value": "cancelled",
+                "description": "The operation was cancelled by the user."
+              },
+              {
+                "value": "succeeded",
+                "description": "The operation completed successfully."
+              },
+              {
+                "value": "failed",
+                "description": "The operation completed with a failure."
+              },
+              {
+                "value": "timedOut",
+                "description": "The operation timed out."
+              },
+              {
+                "value": "notFound",
+                "description": "The operation could not be found."
+              }
+            ]
           }
         },
         "events": {
@@ -2147,7 +3506,29 @@
             "alwaysReturnBasicInformation"
           ],
           "x-ms-enum": {
-            "name": "Microsoft.VisualStudio.Services.Notifications.WebApi.SubscriptionQueryFlags"
+            "name": "SubscriptionQueryFlags",
+            "values": [
+              {
+                "value": "none",
+                "description": ""
+              },
+              {
+                "value": "includeInvalidSubscriptions",
+                "description": "Include subscriptions with invalid subscribers."
+              },
+              {
+                "value": "includeDeletedSubscriptions",
+                "description": "Include subscriptions marked for deletion."
+              },
+              {
+                "value": "includeFilterDetails",
+                "description": "Include the full filter details with each subscription."
+              },
+              {
+                "value": "alwaysReturnBasicInformation",
+                "description": "For a subscription the caller does not have permission to view, return basic (non-confidential) information."
+              }
+            ]
           }
         }
       }
@@ -2170,7 +3551,29 @@
             "teamSubscription"
           ],
           "x-ms-enum": {
-            "name": "Microsoft.VisualStudio.Services.Notifications.WebApi.SubscriptionFlags"
+            "name": "SubscriptionFlags",
+            "values": [
+              {
+                "value": "none",
+                "description": "None"
+              },
+              {
+                "value": "groupSubscription",
+                "description": "Subscription's subscriber is a group, not a user"
+              },
+              {
+                "value": "contributedSubscription",
+                "description": "Subscription is contributed and not persisted. This means certain fields of the subscription, like Filter, are read-only."
+              },
+              {
+                "value": "canOptOut",
+                "description": "A user that is member of the subscription's subscriber group can opt in/out of the subscription."
+              },
+              {
+                "value": "teamSubscription",
+                "description": "If the subscriber is a group, is it a team."
+              }
+            ]
           }
         },
         "scope": {
@@ -2196,7 +3599,103 @@
           "$ref": "#/definitions/EventScope"
         }
       ],
+      "properties": {}
+    },
+    "SubscriptionTraceDiagnosticLog": {
+      "description": "",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/NotificationDiagnosticLog"
+        }
+      ],
       "properties": {
+        "jobId": {
+          "description": "Indicates the job Id that processed or delivered this subscription",
+          "type": "string",
+          "format": "uuid"
+        },
+        "jobInstanceId": {
+          "description": "Indicates unique instance identifier for the job that processed or delivered this subscription",
+          "type": "string",
+          "format": "uuid"
+        },
+        "subscriptionId": {
+          "type": "string"
+        }
+      }
+    },
+    "SubscriptionTraceEventProcessingLog": {
+      "description": "",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/SubscriptionTraceDiagnosticLog"
+        }
+      ],
+      "properties": {
+        "channel": {
+          "type": "string"
+        },
+        "optedOut": {
+          "description": "Which members opted out from receiving notifications from this subscription",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/DiagnosticIdentity"
+          }
+        },
+        "processedEvents": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/ProcessedEvent"
+          }
+        }
+      }
+    },
+    "SubscriptionTraceNotificationDeliveryLog": {
+      "description": "",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/SubscriptionTraceDiagnosticLog"
+        }
+      ],
+      "properties": {
+        "notifications": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/DiagnosticNotification"
+          }
+        }
+      }
+    },
+    "SubscriptionTracing": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        },
+        "endDate": {
+          "description": "Trace until the specified end date.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "maxTracedEntries": {
+          "description": "The maximum number of result details to trace.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "startDate": {
+          "description": "The date and time tracing started.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "tracedEntries": {
+          "description": "Trace until remaining count reaches 0.",
+          "type": "integer",
+          "format": "int32"
+        }
       }
     },
     "SubscriptionUserSettings": {
@@ -2219,7 +3718,6 @@
       ],
       "properties": {
         "type": {
-          "readOnly": true,
           "type": "string"
         }
       }
@@ -2229,8 +3727,31 @@
       "type": "object",
       "properties": {
         "type": {
-          "readOnly": true,
           "type": "string"
+        }
+      }
+    },
+    "UpdateSubscripitonDiagnosticsParameters": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "deliveryResults": {
+          "$ref": "#/definitions/UpdateSubscripitonTracingParameters"
+        },
+        "deliveryTracing": {
+          "$ref": "#/definitions/UpdateSubscripitonTracingParameters"
+        },
+        "evaluationTracing": {
+          "$ref": "#/definitions/UpdateSubscripitonTracingParameters"
+        }
+      }
+    },
+    "UpdateSubscripitonTracingParameters": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "type": "boolean"
         }
       }
     },
@@ -2244,7 +3765,6 @@
       ],
       "properties": {
         "type": {
-          "readOnly": true,
           "type": "string"
         }
       }
@@ -2259,7 +3779,6 @@
       ],
       "properties": {
         "type": {
-          "readOnly": true,
           "type": "string"
         }
       }
@@ -2295,7 +3814,6 @@
       ],
       "properties": {
         "value": {
-          "readOnly": true,
           "type": "string",
           "format": "T"
         }
@@ -2306,7 +3824,6 @@
       "type": "object",
       "properties": {
         "count": {
-          "readOnly": true,
           "type": "integer",
           "format": "int32"
         }
@@ -2318,7 +3835,6 @@
       "properties": {
         "actors": {
           "description": "Optional: A list of actors which are additional identities with corresponding roles that are relevant to the event.",
-          "readOnly": true,
           "type": "array",
           "items": {
             "$ref": "#/definitions/EventActor"
@@ -2326,7 +3842,6 @@
         },
         "artifactUris": {
           "description": "Optional: A list of artifacts referenced or impacted by this event.",
-          "readOnly": true,
           "type": "array",
           "items": {
             "type": "string"
@@ -2342,7 +3857,6 @@
         },
         "scopes": {
           "description": "Optional: A list of scopes which are are relevant to the event.",
-          "readOnly": true,
           "type": "array",
           "items": {
             "$ref": "#/definitions/EventScope"
@@ -2364,8 +3878,8 @@
     "accessToken": {
       "type": "basic",
       "description": "Personal access token. Use any value for the user name and the token as the password."
-     },
-     "oauth2": {
+    },
+    "oauth2": {
       "type": "oauth2",
       "flow": "accessCode",
       "authorizationUrl": "https://app.vssps.visualstudio.com/oauth2/authorize&response_type=Assertion",
@@ -2373,7 +3887,8 @@
       "scopes": {
         "vso.notification": "Provides read access to subscriptions and event metadata, including filterable field values.",
         "vso.notification_write": "Provides read/write access to subscriptions and read access to event metadata, including filterable field values.",
-        "vso.notification_manage": "Provides read, write, and management access to subscriptions and read access to event metadata, including filterable field values."
+        "vso.notification_manage": "Provides read, write, and management access to subscriptions and read access to event metadata, including filterable field values.",
+        "vso.notification_diagnostics": "Provides access to notification-related diagnostic logs and provides the ability to enable diagnostics for individual subscriptions."
       }
     }
   },

@@ -16,7 +16,7 @@
   },
   "host": "fabrikam-fiber-inc.visualstudio.com",
   "x-ms-parameterized-host": {
-    "hostTemplate": "{accountName}.visualstudio.com",
+    "hostTemplate": "{accountName}.vssps.visualstudio.com",
     "parameters": [
       {
         "name": "accountName",
@@ -40,13 +40,13 @@
       "name": "Memberships"
     },
     {
-      "name": "Membershipstates"
+      "name": "Membership States"
     },
     {
-      "name": "Storagekeys"
+      "name": "Storage Keys"
     },
     {
-      "name": "Subjectlookup"
+      "name": "Subject Lookup"
     },
     {
       "name": "Users"
@@ -61,6 +61,7 @@
         "tags": [
           "Descriptors"
         ],
+        "x-ms-docs-override-version": "4.1-preview.1",
         "x-ms-vss-resource": "descriptors",
         "x-ms-vss-method": "GetDescriptor",
         "x-ms-preview": true,
@@ -79,7 +80,7 @@
             "format": "uuid"
           },
           {
-            "$ref": "#/parameters/api-Version"
+            "$ref": "#/parameters/api-Version-preview.1"
           }
         ],
         "responses": {
@@ -88,12 +89,12 @@
             "schema": {
               "$ref": "#/definitions/GraphDescriptorResult"
             }
-         }
+          }
         },
         "x-ms-examples": {
-            "": {
-                "$ref": "./httpExamples/descriptors//GetDescriptorById.json"
-            }
+          "": {
+            "$ref": "./httpExamples/Descriptors/GetDescriptorById.json"
+          }
         }
       }
     },
@@ -102,10 +103,11 @@
         "tags": [
           "Groups"
         ],
+        "x-ms-docs-override-version": "4.1-preview.1",
         "x-ms-vss-resource": "groups",
         "x-ms-vss-method": "CreateGroup",
         "x-ms-preview": true,
-        "description": "Create a new VSTS group or materialize an existing AAD group.  The body of the request must be a derived type of GraphGroupCreationContext: - GraphGroupVstsCreationContext - Create a new VSTS group that is not backed by an external provider. - GraphGroupMailAddressCreationContext - Create a new group using the mail address as a reference to an existing group from an external AD or AAD backed provider. - GraphGroupOriginIdCreationContext - Create a new group using the OriginID as a reference to a group from an external AD or AAD backed provider.  Optionally, you can add the newly created group as a member of an existing VSTS group and/or specify a custom storage key for the group.",
+        "description": "Create a new VSTS group or materialize an existing AAD group.\n\nThe body of the request must be a derived type of GraphGroupCreationContext:\n  * GraphGroupVstsCreationContext - Create a new VSTS group that is not backed by an external provider.\n  * GraphGroupMailAddressCreationContext - Create a new group using the mail address as a reference to an existing group from an external AD or AAD backed provider.\n  * GraphGroupOriginIdCreationContext - Create a new group using the OriginID as a reference to a group from an external AD or AAD backed provider.\n\n Optionally, you can add the newly created group as a member of an existing VSTS group and/or specify a custom storage key for the group.",
         "operationId": "Create",
         "consumes": [
           "application/json"
@@ -126,7 +128,7 @@
           {
             "in": "query",
             "name": "scopeDescriptor",
-            "description": "A descriptor referencing the scope (collection, project) in which the group should be created. If omitted, while be created in the scope of the enclosing account or organization. Valid only for VSTS groups.",
+            "description": "A descriptor referencing the scope (collection, project) in which the group should be created. If omitted, will be created in the scope of the enclosing account or organization. Valid only for VSTS groups.",
             "required": false,
             "type": "string"
           },
@@ -139,7 +141,7 @@
             "format": "array (string)"
           },
           {
-            "$ref": "#/parameters/api-Version"
+            "$ref": "#/parameters/api-Version-preview.1"
           }
         ],
         "responses": {
@@ -148,32 +150,36 @@
             "schema": {
               "$ref": "#/definitions/GraphGroup"
             }
-         }
+          }
         },
         "x-ms-examples": {
-            "Create a Group at the account level": {
-                "$ref": "./httpExamples/groups/CreateGroup.json"
-            },
-            "Add an AAD Group by OID": {
-                "$ref": "./httpExamples/groups/MaterializeAADGroupByOID.json"
-            },
-            "Add an AAD Group as member of a group": {
-                "$ref": "./httpExamples/groups/MaterializeAADGroupByOIDAsMember.json"
-            },
-            "Add an AAD Group with a custom storage key": {
-                "$ref": "./httpExamples/groups/MaterializeAADGroupByOIDWithStorageKey.json"
-            }
+          "Create a Group at the account level": {
+            "$ref": "./httpExamples/Groups/CreateGroup.json"
+          },
+          "Create a Group at the project level": {
+            "$ref": "./httpExamples/Groups/CreateGroupInProject.json"
+          },
+          "Add an AAD Group by OID": {
+            "$ref": "./httpExamples/Groups/MaterializeAADGroupByOID.json"
+          },
+          "Add an AAD Group as member of a group": {
+            "$ref": "./httpExamples/Groups/MaterializeAADGroupByOIDAsMember.json"
+          },
+          "Add an AAD Group with a custom storage key": {
+            "$ref": "./httpExamples/Groups/MaterializeAADGroupByOIDWithStorageKey.json"
+          }
         }
       },
       "get": {
         "tags": [
           "Groups"
         ],
+        "x-ms-docs-override-version": "4.1-preview.1",
         "x-ms-vss-resource": "groups",
-        "x-ms-vss-method": "GetGroups",
+        "x-ms-vss-method": "ListGroups",
         "x-ms-preview": true,
-        "description": "Gets a list of all groups in the current scope (usually organization or account). The optional parameters are used to filter down the returned results. Returned results are in no guaranteed order.  Since the list of groups may be large, results are returned in pages of groups.  If there are more results than can be returned in a single page, the result set will containt a continuation token for retrieval of the next set of results.",
-        "operationId": "Get Groups",
+        "description": "Gets a list of all groups in the current scope (usually organization or account).\n\nThe optional parameters are used to filter down the returned results. Returned results are in no guaranteed order.\n\n Since the list of groups may be large, results are returned in pages of groups.  If there are more results\n than can be returned in a single page, the result set will containt a continuation token for retrieval of the\n next set of results.",
+        "operationId": "List",
         "produces": [
           "application/json"
         ],
@@ -196,12 +202,12 @@
           {
             "in": "query",
             "name": "continuationToken",
-            "description": "An opaque data blog that allows the next page of data to resume immediately after where the previous page ended. The only reliable way to know if there is more data left is the presence of a continuation token.",
+            "description": "An opaque data blob that allows the next page of data to resume immediately after where the previous page ended. The only reliable way to know if there is more data left is the presence of a continuation token.",
             "required": false,
             "type": "string"
           },
           {
-            "$ref": "#/parameters/api-Version"
+            "$ref": "#/parameters/api-Version-preview.1"
           }
         ],
         "responses": {
@@ -214,16 +220,16 @@
               }
             },
             "headers": {
-               "X-MS-ContinuationToken": {
-                 "type": "string"
-               }
+              "X-MS-ContinuationToken": {
+                "type": "string"
+              }
             }
-         }
+          }
         },
         "x-ms-examples": {
-            "": {
-                "$ref": "./httpExamples/groups/GetAllGroups.json"
-            }
+          "": {
+            "$ref": "./httpExamples/Groups/GetAllGroups.json"
+          }
         }
       }
     },
@@ -232,10 +238,11 @@
         "tags": [
           "Groups"
         ],
+        "x-ms-docs-override-version": "4.1-preview.1",
         "x-ms-vss-resource": "groups",
         "x-ms-vss-method": "DeleteGroup",
         "x-ms-preview": true,
-        "description": "Removes a VSTS group from all of its parent groups. The group will still be visible, but membership checks for the group, and all descendants which derive membership through it, will return false.”",
+        "description": "Removes a VSTS group from all of its parent groups.\n\nThe group will still be visible, but membership\n checks for the group, and all descendants which derive membership through it, will return false.”",
         "operationId": "Delete",
         "parameters": [
           {
@@ -246,29 +253,30 @@
             "type": "string"
           },
           {
-            "$ref": "#/parameters/api-Version"
+            "$ref": "#/parameters/api-Version-preview.1"
           }
         ],
         "responses": {
           "200": {
             "description": "successful operation"
-         }
+          }
         },
         "x-ms-examples": {
-            "": {
-                "$ref": "./httpExamples/groups/DeleteGroup.json"
-            }
+          "": {
+            "$ref": "./httpExamples/Groups/DeleteGroup.json"
+          }
         }
       },
       "get": {
         "tags": [
           "Groups"
         ],
+        "x-ms-docs-override-version": "4.1-preview.1",
         "x-ms-vss-resource": "groups",
         "x-ms-vss-method": "GetGroup",
         "x-ms-preview": true,
-        "description": "Get a group by its descriptor.  The group will be returned even if it has been deleted from the account or has had all its memberships deleted.",
-        "operationId": "Get Group",
+        "description": "Get a group by its descriptor.\n\nThe group will be returned even if it has been deleted from the account or has had all its memberships\ndeleted.",
+        "operationId": "Get",
         "produces": [
           "application/json"
         ],
@@ -281,7 +289,7 @@
             "type": "string"
           },
           {
-            "$ref": "#/parameters/api-Version"
+            "$ref": "#/parameters/api-Version-preview.1"
           }
         ],
         "responses": {
@@ -290,22 +298,23 @@
             "schema": {
               "$ref": "#/definitions/GraphGroup"
             }
-         }
+          }
         },
         "x-ms-examples": {
-            "": {
-                "$ref": "./httpExamples/groups/GetGroup-AddRemoveAADGroupByOID.json"
-            }
+          "": {
+            "$ref": "./httpExamples/Groups/GetGroup-AddRemoveAADGroupByOID.json"
+          }
         }
       },
       "patch": {
         "tags": [
           "Groups"
         ],
+        "x-ms-docs-override-version": "4.1-preview.1",
         "x-ms-vss-resource": "groups",
         "x-ms-vss-method": "UpdateGroup",
         "x-ms-preview": true,
-        "description": "Update the properties of a VSTS group.  Currently limited to only changing the description and account name.",
+        "description": "Update the properties of a VSTS group.\n\nCurrently limited to only changing the description and account name.",
         "operationId": "Update",
         "consumes": [
           "application/json-patch+json"
@@ -331,7 +340,7 @@
             }
           },
           {
-            "$ref": "#/parameters/api-Version"
+            "$ref": "#/parameters/api-Version-preview.1"
           }
         ],
         "responses": {
@@ -340,12 +349,12 @@
             "schema": {
               "$ref": "#/definitions/GraphGroup"
             }
-         }
+          }
         },
         "x-ms-examples": {
-            "": {
-                "$ref": "./httpExamples/groups/UpdateGroup.json"
-            }
+          "": {
+            "$ref": "./httpExamples/Groups/UpdateGroup.json"
+          }
         }
       }
     },
@@ -354,10 +363,11 @@
         "tags": [
           "Memberships"
         ],
-        "x-ms-vss-resource": "membershipsbatch",
-        "x-ms-vss-method": "GetMemberships",
+        "x-ms-docs-override-version": "4.1-preview.1",
+        "x-ms-vss-resource": "membershipsBatch",
+        "x-ms-vss-method": "ListMemberships",
         "x-ms-preview": true,
-        "description": "Get all the memberships where this descriptor is a member in the relationship. The default value for direction is 'up' meaning return all memberships where the subject is a member (e.g. all groups the subject is a member of).  Alternatively, passing the direction as 'down' will return all memberships where the subject is a container (e.g. all members of the subject group).",
+        "description": "Get all the memberships where this descriptor is a member in the relationship.\n\nThe default value for direction is 'up' meaning return all memberships where the subject is a member (e.g. all groups the subject is a member of).\n Alternatively, passing the direction as 'down' will return all memberships where the subject is a container (e.g. all members of the subject group).",
         "operationId": "List",
         "produces": [
           "application/json"
@@ -376,7 +386,28 @@
             "description": "Defaults to Up.",
             "required": false,
             "type": "string",
-            "format": "GraphTraversalDirection"
+            "enum": [
+              "unknown",
+              "down",
+              "up"
+            ],
+            "x-ms-enum": {
+              "name": "GraphTraversalDirection",
+              "values": [
+                {
+                  "value": "unknown",
+                  "description": ""
+                },
+                {
+                  "value": "down",
+                  "description": ""
+                },
+                {
+                  "value": "up",
+                  "description": ""
+                }
+              ]
+            }
           },
           {
             "in": "query",
@@ -387,7 +418,7 @@
             "format": "int32"
           },
           {
-            "$ref": "#/parameters/api-Version"
+            "$ref": "#/parameters/api-Version-preview.1"
           }
         ],
         "responses": {
@@ -399,18 +430,18 @@
                 "$ref": "#/definitions/GraphMembership"
               }
             }
-         }
+          }
         },
         "x-ms-examples": {
-            "All members of a group": {
-                "$ref": "./httpExamples/membershipsbatch/BatchGetMembershipsGroupDown.json"
-            },
-            "All groups for a user": {
-                "$ref": "./httpExamples/membershipsbatch/BatchGetMembershipsUserUp.json"
-            },
-            "All groups for a group": {
-                "$ref": "./httpExamples/membershipsbatch/BatchGetMembershipsVSTSGroupUp.json"
-            }
+          "All members of a group": {
+            "$ref": "./httpExamples/MembershipsBatch/BatchGetMembershipsGroupDown.json"
+          },
+          "All groups for a user": {
+            "$ref": "./httpExamples/MembershipsBatch/BatchGetMembershipsUserUp.json"
+          },
+          "All groups for a group": {
+            "$ref": "./httpExamples/MembershipsBatch/BatchGetMembershipsVSTSGroupUp.json"
+          }
         }
       }
     },
@@ -419,10 +450,11 @@
         "tags": [
           "Memberships"
         ],
+        "x-ms-docs-override-version": "4.1-preview.1",
         "x-ms-vss-resource": "memberships",
         "x-ms-vss-method": "AddMembership",
         "x-ms-preview": true,
-        "description": "Create a new membership between a container and subject",
+        "description": "Create a new membership between a container and subject.",
         "operationId": "Add",
         "produces": [
           "application/json"
@@ -443,7 +475,7 @@
             "type": "string"
           },
           {
-            "$ref": "#/parameters/api-Version"
+            "$ref": "#/parameters/api-Version-preview.1"
           }
         ],
         "responses": {
@@ -452,22 +484,23 @@
             "schema": {
               "$ref": "#/definitions/GraphMembership"
             }
-         }
+          }
         },
         "x-ms-examples": {
-            "": {
-                "$ref": "./httpExamples/memberships/CreateMembershipVSTSGroup.json"
-            }
+          "": {
+            "$ref": "./httpExamples/Memberships/CreateMembershipVSTSGroup.json"
+          }
         }
       },
       "head": {
         "tags": [
           "Memberships"
         ],
+        "x-ms-docs-override-version": "4.1-preview.1",
         "x-ms-vss-resource": "memberships",
         "x-ms-vss-method": "CheckMembershipExistence",
         "x-ms-preview": true,
-        "description": "Check to see if a membership relationship between a container and subject exists",
+        "description": "Check to see if a membership relationship between a container and subject exists.",
         "operationId": "Check Membership Existence",
         "parameters": [
           {
@@ -485,28 +518,29 @@
             "type": "string"
           },
           {
-            "$ref": "#/parameters/api-Version"
+            "$ref": "#/parameters/api-Version-preview.1"
           }
         ],
         "responses": {
           "200": {
             "description": "successful operation"
-         }
+          }
         },
         "x-ms-examples": {
-            "": {
-                "$ref": "./httpExamples/memberships/CheckMembershipExistenceUser.json"
-            }
+          "": {
+            "$ref": "./httpExamples/Memberships/CheckMembershipExistenceUser.json"
+          }
         }
       },
       "get": {
         "tags": [
           "Memberships"
         ],
+        "x-ms-docs-override-version": "4.1-preview.1",
         "x-ms-vss-resource": "memberships",
         "x-ms-vss-method": "GetMembership",
         "x-ms-preview": true,
-        "description": "Get a membership relationship between a container and subject",
+        "description": "Get a membership relationship between a container and subject.",
         "operationId": "Get",
         "produces": [
           "application/json"
@@ -527,7 +561,7 @@
             "type": "string"
           },
           {
-            "$ref": "#/parameters/api-Version"
+            "$ref": "#/parameters/api-Version-preview.1"
           }
         ],
         "responses": {
@@ -536,25 +570,26 @@
             "schema": {
               "$ref": "#/definitions/GraphMembership"
             }
-         }
+          }
         },
         "x-ms-examples": {
-            "For a User": {
-                "$ref": "./httpExamples/memberships/GetMembershipUser.json"
-            },
-            "For a Group": {
-                "$ref": "./httpExamples/memberships/GetMembershipVSTSGroup.json"
-            }
+          "For a User": {
+            "$ref": "./httpExamples/Memberships/GetMembershipUser.json"
+          },
+          "For a Group": {
+            "$ref": "./httpExamples/Memberships/GetMembershipVSTSGroup.json"
+          }
         }
       },
       "delete": {
         "tags": [
           "Memberships"
         ],
+        "x-ms-docs-override-version": "4.1-preview.1",
         "x-ms-vss-resource": "memberships",
         "x-ms-vss-method": "RemoveMembership",
         "x-ms-preview": true,
-        "description": "Deletes a membership between a container and subject",
+        "description": "Deletes a membership between a container and subject.",
         "operationId": "Remove Membership",
         "parameters": [
           {
@@ -572,30 +607,31 @@
             "type": "string"
           },
           {
-            "$ref": "#/parameters/api-Version"
+            "$ref": "#/parameters/api-Version-preview.1"
           }
         ],
         "responses": {
           "200": {
             "description": "successful operation"
-         }
+          }
         },
         "x-ms-examples": {
-            "": {
-                "$ref": "./httpExamples/memberships/DeleteMembershipUser.json"
-            }
+          "": {
+            "$ref": "./httpExamples/Memberships/DeleteMembershipUser.json"
+          }
         }
       }
     },
     "/_apis/graph/membershipstates/{subjectDescriptor}": {
       "get": {
         "tags": [
-          "Membershipstates"
+          "Membership States"
         ],
-        "x-ms-vss-resource": "membershipstates",
+        "x-ms-docs-override-version": "4.1-preview.1",
+        "x-ms-vss-resource": "membershipStates",
         "x-ms-vss-method": "GetMembershipState",
         "x-ms-preview": true,
-        "description": "Check whether a subject is active or inactive",
+        "description": "Check whether a subject is active or inactive.",
         "operationId": "Get",
         "produces": [
           "application/json"
@@ -609,7 +645,7 @@
             "type": "string"
           },
           {
-            "$ref": "#/parameters/api-Version"
+            "$ref": "#/parameters/api-Version-preview.1"
           }
         ],
         "responses": {
@@ -618,21 +654,22 @@
             "schema": {
               "$ref": "#/definitions/GraphMembershipState"
             }
-         }
+          }
         },
         "x-ms-examples": {
-            "": {
-                "$ref": "./httpExamples/membershipstates/GetMembershipStateBySubjectDescriptor.json"
-            }
+          "": {
+            "$ref": "./httpExamples/MembershipStates/GetMembershipStateBySubjectDescriptor.json"
+          }
         }
       }
     },
     "/_apis/graph/storagekeys/{subjectDescriptor}": {
       "get": {
         "tags": [
-          "Storagekeys"
+          "Storage Keys"
         ],
-        "x-ms-vss-resource": "storagekeys",
+        "x-ms-docs-override-version": "4.1-preview.1",
+        "x-ms-vss-resource": "storageKeys",
         "x-ms-vss-method": "GetStorageKey",
         "x-ms-preview": true,
         "description": "Resolve a descriptor to a storage key.",
@@ -649,7 +686,7 @@
             "type": "string"
           },
           {
-            "$ref": "#/parameters/api-Version"
+            "$ref": "#/parameters/api-Version-preview.1"
           }
         ],
         "responses": {
@@ -658,24 +695,25 @@
             "schema": {
               "$ref": "#/definitions/GraphStorageKeyResult"
             }
-         }
+          }
         },
         "x-ms-examples": {
-            "": {
-                "$ref": "./httpExamples/storagekeys/GetStorageKeyBySubjectDescriptor.json"
-            }
+          "": {
+            "$ref": "./httpExamples/StorageKeys/GetStorageKeyBySubjectDescriptor.json"
+          }
         }
       }
     },
     "/_apis/graph/subjectlookup": {
       "post": {
         "tags": [
-          "Subjectlookup"
+          "Subject Lookup"
         ],
-        "x-ms-vss-resource": "subjectlookup",
+        "x-ms-docs-override-version": "4.1-preview.1",
+        "x-ms-vss-resource": "subjectLookup",
         "x-ms-vss-method": "LookupSubjects",
         "x-ms-preview": true,
-        "description": "Resolve descriptors to users, groups or scopes (Subjects) in a batch",
+        "description": "Resolve descriptors to users, groups or scopes (Subjects) in a batch.",
         "operationId": "Lookup Subjects",
         "consumes": [
           "application/json"
@@ -694,7 +732,7 @@
             }
           },
           {
-            "$ref": "#/parameters/api-Version"
+            "$ref": "#/parameters/api-Version-preview.1"
           }
         ],
         "responses": {
@@ -706,12 +744,12 @@
                 "$ref": "#/definitions/GraphSubject"
               }
             }
-         }
+          }
         },
         "x-ms-examples": {
-            "": {
-                "$ref": "./httpExamples/subjectlookup/LookupSubjects.json"
-            }
+          "": {
+            "$ref": "./httpExamples/SubjectLookup/LookupSubjects.json"
+          }
         }
       }
     },
@@ -720,10 +758,11 @@
         "tags": [
           "Users"
         ],
+        "x-ms-docs-override-version": "4.1-preview.1",
         "x-ms-vss-resource": "users",
         "x-ms-vss-method": "CreateUser",
         "x-ms-preview": true,
-        "description": "Materialize an existing AAD or MSA user into the VSTS account.  NOTE: Created users are not active in an account unless they have been explicitly assigned a parent group at creation time or have signed in and been autolicensed through AAD group memberships.  Adding a user to an account is required before the user can be added to VSTS groups or assigned an asset.  The body of the request must be a derived type of GraphUserCreationContext: - GraphUserMailAddressCreationContext - Create a new user using the mail address as a reference to an existing user from an external AD or AAD backed provider. - GraphUserOriginIdCreationContext - Create a new user using the OriginID as a reference to an existing user from an external AD or AAD backed provider. - GraphUserPrincipalNameCreationContext - Create a new user using the principal name as a reference to an existing user from an external AD or AAD backed provider.  If the user to be added corresponds to a user that was previously deleted, then that user will be restored.  Optionally, you can add the newly created user as a member of an existing VSTS group and/or specify a custom storage key for the user.",
+        "description": "Materialize an existing AAD or MSA user into the VSTS account.\n\nNOTE: Created users are not active in an account unless they have been explicitly assigned a parent group at creation time or have signed in\n  and been autolicensed through AAD group memberships.\n\n Adding a user to an account is required before the user can be added to VSTS groups or assigned an asset.\n\n The body of the request must be a derived type of GraphUserCreationContext:\n  * GraphUserMailAddressCreationContext - Create a new user using the mail address as a reference to an existing user from an external AD or AAD backed provider.\n  * GraphUserOriginIdCreationContext - Create a new user using the OriginID as a reference to an existing user from an external AD or AAD backed provider.\n  * GraphUserPrincipalNameCreationContext - Create a new user using the principal name as a reference to an existing user from an external AD or AAD backed provider.\n\n If the user to be added corresponds to a user that was previously deleted, then that user will be restored.\n\n Optionally, you can add the newly created user as a member of an existing VSTS group and/or specify a custom storage key for the user.",
         "operationId": "Create",
         "consumes": [
           "application/json"
@@ -750,7 +789,7 @@
             "format": "array (string)"
           },
           {
-            "$ref": "#/parameters/api-Version"
+            "$ref": "#/parameters/api-Version-preview.1"
           }
         ],
         "responses": {
@@ -759,35 +798,36 @@
             "schema": {
               "$ref": "#/definitions/GraphUser"
             }
-         }
+          }
         },
         "x-ms-examples": {
-            "Add an AAD user by UPN": {
-                "$ref": "./httpExamples/users/CreateUserAAD.json"
-            },
-            "Add a MSA user by UPN": {
-                "$ref": "./httpExamples/users/CreateUserMSA.json"
-            },
-            "Add an AAD user by OID": {
-                "$ref": "./httpExamples/users/MaterializeAADUserByOID.json"
-            },
-            "Add an AAD user as member of a group": {
-                "$ref": "./httpExamples/users/MaterializeAADUserByOIDAsMember.json"
-            },
-            "Add an AAD user with a custom storage key": {
-                "$ref": "./httpExamples/users/MaterializeAADUserByOIDWithStorageKey.json"
-            }
+          "Add an AAD user by UPN": {
+            "$ref": "./httpExamples/Users/CreateUserAAD.json"
+          },
+          "Add a MSA user by UPN": {
+            "$ref": "./httpExamples/Users/CreateUserMSA.json"
+          },
+          "Add an AAD user by OID": {
+            "$ref": "./httpExamples/Users/MaterializeAADUserByOID.json"
+          },
+          "Add an AAD user as member of a group": {
+            "$ref": "./httpExamples/Users/MaterializeAADUserByOIDAsMember.json"
+          },
+          "Add an AAD user with a custom storage key": {
+            "$ref": "./httpExamples/Users/MaterializeAADUserByOIDWithStorageKey.json"
+          }
         }
       },
       "get": {
         "tags": [
           "Users"
         ],
+        "x-ms-docs-override-version": "4.1-preview.1",
         "x-ms-vss-resource": "users",
-        "x-ms-vss-method": "GetUsers",
+        "x-ms-vss-method": "ListUsers",
         "x-ms-preview": true,
-        "description": "Get a list of all users in a given scope.  Since the list of users may be large, results are returned in pages of users.  If there are more results than can be returned in a single page, the result set will containt a continuation token for retrieval of the next set of results.",
-        "operationId": "Get Users",
+        "description": "Get a list of all users in a given scope.\n\nSince the list of users may be large, results are returned in pages of users.  If there are more results\n than can be returned in a single page, the result set will containt a continuation token for retrieval of the\n next set of results.",
+        "operationId": "List",
         "produces": [
           "application/json"
         ],
@@ -803,12 +843,12 @@
           {
             "in": "query",
             "name": "continuationToken",
-            "description": "An opaque data blog that allows the next page of data to resume immediately after where the previous page ended. The only reliable way to know if there is more data left is the presence of a continuation token.",
+            "description": "An opaque data blob that allows the next page of data to resume immediately after where the previous page ended. The only reliable way to know if there is more data left is the presence of a continuation token.",
             "required": false,
             "type": "string"
           },
           {
-            "$ref": "#/parameters/api-Version"
+            "$ref": "#/parameters/api-Version-preview.1"
           }
         ],
         "responses": {
@@ -821,16 +861,16 @@
               }
             },
             "headers": {
-               "X-MS-ContinuationToken": {
-                 "type": "string"
-               }
+              "X-MS-ContinuationToken": {
+                "type": "string"
+              }
             }
-         }
+          }
         },
         "x-ms-examples": {
-            "": {
-                "$ref": "./httpExamples/users/GetAllUsers.json"
-            }
+          "": {
+            "$ref": "./httpExamples/Users/GetAllUsers.json"
+          }
         }
       }
     },
@@ -839,10 +879,11 @@
         "tags": [
           "Users"
         ],
+        "x-ms-docs-override-version": "4.1-preview.1",
         "x-ms-vss-resource": "users",
         "x-ms-vss-method": "DeleteUser",
         "x-ms-preview": true,
-        "description": "Disables a user.  Calls to GET .../users/{userDescriptor} will return the user with disabled marked true. Other GET calls, which may return multiple users, can control whether or not deleted users should be returned using the disabled flag, which defaults to false.",
+        "description": "Disables a user.\n\nCalls to GET .../users/{userDescriptor} will return the user with disabled marked true. Other GET calls, which may return multiple\n users, can control whether or not deleted users should be returned using the disabled flag, which defaults to false.",
         "operationId": "Delete",
         "parameters": [
           {
@@ -853,29 +894,30 @@
             "type": "string"
           },
           {
-            "$ref": "#/parameters/api-Version"
+            "$ref": "#/parameters/api-Version-preview.1"
           }
         ],
         "responses": {
           "200": {
             "description": "successful operation"
-         }
+          }
         },
         "x-ms-examples": {
-            "": {
-                "$ref": "./httpExamples/users/DeleteUserAAD.json"
-            }
+          "": {
+            "$ref": "./httpExamples/Users/DeleteUserAAD.json"
+          }
         }
       },
       "get": {
         "tags": [
           "Users"
         ],
+        "x-ms-docs-override-version": "4.1-preview.1",
         "x-ms-vss-resource": "users",
         "x-ms-vss-method": "GetUser",
         "x-ms-preview": true,
         "description": "Get a user by its descriptor.",
-        "operationId": "Get User",
+        "operationId": "Get",
         "produces": [
           "application/json"
         ],
@@ -888,7 +930,7 @@
             "type": "string"
           },
           {
-            "$ref": "#/parameters/api-Version"
+            "$ref": "#/parameters/api-Version-preview.1"
           }
         ],
         "responses": {
@@ -897,12 +939,12 @@
             "schema": {
               "$ref": "#/definitions/GraphUser"
             }
-         }
+          }
         },
         "x-ms-examples": {
-            "": {
-                "$ref": "./httpExamples/users/GetUserAAD.json"
-            }
+          "": {
+            "$ref": "./httpExamples/Users/GetUserAAD.json"
+          }
         }
       }
     }
@@ -928,7 +970,6 @@
           "$ref": "#/definitions/ReferenceLinks"
         },
         "value": {
-          "readOnly": true,
           "type": "string"
         }
       }
@@ -938,14 +979,12 @@
       "type": "object",
       "properties": {
         "propertyNameFilters": {
-          "readOnly": true,
           "type": "array",
           "items": {
             "type": "string"
           }
         },
         "subjectDescriptors": {
-          "readOnly": true,
           "type": "array",
           "items": {
             "type": "string"
@@ -964,46 +1003,39 @@
       "properties": {
         "description": {
           "description": "A short phrase to help human readers disambiguate groups with similar names",
-          "readOnly": true,
           "type": "string"
         },
         "isCrossProject": {
-          "readOnly": true,
+          "type": "boolean"
+        },
+        "isDeleted": {
           "type": "boolean"
         },
         "isGlobalScope": {
-          "readOnly": true,
           "type": "boolean"
         },
         "isRestrictedVisible": {
-          "readOnly": true,
           "type": "boolean"
         },
         "localScopeId": {
-          "readOnly": true,
           "type": "string",
           "format": "uuid"
         },
         "scopeId": {
-          "readOnly": true,
           "type": "string",
           "format": "uuid"
         },
         "scopeName": {
-          "readOnly": true,
           "type": "string"
         },
         "scopeType": {
-          "readOnly": true,
           "type": "string"
         },
         "securingHostId": {
-          "readOnly": true,
           "type": "string",
           "format": "uuid"
         },
         "specialType": {
-          "readOnly": true,
           "type": "string"
         }
       }
@@ -1067,7 +1099,6 @@
           "type": "string"
         },
         "descriptor": {
-          "readOnly": true,
           "type": "string"
         },
         "displayName": {
@@ -1095,23 +1126,19 @@
       "properties": {
         "cuid": {
           "description": "The Consistently Unique Identifier of the subject",
-          "readOnly": true,
           "type": "string",
           "format": "uuid"
         },
         "domain": {
           "description": "This represents the name of the container of origin for a graph member. (For MSA this is \"Windows Live ID\", for AD the name of the domain, for AAD the tenantID of the directory, for VSTS groups the ScopeId, etc)",
-          "readOnly": true,
           "type": "string"
         },
         "mailAddress": {
           "description": "The email address of record for a given graph member. This may be different than the principal name.",
-          "readOnly": true,
           "type": "string"
         },
         "principalName": {
           "description": "This is the PrincipalName of this graph member from the source provider. The source provider may change this field over time and it is not guaranteed to be immutable for the life of the graph member by VSTS.",
-          "readOnly": true,
           "type": "string"
         }
       }
@@ -1125,11 +1152,9 @@
           "$ref": "#/definitions/ReferenceLinks"
         },
         "containerDescriptor": {
-          "readOnly": true,
           "type": "string"
         },
         "memberDescriptor": {
-          "readOnly": true,
           "type": "string"
         }
       }
@@ -1143,7 +1168,6 @@
           "$ref": "#/definitions/ReferenceLinks"
         },
         "active": {
-          "readOnly": true,
           "type": "boolean"
         }
       }
@@ -1166,7 +1190,6 @@
         },
         "traversedSubjectIds": {
           "description": "Subject descriptor ids of the traversed members",
-          "readOnly": true,
           "type": "array",
           "items": {
             "type": "string",
@@ -1193,34 +1216,43 @@
       "properties": {
         "administratorDescriptor": {
           "description": "The subject descriptor that references the administrators group for this scope. Only members of this group can change the contents of this scope or assign other users permissions to access this scope.",
-          "readOnly": true,
           "type": "string"
         },
         "isGlobal": {
           "description": "When true, this scope is also a securing host for one or more scopes.",
-          "readOnly": true,
           "type": "boolean"
         },
         "parentDescriptor": {
           "description": "The subject descriptor for the closest account or organization in the ancestor tree of this scope.",
-          "readOnly": true,
           "type": "string"
         },
         "scopeType": {
           "description": "The type of this scope. Typically ServiceHost or TeamProject.",
-          "readOnly": true,
           "enum": [
             "generic",
             "serviceHost",
             "teamProject"
           ],
           "x-ms-enum": {
-            "name": "Microsoft.VisualStudio.Services.Identity.GroupScopeType"
+            "name": "GroupScopeType",
+            "values": [
+              {
+                "value": "generic",
+                "description": ""
+              },
+              {
+                "value": "serviceHost",
+                "description": ""
+              },
+              {
+                "value": "teamProject",
+                "description": ""
+              }
+            ]
           }
         },
         "securingHostDescriptor": {
           "description": "The subject descriptor for the containing organization in the ancestor tree of this scope.",
-          "readOnly": true,
           "type": "string"
         }
       }
@@ -1254,7 +1286,21 @@
             "teamProject"
           ],
           "x-ms-enum": {
-            "name": "Microsoft.VisualStudio.Services.Identity.GroupScopeType"
+            "name": "GroupScopeType",
+            "values": [
+              {
+                "value": "generic",
+                "description": ""
+              },
+              {
+                "value": "serviceHost",
+                "description": ""
+              },
+              {
+                "value": "teamProject",
+                "description": ""
+              }
+            ]
           }
         },
         "storageKey": {
@@ -1273,13 +1319,39 @@
           "$ref": "#/definitions/ReferenceLinks"
         },
         "value": {
-          "readOnly": true,
           "type": "string",
           "format": "uuid"
         }
       }
     },
     "GraphSubject": {
+      "description": "",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/GraphSubjectBase"
+        }
+      ],
+      "properties": {
+        "legacyDescriptor": {
+          "description": "[Internal Use Only] The legacy descriptor is here in case you need to access old version IMS using identity descriptor.",
+          "type": "string"
+        },
+        "origin": {
+          "description": "The type of source provider for the origin identifier (ex:AD, AAD, MSA)",
+          "type": "string"
+        },
+        "originId": {
+          "description": "The unique identifier from the system of origin. Typically a sid, object id or Guid. Linking and unlinking operations can cause this value to change for a user because the user is not backed by a different provider and has a different unique id in the new provider.",
+          "type": "string"
+        },
+        "subjectKind": {
+          "description": "This field identifies the type of the graph subject (ex: Group, Scope, User).",
+          "type": "string"
+        }
+      }
+    },
+    "GraphSubjectBase": {
       "description": "",
       "type": "object",
       "properties": {
@@ -1289,37 +1361,14 @@
         },
         "descriptor": {
           "description": "The descriptor is the primary way to reference the graph subject while the system is running. This field will uniquely identify the same graph subject across both Accounts and Organizations.",
-          "readOnly": true,
           "type": "string"
         },
         "displayName": {
           "description": "This is the non-unique display name of the graph subject. To change this field, you must alter its value in the source provider.",
-          "readOnly": true,
-          "type": "string"
-        },
-        "legacyDescriptor": {
-          "description": "[Internal Use Only] The legacy descriptor is here in case you need to access old version IMS using identity descriptor.",
-          "readOnly": true,
-          "type": "string"
-        },
-        "origin": {
-          "description": "The type of source provider for the origin identifier (ex:AD, AAD, MSA)",
-          "readOnly": true,
-          "type": "string"
-        },
-        "originId": {
-          "description": "The unique identifier from the system of origin. Typically a sid, object id or Guid. Linking and unlinking operations can cause this value to change for a user because the user is not backed by a different provider and has a different unique id in the new provider.",
-          "readOnly": true,
-          "type": "string"
-        },
-        "subjectKind": {
-          "description": "This field identifies the type of the graph subject (ex: Group, Scope, User).",
-          "readOnly": true,
           "type": "string"
         },
         "url": {
           "description": "This url is the full route to the source resource of this graph subject.",
-          "readOnly": true,
           "type": "string"
         }
       }
@@ -1329,7 +1378,6 @@
       "type": "object",
       "properties": {
         "lookupKeys": {
-          "readOnly": true,
           "type": "array",
           "items": {
             "$ref": "#/definitions/GraphSubjectLookupKey"
@@ -1342,7 +1390,6 @@
       "type": "object",
       "properties": {
         "descriptor": {
-          "readOnly": true,
           "type": "string"
         }
       }
@@ -1355,8 +1402,7 @@
           "$ref": "#/definitions/GraphSubject"
         }
       ],
-      "properties": {
-      }
+      "properties": {}
     },
     "GraphUser": {
       "description": "",
@@ -1367,14 +1413,8 @@
         }
       ],
       "properties": {
-        "basicAuthAlias": {
-          "description": "The alias that is used for Basic Authentication flows (alternative authentication credentials)",
-          "readOnly": true,
-          "type": "string"
-        },
         "metaType": {
           "description": "The meta type of the user in the origin, such as \"member\", \"guest\", etc. See UserMetaType for the set of possible values.",
-          "readOnly": true,
           "type": "string"
         }
       }
@@ -1434,20 +1474,6 @@
         }
       }
     },
-    "IdentityDescriptor": {
-      "description": "An Identity descriptor is a wrapper for the identity type (Windows SID, Passport) along with a unique identifier such as the SID or PUID.",
-      "type": "object",
-      "properties": {
-        "identifier": {
-          "description": "The unique identifier for this identity, not exceeding 256 chars, which will be persisted.",
-          "type": "string"
-        },
-        "identityType": {
-          "description": "Type of descriptor (for example, Windows, Passport, etc.).",
-          "type": "string"
-        }
-      }
-    },
     "IdentityKeyMap": {
       "description": "",
       "type": "object",
@@ -1472,11 +1498,11 @@
         {
           "type": "array",
           "items": {
+            "$ref": "#/definitions/JsonPatchOperation"
           }
         }
       ],
-      "properties": {
-      }
+      "properties": {}
     },
     "JsonPatchOperation": {
       "description": "The JSON model for a JSON Patch operation",
@@ -1497,7 +1523,33 @@
             "test"
           ],
           "x-ms-enum": {
-            "name": "Microsoft.VisualStudio.Services.WebApi.Patch.Operation"
+            "name": "Operation",
+            "values": [
+              {
+                "value": "add",
+                "description": ""
+              },
+              {
+                "value": "remove",
+                "description": ""
+              },
+              {
+                "value": "replace",
+                "description": ""
+              },
+              {
+                "value": "move",
+                "description": ""
+              },
+              {
+                "value": "copy",
+                "description": ""
+              },
+              {
+                "value": "test",
+                "description": ""
+              }
+            ]
           }
         },
         "path": {
@@ -1556,7 +1608,6 @@
       "properties": {
         "count": {
           "description": "The count of properties in the collection.",
-          "readOnly": true,
           "type": "integer",
           "format": "int32"
         },
@@ -1565,7 +1616,6 @@
         },
         "keys": {
           "description": "The set of keys in the collection.",
-          "readOnly": true,
           "type": "array",
           "items": {
             "type": "string"
@@ -1573,7 +1623,6 @@
         },
         "values": {
           "description": "The set of values in the collection.",
-          "readOnly": true,
           "type": "array",
           "items": {
             "type": "string"
@@ -1587,7 +1636,6 @@
       "properties": {
         "links": {
           "description": "The readonly view of the links.  Because Reference links are readonly, we only want to expose them as read only.",
-          "readOnly": true,
           "type": "object",
           "additionalProperties": {
             "type": "object"
@@ -1605,7 +1653,6 @@
       ],
       "properties": {
         "value": {
-          "readOnly": true,
           "type": "string",
           "format": "T"
         }
@@ -1616,7 +1663,6 @@
       "type": "object",
       "properties": {
         "count": {
-          "readOnly": true,
           "type": "integer",
           "format": "int32"
         }
@@ -1624,10 +1670,10 @@
     }
   },
   "parameters": {
-    "api-Version": {
+    "api-Version-preview.1": {
       "name": "api-version",
       "in": "query",
-      "description": "Version of the API to use.  This should be set to '4.1-preview' to use this version of the api.",
+      "description": "Version of the API to use.  This should be set to '4.1-preview.1' to use this version of the api.",
       "required": true,
       "type": "string"
     }
@@ -1636,7 +1682,7 @@
     "accessToken": {
       "type": "basic",
       "description": "Personal access token. Use any value for the user name and the token as the password."
-     }
+    }
   },
   "security": [
     {
