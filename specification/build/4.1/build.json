@@ -95,6 +95,14 @@
       "description": "Provides methods for working with build definition templates."
     },
     {
+      "name": "Ticketed Artifacts",
+      "description": "Provides public methods for downloading artifacts produced by builds when a valid download ticket is provided."
+    },
+    {
+      "name": "Ticketed Logs",
+      "description": "Provides public methods for downloading logs produced by builds when a valid download ticket is provided."
+    },
+    {
       "name": "Timeline"
     }
   ],
@@ -107,10 +115,9 @@
         "tags": [
           "Controllers"
         ],
-        "x-ms-vss-api-version": "4.1-preview.2",
+        "x-ms-docs-override-version": "4.1",
         "x-ms-vss-resource": "controllers",
         "x-ms-vss-method": "GetBuildControllers",
-        "x-ms-preview": true,
         "description": "Gets controller, optionally filtered by name",
         "operationId": "List",
         "produces": [
@@ -125,7 +132,7 @@
             "type": "string"
           },
           {
-            "$ref": "#/parameters/api-Version-preview.2"
+            "$ref": "#/parameters/api-Version"
           }
         ],
         "responses": {
@@ -137,7 +144,7 @@
                 "$ref": "#/definitions/BuildController"
               }
             }
-         }
+          }
         },
         "security": [
           {
@@ -153,10 +160,9 @@
         "tags": [
           "Controllers"
         ],
-        "x-ms-vss-api-version": "4.1-preview.2",
+        "x-ms-docs-override-version": "4.1",
         "x-ms-vss-resource": "controllers",
         "x-ms-vss-method": "GetBuildController",
-        "x-ms-preview": true,
         "description": "Gets a controller",
         "operationId": "Get",
         "produces": [
@@ -172,7 +178,7 @@
             "format": "int32"
           },
           {
-            "$ref": "#/parameters/api-Version-preview.2"
+            "$ref": "#/parameters/api-Version"
           }
         ],
         "responses": {
@@ -181,7 +187,7 @@
             "schema": {
               "$ref": "#/definitions/BuildController"
             }
-         }
+          }
         },
         "security": [
           {
@@ -197,7 +203,7 @@
         "tags": [
           "Resource Usage"
         ],
-        "x-ms-vss-api-version": "4.1-preview.2",
+        "x-ms-docs-override-version": "4.1-preview.2",
         "x-ms-vss-resource": "resourceUsage",
         "x-ms-vss-method": "GetResourceUsage",
         "x-ms-preview": true,
@@ -217,7 +223,7 @@
             "schema": {
               "$ref": "#/definitions/BuildResourceUsage"
             }
-         }
+          }
         }
       }
     },
@@ -226,10 +232,9 @@
         "tags": [
           "Settings"
         ],
-        "x-ms-vss-api-version": "4.1-preview.1",
+        "x-ms-docs-override-version": "4.1",
         "x-ms-vss-resource": "settings",
         "x-ms-vss-method": "GetBuildSettings",
-        "x-ms-preview": true,
         "description": "Gets the build settings.",
         "operationId": "Get",
         "produces": [
@@ -237,7 +242,7 @@
         ],
         "parameters": [
           {
-            "$ref": "#/parameters/api-Version-preview.1"
+            "$ref": "#/parameters/api-Version"
           }
         ],
         "responses": {
@@ -246,17 +251,16 @@
             "schema": {
               "$ref": "#/definitions/BuildSettings"
             }
-         }
+          }
         }
       },
       "patch": {
         "tags": [
           "Settings"
         ],
-        "x-ms-vss-api-version": "4.1-preview.1",
+        "x-ms-docs-override-version": "4.1",
         "x-ms-vss-resource": "settings",
         "x-ms-vss-method": "UpdateBuildSettings",
-        "x-ms-preview": true,
         "description": "Updates the build settings.",
         "operationId": "Update",
         "consumes": [
@@ -276,7 +280,7 @@
             }
           },
           {
-            "$ref": "#/parameters/api-Version-preview.1"
+            "$ref": "#/parameters/api-Version"
           }
         ],
         "responses": {
@@ -285,7 +289,120 @@
             "schema": {
               "$ref": "#/definitions/BuildSettings"
             }
-         }
+          }
+        }
+      }
+    },
+    "/_apis/public/build/builds/{buildId}/ticketedartifacts": {
+      "get": {
+        "tags": [
+          "Ticketed Artifacts"
+        ],
+        "x-ms-docs-override-version": "4.1-preview.1",
+        "x-ms-vss-resource": "ticketedArtifacts",
+        "x-ms-vss-method": "GetTicketedArtifact",
+        "x-ms-preview": true,
+        "description": "Gets a Zip file of the artifact with the given name for a build.",
+        "operationId": "Get",
+        "produces": [
+          "application/zip"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "buildId",
+            "description": "The ID of the build.",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "projectId",
+            "description": "The project ID.",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "query",
+            "name": "artifactName",
+            "description": "The name of the artifact.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "header",
+            "name": "downloadTicket",
+            "description": "A valid ticket that gives permission to download artifacts",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "string",
+              "format": "Stream"
+            }
+          }
+        }
+      }
+    },
+    "/_apis/public/build/builds/{buildId}/ticketedlogs": {
+      "get": {
+        "tags": [
+          "Ticketed Logs"
+        ],
+        "x-ms-docs-override-version": "4.1-preview.1",
+        "x-ms-vss-resource": "ticketedLogs",
+        "x-ms-vss-method": "GetTicketedLogs",
+        "x-ms-preview": true,
+        "description": "Gets a Zip file of the logs for a given build.",
+        "operationId": "Get",
+        "produces": [
+          "application/zip"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "buildId",
+            "description": "The ID of the build.",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "projectId",
+            "description": "The project ID.",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "header",
+            "name": "downloadTicket",
+            "description": "A valid ticket that gives permission to download the logs.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "string",
+              "format": "Stream"
+            }
+          }
         }
       }
     },
@@ -294,10 +411,9 @@
         "tags": [
           "Badge"
         ],
-        "x-ms-vss-api-version": "4.1-preview.2",
+        "x-ms-docs-override-version": "4.1",
         "x-ms-vss-resource": "badge",
         "x-ms-vss-method": "GetBadge",
-        "x-ms-preview": true,
         "description": "Gets a badge that indicates the status of the most recent build for a definition.",
         "operationId": "Get",
         "produces": [
@@ -328,7 +444,7 @@
             "type": "string"
           },
           {
-            "$ref": "#/parameters/api-Version-preview.2"
+            "$ref": "#/parameters/api-Version"
           }
         ],
         "responses": {
@@ -337,7 +453,7 @@
             "schema": {
               "type": "string"
             }
-         }
+          }
         }
       }
     },
@@ -346,10 +462,9 @@
         "tags": [
           "Builds"
         ],
-        "x-ms-vss-api-version": "4.1-preview.3",
+        "x-ms-docs-override-version": "4.1",
         "x-ms-vss-resource": "builds",
         "x-ms-vss-method": "GetBuilds",
-        "x-ms-preview": true,
         "description": "Gets a list of builds.",
         "operationId": "List",
         "produces": [
@@ -416,7 +531,73 @@
             "description": "If specified, filters to builds that match this reason.",
             "required": false,
             "type": "string",
-            "format": "BuildReason"
+            "enum": [
+              "none",
+              "manual",
+              "individualCI",
+              "batchedCI",
+              "schedule",
+              "userCreated",
+              "validateShelveset",
+              "checkInShelveset",
+              "pullRequest",
+              "buildCompletion",
+              "triggered",
+              "all"
+            ],
+            "x-ms-enum": {
+              "name": "BuildReason",
+              "values": [
+                {
+                  "value": "none",
+                  "description": "No reason. This value should not be used."
+                },
+                {
+                  "value": "manual",
+                  "description": "The build was started manually."
+                },
+                {
+                  "value": "individualCI",
+                  "description": "The build was started for the trigger TriggerType.ContinuousIntegration."
+                },
+                {
+                  "value": "batchedCI",
+                  "description": "The build was started for the trigger TriggerType.BatchedContinuousIntegration."
+                },
+                {
+                  "value": "schedule",
+                  "description": "The build was started for the trigger TriggerType.Schedule."
+                },
+                {
+                  "value": "userCreated",
+                  "description": "The build was created by a user."
+                },
+                {
+                  "value": "validateShelveset",
+                  "description": "The build was started manually for private validation."
+                },
+                {
+                  "value": "checkInShelveset",
+                  "description": "The build was started for the trigger ContinuousIntegrationType.Gated."
+                },
+                {
+                  "value": "pullRequest",
+                  "description": "The build was started by a pull request. Added in resource version 3."
+                },
+                {
+                  "value": "buildCompletion",
+                  "description": "The build was started when another build completed."
+                },
+                {
+                  "value": "triggered",
+                  "description": "The build was triggered for retention policy purposes."
+                },
+                {
+                  "value": "all",
+                  "description": "All reasons."
+                }
+              ]
+            }
           },
           {
             "in": "query",
@@ -424,7 +605,48 @@
             "description": "If specified, filters to builds that match this status.",
             "required": false,
             "type": "string",
-            "format": "BuildStatus"
+            "enum": [
+              "none",
+              "inProgress",
+              "completed",
+              "cancelling",
+              "postponed",
+              "notStarted",
+              "all"
+            ],
+            "x-ms-enum": {
+              "name": "BuildStatus",
+              "values": [
+                {
+                  "value": "none",
+                  "description": "No status."
+                },
+                {
+                  "value": "inProgress",
+                  "description": "The build is currently in progress."
+                },
+                {
+                  "value": "completed",
+                  "description": "The build has completed."
+                },
+                {
+                  "value": "cancelling",
+                  "description": "The build is cancelling"
+                },
+                {
+                  "value": "postponed",
+                  "description": "The build is inactive in the queue."
+                },
+                {
+                  "value": "notStarted",
+                  "description": "The build has not yet started."
+                },
+                {
+                  "value": "all",
+                  "description": "All status."
+                }
+              ]
+            }
           },
           {
             "in": "query",
@@ -432,7 +654,38 @@
             "description": "If specified, filters to builds that match this result.",
             "required": false,
             "type": "string",
-            "format": "BuildResult"
+            "enum": [
+              "none",
+              "succeeded",
+              "partiallySucceeded",
+              "failed",
+              "canceled"
+            ],
+            "x-ms-enum": {
+              "name": "BuildResult",
+              "values": [
+                {
+                  "value": "none",
+                  "description": "No result"
+                },
+                {
+                  "value": "succeeded",
+                  "description": "The build completed successfully."
+                },
+                {
+                  "value": "partiallySucceeded",
+                  "description": "The build completed compilation successfully but had other errors."
+                },
+                {
+                  "value": "failed",
+                  "description": "The build completed unsuccessfully."
+                },
+                {
+                  "value": "canceled",
+                  "description": "The build was canceled before starting."
+                }
+              ]
+            }
           },
           {
             "in": "query",
@@ -479,7 +732,28 @@
             "description": "Indicates whether to exclude, include, or only return deleted builds.",
             "required": false,
             "type": "string",
-            "format": "QueryDeletedOption"
+            "enum": [
+              "excludeDeleted",
+              "includeDeleted",
+              "onlyDeleted"
+            ],
+            "x-ms-enum": {
+              "name": "QueryDeletedOption",
+              "values": [
+                {
+                  "value": "excludeDeleted",
+                  "description": "Include only non-deleted builds."
+                },
+                {
+                  "value": "includeDeleted",
+                  "description": "Include deleted and non-deleted builds."
+                },
+                {
+                  "value": "onlyDeleted",
+                  "description": "Include only deleted builds."
+                }
+              ]
+            }
           },
           {
             "in": "query",
@@ -487,7 +761,43 @@
             "description": "The order in which builds should be returned.",
             "required": false,
             "type": "string",
-            "format": "BuildQueryOrder"
+            "enum": [
+              "finishTimeAscending",
+              "finishTimeDescending",
+              "queueTimeDescending",
+              "queueTimeAscending",
+              "startTimeDescending",
+              "startTimeAscending"
+            ],
+            "x-ms-enum": {
+              "name": "BuildQueryOrder",
+              "values": [
+                {
+                  "value": "finishTimeAscending",
+                  "description": "Order by finish time ascending."
+                },
+                {
+                  "value": "finishTimeDescending",
+                  "description": "Order by finish time descending."
+                },
+                {
+                  "value": "queueTimeDescending",
+                  "description": "Order by finish time descending."
+                },
+                {
+                  "value": "queueTimeAscending",
+                  "description": "Order by finish time descending."
+                },
+                {
+                  "value": "startTimeDescending",
+                  "description": "Order by finish time descending."
+                },
+                {
+                  "value": "startTimeAscending",
+                  "description": "Order by finish time descending."
+                }
+              ]
+            }
           },
           {
             "in": "query",
@@ -519,7 +829,7 @@
             "type": "string"
           },
           {
-            "$ref": "#/parameters/api-Version-preview.3"
+            "$ref": "#/parameters/api-Version"
           }
         ],
         "responses": {
@@ -531,7 +841,7 @@
                 "$ref": "#/definitions/Build"
               }
             }
-         }
+          }
         },
         "security": [
           {
@@ -545,10 +855,9 @@
         "tags": [
           "Builds"
         ],
-        "x-ms-vss-api-version": "4.1-preview.3",
+        "x-ms-docs-override-version": "4.1",
         "x-ms-vss-resource": "builds",
         "x-ms-vss-method": "QueueBuild",
-        "x-ms-preview": true,
         "description": "Queues a build",
         "operationId": "Queue",
         "consumes": [
@@ -590,7 +899,7 @@
             "type": "string"
           },
           {
-            "$ref": "#/parameters/api-Version-preview.3"
+            "$ref": "#/parameters/api-Version"
           }
         ],
         "responses": {
@@ -599,7 +908,7 @@
             "schema": {
               "$ref": "#/definitions/Build"
             }
-         }
+          }
         },
         "security": [
           {
@@ -613,10 +922,9 @@
         "tags": [
           "Builds"
         ],
-        "x-ms-vss-api-version": "4.1-preview.3",
+        "x-ms-docs-override-version": "4.1",
         "x-ms-vss-resource": "builds",
         "x-ms-vss-method": "UpdateBuilds",
-        "x-ms-preview": true,
         "description": "Updates multiple builds.",
         "operationId": "Update Builds",
         "consumes": [
@@ -647,7 +955,7 @@
             "type": "string"
           },
           {
-            "$ref": "#/parameters/api-Version-preview.3"
+            "$ref": "#/parameters/api-Version"
           }
         ],
         "responses": {
@@ -659,7 +967,7 @@
                 "$ref": "#/definitions/Build"
               }
             }
-         }
+          }
         },
         "security": [
           {
@@ -675,10 +983,9 @@
         "tags": [
           "Builds"
         ],
-        "x-ms-vss-api-version": "4.1-preview.3",
+        "x-ms-docs-override-version": "4.1",
         "x-ms-vss-resource": "builds",
         "x-ms-vss-method": "DeleteBuild",
-        "x-ms-preview": true,
         "description": "Deletes a build.",
         "operationId": "Delete",
         "parameters": [
@@ -699,13 +1006,13 @@
             "type": "string"
           },
           {
-            "$ref": "#/parameters/api-Version-preview.3"
+            "$ref": "#/parameters/api-Version"
           }
         ],
         "responses": {
           "200": {
             "description": "successful operation"
-         }
+          }
         },
         "security": [
           {
@@ -719,10 +1026,9 @@
         "tags": [
           "Builds"
         ],
-        "x-ms-vss-api-version": "4.1-preview.3",
+        "x-ms-docs-override-version": "4.1",
         "x-ms-vss-resource": "builds",
         "x-ms-vss-method": "GetBuild",
-        "x-ms-preview": true,
         "description": "Gets a build",
         "operationId": "Get",
         "produces": [
@@ -753,7 +1059,7 @@
             "type": "string"
           },
           {
-            "$ref": "#/parameters/api-Version-preview.3"
+            "$ref": "#/parameters/api-Version"
           }
         ],
         "responses": {
@@ -762,7 +1068,7 @@
             "schema": {
               "$ref": "#/definitions/Build"
             }
-         }
+          }
         },
         "security": [
           {
@@ -776,10 +1082,9 @@
         "tags": [
           "Builds"
         ],
-        "x-ms-vss-api-version": "4.1-preview.3",
+        "x-ms-docs-override-version": "4.1",
         "x-ms-vss-resource": "builds",
         "x-ms-vss-method": "UpdateBuild",
-        "x-ms-preview": true,
         "description": "Updates a build.",
         "operationId": "Update Build",
         "consumes": [
@@ -815,7 +1120,7 @@
             "type": "string"
           },
           {
-            "$ref": "#/parameters/api-Version-preview.3"
+            "$ref": "#/parameters/api-Version"
           }
         ],
         "responses": {
@@ -824,7 +1129,7 @@
             "schema": {
               "$ref": "#/definitions/Build"
             }
-         }
+          }
         },
         "security": [
           {
@@ -840,7 +1145,7 @@
         "tags": [
           "Attachments"
         ],
-        "x-ms-vss-api-version": "4.1-preview.1",
+        "x-ms-docs-override-version": "4.1-preview.1",
         "x-ms-vss-resource": "attachments",
         "x-ms-vss-method": "GetAttachment",
         "x-ms-preview": true,
@@ -906,7 +1211,7 @@
               "type": "string",
               "format": "Stream"
             }
-         }
+          }
         },
         "security": [
           {
@@ -922,10 +1227,9 @@
         "tags": [
           "Artifacts"
         ],
-        "x-ms-vss-api-version": "4.1-preview.3",
+        "x-ms-docs-override-version": "4.1",
         "x-ms-vss-resource": "artifacts",
         "x-ms-vss-method": "CreateArtifact",
-        "x-ms-preview": true,
         "description": "Associates an artifact with a build.",
         "operationId": "Create",
         "consumes": [
@@ -961,7 +1265,7 @@
             "type": "string"
           },
           {
-            "$ref": "#/parameters/api-Version-preview.3"
+            "$ref": "#/parameters/api-Version"
           }
         ],
         "responses": {
@@ -970,7 +1274,7 @@
             "schema": {
               "$ref": "#/definitions/BuildArtifact"
             }
-         }
+          }
         },
         "security": [
           {
@@ -984,10 +1288,9 @@
         "tags": [
           "Artifacts"
         ],
-        "x-ms-vss-api-version": "4.1-preview.3",
+        "x-ms-docs-override-version": "4.1",
         "x-ms-vss-resource": "artifacts",
         "x-ms-vss-method": "GetArtifacts",
-        "x-ms-preview": true,
         "description": "Gets all artifacts for a build.",
         "operationId": "List",
         "produces": [
@@ -1011,7 +1314,7 @@
             "type": "string"
           },
           {
-            "$ref": "#/parameters/api-Version-preview.3"
+            "$ref": "#/parameters/api-Version"
           }
         ],
         "responses": {
@@ -1023,67 +1326,7 @@
                 "$ref": "#/definitions/BuildArtifact"
               }
             }
-         }
-        },
-        "security": [
-          {
-            "oauth2": [
-              "vso.build"
-            ]
           }
-        ]
-      }
-    },
-    "/{project}/_apis/build/builds/{buildId}/artifacts/{artifactName}": {
-      "get": {
-        "tags": [
-          "Artifacts"
-        ],
-        "x-ms-vss-api-version": "4.1-preview.3",
-        "x-ms-vss-resource": "artifacts",
-        "x-ms-vss-method": "GetArtifact",
-        "x-ms-preview": true,
-        "description": "Gets a specific artifact for a build.",
-        "operationId": "Get",
-        "produces": [
-          "application/zip",
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "buildId",
-            "description": "The ID of the build.",
-            "required": true,
-            "type": "integer",
-            "format": "int32"
-          },
-          {
-            "in": "query",
-            "name": "artifactName",
-            "description": "The name of the artifact.",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "in": "path",
-            "name": "project",
-            "description": "Project ID or project name",
-            "required": true,
-            "x-ms-required": false,
-            "type": "string"
-          },
-          {
-            "$ref": "#/parameters/api-Version-preview.3"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "$ref": "#/definitions/BuildArtifact"
-            }
-         }
         },
         "security": [
           {
@@ -1099,7 +1342,7 @@
         "tags": [
           "Attachments"
         ],
-        "x-ms-vss-api-version": "4.1-preview.1",
+        "x-ms-docs-override-version": "4.1-preview.1",
         "x-ms-vss-resource": "attachments",
         "x-ms-vss-method": "GetAttachments",
         "x-ms-preview": true,
@@ -1144,7 +1387,7 @@
                 "$ref": "#/definitions/Attachment"
               }
             }
-         }
+          }
         },
         "security": [
           {
@@ -1160,10 +1403,9 @@
         "tags": [
           "Builds"
         ],
-        "x-ms-vss-api-version": "4.1-preview.2",
+        "x-ms-docs-override-version": "4.1",
         "x-ms-vss-resource": "changes",
         "x-ms-vss-method": "GetBuildChanges",
-        "x-ms-preview": true,
         "description": "Gets the changes associated with a build",
         "operationId": "Get Build Changes",
         "produces": [
@@ -1208,7 +1450,7 @@
             "type": "boolean"
           },
           {
-            "$ref": "#/parameters/api-Version-preview.2"
+            "$ref": "#/parameters/api-Version"
           }
         ],
         "responses": {
@@ -1220,7 +1462,7 @@
                 "$ref": "#/definitions/Change"
               }
             }
-         }
+          }
         },
         "security": [
           {
@@ -1236,10 +1478,9 @@
         "tags": [
           "Builds"
         ],
-        "x-ms-vss-api-version": "4.1-preview.2",
+        "x-ms-docs-override-version": "4.1",
         "x-ms-vss-resource": "logs",
         "x-ms-vss-method": "GetBuildLogs",
-        "x-ms-preview": true,
         "description": "Gets the logs for a build.",
         "operationId": "Get Build Logs",
         "produces": [
@@ -1263,7 +1504,7 @@
             "format": "int32"
           },
           {
-            "$ref": "#/parameters/api-Version-preview.2"
+            "$ref": "#/parameters/api-Version"
           }
         ],
         "responses": {
@@ -1275,7 +1516,7 @@
                 "$ref": "#/definitions/BuildLog"
               }
             }
-         }
+          }
         },
         "security": [
           {
@@ -1291,10 +1532,9 @@
         "tags": [
           "Builds"
         ],
-        "x-ms-vss-api-version": "4.1-preview.2",
+        "x-ms-docs-override-version": "4.1",
         "x-ms-vss-resource": "logs",
         "x-ms-vss-method": "GetBuildLog",
-        "x-ms-preview": true,
         "description": "Gets an individual log file for a build.",
         "operationId": "Get Build Log",
         "produces": [
@@ -1342,7 +1582,7 @@
             "format": "int64"
           },
           {
-            "$ref": "#/parameters/api-Version-preview.2"
+            "$ref": "#/parameters/api-Version"
           }
         ],
         "responses": {
@@ -1352,7 +1592,7 @@
               "type": "string",
               "format": "Stream"
             }
-         }
+          }
         },
         "security": [
           {
@@ -1368,7 +1608,7 @@
         "tags": [
           "Properties"
         ],
-        "x-ms-vss-api-version": "4.1-preview.1",
+        "x-ms-docs-override-version": "4.1-preview.1",
         "x-ms-vss-resource": "properties",
         "x-ms-vss-method": "GetBuildProperties",
         "x-ms-preview": true,
@@ -1411,7 +1651,7 @@
             "schema": {
               "$ref": "#/definitions/PropertiesCollection"
             }
-         }
+          }
         },
         "security": [
           {
@@ -1425,7 +1665,7 @@
         "tags": [
           "Properties"
         ],
-        "x-ms-vss-api-version": "4.1-preview.1",
+        "x-ms-docs-override-version": "4.1-preview.1",
         "x-ms-vss-resource": "properties",
         "x-ms-vss-method": "UpdateBuildProperties",
         "x-ms-preview": true,
@@ -1472,7 +1712,7 @@
             "schema": {
               "$ref": "#/definitions/PropertiesCollection"
             }
-         }
+          }
         },
         "security": [
           {
@@ -1488,7 +1728,7 @@
         "tags": [
           "Report"
         ],
-        "x-ms-vss-api-version": "4.1-preview.2",
+        "x-ms-docs-override-version": "4.1-preview.2",
         "x-ms-vss-resource": "report",
         "x-ms-vss-method": "GetBuildReport",
         "x-ms-preview": true,
@@ -1531,7 +1771,7 @@
             "schema": {
               "$ref": "#/definitions/BuildReportMetadata"
             }
-         }
+          }
         },
         "security": [
           {
@@ -1547,10 +1787,9 @@
         "tags": [
           "Tags"
         ],
-        "x-ms-vss-api-version": "4.1-preview.2",
+        "x-ms-docs-override-version": "4.1",
         "x-ms-vss-resource": "tags",
         "x-ms-vss-method": "AddBuildTags",
-        "x-ms-preview": true,
         "description": "Adds tags to a build.",
         "operationId": "Add Build Tags",
         "consumes": [
@@ -1588,7 +1827,7 @@
             "format": "int32"
           },
           {
-            "$ref": "#/parameters/api-Version-preview.2"
+            "$ref": "#/parameters/api-Version"
           }
         ],
         "responses": {
@@ -1600,7 +1839,7 @@
                 "type": "string"
               }
             }
-         }
+          }
         },
         "security": [
           {
@@ -1614,10 +1853,9 @@
         "tags": [
           "Tags"
         ],
-        "x-ms-vss-api-version": "4.1-preview.2",
+        "x-ms-docs-override-version": "4.1",
         "x-ms-vss-resource": "tags",
         "x-ms-vss-method": "GetBuildTags",
-        "x-ms-preview": true,
         "description": "Gets the tags for a build.",
         "operationId": "Get Build Tags",
         "produces": [
@@ -1640,7 +1878,7 @@
             "format": "int32"
           },
           {
-            "$ref": "#/parameters/api-Version-preview.2"
+            "$ref": "#/parameters/api-Version"
           }
         ],
         "responses": {
@@ -1652,7 +1890,7 @@
                 "type": "string"
               }
             }
-         }
+          }
         },
         "security": [
           {
@@ -1668,10 +1906,9 @@
         "tags": [
           "Tags"
         ],
-        "x-ms-vss-api-version": "4.1-preview.2",
+        "x-ms-docs-override-version": "4.1",
         "x-ms-vss-resource": "tags",
         "x-ms-vss-method": "AddBuildTag",
-        "x-ms-preview": true,
         "description": "Adds a tag to a build.",
         "operationId": "Add Build Tag",
         "produces": [
@@ -1701,7 +1938,7 @@
             "type": "string"
           },
           {
-            "$ref": "#/parameters/api-Version-preview.2"
+            "$ref": "#/parameters/api-Version"
           }
         ],
         "responses": {
@@ -1713,7 +1950,7 @@
                 "type": "string"
               }
             }
-         }
+          }
         },
         "security": [
           {
@@ -1727,10 +1964,9 @@
         "tags": [
           "Tags"
         ],
-        "x-ms-vss-api-version": "4.1-preview.2",
+        "x-ms-docs-override-version": "4.1",
         "x-ms-vss-resource": "tags",
         "x-ms-vss-method": "DeleteBuildTag",
-        "x-ms-preview": true,
         "description": "Removes a tag from a build.",
         "operationId": "Delete Build Tag",
         "produces": [
@@ -1760,7 +1996,7 @@
             "type": "string"
           },
           {
-            "$ref": "#/parameters/api-Version-preview.2"
+            "$ref": "#/parameters/api-Version"
           }
         ],
         "responses": {
@@ -1772,7 +2008,7 @@
                 "type": "string"
               }
             }
-         }
+          }
         },
         "security": [
           {
@@ -1788,10 +2024,9 @@
         "tags": [
           "Timeline"
         ],
-        "x-ms-vss-api-version": "4.1-preview.2",
+        "x-ms-docs-override-version": "4.1",
         "x-ms-vss-resource": "timeline",
         "x-ms-vss-method": "GetBuildTimeline",
-        "x-ms-preview": true,
         "description": "Gets details for a build",
         "operationId": "Get",
         "produces": [
@@ -1839,7 +2074,7 @@
             "format": "uuid"
           },
           {
-            "$ref": "#/parameters/api-Version-preview.2"
+            "$ref": "#/parameters/api-Version"
           }
         ],
         "responses": {
@@ -1848,7 +2083,7 @@
             "schema": {
               "$ref": "#/definitions/Timeline"
             }
-         }
+          }
         },
         "security": [
           {
@@ -1864,10 +2099,9 @@
         "tags": [
           "Builds"
         ],
-        "x-ms-vss-api-version": "4.1-preview.2",
+        "x-ms-docs-override-version": "4.1",
         "x-ms-vss-resource": "workitems",
         "x-ms-vss-method": "GetBuildWorkItemsRefs",
-        "x-ms-preview": true,
         "description": "Gets the work items associated with a build.",
         "operationId": "Get Build Work Items Refs",
         "produces": [
@@ -1898,7 +2132,7 @@
             "format": "int32"
           },
           {
-            "$ref": "#/parameters/api-Version-preview.2"
+            "$ref": "#/parameters/api-Version"
           }
         ],
         "responses": {
@@ -1910,7 +2144,7 @@
                 "$ref": "#/definitions/ResourceRef"
               }
             }
-         }
+          }
         },
         "security": [
           {
@@ -1924,10 +2158,9 @@
         "tags": [
           "Builds"
         ],
-        "x-ms-vss-api-version": "4.1-preview.2",
+        "x-ms-docs-override-version": "4.1",
         "x-ms-vss-resource": "workitems",
         "x-ms-vss-method": "GetBuildWorkItemsRefsFromCommits",
-        "x-ms-preview": true,
         "description": "Gets the work items associated with a build, filtered to specific commits.",
         "operationId": "Get Build Work Items Refs From Commits",
         "consumes": [
@@ -1973,7 +2206,7 @@
             "format": "int32"
           },
           {
-            "$ref": "#/parameters/api-Version-preview.2"
+            "$ref": "#/parameters/api-Version"
           }
         ],
         "responses": {
@@ -1985,7 +2218,7 @@
                 "$ref": "#/definitions/ResourceRef"
               }
             }
-         }
+          }
         },
         "security": [
           {
@@ -2001,7 +2234,7 @@
         "tags": [
           "Builds"
         ],
-        "x-ms-vss-api-version": "4.1-preview.2",
+        "x-ms-docs-override-version": "4.1-preview.2",
         "x-ms-vss-resource": "changes",
         "x-ms-vss-method": "GetChangesBetweenBuilds",
         "x-ms-preview": true,
@@ -2055,7 +2288,7 @@
                 "$ref": "#/definitions/Change"
               }
             }
-         }
+          }
         }
       }
     },
@@ -2064,10 +2297,9 @@
         "tags": [
           "Definitions"
         ],
-        "x-ms-vss-api-version": "4.1-preview.6",
+        "x-ms-docs-override-version": "4.1",
         "x-ms-vss-resource": "definitions",
         "x-ms-vss-method": "CreateDefinition",
-        "x-ms-preview": true,
         "description": "Creates a new definition.",
         "operationId": "Create",
         "consumes": [
@@ -2111,7 +2343,7 @@
             "format": "int32"
           },
           {
-            "$ref": "#/parameters/api-Version-preview.6"
+            "$ref": "#/parameters/api-Version"
           }
         ],
         "responses": {
@@ -2120,7 +2352,7 @@
             "schema": {
               "$ref": "#/definitions/BuildDefinition"
             }
-         }
+          }
         },
         "security": [
           {
@@ -2134,10 +2366,9 @@
         "tags": [
           "Definitions"
         ],
-        "x-ms-vss-api-version": "4.1-preview.6",
+        "x-ms-docs-override-version": "4.1",
         "x-ms-vss-resource": "definitions",
         "x-ms-vss-method": "GetDefinitions",
-        "x-ms-preview": true,
         "description": "Gets a list of definitions.",
         "operationId": "List",
         "produces": [
@@ -2179,7 +2410,38 @@
             "description": "Indicates the order in which definitions should be returned.",
             "required": false,
             "type": "string",
-            "format": "DefinitionQueryOrder"
+            "enum": [
+              "none",
+              "lastModifiedAscending",
+              "lastModifiedDescending",
+              "definitionNameAscending",
+              "definitionNameDescending"
+            ],
+            "x-ms-enum": {
+              "name": "DefinitionQueryOrder",
+              "values": [
+                {
+                  "value": "none",
+                  "description": "No order"
+                },
+                {
+                  "value": "lastModifiedAscending",
+                  "description": "Order by created on/last modified time ascending."
+                },
+                {
+                  "value": "lastModifiedDescending",
+                  "description": "Order by created on/last modified time descending."
+                },
+                {
+                  "value": "definitionNameAscending",
+                  "description": "Order by definition name ascending."
+                },
+                {
+                  "value": "definitionNameDescending",
+                  "description": "Order by definition name descending."
+                }
+              ]
+            }
           },
           {
             "in": "query",
@@ -2258,7 +2520,7 @@
             "format": "uuid"
           },
           {
-            "$ref": "#/parameters/api-Version-preview.6"
+            "$ref": "#/parameters/api-Version"
           }
         ],
         "responses": {
@@ -2270,7 +2532,7 @@
                 "$ref": "#/definitions/BuildDefinitionReference"
               }
             }
-         }
+          }
         },
         "security": [
           {
@@ -2286,10 +2548,9 @@
         "tags": [
           "Definitions"
         ],
-        "x-ms-vss-api-version": "4.1-preview.6",
+        "x-ms-docs-override-version": "4.1",
         "x-ms-vss-resource": "definitions",
         "x-ms-vss-method": "DeleteDefinition",
-        "x-ms-preview": true,
         "description": "Deletes a definition and all associated builds.",
         "operationId": "Delete",
         "parameters": [
@@ -2310,13 +2571,13 @@
             "type": "string"
           },
           {
-            "$ref": "#/parameters/api-Version-preview.6"
+            "$ref": "#/parameters/api-Version"
           }
         ],
         "responses": {
           "200": {
             "description": "successful operation"
-         }
+          }
         },
         "security": [
           {
@@ -2330,10 +2591,9 @@
         "tags": [
           "Definitions"
         ],
-        "x-ms-vss-api-version": "4.1-preview.6",
+        "x-ms-docs-override-version": "4.1",
         "x-ms-vss-resource": "definitions",
         "x-ms-vss-method": "GetDefinition",
-        "x-ms-preview": true,
         "description": "Gets a definition, optionally at a specific revision.",
         "operationId": "Get",
         "produces": [
@@ -2388,7 +2648,7 @@
             "type": "boolean"
           },
           {
-            "$ref": "#/parameters/api-Version-preview.6"
+            "$ref": "#/parameters/api-Version"
           }
         ],
         "responses": {
@@ -2397,7 +2657,7 @@
             "schema": {
               "$ref": "#/definitions/BuildDefinition"
             }
-         }
+          }
         },
         "security": [
           {
@@ -2407,16 +2667,66 @@
           }
         ]
       },
+      "post": {
+        "tags": [
+          "Definitions"
+        ],
+        "x-ms-docs-override-version": "4.1",
+        "x-ms-vss-resource": "definitions",
+        "x-ms-vss-method": "ResetCounter",
+        "description": "Resets the counter variable Value back to the Seed.",
+        "operationId": "Reset Counter",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "definitionId",
+            "description": "The ID of the definition.",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "counterId",
+            "description": "The ID of the counter.",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "x-ms-required": false,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.build_execute"
+            ]
+          }
+        ]
+      },
       "put": {
         "tags": [
           "Definitions"
         ],
-        "x-ms-vss-api-version": "4.1-preview.6",
+        "x-ms-docs-override-version": "4.1",
         "x-ms-vss-resource": "definitions",
         "x-ms-vss-method": "UpdateDefinition",
-        "x-ms-preview": true,
         "description": "Updates an existing definition.",
-        "operationId": "Update",
+        "operationId": "Update Definition",
         "consumes": [
           "application/json"
         ],
@@ -2466,7 +2776,7 @@
             "format": "int32"
           },
           {
-            "$ref": "#/parameters/api-Version-preview.6"
+            "$ref": "#/parameters/api-Version"
           }
         ],
         "responses": {
@@ -2475,7 +2785,7 @@
             "schema": {
               "$ref": "#/definitions/BuildDefinition"
             }
-         }
+          }
         },
         "security": [
           {
@@ -2491,7 +2801,7 @@
         "tags": [
           "Metrics"
         ],
-        "x-ms-vss-api-version": "4.1-preview.1",
+        "x-ms-docs-override-version": "4.1-preview.1",
         "x-ms-vss-resource": "metrics",
         "x-ms-vss-method": "GetDefinitionMetrics",
         "x-ms-preview": true,
@@ -2537,7 +2847,7 @@
                 "$ref": "#/definitions/BuildMetric"
               }
             }
-         }
+          }
         },
         "security": [
           {
@@ -2553,7 +2863,7 @@
         "tags": [
           "Properties"
         ],
-        "x-ms-vss-api-version": "4.1-preview.1",
+        "x-ms-docs-override-version": "4.1-preview.1",
         "x-ms-vss-resource": "properties",
         "x-ms-vss-method": "GetDefinitionProperties",
         "x-ms-preview": true,
@@ -2596,7 +2906,7 @@
             "schema": {
               "$ref": "#/definitions/PropertiesCollection"
             }
-         }
+          }
         },
         "security": [
           {
@@ -2610,7 +2920,7 @@
         "tags": [
           "Properties"
         ],
-        "x-ms-vss-api-version": "4.1-preview.1",
+        "x-ms-docs-override-version": "4.1-preview.1",
         "x-ms-vss-resource": "properties",
         "x-ms-vss-method": "UpdateDefinitionProperties",
         "x-ms-preview": true,
@@ -2657,7 +2967,7 @@
             "schema": {
               "$ref": "#/definitions/PropertiesCollection"
             }
-         }
+          }
         }
       }
     },
@@ -2666,10 +2976,9 @@
         "tags": [
           "Definitions"
         ],
-        "x-ms-vss-api-version": "4.1-preview.2",
+        "x-ms-docs-override-version": "4.1",
         "x-ms-vss-resource": "revisions",
         "x-ms-vss-method": "GetDefinitionRevisions",
-        "x-ms-preview": true,
         "description": "Gets all revisions of a definition.",
         "operationId": "Get Definition Revisions",
         "produces": [
@@ -2692,7 +3001,7 @@
             "format": "int32"
           },
           {
-            "$ref": "#/parameters/api-Version-preview.2"
+            "$ref": "#/parameters/api-Version"
           }
         ],
         "responses": {
@@ -2704,7 +3013,7 @@
                 "$ref": "#/definitions/BuildDefinitionRevision"
               }
             }
-         }
+          }
         },
         "security": [
           {
@@ -2720,7 +3029,7 @@
         "tags": [
           "Tags"
         ],
-        "x-ms-vss-api-version": "4.1-preview.2",
+        "x-ms-docs-override-version": "4.1-preview.2",
         "x-ms-vss-resource": "tags",
         "x-ms-vss-method": "AddDefinitionTags",
         "x-ms-preview": true,
@@ -2773,7 +3082,7 @@
                 "type": "string"
               }
             }
-         }
+          }
         },
         "security": [
           {
@@ -2787,7 +3096,7 @@
         "tags": [
           "Tags"
         ],
-        "x-ms-vss-api-version": "4.1-preview.2",
+        "x-ms-docs-override-version": "4.1-preview.2",
         "x-ms-vss-resource": "tags",
         "x-ms-vss-method": "GetDefinitionTags",
         "x-ms-preview": true,
@@ -2833,7 +3142,7 @@
                 "type": "string"
               }
             }
-         }
+          }
         },
         "security": [
           {
@@ -2849,7 +3158,7 @@
         "tags": [
           "Tags"
         ],
-        "x-ms-vss-api-version": "4.1-preview.2",
+        "x-ms-docs-override-version": "4.1-preview.2",
         "x-ms-vss-resource": "tags",
         "x-ms-vss-method": "AddDefinitionTag",
         "x-ms-preview": true,
@@ -2894,7 +3203,7 @@
                 "type": "string"
               }
             }
-         }
+          }
         },
         "security": [
           {
@@ -2908,7 +3217,7 @@
         "tags": [
           "Tags"
         ],
-        "x-ms-vss-api-version": "4.1-preview.2",
+        "x-ms-docs-override-version": "4.1-preview.2",
         "x-ms-vss-resource": "tags",
         "x-ms-vss-method": "DeleteDefinitionTag",
         "x-ms-preview": true,
@@ -2953,7 +3262,7 @@
                 "type": "string"
               }
             }
-         }
+          }
         },
         "security": [
           {
@@ -2969,10 +3278,9 @@
         "tags": [
           "Templates"
         ],
-        "x-ms-vss-api-version": "4.1-preview.3",
+        "x-ms-docs-override-version": "4.1",
         "x-ms-vss-resource": "templates",
         "x-ms-vss-method": "GetTemplates",
-        "x-ms-preview": true,
         "description": "Gets all definition templates.",
         "operationId": "List",
         "produces": [
@@ -2987,7 +3295,7 @@
             "type": "string"
           },
           {
-            "$ref": "#/parameters/api-Version-preview.3"
+            "$ref": "#/parameters/api-Version"
           }
         ],
         "responses": {
@@ -2999,7 +3307,7 @@
                 "$ref": "#/definitions/BuildDefinitionTemplate"
               }
             }
-         }
+          }
         },
         "security": [
           {
@@ -3015,10 +3323,9 @@
         "tags": [
           "Templates"
         ],
-        "x-ms-vss-api-version": "4.1-preview.3",
+        "x-ms-docs-override-version": "4.1",
         "x-ms-vss-resource": "templates",
         "x-ms-vss-method": "DeleteTemplate",
-        "x-ms-preview": true,
         "description": "Deletes a build definition template.",
         "operationId": "Delete",
         "parameters": [
@@ -3037,13 +3344,13 @@
             "type": "string"
           },
           {
-            "$ref": "#/parameters/api-Version-preview.3"
+            "$ref": "#/parameters/api-Version"
           }
         ],
         "responses": {
           "200": {
             "description": "successful operation"
-         }
+          }
         },
         "security": [
           {
@@ -3057,10 +3364,9 @@
         "tags": [
           "Templates"
         ],
-        "x-ms-vss-api-version": "4.1-preview.3",
+        "x-ms-docs-override-version": "4.1",
         "x-ms-vss-resource": "templates",
         "x-ms-vss-method": "GetTemplate",
-        "x-ms-preview": true,
         "description": "Gets a specific build definition template.",
         "operationId": "Get",
         "produces": [
@@ -3082,7 +3388,7 @@
             "type": "string"
           },
           {
-            "$ref": "#/parameters/api-Version-preview.3"
+            "$ref": "#/parameters/api-Version"
           }
         ],
         "responses": {
@@ -3091,7 +3397,7 @@
             "schema": {
               "$ref": "#/definitions/BuildDefinitionTemplate"
             }
-         }
+          }
         },
         "security": [
           {
@@ -3105,10 +3411,9 @@
         "tags": [
           "Templates"
         ],
-        "x-ms-vss-api-version": "4.1-preview.3",
+        "x-ms-docs-override-version": "4.1",
         "x-ms-vss-resource": "templates",
         "x-ms-vss-method": "SaveTemplate",
-        "x-ms-preview": true,
         "description": "Updates an existing build definition template.",
         "operationId": "Save Template",
         "consumes": [
@@ -3142,7 +3447,7 @@
             "type": "string"
           },
           {
-            "$ref": "#/parameters/api-Version-preview.3"
+            "$ref": "#/parameters/api-Version"
           }
         ],
         "responses": {
@@ -3151,7 +3456,7 @@
             "schema": {
               "$ref": "#/definitions/BuildDefinitionTemplate"
             }
-         }
+          }
         },
         "security": [
           {
@@ -3162,74 +3467,12 @@
         ]
       }
     },
-    "/{project}/_apis/build/folders/{*path}": {
-      "get": {
-        "tags": [
-          "Folders"
-        ],
-        "x-ms-vss-api-version": "4.1-preview.1",
-        "x-ms-vss-resource": "folders",
-        "x-ms-vss-method": "GetFolders",
-        "x-ms-preview": true,
-        "description": "Gets a list of build definition folders.",
-        "operationId": "List",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "project",
-            "description": "Project ID or project name",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "in": "path",
-            "name": "path",
-            "description": "The path to start with.",
-            "required": true,
-            "x-ms-required": false,
-            "type": "string"
-          },
-          {
-            "in": "query",
-            "name": "queryOrder",
-            "description": "The order in which folders should be returned.",
-            "required": false,
-            "type": "string",
-            "format": "FolderQueryOrder"
-          },
-          {
-            "$ref": "#/parameters/api-Version-preview.1"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/Folder"
-              }
-            }
-         }
-        },
-        "security": [
-          {
-            "oauth2": [
-              "vso.build"
-            ]
-          }
-        ]
-      }
-    },
     "/{project}/_apis/build/folders/{path}": {
       "put": {
         "tags": [
           "Folders"
         ],
-        "x-ms-vss-api-version": "4.1-preview.1",
+        "x-ms-docs-override-version": "4.1-preview.1",
         "x-ms-vss-resource": "folders",
         "x-ms-vss-method": "CreateFolder",
         "x-ms-preview": true,
@@ -3275,7 +3518,7 @@
             "schema": {
               "$ref": "#/definitions/Folder"
             }
-         }
+          }
         },
         "security": [
           {
@@ -3289,7 +3532,7 @@
         "tags": [
           "Folders"
         ],
-        "x-ms-vss-api-version": "4.1-preview.1",
+        "x-ms-docs-override-version": "4.1-preview.1",
         "x-ms-vss-resource": "folders",
         "x-ms-vss-method": "DeleteFolder",
         "x-ms-preview": true,
@@ -3317,7 +3560,7 @@
         "responses": {
           "200": {
             "description": "successful operation"
-         }
+          }
         },
         "security": [
           {
@@ -3327,11 +3570,92 @@
           }
         ]
       },
+      "get": {
+        "tags": [
+          "Folders"
+        ],
+        "x-ms-docs-override-version": "4.1-preview.1",
+        "x-ms-vss-resource": "folders",
+        "x-ms-vss-method": "GetFolders",
+        "x-ms-preview": true,
+        "description": "Gets a list of build definition folders.",
+        "operationId": "List",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "path",
+            "description": "The path to start with.",
+            "required": true,
+            "x-ms-required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "queryOrder",
+            "description": "The order in which folders should be returned.",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "none",
+              "folderAscending",
+              "folderDescending"
+            ],
+            "x-ms-enum": {
+              "name": "FolderQueryOrder",
+              "values": [
+                {
+                  "value": "none",
+                  "description": "No order"
+                },
+                {
+                  "value": "folderAscending",
+                  "description": "Order by folder name and path ascending."
+                },
+                {
+                  "value": "folderDescending",
+                  "description": "Order by folder name and path descending."
+                }
+              ]
+            }
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Folder"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.build"
+            ]
+          }
+        ]
+      },
       "post": {
         "tags": [
           "Folders"
         ],
-        "x-ms-vss-api-version": "4.1-preview.1",
+        "x-ms-docs-override-version": "4.1-preview.1",
         "x-ms-vss-resource": "folders",
         "x-ms-vss-method": "UpdateFolder",
         "x-ms-preview": true,
@@ -3377,7 +3701,7 @@
             "schema": {
               "$ref": "#/definitions/Folder"
             }
-         }
+          }
         },
         "security": [
           {
@@ -3393,7 +3717,7 @@
         "tags": [
           "Metrics"
         ],
-        "x-ms-vss-api-version": "4.1-preview.1",
+        "x-ms-docs-override-version": "4.1-preview.1",
         "x-ms-vss-resource": "metrics",
         "x-ms-vss-method": "GetProjectMetrics",
         "x-ms-preview": true,
@@ -3439,7 +3763,7 @@
                 "$ref": "#/definitions/BuildMetric"
               }
             }
-         }
+          }
         }
       }
     },
@@ -3448,10 +3772,9 @@
         "tags": [
           "Options"
         ],
-        "x-ms-vss-api-version": "4.1-preview.2",
+        "x-ms-docs-override-version": "4.1",
         "x-ms-vss-resource": "options",
         "x-ms-vss-method": "GetBuildOptionDefinitions",
-        "x-ms-preview": true,
         "description": "Gets all build definition options supported by the system.",
         "operationId": "List",
         "produces": [
@@ -3467,7 +3790,7 @@
             "type": "string"
           },
           {
-            "$ref": "#/parameters/api-Version-preview.2"
+            "$ref": "#/parameters/api-Version"
           }
         ],
         "responses": {
@@ -3479,7 +3802,7 @@
                 "$ref": "#/definitions/BuildOptionDefinition"
               }
             }
-         }
+          }
         },
         "security": [
           {
@@ -3495,7 +3818,7 @@
         "tags": [
           "Badge"
         ],
-        "x-ms-vss-api-version": "4.1-preview.1",
+        "x-ms-docs-override-version": "4.1-preview.1",
         "x-ms-vss-resource": "buildbadge",
         "x-ms-vss-method": "GetBuildBadge",
         "x-ms-preview": true,
@@ -3543,7 +3866,7 @@
             "schema": {
               "type": "string"
             }
-         }
+          }
         },
         "security": [
           {
@@ -3559,10 +3882,9 @@
         "tags": [
           "Tags"
         ],
-        "x-ms-vss-api-version": "4.1-preview.2",
+        "x-ms-docs-override-version": "4.1",
         "x-ms-vss-resource": "tags",
         "x-ms-vss-method": "GetTags",
-        "x-ms-preview": true,
         "description": "Gets a list of all build and definition tags in the project.",
         "operationId": "Get Tags",
         "produces": [
@@ -3577,7 +3899,7 @@
             "type": "string"
           },
           {
-            "$ref": "#/parameters/api-Version-preview.2"
+            "$ref": "#/parameters/api-Version"
           }
         ],
         "responses": {
@@ -3589,7 +3911,7 @@
                 "type": "string"
               }
             }
-         }
+          }
         },
         "security": [
           {
@@ -3605,7 +3927,7 @@
         "tags": [
           "Builds"
         ],
-        "x-ms-vss-api-version": "4.1-preview.2",
+        "x-ms-docs-override-version": "4.1-preview.2",
         "x-ms-vss-resource": "workitems",
         "x-ms-vss-method": "GetWorkItemsBetweenBuilds",
         "x-ms-preview": true,
@@ -3659,7 +3981,7 @@
                 "$ref": "#/definitions/ResourceRef"
               }
             }
-         }
+          }
         }
       }
     },
@@ -3668,7 +3990,7 @@
         "tags": [
           "Source Providers"
         ],
-        "x-ms-vss-api-version": "4.1-preview.1",
+        "x-ms-docs-override-version": "4.1-preview.1",
         "x-ms-vss-resource": "sourceProviders",
         "x-ms-vss-method": "ListSourceProviders",
         "x-ms-preview": true,
@@ -3698,7 +4020,7 @@
                 "$ref": "#/definitions/SourceProviderAttributes"
               }
             }
-         }
+          }
         }
       }
     },
@@ -3707,7 +4029,7 @@
         "tags": [
           "Source Providers"
         ],
-        "x-ms-vss-api-version": "4.1-preview.1",
+        "x-ms-docs-override-version": "4.1-preview.1",
         "x-ms-vss-resource": "branches",
         "x-ms-vss-method": "ListBranches",
         "x-ms-preview": true,
@@ -3759,7 +4081,155 @@
                 "type": "string"
               }
             }
-         }
+          }
+        }
+      }
+    },
+    "/{project}/_apis/sourceProviders/{providerName}/filecontents": {
+      "get": {
+        "tags": [
+          "Source Providers"
+        ],
+        "x-ms-docs-override-version": "4.1-preview.1",
+        "x-ms-vss-resource": "fileContents",
+        "x-ms-vss-method": "GetFileContents",
+        "x-ms-preview": true,
+        "description": "Gets the contents of a file in the given source code repository.",
+        "operationId": "Get",
+        "produces": [
+          "text/plain"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "providerName",
+            "description": "The name of the source provider.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "serviceEndpointId",
+            "description": "If specified, the ID of the service endpoint to query. Can only be omitted for providers that do not use service endpoints, e.g. TFVC or TFGit.",
+            "required": false,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "query",
+            "name": "repository",
+            "description": "If specified, the vendor-specific identifier or the name of the repository to get branches. Can only be omitted for providers that do not support multiple repositories.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "commitOrBranch",
+            "description": "The identifier of the commit or branch from which a file's contents are retrieved.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "path",
+            "description": "The path to the file to retrieve, relative to the root of the repository.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "string",
+              "format": "Stream"
+            }
+          }
+        }
+      }
+    },
+    "/{project}/_apis/sourceProviders/{providerName}/pathcontents": {
+      "get": {
+        "tags": [
+          "Source Providers"
+        ],
+        "x-ms-docs-override-version": "4.1-preview.1",
+        "x-ms-vss-resource": "pathContents",
+        "x-ms-vss-method": "GetPathContents",
+        "x-ms-preview": true,
+        "description": "Gets the contents of a directory in the given source code repository.",
+        "operationId": "Get Path Contents",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "providerName",
+            "description": "The name of the source provider.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "serviceEndpointId",
+            "description": "If specified, the ID of the service endpoint to query. Can only be omitted for providers that do not use service endpoints, e.g. TFVC or TFGit.",
+            "required": false,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "query",
+            "name": "repository",
+            "description": "If specified, the vendor-specific identifier or the name of the repository to get branches. Can only be omitted for providers that do not support multiple repositories.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "commitOrBranch",
+            "description": "The identifier of the commit or branch from which a file's contents are retrieved.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "path",
+            "description": "The path contents to list, relative to the root of the repository.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/SourceRepositoryItem"
+              }
+            }
+          }
         }
       }
     },
@@ -3768,7 +4238,7 @@
         "tags": [
           "Source Providers"
         ],
-        "x-ms-vss-api-version": "4.1-preview.1",
+        "x-ms-docs-override-version": "4.1-preview.1",
         "x-ms-vss-resource": "repositories",
         "x-ms-vss-method": "ListRepositories",
         "x-ms-preview": true,
@@ -3808,6 +4278,44 @@
             "type": "string"
           },
           {
+            "in": "query",
+            "name": "resultSet",
+            "description": "'top' for the repositories most relevant for the endpoint. If not set, all repositories are returned. Ignored if 'repository' is set.",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "all",
+              "top"
+            ],
+            "x-ms-enum": {
+              "name": "ResultSet",
+              "values": [
+                {
+                  "value": "all",
+                  "description": "Include all repositories"
+                },
+                {
+                  "value": "top",
+                  "description": "Include most relevant repositories for user"
+                }
+              ]
+            }
+          },
+          {
+            "in": "query",
+            "name": "pageResults",
+            "description": "If set to true, this will limit the set of results and will return a continuation token to continue the query.",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "continuationToken",
+            "description": "When paging results, this is a continuation token, returned by a previous call to this method, that can be used to return the next set of repositories.",
+            "required": false,
+            "type": "string"
+          },
+          {
             "$ref": "#/parameters/api-Version-preview.1"
           }
         ],
@@ -3815,21 +4323,84 @@
           "200": {
             "description": "successful operation",
             "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/SourceRepository"
-              }
+              "$ref": "#/definitions/SourceRepositories"
             }
-         }
+          }
         }
       }
     },
     "/{project}/_apis/sourceProviders/{providerName}/webhooks": {
+      "post": {
+        "tags": [
+          "Source Providers"
+        ],
+        "x-ms-docs-override-version": "4.1-preview.1",
+        "x-ms-vss-resource": "webhooks",
+        "x-ms-vss-method": "RestoreWebhooks",
+        "x-ms-preview": true,
+        "description": "Recreates the webhooks for the specified triggers in the given source code repository.",
+        "operationId": "Restore Webhooks",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "The types of triggers to restore webhooks for.",
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "format": "DefinitionTriggerType"
+              }
+            }
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "providerName",
+            "description": "The name of the source provider.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "serviceEndpointId",
+            "description": "If specified, the ID of the service endpoint to query. Can only be omitted for providers that do not use service endpoints, e.g. TFVC or TFGit.",
+            "required": false,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "query",
+            "name": "repository",
+            "description": "If specified, the vendor-specific identifier or the name of the repository to get webhooks. Can only be omitted for providers that do not support multiple repositories.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        }
+      },
       "get": {
         "tags": [
           "Source Providers"
         ],
-        "x-ms-vss-api-version": "4.1-preview.1",
+        "x-ms-docs-override-version": "4.1-preview.1",
         "x-ms-vss-resource": "webhooks",
         "x-ms-vss-method": "ListWebhooks",
         "x-ms-preview": true,
@@ -3881,8 +4452,137 @@
                 "$ref": "#/definitions/RepositoryWebhook"
               }
             }
-         }
+          }
         }
+      }
+    }
+  },
+  "x-ms-paths": {
+    "/{project}/_apis/build/builds/{buildId}/artifacts?artifactName={artifactName}": {
+      "get": {
+        "tags": [
+          "Artifacts"
+        ],
+        "x-ms-docs-override-version": "4.1",
+        "x-ms-vss-resource": "artifacts",
+        "x-ms-vss-method": "GetArtifact",
+        "description": "Gets a specific artifact for a build.",
+        "operationId": "Get",
+        "produces": [
+          "application/zip",
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "buildId",
+            "description": "The ID of the build.",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "artifactName",
+            "description": "The name of the artifact.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "x-ms-required": false,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/BuildArtifact"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.build"
+            ]
+          }
+        ]
+      }
+    },
+    "/{project}/_apis/build/definitions/{definitionId}?counterId={counterId}&newSeed={newSeed}&resetValue={resetValue}": {
+      "post": {
+        "tags": [
+          "Definitions"
+        ],
+        "x-ms-docs-override-version": "4.1",
+        "x-ms-vss-resource": "definitions",
+        "x-ms-vss-method": "UpdateCounterSeed",
+        "description": "Changes the counter variable Seed, and optionally resets the Value to this new Seed. Note that if Seed is being set above Value, then Value will be updated regardless.",
+        "operationId": "Update Counter Seed",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "definitionId",
+            "description": "The ID of the definition.",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "counterId",
+            "description": "The ID of the counter.",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "newSeed",
+            "description": "The new Seed value.",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "in": "query",
+            "name": "resetValue",
+            "description": "Flag indicating if Value should also be reset.",
+            "required": true,
+            "type": "boolean"
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "x-ms-required": false,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.build_execute"
+            ]
+          }
+        ]
       }
     }
   },
@@ -3943,7 +4643,6 @@
           "type": "boolean"
         },
         "demands": {
-          "readOnly": true,
           "type": "array",
           "items": {
             "$ref": "#/definitions/Demand"
@@ -3962,17 +4661,242 @@
     "AgentTargetExecutionOptions": {
       "description": "Additional options for running phases against an agent queue.",
       "type": "object",
-      "allOf": [
-        {
-          "$ref": "#/definitions/ChildObject"
-        }
-      ],
       "properties": {
         "type": {
           "description": "Indicates the type of execution options.",
-          "readOnly": true,
           "type": "integer",
           "format": "int32"
+        }
+      }
+    },
+    "AggregatedResultsAnalysis": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "duration": {
+          "type": "string",
+          "format": "TimeSpan"
+        },
+        "notReportedResultsByOutcome": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/AggregatedResultsByOutcome"
+          }
+        },
+        "previousContext": {
+          "$ref": "#/definitions/TestResultsContext"
+        },
+        "resultsByOutcome": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/AggregatedResultsByOutcome"
+          }
+        },
+        "resultsDifference": {
+          "$ref": "#/definitions/AggregatedResultsDifference"
+        },
+        "runSummaryByState": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/AggregatedRunsByState"
+          }
+        },
+        "totalTests": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "AggregatedResultsByOutcome": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "count": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "duration": {
+          "type": "string",
+          "format": "TimeSpan"
+        },
+        "groupByField": {
+          "type": "string"
+        },
+        "groupByValue": {
+          "type": "object"
+        },
+        "outcome": {
+          "enum": [
+            "unspecified",
+            "none",
+            "passed",
+            "failed",
+            "inconclusive",
+            "timeout",
+            "aborted",
+            "blocked",
+            "notExecuted",
+            "warning",
+            "error",
+            "notApplicable",
+            "paused",
+            "inProgress",
+            "notImpacted",
+            "maxValue"
+          ],
+          "x-ms-enum": {
+            "name": "TestOutcome",
+            "values": [
+              {
+                "value": "unspecified",
+                "description": "Only used during an update to preserve the existing value."
+              },
+              {
+                "value": "none",
+                "description": "Test has not been completed, or the test type does not report pass/failure."
+              },
+              {
+                "value": "passed",
+                "description": "Test was executed w/o any issues."
+              },
+              {
+                "value": "failed",
+                "description": "Test was executed, but there were issues. Issues may involve exceptions or failed assertions."
+              },
+              {
+                "value": "inconclusive",
+                "description": "Test has completed, but we can't say if it passed or failed. May be used for aborted tests..."
+              },
+              {
+                "value": "timeout",
+                "description": "The test timed out"
+              },
+              {
+                "value": "aborted",
+                "description": "Test was aborted. This was not caused by a user gesture, but rather by a framework decision."
+              },
+              {
+                "value": "blocked",
+                "description": "Test had it chance for been executed but was not, as ITestElement.IsRunnable == false."
+              },
+              {
+                "value": "notExecuted",
+                "description": "Test was not executed. This was caused by a user gesture - e.g. user hit stop button."
+              },
+              {
+                "value": "warning",
+                "description": "To be used by Run level results. This is not a failure."
+              },
+              {
+                "value": "error",
+                "description": "There was a system error while we were trying to execute a test."
+              },
+              {
+                "value": "notApplicable",
+                "description": "Test is Not Applicable for execution."
+              },
+              {
+                "value": "paused",
+                "description": "Test is paused."
+              },
+              {
+                "value": "inProgress",
+                "description": "Test is currently executing. Added this for TCM charts"
+              },
+              {
+                "value": "notImpacted",
+                "description": "Test is not impacted. Added fot TIA."
+              },
+              {
+                "value": "maxValue",
+                "description": ""
+              }
+            ]
+          }
+        },
+        "rerunResultCount": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "AggregatedResultsDifference": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "increaseInDuration": {
+          "type": "string",
+          "format": "TimeSpan"
+        },
+        "increaseInFailures": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "increaseInOtherTests": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "increaseInPassedTests": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "increaseInTotalTests": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "AggregatedRunsByState": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "runsCount": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "state": {
+          "enum": [
+            "unspecified",
+            "notStarted",
+            "inProgress",
+            "completed",
+            "aborted",
+            "waiting",
+            "needsInvestigation"
+          ],
+          "x-ms-enum": {
+            "name": "TestRunState",
+            "values": [
+              {
+                "value": "unspecified",
+                "description": "Only used during an update to preserve the existing value."
+              },
+              {
+                "value": "notStarted",
+                "description": "The run is still being created.  No tests have started yet."
+              },
+              {
+                "value": "inProgress",
+                "description": "Tests are running."
+              },
+              {
+                "value": "completed",
+                "description": "All tests have completed or been skipped."
+              },
+              {
+                "value": "aborted",
+                "description": "Run is stopped and remaing tests have been aborted"
+              },
+              {
+                "value": "waiting",
+                "description": "Run is currently initializing This is a legacy state and should not be used any more"
+              },
+              {
+                "value": "needsInvestigation",
+                "description": "Run requires investigation because of a test point failure This is a legacy state and should not be used any more"
+              }
+            ]
+          }
         }
       }
     },
@@ -3985,6 +4909,10 @@
         },
         "data": {
           "description": "Type-specific data about the artifact.",
+          "type": "string"
+        },
+        "downloadTicket": {
+          "description": "A secret that can be sent in a request header to retrieve an artifact anonymously. Valid for a limited amount of time. Optional.",
           "type": "string"
         },
         "downloadUrl": {
@@ -4008,14 +4936,39 @@
         }
       }
     },
+    "AssociatedWorkItem": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "assignedTo": {
+          "type": "string"
+        },
+        "id": {
+          "description": "Id of associated the work item.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "state": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "url": {
+          "description": "REST Url of the work item.",
+          "type": "string"
+        },
+        "webUrl": {
+          "type": "string"
+        },
+        "workItemType": {
+          "type": "string"
+        }
+      }
+    },
     "Attachment": {
       "description": "Represents an attachment to a build.",
       "type": "object",
-      "allOf": [
-        {
-          "$ref": "#/definitions/ChildObject"
-        }
-      ],
       "properties": {
         "_links": {
           "$ref": "#/definitions/ReferenceLinks"
@@ -4029,11 +4982,6 @@
     "AuthorizationHeader": {
       "description": "",
       "type": "object",
-      "allOf": [
-        {
-          "$ref": "#/definitions/ChildObject"
-        }
-      ],
       "properties": {
         "name": {
           "type": "string"
@@ -4128,7 +5076,6 @@
         },
         "plans": {
           "description": "Orchestration plans associated with the build (build, cleanup)",
-          "readOnly": true,
           "type": "array",
           "items": {
             "$ref": "#/definitions/TaskOrchestrationPlanReference"
@@ -4144,7 +5091,29 @@
             "high"
           ],
           "x-ms-enum": {
-            "name": "Microsoft.TeamFoundation.Build.WebApi.QueuePriority"
+            "name": "QueuePriority",
+            "values": [
+              {
+                "value": "low",
+                "description": "Low priority."
+              },
+              {
+                "value": "belowNormal",
+                "description": "Below normal priority."
+              },
+              {
+                "value": "normal",
+                "description": "Normal priority."
+              },
+              {
+                "value": "aboveNormal",
+                "description": "Above normal priority."
+              },
+              {
+                "value": "high",
+                "description": "High priority."
+              }
+            ]
           }
         },
         "project": {
@@ -4169,7 +5138,17 @@
             "doNotRun"
           ],
           "x-ms-enum": {
-            "name": "Microsoft.TeamFoundation.Build.WebApi.QueueOptions"
+            "name": "QueueOptions",
+            "values": [
+              {
+                "value": "none",
+                "description": "No queue options"
+              },
+              {
+                "value": "doNotRun",
+                "description": "Create a plan Id for the build, do not run it"
+              }
+            ]
           }
         },
         "queuePosition": {
@@ -4194,11 +5173,62 @@
             "validateShelveset",
             "checkInShelveset",
             "pullRequest",
+            "buildCompletion",
             "triggered",
             "all"
           ],
           "x-ms-enum": {
-            "name": "Microsoft.TeamFoundation.Build.WebApi.BuildReason"
+            "name": "BuildReason",
+            "values": [
+              {
+                "value": "none",
+                "description": "No reason. This value should not be used."
+              },
+              {
+                "value": "manual",
+                "description": "The build was started manually."
+              },
+              {
+                "value": "individualCI",
+                "description": "The build was started for the trigger TriggerType.ContinuousIntegration."
+              },
+              {
+                "value": "batchedCI",
+                "description": "The build was started for the trigger TriggerType.BatchedContinuousIntegration."
+              },
+              {
+                "value": "schedule",
+                "description": "The build was started for the trigger TriggerType.Schedule."
+              },
+              {
+                "value": "userCreated",
+                "description": "The build was created by a user."
+              },
+              {
+                "value": "validateShelveset",
+                "description": "The build was started manually for private validation."
+              },
+              {
+                "value": "checkInShelveset",
+                "description": "The build was started for the trigger ContinuousIntegrationType.Gated."
+              },
+              {
+                "value": "pullRequest",
+                "description": "The build was started by a pull request. Added in resource version 3."
+              },
+              {
+                "value": "buildCompletion",
+                "description": "The build was started when another build completed."
+              },
+              {
+                "value": "triggered",
+                "description": "The build was triggered for retention policy purposes."
+              },
+              {
+                "value": "all",
+                "description": "All reasons."
+              }
+            ]
           }
         },
         "repository": {
@@ -4223,7 +5253,29 @@
             "canceled"
           ],
           "x-ms-enum": {
-            "name": "Microsoft.TeamFoundation.Build.WebApi.BuildResult"
+            "name": "BuildResult",
+            "values": [
+              {
+                "value": "none",
+                "description": "No result"
+              },
+              {
+                "value": "succeeded",
+                "description": "The build completed successfully."
+              },
+              {
+                "value": "partiallySucceeded",
+                "description": "The build completed compilation successfully but had other errors."
+              },
+              {
+                "value": "failed",
+                "description": "The build completed unsuccessfully."
+              },
+              {
+                "value": "canceled",
+                "description": "The build was canceled before starting."
+              }
+            ]
           }
         },
         "retainedByRelease": {
@@ -4255,19 +5307,51 @@
             "all"
           ],
           "x-ms-enum": {
-            "name": "Microsoft.TeamFoundation.Build.WebApi.BuildStatus"
+            "name": "BuildStatus",
+            "values": [
+              {
+                "value": "none",
+                "description": "No status."
+              },
+              {
+                "value": "inProgress",
+                "description": "The build is currently in progress."
+              },
+              {
+                "value": "completed",
+                "description": "The build has completed."
+              },
+              {
+                "value": "cancelling",
+                "description": "The build is cancelling"
+              },
+              {
+                "value": "postponed",
+                "description": "The build is inactive in the queue."
+              },
+              {
+                "value": "notStarted",
+                "description": "The build has not yet started."
+              },
+              {
+                "value": "all",
+                "description": "All status."
+              }
+            ]
           }
         },
         "tags": {
-          "readOnly": true,
           "type": "array",
           "items": {
             "type": "string"
           }
         },
+        "triggeredByBuild": {
+          "description": "The build that triggered this build via a Build completion trigger.",
+          "$ref": "#/definitions/Build"
+        },
         "triggerInfo": {
           "description": "Sourceprovider-specific information about what triggered the build",
-          "readOnly": true,
           "type": "object",
           "additionalProperties": {
             "type": "string"
@@ -4282,7 +5366,6 @@
           "type": "string"
         },
         "validationResults": {
-          "readOnly": true,
           "type": "array",
           "items": {
             "$ref": "#/definitions/BuildRequestValidationResult"
@@ -4333,7 +5416,21 @@
             "offline"
           ],
           "x-ms-enum": {
-            "name": "Microsoft.TeamFoundation.Build.WebApi.AgentStatus"
+            "name": "AgentStatus",
+            "values": [
+              {
+                "value": "unavailable",
+                "description": "Indicates that the build agent cannot be contacted."
+              },
+              {
+                "value": "available",
+                "description": "Indicates that the build agent is currently available."
+              },
+              {
+                "value": "offline",
+                "description": "Indicates that the build agent has taken itself offline."
+              }
+            ]
           }
         },
         "statusMessage": {
@@ -4389,20 +5486,6 @@
         }
       }
     },
-    "BuildArtifactAddedEvent": {
-      "description": "",
-      "type": "object",
-      "allOf": [
-        {
-          "$ref": "#/definitions/BuildUpdatedEvent"
-        }
-      ],
-      "properties": {
-        "artifact": {
-          "$ref": "#/definitions/BuildArtifact"
-        }
-      }
-    },
     "BuildBadge": {
       "description": "Represents a build badge.",
       "type": "object",
@@ -4418,24 +5501,6 @@
         }
       }
     },
-    "BuildChangesCalculatedEvent": {
-      "description": "",
-      "type": "object",
-      "allOf": [
-        {
-          "$ref": "#/definitions/BuildUpdatedEvent"
-        }
-      ],
-      "properties": {
-        "changes": {
-          "readOnly": true,
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/Change"
-          }
-        }
-      }
-    },
     "BuildCompletedEvent": {
       "description": "",
       "type": "object",
@@ -4445,26 +5510,54 @@
         }
       ],
       "properties": {
-        "buildErrors": {
-          "description": "errors associated with a build used for build notifications",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/BuildRequestValidationResult"
-          }
-        },
-        "buildWarnings": {
-          "description": "warnings associated with a build used for build notifications",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/BuildRequestValidationResult"
-          }
-        },
         "changes": {
           "description": "Changes associated with a build used for build notifications",
           "type": "array",
           "items": {
             "$ref": "#/definitions/Change"
           }
+        },
+        "testResults": {
+          "description": "Test results associated with a build used for build notifications",
+          "$ref": "#/definitions/AggregatedResultsAnalysis"
+        },
+        "timelineRecords": {
+          "description": "Timeline records associated with a build used for build notifications",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TimelineRecord"
+          }
+        },
+        "workItems": {
+          "description": "Work items associated with a build used for build notifications",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AssociatedWorkItem"
+          }
+        }
+      }
+    },
+    "BuildCompletionTrigger": {
+      "description": "Represents a build completion trigger.",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/BuildTrigger"
+        }
+      ],
+      "properties": {
+        "branchFilters": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "definition": {
+          "description": "A reference to the definition that should trigger builds for this definition.",
+          "$ref": "#/definitions/DefinitionReference"
+        },
+        "requiresSuccessfulBuild": {
+          "type": "boolean"
         }
       }
     },
@@ -4501,7 +5594,21 @@
             "offline"
           ],
           "x-ms-enum": {
-            "name": "Microsoft.TeamFoundation.Build.WebApi.ControllerStatus"
+            "name": "ControllerStatus",
+            "values": [
+              {
+                "value": "unavailable",
+                "description": "Indicates that the build controller cannot be contacted."
+              },
+              {
+                "value": "available",
+                "description": "Indicates that the build controller is currently available."
+              },
+              {
+                "value": "offline",
+                "description": "Indicates that the build controller has taken itself offline."
+              }
+            ]
           }
         },
         "updatedDate": {
@@ -4536,8 +5643,13 @@
           "description": "A save-time comment for the definition.",
           "type": "string"
         },
+        "counters": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/BuildDefinitionCounter"
+          }
+        },
         "demands": {
-          "readOnly": true,
           "type": "array",
           "items": {
             "$ref": "#/definitions/Demand"
@@ -4558,7 +5670,17 @@
             "project"
           ],
           "x-ms-enum": {
-            "name": "Microsoft.TeamFoundation.Build.WebApi.BuildAuthorizationScope"
+            "name": "BuildAuthorizationScope",
+            "values": [
+              {
+                "value": "projectCollection",
+                "description": "The identity used should have build service account permissions scoped to the project collection. This is useful when resources for a single build are spread across multiple projects."
+              },
+              {
+                "value": "project",
+                "description": "The identity used should have build service account permissions scoped to the project in which the build definition resides. This is useful for isolation of build jobs to a particular team project to avoid any unintentional escalation of privilege attacks during a build."
+              }
+            ]
           }
         },
         "jobCancelTimeoutInMinutes": {
@@ -4572,7 +5694,6 @@
           "format": "int32"
         },
         "options": {
-          "readOnly": true,
           "type": "array",
           "items": {
             "$ref": "#/definitions/BuildOption"
@@ -4594,35 +5715,30 @@
           "$ref": "#/definitions/BuildRepository"
         },
         "retentionRules": {
-          "readOnly": true,
           "type": "array",
           "items": {
             "$ref": "#/definitions/RetentionPolicy"
           }
         },
         "tags": {
-          "readOnly": true,
           "type": "array",
           "items": {
             "type": "string"
           }
         },
         "triggers": {
-          "readOnly": true,
           "type": "array",
           "items": {
             "$ref": "#/definitions/BuildTrigger"
           }
         },
         "variableGroups": {
-          "readOnly": true,
           "type": "array",
           "items": {
             "$ref": "#/definitions/VariableGroup"
           }
         },
         "variables": {
-          "readOnly": true,
           "type": "object",
           "additionalProperties": {
             "$ref": "#/definitions/BuildDefinitionVariable"
@@ -4644,7 +5760,6 @@
           "type": "boolean"
         },
         "build": {
-          "readOnly": true,
           "type": "array",
           "items": {
             "$ref": "#/definitions/BuildDefinitionStep"
@@ -4659,7 +5774,6 @@
           "type": "string"
         },
         "demands": {
-          "readOnly": true,
           "type": "array",
           "items": {
             "$ref": "#/definitions/Demand"
@@ -4680,7 +5794,17 @@
             "project"
           ],
           "x-ms-enum": {
-            "name": "Microsoft.TeamFoundation.Build.WebApi.BuildAuthorizationScope"
+            "name": "BuildAuthorizationScope",
+            "values": [
+              {
+                "value": "projectCollection",
+                "description": "The identity used should have build service account permissions scoped to the project collection. This is useful when resources for a single build are spread across multiple projects."
+              },
+              {
+                "value": "project",
+                "description": "The identity used should have build service account permissions scoped to the project in which the build definition resides. This is useful for isolation of build jobs to a particular team project to avoid any unintentional escalation of privilege attacks during a build."
+              }
+            ]
           }
         },
         "jobCancelTimeoutInMinutes": {
@@ -4700,7 +5824,6 @@
           "$ref": "#/definitions/Build"
         },
         "options": {
-          "readOnly": true,
           "type": "array",
           "items": {
             "$ref": "#/definitions/BuildOption"
@@ -4718,28 +5841,24 @@
           "$ref": "#/definitions/BuildRepository"
         },
         "retentionRules": {
-          "readOnly": true,
           "type": "array",
           "items": {
             "$ref": "#/definitions/RetentionPolicy"
           }
         },
         "tags": {
-          "readOnly": true,
           "type": "array",
           "items": {
             "type": "string"
           }
         },
         "triggers": {
-          "readOnly": true,
           "type": "array",
           "items": {
             "$ref": "#/definitions/BuildTrigger"
           }
         },
         "variables": {
-          "readOnly": true,
           "type": "object",
           "additionalProperties": {
             "$ref": "#/definitions/BuildDefinitionVariable"
@@ -4747,44 +5866,24 @@
         }
       }
     },
-    "BuildDefinitionChangedEvent": {
-      "description": "",
+    "BuildDefinitionCounter": {
+      "description": "Represents a variable that increases in value with each build.",
       "type": "object",
       "properties": {
-        "changeType": {
-          "enum": [
-            "add",
-            "update",
-            "delete"
-          ],
-          "x-ms-enum": {
-            "name": "Microsoft.TeamFoundation.Build.WebApi.AuditAction"
-          }
+        "id": {
+          "description": "The unique Id of the Counter.",
+          "type": "integer",
+          "format": "int32"
         },
-        "definition": {
-          "$ref": "#/definitions/BuildDefinition"
-        }
-      }
-    },
-    "BuildDefinitionChangingEvent": {
-      "description": "",
-      "type": "object",
-      "properties": {
-        "changeType": {
-          "enum": [
-            "add",
-            "update",
-            "delete"
-          ],
-          "x-ms-enum": {
-            "name": "Microsoft.TeamFoundation.Build.WebApi.AuditAction"
-          }
+        "seed": {
+          "description": "This is the original counter value.",
+          "type": "integer",
+          "format": "int64"
         },
-        "newDefinition": {
-          "$ref": "#/definitions/BuildDefinition"
-        },
-        "originalDefinition": {
-          "$ref": "#/definitions/BuildDefinition"
+        "value": {
+          "description": "This is the current counter value.",
+          "type": "integer",
+          "format": "int64"
         }
       }
     },
@@ -4810,7 +5909,6 @@
         },
         "drafts": {
           "description": "The list of drafts associated with this definition, if this is not a draft definition.",
-          "readOnly": true,
           "type": "array",
           "items": {
             "$ref": "#/definitions/DefinitionReference"
@@ -4823,7 +5921,6 @@
           "$ref": "#/definitions/Build"
         },
         "metrics": {
-          "readOnly": true,
           "type": "array",
           "items": {
             "$ref": "#/definitions/BuildMetric"
@@ -4836,7 +5933,17 @@
             "draft"
           ],
           "x-ms-enum": {
-            "name": "Microsoft.TeamFoundation.Build.WebApi.DefinitionQuality"
+            "name": "DefinitionQuality",
+            "values": [
+              {
+                "value": "definition",
+                "description": ""
+              },
+              {
+                "value": "draft",
+                "description": ""
+              }
+            ]
           }
         },
         "queue": {
@@ -4867,14 +5974,12 @@
         },
         "drafts": {
           "description": "The list of drafts associated with this definition, if this is not a draft definition.",
-          "readOnly": true,
           "type": "array",
           "items": {
             "$ref": "#/definitions/DefinitionReference"
           }
         },
         "metrics": {
-          "readOnly": true,
           "type": "array",
           "items": {
             "$ref": "#/definitions/BuildMetric"
@@ -4887,7 +5992,17 @@
             "draft"
           ],
           "x-ms-enum": {
-            "name": "Microsoft.TeamFoundation.Build.WebApi.DefinitionQuality"
+            "name": "DefinitionQuality",
+            "values": [
+              {
+                "value": "definition",
+                "description": ""
+              },
+              {
+                "value": "draft",
+                "description": ""
+              }
+            ]
           }
         },
         "queue": {
@@ -4917,7 +6032,21 @@
             "delete"
           ],
           "x-ms-enum": {
-            "name": "Microsoft.TeamFoundation.Build.WebApi.AuditAction"
+            "name": "AuditAction",
+            "values": [
+              {
+                "value": "add",
+                "description": ""
+              },
+              {
+                "value": "update",
+                "description": ""
+              },
+              {
+                "value": "delete",
+                "description": ""
+              }
+            ]
           }
         },
         "comment": {
@@ -4945,7 +6074,6 @@
       "properties": {
         "definitionUri": {
           "description": "Uri of the associated definition",
-          "readOnly": true,
           "type": "string"
         },
         "fields": {
@@ -4957,13 +6085,11 @@
         },
         "id": {
           "description": "Id of this source provider",
-          "readOnly": true,
           "type": "integer",
           "format": "int32"
         },
         "lastModified": {
           "description": "The lst time this source provider was modified",
-          "readOnly": true,
           "type": "string",
           "format": "date-time"
         },
@@ -4981,10 +6107,49 @@
             "gatedCheckIn",
             "batchedGatedCheckIn",
             "pullRequest",
+            "buildCompletion",
             "all"
           ],
           "x-ms-enum": {
-            "name": "Microsoft.TeamFoundation.Build.WebApi.DefinitionTriggerType"
+            "name": "DefinitionTriggerType",
+            "values": [
+              {
+                "value": "none",
+                "description": "Manual builds only."
+              },
+              {
+                "value": "continuousIntegration",
+                "description": "A build should be started for each changeset."
+              },
+              {
+                "value": "batchedContinuousIntegration",
+                "description": "A build should be started for multiple changesets at a time at a specified interval."
+              },
+              {
+                "value": "schedule",
+                "description": "A build should be started on a specified schedule whether or not changesets exist."
+              },
+              {
+                "value": "gatedCheckIn",
+                "description": "A validation build should be started for each check-in."
+              },
+              {
+                "value": "batchedGatedCheckIn",
+                "description": "A validation build should be started for each batch of check-ins."
+              },
+              {
+                "value": "pullRequest",
+                "description": "A build should be triggered when a GitHub pull request is created or updated. Added in resource version 3"
+              },
+              {
+                "value": "buildCompletion",
+                "description": "A build should be triggered when another build completes."
+              },
+              {
+                "value": "all",
+                "description": "All types."
+              }
+            ]
           }
         }
       }
@@ -4992,11 +6157,6 @@
     "BuildDefinitionStep": {
       "description": "Represents a step in a build phase.",
       "type": "object",
-      "allOf": [
-        {
-          "$ref": "#/definitions/ChildObject"
-        }
-      ],
       "properties": {
         "alwaysRun": {
           "description": "Indicates whether this step should run even if a previous step fails.",
@@ -5019,14 +6179,12 @@
           "type": "boolean"
         },
         "environment": {
-          "readOnly": true,
           "type": "object",
           "additionalProperties": {
             "type": "string"
           }
         },
         "inputs": {
-          "readOnly": true,
           "type": "object",
           "additionalProperties": {
             "type": "string"
@@ -5059,12 +6217,15 @@
           "description": "The template category.",
           "type": "string"
         },
+        "defaultHostedQueue": {
+          "description": "An optional hosted agent queue for the template to use by default.",
+          "type": "string"
+        },
         "description": {
           "description": "A description of the template.",
           "type": "string"
         },
         "icons": {
-          "readOnly": true,
           "type": "object",
           "additionalProperties": {
             "type": "string"
@@ -5099,11 +6260,13 @@
         "category": {
           "type": "string"
         },
+        "defaultHostedQueue": {
+          "type": "string"
+        },
         "description": {
           "type": "string"
         },
         "icons": {
-          "readOnly": true,
           "type": "object",
           "additionalProperties": {
             "type": "string"
@@ -5127,11 +6290,6 @@
     "BuildDefinitionVariable": {
       "description": "Represents a variable used by a build definition.",
       "type": "object",
-      "allOf": [
-        {
-          "$ref": "#/definitions/ChildObject"
-        }
-      ],
       "properties": {
         "allowOverride": {
           "description": "Indicates whether the value can be set at queue time.",
@@ -5173,17 +6331,18 @@
         }
       }
     },
-    "BuildDestroyedEvent": {
+    "BuildEvent": {
       "description": "",
       "type": "object",
-      "allOf": [
-        {
-          "$ref": "#/definitions/RealtimeBuildEvent"
-        }
-      ],
       "properties": {
-        "build": {
-          "$ref": "#/definitions/Build"
+        "data": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "identifier": {
+          "type": "string"
         }
       }
     },
@@ -5216,11 +6375,6 @@
     "BuildLogReference": {
       "description": "Represents a reference to a build log.",
       "type": "object",
-      "allOf": [
-        {
-          "$ref": "#/definitions/ChildObject"
-        }
-      ],
       "properties": {
         "id": {
           "description": "The ID of the log.",
@@ -5240,11 +6394,6 @@
     "BuildMetric": {
       "description": "Represents metadata about builds in the system.",
       "type": "object",
-      "allOf": [
-        {
-          "$ref": "#/definitions/ChildObject"
-        }
-      ],
       "properties": {
         "date": {
           "description": "The date for the scope.",
@@ -5269,11 +6418,6 @@
     "BuildOption": {
       "description": "Represents the application of an optional behavior to a build definition.",
       "type": "object",
-      "allOf": [
-        {
-          "$ref": "#/definitions/ChildObject"
-        }
-      ],
       "properties": {
         "definition": {
           "description": "A reference to the build option.",
@@ -5284,7 +6428,6 @@
           "type": "boolean"
         },
         "inputs": {
-          "readOnly": true,
           "type": "object",
           "additionalProperties": {
             "type": "string"
@@ -5307,7 +6450,6 @@
         },
         "groups": {
           "description": "The list of input groups defined for the build option.",
-          "readOnly": true,
           "type": "array",
           "items": {
             "$ref": "#/definitions/BuildOptionGroupDefinition"
@@ -5315,7 +6457,6 @@
         },
         "inputs": {
           "description": "The list of inputs defined for the build option.",
-          "readOnly": true,
           "type": "array",
           "items": {
             "$ref": "#/definitions/BuildOptionInputDefinition"
@@ -5335,11 +6476,6 @@
     "BuildOptionDefinitionReference": {
       "description": "Represents a reference to a build option definition.",
       "type": "object",
-      "allOf": [
-        {
-          "$ref": "#/definitions/ChildObject"
-        }
-      ],
       "properties": {
         "id": {
           "description": "The ID of the referenced build option.",
@@ -5351,11 +6487,6 @@
     "BuildOptionGroupDefinition": {
       "description": "Represents a group of inputs for a build option.",
       "type": "object",
-      "allOf": [
-        {
-          "$ref": "#/definitions/ChildObject"
-        }
-      ],
       "properties": {
         "displayName": {
           "description": "The name of the group to display in the UI.",
@@ -5374,11 +6505,6 @@
     "BuildOptionInputDefinition": {
       "description": "Represents an input for a build option.",
       "type": "object",
-      "allOf": [
-        {
-          "$ref": "#/definitions/ChildObject"
-        }
-      ],
       "properties": {
         "defaultValue": {
           "description": "The default value.",
@@ -5389,7 +6515,6 @@
           "type": "string"
         },
         "help": {
-          "readOnly": true,
           "type": "object",
           "additionalProperties": {
             "type": "string"
@@ -5404,7 +6529,6 @@
           "type": "string"
         },
         "options": {
-          "readOnly": true,
           "type": "object",
           "additionalProperties": {
             "type": "string"
@@ -5426,7 +6550,37 @@
             "branchFilter"
           ],
           "x-ms-enum": {
-            "name": "Microsoft.TeamFoundation.Build.WebApi.BuildOptionInputType"
+            "name": "BuildOptionInputType",
+            "values": [
+              {
+                "value": "string",
+                "description": ""
+              },
+              {
+                "value": "boolean",
+                "description": ""
+              },
+              {
+                "value": "stringList",
+                "description": ""
+              },
+              {
+                "value": "radio",
+                "description": ""
+              },
+              {
+                "value": "pickList",
+                "description": ""
+              },
+              {
+                "value": "multiLine",
+                "description": ""
+              },
+              {
+                "value": "branchFilter",
+                "description": ""
+              }
+            ]
           }
         },
         "visibleRule": {
@@ -5435,24 +6589,12 @@
         }
       }
     },
-    "BuildPollingSummaryEvent": {
-      "description": "",
-      "type": "object",
-      "properties": {
-      }
-    },
     "BuildProcess": {
       "description": "Represents a build process.",
       "type": "object",
-      "allOf": [
-        {
-          "$ref": "#/definitions/ChildObject"
-        }
-      ],
       "properties": {
         "type": {
           "description": "The type of the process.",
-          "readOnly": true,
           "type": "integer",
           "format": "int32"
         }
@@ -5463,21 +6605,18 @@
       "type": "object",
       "properties": {
         "endpoints": {
-          "readOnly": true,
           "type": "array",
           "items": {
             "$ref": "#/definitions/ServiceEndpointReference"
           }
         },
         "files": {
-          "readOnly": true,
           "type": "array",
           "items": {
             "$ref": "#/definitions/SecureFileReference"
           }
         },
         "queues": {
-          "readOnly": true,
           "type": "array",
           "items": {
             "$ref": "#/definitions/AgentPoolQueueReference"
@@ -5516,11 +6655,62 @@
             "validateShelveset",
             "checkInShelveset",
             "pullRequest",
+            "buildCompletion",
             "triggered",
             "all"
           ],
           "x-ms-enum": {
-            "name": "Microsoft.TeamFoundation.Build.WebApi.BuildReason"
+            "name": "BuildReason",
+            "values": [
+              {
+                "value": "none",
+                "description": "No reason. This value should not be used."
+              },
+              {
+                "value": "manual",
+                "description": "The build was started manually."
+              },
+              {
+                "value": "individualCI",
+                "description": "The build was started for the trigger TriggerType.ContinuousIntegration."
+              },
+              {
+                "value": "batchedCI",
+                "description": "The build was started for the trigger TriggerType.BatchedContinuousIntegration."
+              },
+              {
+                "value": "schedule",
+                "description": "The build was started for the trigger TriggerType.Schedule."
+              },
+              {
+                "value": "userCreated",
+                "description": "The build was created by a user."
+              },
+              {
+                "value": "validateShelveset",
+                "description": "The build was started manually for private validation."
+              },
+              {
+                "value": "checkInShelveset",
+                "description": "The build was started for the trigger ContinuousIntegrationType.Gated."
+              },
+              {
+                "value": "pullRequest",
+                "description": "The build was started by a pull request. Added in resource version 3."
+              },
+              {
+                "value": "buildCompletion",
+                "description": "The build was started when another build completed."
+              },
+              {
+                "value": "triggered",
+                "description": "The build was triggered for retention policy purposes."
+              },
+              {
+                "value": "all",
+                "description": "All reasons."
+              }
+            ]
           }
         },
         "teamProject": {
@@ -5533,7 +6723,21 @@
             "upgrade"
           ],
           "x-ms-enum": {
-            "name": "Microsoft.TeamFoundation.Build.WebApi.ProcessTemplateType"
+            "name": "ProcessTemplateType",
+            "values": [
+              {
+                "value": "custom",
+                "description": "Indicates a custom template."
+              },
+              {
+                "value": "default",
+                "description": "Indicates a default template."
+              },
+              {
+                "value": "upgrade",
+                "description": "Indicates an upgrade template."
+              }
+            ]
           }
         },
         "url": {
@@ -5544,25 +6748,9 @@
         }
       }
     },
-    "BuildQueuedEvent": {
-      "description": "",
-      "type": "object",
-      "allOf": [
-        {
-          "$ref": "#/definitions/BuildUpdatedEvent"
-        }
-      ],
-      "properties": {
-      }
-    },
     "BuildReference": {
       "description": "Represents a reference to a build.",
       "type": "object",
-      "allOf": [
-        {
-          "$ref": "#/definitions/ChildObject"
-        }
-      ],
       "properties": {
         "_links": {
           "$ref": "#/definitions/ReferenceLinks"
@@ -5604,7 +6792,29 @@
             "canceled"
           ],
           "x-ms-enum": {
-            "name": "Microsoft.TeamFoundation.Build.WebApi.BuildResult"
+            "name": "BuildResult",
+            "values": [
+              {
+                "value": "none",
+                "description": "No result"
+              },
+              {
+                "value": "succeeded",
+                "description": "The build completed successfully."
+              },
+              {
+                "value": "partiallySucceeded",
+                "description": "The build completed compilation successfully but had other errors."
+              },
+              {
+                "value": "failed",
+                "description": "The build completed unsuccessfully."
+              },
+              {
+                "value": "canceled",
+                "description": "The build was canceled before starting."
+              }
+            ]
           }
         },
         "startTime": {
@@ -5624,7 +6834,37 @@
             "all"
           ],
           "x-ms-enum": {
-            "name": "Microsoft.TeamFoundation.Build.WebApi.BuildStatus"
+            "name": "BuildStatus",
+            "values": [
+              {
+                "value": "none",
+                "description": "No status."
+              },
+              {
+                "value": "inProgress",
+                "description": "The build is currently in progress."
+              },
+              {
+                "value": "completed",
+                "description": "The build has completed."
+              },
+              {
+                "value": "cancelling",
+                "description": "The build is cancelling"
+              },
+              {
+                "value": "postponed",
+                "description": "The build is inactive in the queue."
+              },
+              {
+                "value": "notStarted",
+                "description": "The build has not yet started."
+              },
+              {
+                "value": "all",
+                "description": "All status."
+              }
+            ]
           }
         }
       }
@@ -5651,11 +6891,6 @@
     "BuildRepository": {
       "description": "Represents a repository used by a build definition.",
       "type": "object",
-      "allOf": [
-        {
-          "$ref": "#/definitions/ChildObject"
-        }
-      ],
       "properties": {
         "checkoutSubmodules": {
           "description": "Indicates whether to checkout submodules.",
@@ -5678,7 +6913,6 @@
           "type": "string"
         },
         "properties": {
-          "readOnly": true,
           "type": "object",
           "additionalProperties": {
             "type": "string"
@@ -5701,11 +6935,6 @@
     "BuildRequestValidationResult": {
       "description": "Represents the result of validating a build request.",
       "type": "object",
-      "allOf": [
-        {
-          "$ref": "#/definitions/ChildObject"
-        }
-      ],
       "properties": {
         "message": {
           "description": "The message associated with the result.",
@@ -5719,7 +6948,21 @@
             "error"
           ],
           "x-ms-enum": {
-            "name": "Microsoft.TeamFoundation.Build.WebApi.ValidationResult"
+            "name": "ValidationResult",
+            "values": [
+              {
+                "value": "oK",
+                "description": ""
+              },
+              {
+                "value": "warning",
+                "description": ""
+              },
+              {
+                "value": "error",
+                "description": ""
+              }
+            ]
           }
         }
       }
@@ -5730,27 +6973,56 @@
       "properties": {
         "distributedTaskAgents": {
           "description": "The number of build agents.",
-          "readOnly": true,
           "type": "integer",
           "format": "int32"
         },
         "paidPrivateAgentSlots": {
           "description": "The number of paid private agent slots.",
-          "readOnly": true,
           "type": "integer",
           "format": "int32"
         },
         "totalUsage": {
           "description": "The total usage.",
-          "readOnly": true,
           "type": "integer",
           "format": "int32"
         },
         "xamlControllers": {
           "description": "The number of XAML controllers.",
-          "readOnly": true,
           "type": "integer",
           "format": "int32"
+        }
+      }
+    },
+    "BuildsDeletedEvent": {
+      "description": "",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/BuildsDeletedEvent1"
+        }
+      ],
+      "properties": {}
+    },
+    "BuildsDeletedEvent1": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "buildIds": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "definitionId": {
+          "description": "The ID of the definition.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "projectId": {
+          "description": "The ID of the project.",
+          "type": "string",
+          "format": "uuid"
         }
       }
     },
@@ -5789,7 +7061,17 @@
             "offline"
           ],
           "x-ms-enum": {
-            "name": "Microsoft.TeamFoundation.Build.WebApi.ServiceHostStatus"
+            "name": "ServiceHostStatus",
+            "values": [
+              {
+                "value": "online",
+                "description": "The service host is currently connected and accepting commands."
+              },
+              {
+                "value": "offline",
+                "description": "The service host is currently disconnected and not accepting commands."
+              }
+            ]
           }
         },
         "statusChangedDate": {
@@ -5827,17 +7109,6 @@
         }
       }
     },
-    "BuildStartedEvent": {
-      "description": "",
-      "type": "object",
-      "allOf": [
-        {
-          "$ref": "#/definitions/BuildUpdatedEvent"
-        }
-      ],
-      "properties": {
-      }
-    },
     "BuildSummary": {
       "description": "",
       "type": "object",
@@ -5866,11 +7137,62 @@
             "validateShelveset",
             "checkInShelveset",
             "pullRequest",
+            "buildCompletion",
             "triggered",
             "all"
           ],
           "x-ms-enum": {
-            "name": "Microsoft.TeamFoundation.Build.WebApi.BuildReason"
+            "name": "BuildReason",
+            "values": [
+              {
+                "value": "none",
+                "description": "No reason. This value should not be used."
+              },
+              {
+                "value": "manual",
+                "description": "The build was started manually."
+              },
+              {
+                "value": "individualCI",
+                "description": "The build was started for the trigger TriggerType.ContinuousIntegration."
+              },
+              {
+                "value": "batchedCI",
+                "description": "The build was started for the trigger TriggerType.BatchedContinuousIntegration."
+              },
+              {
+                "value": "schedule",
+                "description": "The build was started for the trigger TriggerType.Schedule."
+              },
+              {
+                "value": "userCreated",
+                "description": "The build was created by a user."
+              },
+              {
+                "value": "validateShelveset",
+                "description": "The build was started manually for private validation."
+              },
+              {
+                "value": "checkInShelveset",
+                "description": "The build was started for the trigger ContinuousIntegrationType.Gated."
+              },
+              {
+                "value": "pullRequest",
+                "description": "The build was started by a pull request. Added in resource version 3."
+              },
+              {
+                "value": "buildCompletion",
+                "description": "The build was started when another build completed."
+              },
+              {
+                "value": "triggered",
+                "description": "The build was triggered for retention policy purposes."
+              },
+              {
+                "value": "all",
+                "description": "All reasons."
+              }
+            ]
           }
         },
         "requestedFor": {
@@ -5891,7 +7213,60 @@
             "all"
           ],
           "x-ms-enum": {
-            "name": "Microsoft.TeamFoundation.Build.WebApi.BuildStatus"
+            "name": "BuildStatus",
+            "values": [
+              {
+                "value": "none",
+                "description": "No status."
+              },
+              {
+                "value": "inProgress",
+                "description": "The build is currently in progress."
+              },
+              {
+                "value": "completed",
+                "description": "The build has completed."
+              },
+              {
+                "value": "cancelling",
+                "description": "The build is cancelling"
+              },
+              {
+                "value": "postponed",
+                "description": "The build is inactive in the queue."
+              },
+              {
+                "value": "notStarted",
+                "description": "The build has not yet started."
+              },
+              {
+                "value": "all",
+                "description": "All status."
+              }
+            ]
+          }
+        }
+      }
+    },
+    "BuildTagsAddedEvent": {
+      "description": "",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/BuildUpdatedEvent"
+        }
+      ],
+      "properties": {
+        "allTags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "newTags": {
+          "type": "array",
+          "items": {
+            "type": "string"
           }
         }
       }
@@ -5899,15 +7274,9 @@
     "BuildTrigger": {
       "description": "Represents a trigger for a buld definition.",
       "type": "object",
-      "allOf": [
-        {
-          "$ref": "#/definitions/ChildObject"
-        }
-      ],
       "properties": {
         "triggerType": {
           "description": "The type of the trigger.",
-          "readOnly": true,
           "enum": [
             "none",
             "continuousIntegration",
@@ -5916,10 +7285,49 @@
             "gatedCheckIn",
             "batchedGatedCheckIn",
             "pullRequest",
+            "buildCompletion",
             "all"
           ],
           "x-ms-enum": {
-            "name": "Microsoft.TeamFoundation.Build.WebApi.DefinitionTriggerType"
+            "name": "DefinitionTriggerType",
+            "values": [
+              {
+                "value": "none",
+                "description": "Manual builds only."
+              },
+              {
+                "value": "continuousIntegration",
+                "description": "A build should be started for each changeset."
+              },
+              {
+                "value": "batchedContinuousIntegration",
+                "description": "A build should be started for multiple changesets at a time at a specified interval."
+              },
+              {
+                "value": "schedule",
+                "description": "A build should be started on a specified schedule whether or not changesets exist."
+              },
+              {
+                "value": "gatedCheckIn",
+                "description": "A validation build should be started for each check-in."
+              },
+              {
+                "value": "batchedGatedCheckIn",
+                "description": "A validation build should be started for each batch of check-ins."
+              },
+              {
+                "value": "pullRequest",
+                "description": "A build should be triggered when a GitHub pull request is created or updated. Added in resource version 3"
+              },
+              {
+                "value": "buildCompletion",
+                "description": "A build should be triggered when another build completes."
+              },
+              {
+                "value": "all",
+                "description": "All types."
+              }
+            ]
           }
         }
       }
@@ -5943,7 +7351,6 @@
       "type": "object",
       "properties": {
         "mappings": {
-          "readOnly": true,
           "type": "array",
           "items": {
             "$ref": "#/definitions/MappingDetails"
@@ -5954,11 +7361,6 @@
     "Change": {
       "description": "Represents a change associated with a build.",
       "type": "object",
-      "allOf": [
-        {
-          "$ref": "#/definitions/ChildObject"
-        }
-      ],
       "properties": {
         "author": {
           "description": "The author of the change.",
@@ -5999,12 +7401,6 @@
         }
       }
     },
-    "ChildObject": {
-      "description": "",
-      "type": "object",
-      "properties": {
-      }
-    },
     "ConsoleLogEvent": {
       "description": "",
       "type": "object",
@@ -6015,19 +7411,16 @@
       ],
       "properties": {
         "lines": {
-          "readOnly": true,
           "type": "array",
           "items": {
             "type": "string"
           }
         },
         "timelineId": {
-          "readOnly": true,
           "type": "string",
           "format": "uuid"
         },
         "timelineRecordId": {
-          "readOnly": true,
           "type": "string",
           "format": "uuid"
         }
@@ -6085,7 +7478,6 @@
           "type": "boolean"
         },
         "branchFilters": {
-          "readOnly": true,
           "type": "array",
           "items": {
             "type": "string"
@@ -6097,7 +7489,6 @@
           "format": "int32"
         },
         "pathFilters": {
-          "readOnly": true,
           "type": "array",
           "items": {
             "type": "string"
@@ -6112,47 +7503,53 @@
           "description": "The ID of the job used to poll an external repository.",
           "type": "string",
           "format": "uuid"
+        },
+        "settingsSourceType": {
+          "type": "integer",
+          "format": "int32"
         }
       }
     },
     "DataSourceBindingBase": {
-      "description": "",
+      "description": "Represents binding of data source for the service endpoint request.",
       "type": "object",
-      "allOf": [
-        {
-          "$ref": "#/definitions/ChildObject"
-        }
-      ],
       "properties": {
         "dataSourceName": {
+          "description": "Gets or sets the name of the data source.",
           "type": "string"
         },
         "endpointId": {
+          "description": "Gets or sets the endpoint Id.",
           "type": "string"
         },
         "endpointUrl": {
+          "description": "Gets or sets the url of the service endpoint.",
           "type": "string"
         },
         "headers": {
+          "description": "Gets or sets the authorization headers.",
           "type": "array",
           "items": {
             "$ref": "#/definitions/AuthorizationHeader"
           }
         },
         "parameters": {
-          "readOnly": true,
+          "description": "Gets or sets the parameters for the data source.",
           "type": "object",
           "additionalProperties": {
             "type": "string"
           }
         },
         "resultSelector": {
+          "description": "Gets or sets the result selector.",
           "type": "string"
         },
         "resultTemplate": {
+          "description": "Gets or sets the result template.",
           "type": "string"
         },
         "target": {
+          "description": "Gets or sets the target of the data source.",
           "type": "string"
         }
       }
@@ -6191,7 +7588,21 @@
             "disabled"
           ],
           "x-ms-enum": {
-            "name": "Microsoft.TeamFoundation.Build.WebApi.DefinitionQueueStatus"
+            "name": "DefinitionQueueStatus",
+            "values": [
+              {
+                "value": "enabled",
+                "description": "When enabled the definition queue allows builds to be queued by users, the system will queue scheduled, gated and continuous integration builds, and the queued builds will be started by the system."
+              },
+              {
+                "value": "paused",
+                "description": "When paused the definition queue allows builds to be queued by users and the system will queue scheduled, gated and continuous integration builds. Builds in the queue will not be started by the system."
+              },
+              {
+                "value": "disabled",
+                "description": "When disabled the definition queue will not allow builds to be queued by users and the system will not queue scheduled, gated or continuous integration builds. Builds already in the queue will not be started by the system."
+              }
+            ]
           }
         },
         "revision": {
@@ -6206,7 +7617,17 @@
             "build"
           ],
           "x-ms-enum": {
-            "name": "Microsoft.TeamFoundation.Build.WebApi.DefinitionType"
+            "name": "DefinitionType",
+            "values": [
+              {
+                "value": "xaml",
+                "description": ""
+              },
+              {
+                "value": "build",
+                "description": ""
+              }
+            ]
           }
         },
         "uri": {
@@ -6222,20 +7643,13 @@
     "Demand": {
       "description": "Represents a demand used by a definition or build.",
       "type": "object",
-      "allOf": [
-        {
-          "$ref": "#/definitions/ChildObject"
-        }
-      ],
       "properties": {
         "name": {
           "description": "The name of the capability referenced by the demand.",
-          "readOnly": true,
           "type": "string"
         },
         "value": {
           "description": "The demanded value.",
-          "readOnly": true,
           "type": "string"
         }
       }
@@ -6243,11 +7657,6 @@
     "Dependency": {
       "description": "Represents a dependency.",
       "type": "object",
-      "allOf": [
-        {
-          "$ref": "#/definitions/ChildObject"
-        }
-      ],
       "properties": {
         "event": {
           "description": "The event. The dependency is satisfied when the referenced object emits this event.",
@@ -6322,7 +7731,6 @@
       ],
       "properties": {
         "phases": {
-          "readOnly": true,
           "type": "array",
           "items": {
             "$ref": "#/definitions/Phase"
@@ -6333,11 +7741,6 @@
     "Folder": {
       "description": "Represents a folder that contains build definitions.",
       "type": "object",
-      "allOf": [
-        {
-          "$ref": "#/definitions/ChildObject"
-        }
-      ],
       "properties": {
         "createdBy": {
           "description": "The process or person who created the folder.",
@@ -6358,7 +7761,6 @@
         },
         "lastChangedDate": {
           "description": "The date the folder was last changed.",
-          "readOnly": true,
           "type": "string",
           "format": "date-time"
         },
@@ -6375,11 +7777,6 @@
     "Forks": {
       "description": "Represents the ability to build forks of the selected repository.",
       "type": "object",
-      "allOf": [
-        {
-          "$ref": "#/definitions/ChildObject"
-        }
-      ],
       "properties": {
         "allowSecrets": {
           "description": "Indicates whether a build should use secrets when building forks of the selected repository.",
@@ -6401,7 +7798,6 @@
       ],
       "properties": {
         "pathFilters": {
-          "readOnly": true,
           "type": "array",
           "items": {
             "type": "string"
@@ -6417,14 +7813,38 @@
         }
       }
     },
-    "IdentityRef": {
+    "GraphSubjectBase": {
       "description": "",
       "type": "object",
       "properties": {
-        "directoryAlias": {
+        "_links": {
+          "description": "This field contains zero or more interesting links about the graph subject. These links may be invoked to obtain additional relationships or more detailed information about this graph subject.",
+          "$ref": "#/definitions/ReferenceLinks"
+        },
+        "descriptor": {
+          "description": "The descriptor is the primary way to reference the graph subject while the system is running. This field will uniquely identify the same graph subject across both Accounts and Organizations.",
           "type": "string"
         },
         "displayName": {
+          "description": "This is the non-unique display name of the graph subject. To change this field, you must alter its value in the source provider.",
+          "type": "string"
+        },
+        "url": {
+          "description": "This url is the full route to the source resource of this graph subject.",
+          "type": "string"
+        }
+      }
+    },
+    "IdentityRef": {
+      "description": "",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/GraphSubjectBase"
+        }
+      ],
+      "properties": {
+        "directoryAlias": {
           "type": "string"
         },
         "id": {
@@ -6446,9 +7866,6 @@
           "type": "string"
         },
         "uniqueName": {
-          "type": "string"
-        },
-        "url": {
           "type": "string"
         }
       }
@@ -6492,18 +7909,12 @@
     "Issue": {
       "description": "Represents an issue (error, warning) associated with a build.",
       "type": "object",
-      "allOf": [
-        {
-          "$ref": "#/definitions/ChildObject"
-        }
-      ],
       "properties": {
         "category": {
           "description": "The category.",
           "type": "string"
         },
         "data": {
-          "readOnly": true,
           "type": "object",
           "additionalProperties": {
             "type": "string"
@@ -6520,7 +7931,17 @@
             "warning"
           ],
           "x-ms-enum": {
-            "name": "Microsoft.TeamFoundation.Build.WebApi.IssueType"
+            "name": "IssueType",
+            "values": [
+              {
+                "value": "error",
+                "description": ""
+              },
+              {
+                "value": "warning",
+                "description": ""
+              }
+            ]
           }
         }
       }
@@ -6532,11 +7953,11 @@
         {
           "type": "array",
           "items": {
+            "$ref": "#/definitions/JsonPatchOperation"
           }
         }
       ],
-      "properties": {
-      }
+      "properties": {}
     },
     "JsonPatchOperation": {
       "description": "The JSON model for a JSON Patch operation",
@@ -6557,7 +7978,33 @@
             "test"
           ],
           "x-ms-enum": {
-            "name": "Microsoft.VisualStudio.Services.WebApi.Patch.Operation"
+            "name": "Operation",
+            "values": [
+              {
+                "value": "add",
+                "description": ""
+              },
+              {
+                "value": "remove",
+                "description": ""
+              },
+              {
+                "value": "replace",
+                "description": ""
+              },
+              {
+                "value": "move",
+                "description": ""
+              },
+              {
+                "value": "copy",
+                "description": ""
+              },
+              {
+                "value": "test",
+                "description": ""
+              }
+            ]
           }
         },
         "path": {
@@ -6611,18 +8058,12 @@
     "Phase": {
       "description": "Represents a phase of a build definition.",
       "type": "object",
-      "allOf": [
-        {
-          "$ref": "#/definitions/ChildObject"
-        }
-      ],
       "properties": {
         "condition": {
           "description": "The condition that must be true for this phase to execute.",
           "type": "string"
         },
         "dependencies": {
-          "readOnly": true,
           "type": "array",
           "items": {
             "$ref": "#/definitions/Dependency"
@@ -6635,7 +8076,17 @@
             "project"
           ],
           "x-ms-enum": {
-            "name": "Microsoft.TeamFoundation.Build.WebApi.BuildAuthorizationScope"
+            "name": "BuildAuthorizationScope",
+            "values": [
+              {
+                "value": "projectCollection",
+                "description": "The identity used should have build service account permissions scoped to the project collection. This is useful when resources for a single build are spread across multiple projects."
+              },
+              {
+                "value": "project",
+                "description": "The identity used should have build service account permissions scoped to the project in which the build definition resides. This is useful for isolation of build jobs to a particular team project to avoid any unintentional escalation of privilege attacks during a build."
+              }
+            ]
           }
         },
         "jobCancelTimeoutInMinutes": {
@@ -6652,8 +8103,11 @@
           "description": "The name of the phase.",
           "type": "string"
         },
+        "refName": {
+          "description": "The unique ref name of the phase.",
+          "type": "string"
+        },
         "steps": {
-          "readOnly": true,
           "type": "array",
           "items": {
             "$ref": "#/definitions/BuildDefinitionStep"
@@ -6664,7 +8118,6 @@
           "$ref": "#/definitions/PhaseTarget"
         },
         "variables": {
-          "readOnly": true,
           "type": "object",
           "additionalProperties": {
             "$ref": "#/definitions/BuildDefinitionVariable"
@@ -6675,15 +8128,9 @@
     "PhaseTarget": {
       "description": "Represents the target of a phase.",
       "type": "object",
-      "allOf": [
-        {
-          "$ref": "#/definitions/ChildObject"
-        }
-      ],
       "properties": {
         "type": {
           "description": "The type of the target.",
-          "readOnly": true,
           "type": "integer",
           "format": "int32"
         }
@@ -6692,28 +8139,20 @@
     "ProcessParameters": {
       "description": "",
       "type": "object",
-      "allOf": [
-        {
-          "$ref": "#/definitions/ChildObject"
-        }
-      ],
       "properties": {
         "dataSourceBindings": {
-          "readOnly": true,
           "type": "array",
           "items": {
             "$ref": "#/definitions/DataSourceBindingBase"
           }
         },
         "inputs": {
-          "readOnly": true,
           "type": "array",
           "items": {
             "$ref": "#/definitions/TaskInputDefinitionBase"
           }
         },
         "sourceDefinitions": {
-          "readOnly": true,
           "type": "array",
           "items": {
             "$ref": "#/definitions/TaskSourceDefinitionBase"
@@ -6727,7 +8166,6 @@
       "properties": {
         "count": {
           "description": "The count of properties in the collection.",
-          "readOnly": true,
           "type": "integer",
           "format": "int32"
         },
@@ -6736,7 +8174,6 @@
         },
         "keys": {
           "description": "The set of keys in the collection.",
-          "readOnly": true,
           "type": "array",
           "items": {
             "type": "string"
@@ -6744,7 +8181,6 @@
         },
         "values": {
           "description": "The set of values in the collection.",
-          "readOnly": true,
           "type": "array",
           "items": {
             "type": "string"
@@ -6762,7 +8198,6 @@
       ],
       "properties": {
         "branchFilters": {
-          "readOnly": true,
           "type": "array",
           "items": {
             "type": "string"
@@ -6778,21 +8213,8 @@
       "type": "object",
       "properties": {
         "buildId": {
-          "readOnly": true,
           "type": "integer",
           "format": "int32"
-        }
-      }
-    },
-    "RecreateSubscriptionResult": {
-      "description": "",
-      "type": "object",
-      "properties": {
-        "eventType": {
-          "type": "string"
-        },
-        "repositoryType": {
-          "type": "string"
         }
       }
     },
@@ -6802,11 +8224,41 @@
       "properties": {
         "links": {
           "description": "The readonly view of the links.  Because Reference links are readonly, we only want to expose them as read only.",
-          "readOnly": true,
           "type": "object",
           "additionalProperties": {
             "type": "object"
           }
+        }
+      }
+    },
+    "ReleaseReference": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "definitionId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "environmentDefinitionId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "environmentDefinitionName": {
+          "type": "string"
+        },
+        "environmentId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "environmentName": {
+          "type": "string"
+        },
+        "id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "name": {
+          "type": "string"
         }
       }
     },
@@ -6819,11 +8271,60 @@
           "type": "string"
         },
         "types": {
-          "readOnly": true,
           "type": "array",
           "items": {
-            "type": "string",
-            "format": "DefinitionTriggerType"
+            "enum": [
+              "none",
+              "continuousIntegration",
+              "batchedContinuousIntegration",
+              "schedule",
+              "gatedCheckIn",
+              "batchedGatedCheckIn",
+              "pullRequest",
+              "buildCompletion",
+              "all"
+            ],
+            "x-ms-enum": {
+              "name": "DefinitionTriggerType",
+              "values": [
+                {
+                  "value": "none",
+                  "description": "Manual builds only."
+                },
+                {
+                  "value": "continuousIntegration",
+                  "description": "A build should be started for each changeset."
+                },
+                {
+                  "value": "batchedContinuousIntegration",
+                  "description": "A build should be started for multiple changesets at a time at a specified interval."
+                },
+                {
+                  "value": "schedule",
+                  "description": "A build should be started on a specified schedule whether or not changesets exist."
+                },
+                {
+                  "value": "gatedCheckIn",
+                  "description": "A validation build should be started for each check-in."
+                },
+                {
+                  "value": "batchedGatedCheckIn",
+                  "description": "A validation build should be started for each batch of check-ins."
+                },
+                {
+                  "value": "pullRequest",
+                  "description": "A build should be triggered when a GitHub pull request is created or updated. Added in resource version 3"
+                },
+                {
+                  "value": "buildCompletion",
+                  "description": "A build should be triggered when another build completes."
+                },
+                {
+                  "value": "all",
+                  "description": "All types."
+                }
+              ]
+            }
           }
         },
         "url": {
@@ -6857,28 +8358,20 @@
     "RetentionPolicy": {
       "description": "Represents a retention policy for a build definition.",
       "type": "object",
-      "allOf": [
-        {
-          "$ref": "#/definitions/ChildObject"
-        }
-      ],
       "properties": {
         "artifacts": {
-          "readOnly": true,
           "type": "array",
           "items": {
             "type": "string"
           }
         },
         "artifactTypesToDelete": {
-          "readOnly": true,
           "type": "array",
           "items": {
             "type": "string"
           }
         },
         "branches": {
-          "readOnly": true,
           "type": "array",
           "items": {
             "type": "string"
@@ -6907,14 +8400,8 @@
     "Schedule": {
       "description": "",
       "type": "object",
-      "allOf": [
-        {
-          "$ref": "#/definitions/ChildObject"
-        }
-      ],
       "properties": {
         "branchFilters": {
-          "readOnly": true,
           "type": "array",
           "items": {
             "type": "string"
@@ -6934,7 +8421,45 @@
             "all"
           ],
           "x-ms-enum": {
-            "name": "Microsoft.TeamFoundation.Build.WebApi.ScheduleDays"
+            "name": "ScheduleDays",
+            "values": [
+              {
+                "value": "none",
+                "description": "Do not run."
+              },
+              {
+                "value": "monday",
+                "description": "Run on Monday."
+              },
+              {
+                "value": "tuesday",
+                "description": "Run on Tuesday."
+              },
+              {
+                "value": "wednesday",
+                "description": "Run on Wednesday."
+              },
+              {
+                "value": "thursday",
+                "description": "Run on Thursday."
+              },
+              {
+                "value": "friday",
+                "description": "Run on Friday."
+              },
+              {
+                "value": "saturday",
+                "description": "Run on Saturday."
+              },
+              {
+                "value": "sunday",
+                "description": "Run on Sunday."
+              },
+              {
+                "value": "all",
+                "description": "Run on all days of the week."
+              }
+            ]
           }
         },
         "scheduleJobId": {
@@ -6972,23 +8497,11 @@
       ],
       "properties": {
         "schedules": {
-          "readOnly": true,
           "type": "array",
           "items": {
             "$ref": "#/definitions/Schedule"
           }
         }
-      }
-    },
-    "SecuredBuildDefinitionReference": {
-      "description": "We allow ViewBuilds without also requiring ViewBuildDefinition, and we have always returned the definition reference along with the builds. So BuildDefinitionReferences created by these data binders will note that they require ViewBuilds instead of ViewBuildDefinition. The SecuredBuildDefinitionReference is sealed to prevent adding any other data from being exposed to anonymous users.",
-      "type": "object",
-      "allOf": [
-        {
-          "$ref": "#/definitions/BuildDefinitionReference"
-        }
-      ],
-      "properties": {
       }
     },
     "SecureFileReference": {
@@ -7025,15 +8538,9 @@
     "ServerTargetExecutionOptions": {
       "description": "Represents options for running a phase on the server.",
       "type": "object",
-      "allOf": [
-        {
-          "$ref": "#/definitions/ChildObject"
-        }
-      ],
       "properties": {
         "type": {
           "description": "The type.",
-          "readOnly": true,
           "type": "integer",
           "format": "int32"
         }
@@ -7079,6 +8586,33 @@
         }
       }
     },
+    "SourceRepositories": {
+      "description": "A set of repositories returned from the source provider.",
+      "type": "object",
+      "properties": {
+        "continuationToken": {
+          "description": "A token used to continue this paged request; 'null' if the request is complete",
+          "type": "string"
+        },
+        "pageLength": {
+          "description": "The number of repositories requested for each page",
+          "type": "integer",
+          "format": "int32"
+        },
+        "repositories": {
+          "description": "A list of repositories",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SourceRepository"
+          }
+        },
+        "totalPageCount": {
+          "description": "The total number of pages, or '-1' if unknown",
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
     "SourceRepository": {
       "description": "Represents a repository returned from a source provider.",
       "type": "object",
@@ -7100,7 +8634,6 @@
           "type": "string"
         },
         "properties": {
-          "readOnly": true,
           "type": "object",
           "additionalProperties": {
             "type": "string"
@@ -7112,6 +8645,28 @@
         },
         "url": {
           "description": "The URL of the repository.",
+          "type": "string"
+        }
+      }
+    },
+    "SourceRepositoryItem": {
+      "description": "Represents an item in a repository from a source provider.",
+      "type": "object",
+      "properties": {
+        "isContainer": {
+          "description": "Whether the item is able to have sub-items (e.g., is a folder).",
+          "type": "boolean"
+        },
+        "path": {
+          "description": "The full path of the item, relative to the root of the repository.",
+          "type": "string"
+        },
+        "type": {
+          "description": "The type of the item (folder, file, etc).",
+          "type": "string"
+        },
+        "url": {
+          "description": "The URL of the item.",
           "type": "string"
         }
       }
@@ -7133,8 +8688,28 @@
           "description": "The capabilities supported by this trigger.",
           "type": "object",
           "additionalProperties": {
-            "type": "string",
-            "format": "SupportLevel"
+            "enum": [
+              "unsupported",
+              "supported",
+              "required"
+            ],
+            "x-ms-enum": {
+              "name": "SupportLevel",
+              "values": [
+                {
+                  "value": "unsupported",
+                  "description": "The functionality is not supported."
+                },
+                {
+                  "value": "supported",
+                  "description": "The functionality is supported."
+                },
+                {
+                  "value": "required",
+                  "description": "The functionality is required."
+                }
+              ]
+            }
           }
         },
         "type": {
@@ -7147,10 +8722,49 @@
             "gatedCheckIn",
             "batchedGatedCheckIn",
             "pullRequest",
+            "buildCompletion",
             "all"
           ],
           "x-ms-enum": {
-            "name": "Microsoft.TeamFoundation.Build.WebApi.DefinitionTriggerType"
+            "name": "DefinitionTriggerType",
+            "values": [
+              {
+                "value": "none",
+                "description": "Manual builds only."
+              },
+              {
+                "value": "continuousIntegration",
+                "description": "A build should be started for each changeset."
+              },
+              {
+                "value": "batchedContinuousIntegration",
+                "description": "A build should be started for multiple changesets at a time at a specified interval."
+              },
+              {
+                "value": "schedule",
+                "description": "A build should be started on a specified schedule whether or not changesets exist."
+              },
+              {
+                "value": "gatedCheckIn",
+                "description": "A validation build should be started for each check-in."
+              },
+              {
+                "value": "batchedGatedCheckIn",
+                "description": "A validation build should be started for each batch of check-ins."
+              },
+              {
+                "value": "pullRequest",
+                "description": "A build should be triggered when a GitHub pull request is created or updated. Added in resource version 3"
+              },
+              {
+                "value": "buildCompletion",
+                "description": "A build should be triggered when another build completes."
+              },
+              {
+                "value": "all",
+                "description": "All types."
+              }
+            ]
           }
         }
       }
@@ -7187,7 +8801,6 @@
       "type": "object",
       "properties": {
         "mappings": {
-          "readOnly": true,
           "type": "array",
           "items": {
             "$ref": "#/definitions/SvnMappingDetails"
@@ -7195,36 +8808,9 @@
         }
       }
     },
-    "SyncBuildCompletedEvent": {
-      "description": "",
-      "type": "object",
-      "allOf": [
-        {
-          "$ref": "#/definitions/BuildUpdatedEvent"
-        }
-      ],
-      "properties": {
-      }
-    },
-    "SyncBuildStartedEvent": {
-      "description": "",
-      "type": "object",
-      "allOf": [
-        {
-          "$ref": "#/definitions/BuildUpdatedEvent"
-        }
-      ],
-      "properties": {
-      }
-    },
     "TaskAgentPoolReference": {
       "description": "Represents a reference to an agent pool.",
       "type": "object",
-      "allOf": [
-        {
-          "$ref": "#/definitions/ChildObject"
-        }
-      ],
       "properties": {
         "id": {
           "description": "The pool ID.",
@@ -7244,11 +8830,6 @@
     "TaskDefinitionReference": {
       "description": "A reference to a task definition.",
       "type": "object",
-      "allOf": [
-        {
-          "$ref": "#/definitions/ChildObject"
-        }
-      ],
       "properties": {
         "definitionType": {
           "description": "The type of task (task or task group).",
@@ -7268,14 +8849,8 @@
     "TaskInputDefinitionBase": {
       "description": "",
       "type": "object",
-      "allOf": [
-        {
-          "$ref": "#/definitions/ChildObject"
-        }
-      ],
       "properties": {
         "aliases": {
-          "readOnly": true,
           "type": "array",
           "items": {
             "type": "string"
@@ -7297,14 +8872,12 @@
           "type": "string"
         },
         "options": {
-          "readOnly": true,
           "type": "object",
           "additionalProperties": {
             "type": "string"
           }
         },
         "properties": {
-          "readOnly": true,
           "type": "object",
           "additionalProperties": {
             "type": "string"
@@ -7327,11 +8900,6 @@
     "TaskInputValidation": {
       "description": "",
       "type": "object",
-      "allOf": [
-        {
-          "$ref": "#/definitions/ChildObject"
-        }
-      ],
       "properties": {
         "expression": {
           "description": "Conditional expression",
@@ -7363,7 +8931,6 @@
       "type": "object",
       "properties": {
         "planGroups": {
-          "readOnly": true,
           "type": "array",
           "items": {
             "$ref": "#/definitions/TaskOrchestrationPlanGroupReference"
@@ -7374,11 +8941,6 @@
     "TaskOrchestrationPlanReference": {
       "description": "Represents a reference to an orchestration plan.",
       "type": "object",
-      "allOf": [
-        {
-          "$ref": "#/definitions/ChildObject"
-        }
-      ],
       "properties": {
         "orchestrationType": {
           "description": "The type of the plan.",
@@ -7395,11 +8957,6 @@
     "TaskReference": {
       "description": "Represents a reference to a task.",
       "type": "object",
-      "allOf": [
-        {
-          "$ref": "#/definitions/ChildObject"
-        }
-      ],
       "properties": {
         "id": {
           "description": "The ID of the task definition.",
@@ -7419,11 +8976,6 @@
     "TaskSourceDefinitionBase": {
       "description": "",
       "type": "object",
-      "allOf": [
-        {
-          "$ref": "#/definitions/ChildObject"
-        }
-      ],
       "properties": {
         "authKey": {
           "type": "string"
@@ -7480,7 +9032,37 @@
             "deleted"
           ],
           "x-ms-enum": {
-            "name": "Microsoft.TeamFoundation.Core.WebApi.ProjectState"
+            "name": "ProjectState",
+            "values": [
+              {
+                "value": "deleting",
+                "description": ""
+              },
+              {
+                "value": "new",
+                "description": ""
+              },
+              {
+                "value": "wellFormed",
+                "description": ""
+              },
+              {
+                "value": "createPending",
+                "description": ""
+              },
+              {
+                "value": "all",
+                "description": ""
+              },
+              {
+                "value": "unchanged",
+                "description": ""
+              },
+              {
+                "value": "deleted",
+                "description": ""
+              }
+            ]
           }
         },
         "url": {
@@ -7495,8 +9077,53 @@
             "organization"
           ],
           "x-ms-enum": {
-            "name": "Microsoft.TeamFoundation.Core.WebApi.ProjectVisibility"
+            "name": "ProjectVisibility",
+            "values": [
+              {
+                "value": "unchanged",
+                "description": ""
+              },
+              {
+                "value": "private",
+                "description": ""
+              },
+              {
+                "value": "organization",
+                "description": ""
+              }
+            ]
           }
+        }
+      }
+    },
+    "TestResultsContext": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "build": {
+          "$ref": "#/definitions/BuildReference"
+        },
+        "contextType": {
+          "enum": [
+            "build",
+            "release"
+          ],
+          "x-ms-enum": {
+            "name": "TestResultsContextType",
+            "values": [
+              {
+                "value": "build",
+                "description": ""
+              },
+              {
+                "value": "release",
+                "description": ""
+              }
+            ]
+          }
+        },
+        "release": {
+          "$ref": "#/definitions/ReleaseReference"
         }
       }
     },
@@ -7511,18 +9138,15 @@
       "properties": {
         "lastChangedBy": {
           "description": "The process or person that last changed the timeline.",
-          "readOnly": true,
           "type": "string",
           "format": "uuid"
         },
         "lastChangedOn": {
           "description": "The time the timeline was last changed.",
-          "readOnly": true,
           "type": "string",
           "format": "date-time"
         },
         "records": {
-          "readOnly": true,
           "type": "array",
           "items": {
             "$ref": "#/definitions/TimelineRecord"
@@ -7533,11 +9157,6 @@
     "TimelineRecord": {
       "description": "Represents an entry in a build's timeline.",
       "type": "object",
-      "allOf": [
-        {
-          "$ref": "#/definitions/ChildObject"
-        }
-      ],
       "properties": {
         "_links": {
           "$ref": "#/definitions/ReferenceLinks"
@@ -7571,7 +9190,6 @@
           "format": "uuid"
         },
         "issues": {
-          "readOnly": true,
           "type": "array",
           "items": {
             "$ref": "#/definitions/Issue"
@@ -7616,7 +9234,33 @@
             "abandoned"
           ],
           "x-ms-enum": {
-            "name": "Microsoft.TeamFoundation.Build.WebApi.TaskResult"
+            "name": "TaskResult",
+            "values": [
+              {
+                "value": "succeeded",
+                "description": ""
+              },
+              {
+                "value": "succeededWithIssues",
+                "description": ""
+              },
+              {
+                "value": "failed",
+                "description": ""
+              },
+              {
+                "value": "canceled",
+                "description": ""
+              },
+              {
+                "value": "skipped",
+                "description": ""
+              },
+              {
+                "value": "abandoned",
+                "description": ""
+              }
+            ]
           }
         },
         "resultCode": {
@@ -7636,7 +9280,21 @@
             "completed"
           ],
           "x-ms-enum": {
-            "name": "Microsoft.TeamFoundation.Build.WebApi.TimelineRecordState"
+            "name": "TimelineRecordState",
+            "values": [
+              {
+                "value": "pending",
+                "description": ""
+              },
+              {
+                "value": "inProgress",
+                "description": ""
+              },
+              {
+                "value": "completed",
+                "description": ""
+              }
+            ]
           }
         },
         "task": {
@@ -7672,7 +9330,6 @@
       ],
       "properties": {
         "timelineRecords": {
-          "readOnly": true,
           "type": "array",
           "items": {
             "$ref": "#/definitions/TimelineRecord"
@@ -7683,21 +9340,14 @@
     "TimelineReference": {
       "description": "Represents a reference to a timeline.",
       "type": "object",
-      "allOf": [
-        {
-          "$ref": "#/definitions/ChildObject"
-        }
-      ],
       "properties": {
         "changeId": {
           "description": "The change ID.",
-          "readOnly": true,
           "type": "integer",
           "format": "int32"
         },
         "id": {
           "description": "The ID of the timeline.",
-          "readOnly": true,
           "type": "string",
           "format": "uuid"
         },
@@ -7729,7 +9379,6 @@
           "type": "string"
         },
         "variables": {
-          "readOnly": true,
           "type": "object",
           "additionalProperties": {
             "$ref": "#/definitions/BuildDefinitionVariable"
@@ -7740,11 +9389,6 @@
     "VariableGroupReference": {
       "description": "Represents a reference to a variable group.",
       "type": "object",
-      "allOf": [
-        {
-          "$ref": "#/definitions/ChildObject"
-        }
-      ],
       "properties": {
         "id": {
           "description": "The ID of the variable group.",
@@ -7772,7 +9416,6 @@
           "format": "int32"
         },
         "multipliers": {
-          "readOnly": true,
           "type": "array",
           "items": {
             "type": "string"
@@ -7799,7 +9442,6 @@
           "format": "int32"
         },
         "multipliers": {
-          "readOnly": true,
           "type": "array",
           "items": {
             "type": "string"
@@ -7817,7 +9459,6 @@
       ],
       "properties": {
         "value": {
-          "readOnly": true,
           "type": "string",
           "format": "T"
         }
@@ -7828,7 +9469,6 @@
       "type": "object",
       "properties": {
         "count": {
-          "readOnly": true,
           "type": "integer",
           "format": "int32"
         }
@@ -7852,7 +9492,6 @@
       "properties": {
         "definitionUri": {
           "description": "Uri of the associated definition",
-          "readOnly": true,
           "type": "string"
         },
         "depth": {
@@ -7871,7 +9510,17 @@
             "cloak"
           ],
           "x-ms-enum": {
-            "name": "Microsoft.TeamFoundation.Build.WebApi.WorkspaceMappingType"
+            "name": "WorkspaceMappingType",
+            "values": [
+              {
+                "value": "map",
+                "description": "The path is mapped in the workspace."
+              },
+              {
+                "value": "cloak",
+                "description": "The path is cloaked in the workspace."
+              }
+            ]
           }
         },
         "serverItem": {
@@ -7880,7 +9529,6 @@
         },
         "workspaceId": {
           "description": "Id of the workspace",
-          "readOnly": true,
           "type": "integer",
           "format": "int32"
         }
@@ -7912,7 +9560,6 @@
         },
         "workspaceId": {
           "description": "Id of the workspace for this template",
-          "readOnly": true,
           "type": "integer",
           "format": "int32"
         }
@@ -7999,11 +9646,62 @@
             "validateShelveset",
             "checkInShelveset",
             "pullRequest",
+            "buildCompletion",
             "triggered",
             "all"
           ],
           "x-ms-enum": {
-            "name": "Microsoft.TeamFoundation.Build.WebApi.BuildReason"
+            "name": "BuildReason",
+            "values": [
+              {
+                "value": "none",
+                "description": "No reason. This value should not be used."
+              },
+              {
+                "value": "manual",
+                "description": "The build was started manually."
+              },
+              {
+                "value": "individualCI",
+                "description": "The build was started for the trigger TriggerType.ContinuousIntegration."
+              },
+              {
+                "value": "batchedCI",
+                "description": "The build was started for the trigger TriggerType.BatchedContinuousIntegration."
+              },
+              {
+                "value": "schedule",
+                "description": "The build was started for the trigger TriggerType.Schedule."
+              },
+              {
+                "value": "userCreated",
+                "description": "The build was created by a user."
+              },
+              {
+                "value": "validateShelveset",
+                "description": "The build was started manually for private validation."
+              },
+              {
+                "value": "checkInShelveset",
+                "description": "The build was started for the trigger ContinuousIntegrationType.Gated."
+              },
+              {
+                "value": "pullRequest",
+                "description": "The build was started by a pull request. Added in resource version 3."
+              },
+              {
+                "value": "buildCompletion",
+                "description": "The build was started when another build completed."
+              },
+              {
+                "value": "triggered",
+                "description": "The build was triggered for retention policy purposes."
+              },
+              {
+                "value": "all",
+                "description": "All reasons."
+              }
+            ]
           }
         },
         "triggerType": {
@@ -8016,10 +9714,49 @@
             "gatedCheckIn",
             "batchedGatedCheckIn",
             "pullRequest",
+            "buildCompletion",
             "all"
           ],
           "x-ms-enum": {
-            "name": "Microsoft.TeamFoundation.Build.WebApi.DefinitionTriggerType"
+            "name": "DefinitionTriggerType",
+            "values": [
+              {
+                "value": "none",
+                "description": "Manual builds only."
+              },
+              {
+                "value": "continuousIntegration",
+                "description": "A build should be started for each changeset."
+              },
+              {
+                "value": "batchedContinuousIntegration",
+                "description": "A build should be started for multiple changesets at a time at a specified interval."
+              },
+              {
+                "value": "schedule",
+                "description": "A build should be started on a specified schedule whether or not changesets exist."
+              },
+              {
+                "value": "gatedCheckIn",
+                "description": "A validation build should be started for each check-in."
+              },
+              {
+                "value": "batchedGatedCheckIn",
+                "description": "A validation build should be started for each batch of check-ins."
+              },
+              {
+                "value": "pullRequest",
+                "description": "A build should be triggered when a GitHub pull request is created or updated. Added in resource version 3"
+              },
+              {
+                "value": "buildCompletion",
+                "description": "A build should be triggered when another build completes."
+              },
+              {
+                "value": "all",
+                "description": "All types."
+              }
+            ]
           }
         }
       }
@@ -8091,7 +9828,6 @@
       ],
       "properties": {
         "errors": {
-          "readOnly": true,
           "type": "array",
           "items": {
             "type": "string"
@@ -8109,6 +9845,13 @@
     }
   },
   "parameters": {
+    "api-Version": {
+      "name": "api-version",
+      "in": "query",
+      "description": "Version of the API to use.  This should be set to '4.1' to use this version of the api.",
+      "required": true,
+      "type": "string"
+    },
     "api-Version-preview.1": {
       "name": "api-version",
       "in": "query",
@@ -8122,28 +9865,14 @@
       "description": "Version of the API to use.  This should be set to '4.1-preview.2' to use this version of the api.",
       "required": true,
       "type": "string"
-    },
-    "api-Version-preview.3": {
-      "name": "api-version",
-      "in": "query",
-      "description": "Version of the API to use.  This should be set to '4.1-preview.3' to use this version of the api.",
-      "required": true,
-      "type": "string"
-    },
-    "api-Version-preview.6": {
-      "name": "api-version",
-      "in": "query",
-      "description": "Version of the API to use.  This should be set to '4.1-preview.6' to use this version of the api.",
-      "required": true,
-      "type": "string"
     }
   },
   "securityDefinitions": {
     "accessToken": {
       "type": "basic",
       "description": "Personal access token. Use any value for the user name and the token as the password."
-     },
-     "oauth2": {
+    },
+    "oauth2": {
       "type": "oauth2",
       "flow": "accessCode",
       "authorizationUrl": "https://app.vssps.visualstudio.com/oauth2/authorize&response_type=Assertion",

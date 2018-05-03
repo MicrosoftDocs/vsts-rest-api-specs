@@ -28,6 +28,7 @@
     ]
   },
   "x-ms-vss-area": "Accounts",
+  "x-ms-vss-resource-area-id": "0d55247a-1c47-4462-9b1f-5e2125590ee6",
   "basePath": "/",
   "tags": [
     {
@@ -43,10 +44,9 @@
         "tags": [
           "Accounts"
         ],
-        "x-ms-vss-api-version": "4.1-preview.1",
+        "x-ms-docs-override-version": "4.1",
         "x-ms-vss-resource": "accounts",
         "x-ms-vss-method": "GetAccounts",
-        "x-ms-preview": true,
         "description": "Get a list of accounts for a specific owner or a specific member.",
         "operationId": "List",
         "produces": [
@@ -77,7 +77,7 @@
             "type": "string"
           },
           {
-            "$ref": "#/parameters/api-Version-preview.1"
+            "$ref": "#/parameters/api-Version"
           }
         ],
         "responses": {
@@ -89,7 +89,7 @@
                 "$ref": "#/definitions/Account"
               }
             }
-         }
+          }
         },
         "security": [
           {
@@ -99,12 +99,12 @@
           }
         ],
         "x-ms-examples": {
-            "By owner": {
-                "$ref": "./httpExamples/Accounts/GET__Accounts_ownerId-_userId_.json"
-            },
-            "By member": {
-                "$ref": "./httpExamples/Accounts/GET__Accounts_memberId-_userId_.json"
-            }
+          "By owner": {
+            "$ref": "./httpExamples/Accounts/GET__Accounts_ownerId-_userId_.json"
+          },
+          "By member": {
+            "$ref": "./httpExamples/Accounts/GET__Accounts_memberId-_userId_.json"
+          }
         }
       }
     }
@@ -116,7 +116,6 @@
       "properties": {
         "accountId": {
           "description": "Identifier for an Account",
-          "readOnly": true,
           "type": "string",
           "format": "uuid"
         },
@@ -139,7 +138,29 @@
             "moved"
           ],
           "x-ms-enum": {
-            "name": "Microsoft.VisualStudio.Services.Account.AccountStatus"
+            "name": "AccountStatus",
+            "values": [
+              {
+                "value": "none",
+                "description": ""
+              },
+              {
+                "value": "enabled",
+                "description": "This hosting account is active and assigned to a customer."
+              },
+              {
+                "value": "disabled",
+                "description": "This hosting account is disabled."
+              },
+              {
+                "value": "deleted",
+                "description": "This account is part of deletion batch and scheduled for deletion."
+              },
+              {
+                "value": "moved",
+                "description": "This account is not mastered locally and has physically moved."
+              }
+            ]
           }
         },
         "accountType": {
@@ -149,7 +170,17 @@
             "organization"
           ],
           "x-ms-enum": {
-            "name": "Microsoft.VisualStudio.Services.Account.AccountType"
+            "name": "AccountType",
+            "values": [
+              {
+                "value": "personal",
+                "description": ""
+              },
+              {
+                "value": "organization",
+                "description": ""
+              }
+            ]
           }
         },
         "accountUri": {
@@ -163,23 +194,19 @@
         },
         "createdDate": {
           "description": "Date account was created",
-          "readOnly": true,
           "type": "string",
           "format": "date-time"
         },
         "hasMoved": {
-          "readOnly": true,
           "type": "boolean"
         },
         "lastUpdatedBy": {
           "description": "Identity of last person to update the account",
-          "readOnly": true,
           "type": "string",
           "format": "uuid"
         },
         "lastUpdatedDate": {
           "description": "Date account was last updated",
-          "readOnly": true,
           "type": "string",
           "format": "date-time"
         },
@@ -189,7 +216,6 @@
           "format": "uuid"
         },
         "newCollectionId": {
-          "readOnly": true,
           "type": "string",
           "format": "uuid"
         },
@@ -203,7 +229,6 @@
         },
         "statusReason": {
           "description": "Reason for current status",
-          "readOnly": true,
           "type": "string"
         }
       }
@@ -213,16 +238,13 @@
       "type": "object",
       "properties": {
         "accountName": {
-          "readOnly": true,
           "type": "string"
         },
         "creator": {
-          "readOnly": true,
           "type": "string",
           "format": "uuid"
         },
         "organization": {
-          "readOnly": true,
           "type": "string"
         },
         "preferences": {
@@ -234,7 +256,10 @@
         "serviceDefinitions": {
           "type": "array",
           "items": {
-            "type": "object"
+            "type": "object",
+            "additionalProperties": {
+              "type": "Guid"
+            }
           }
         }
       }
@@ -244,17 +269,14 @@
       "type": "object",
       "properties": {
         "culture": {
-          "readOnly": true,
           "type": "string",
           "format": "CultureInfo"
         },
         "language": {
-          "readOnly": true,
           "type": "string",
           "format": "CultureInfo"
         },
         "timeZone": {
-          "readOnly": true,
           "type": "string",
           "format": "TimeZoneInfo"
         }
@@ -266,7 +288,6 @@
       "properties": {
         "count": {
           "description": "The count of properties in the collection.",
-          "readOnly": true,
           "type": "integer",
           "format": "int32"
         },
@@ -275,7 +296,6 @@
         },
         "keys": {
           "description": "The set of keys in the collection.",
-          "readOnly": true,
           "type": "array",
           "items": {
             "type": "string"
@@ -283,7 +303,6 @@
         },
         "values": {
           "description": "The set of values in the collection.",
-          "readOnly": true,
           "type": "array",
           "items": {
             "type": "string"
@@ -301,7 +320,6 @@
       ],
       "properties": {
         "value": {
-          "readOnly": true,
           "type": "string",
           "format": "T"
         }
@@ -312,7 +330,6 @@
       "type": "object",
       "properties": {
         "count": {
-          "readOnly": true,
           "type": "integer",
           "format": "int32"
         }
@@ -320,6 +337,13 @@
     }
   },
   "parameters": {
+    "api-Version": {
+      "name": "api-version",
+      "in": "query",
+      "description": "Version of the API to use.  This should be set to '4.1' to use this version of the api.",
+      "required": true,
+      "type": "string"
+    },
     "api-Version-preview.1": {
       "name": "api-version",
       "in": "query",
@@ -332,8 +356,8 @@
     "accessToken": {
       "type": "basic",
       "description": "Personal access token. Use any value for the user name and the token as the password."
-     },
-     "oauth2": {
+    },
+    "oauth2": {
       "type": "oauth2",
       "flow": "accessCode",
       "authorizationUrl": "https://app.vssps.visualstudio.com/oauth2/authorize&response_type=Assertion",

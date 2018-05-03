@@ -28,13 +28,1578 @@
     ]
   },
   "x-ms-vss-area": "TaskAgent",
+  "x-ms-vss-resource-area-id": "a85b8835-c1a1-4aac-ae97-1c3d0ba72dbd",
   "basePath": "/",
   "tags": [
+    {
+      "name": "Deploymentgroups"
+    },
+    {
+      "name": "Targets"
+    },
+    {
+      "name": "Taskgroups"
+    },
+    {
+      "name": "Variablegroups"
+    }
   ],
   "schemes": [
     "https"
   ],
   "paths": {
+    "/{project}/_apis/distributedtask/deploymentgroups": {
+      "post": {
+        "tags": [
+          "Deploymentgroups"
+        ],
+        "x-ms-docs-override-version": "4.1-preview.1",
+        "x-ms-vss-resource": "deploymentgroups",
+        "x-ms-vss-method": "AddDeploymentGroup",
+        "x-ms-preview": true,
+        "description": "Create a deployment group.",
+        "operationId": "Add",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Deployment group to create.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/DeploymentGroupCreateParameter"
+            }
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/DeploymentGroup"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.machinegroup_manage"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "Create a deployment group": {
+            "$ref": "./httpExamples/deploymentgroups/POST__distributedtask_DeploymentGroups.json"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Deploymentgroups"
+        ],
+        "x-ms-docs-override-version": "4.1-preview.1",
+        "x-ms-vss-resource": "deploymentgroups",
+        "x-ms-vss-method": "GetDeploymentGroups",
+        "x-ms-preview": true,
+        "description": "Get a list of deployment groups by name or IDs.",
+        "operationId": "List",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "name",
+            "description": "Name of the deployment group.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "actionFilter",
+            "description": "Get only deployment groups on which this action can be performed.",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "none",
+              "manage",
+              "use"
+            ],
+            "x-ms-enum": {
+              "name": "DeploymentGroupActionFilter",
+              "values": [
+                {
+                  "value": "none",
+                  "description": "All deployment groups."
+                },
+                {
+                  "value": "manage",
+                  "description": "Only deployment groups for which caller has **manage** permission."
+                },
+                {
+                  "value": "use",
+                  "description": "Only deployment groups for which caller has **use** permission."
+                }
+              ]
+            }
+          },
+          {
+            "in": "query",
+            "name": "$expand",
+            "description": "Include these additional details in the returned objects.",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "none",
+              "machines",
+              "tags"
+            ],
+            "x-ms-enum": {
+              "name": "DeploymentGroupExpands",
+              "values": [
+                {
+                  "value": "none",
+                  "description": "No additional properties."
+                },
+                {
+                  "value": "machines",
+                  "description": "Deprecated: Include all the deployment targets."
+                },
+                {
+                  "value": "tags",
+                  "description": "Include unique list of tags across all deployment targets."
+                }
+              ]
+            }
+          },
+          {
+            "in": "query",
+            "name": "continuationToken",
+            "description": "Get deployment groups with names greater than this continuationToken lexicographically.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "$top",
+            "description": "Maximum number of deployment groups to return. Default is **1000**.",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "ids",
+            "description": "Comma separated list of IDs of the deployment groups.",
+            "required": false,
+            "type": "string",
+            "format": "array (int32)"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/DeploymentGroup"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.machinegroup_manage"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "Get a deployment group by name": {
+            "$ref": "./httpExamples/deploymentgroups/GET__distributedtask_DeploymentGroups__Name_.json"
+          },
+          "Get deployment groups by IDs": {
+            "$ref": "./httpExamples/deploymentgroups/GET__distributedtask_DeploymentGroups__Ids_.json"
+          },
+          "List all deployment groups": {
+            "$ref": "./httpExamples/deploymentgroups/GET__distributedtask_DeploymentGroups.json"
+          },
+          "Get deployment groups in pages": {
+            "$ref": "./httpExamples/deploymentgroups/GET__distributedtask_DeploymentGroups__Page_.json"
+          }
+        }
+      }
+    },
+    "/{project}/_apis/distributedtask/deploymentgroups/{deploymentGroupId}": {
+      "delete": {
+        "tags": [
+          "Deploymentgroups"
+        ],
+        "x-ms-docs-override-version": "4.1-preview.1",
+        "x-ms-vss-resource": "deploymentgroups",
+        "x-ms-vss-method": "DeleteDeploymentGroup",
+        "x-ms-preview": true,
+        "description": "Delete a deployment group.",
+        "operationId": "Delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "deploymentGroupId",
+            "description": "ID of the deployment group to be deleted.",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.machinegroup_manage"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "Delete a deployment group": {
+            "$ref": "./httpExamples/deploymentgroups/DELETE__distributedtask_DeploymentGroup__Id_.json"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Deploymentgroups"
+        ],
+        "x-ms-docs-override-version": "4.1-preview.1",
+        "x-ms-vss-resource": "deploymentgroups",
+        "x-ms-vss-method": "GetDeploymentGroup",
+        "x-ms-preview": true,
+        "description": "Get a deployment group by its ID.",
+        "operationId": "Get",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "deploymentGroupId",
+            "description": "ID of the deployment group.",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "actionFilter",
+            "description": "Get the deployment group only if this action can be performed on it.",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "none",
+              "manage",
+              "use"
+            ],
+            "x-ms-enum": {
+              "name": "DeploymentGroupActionFilter",
+              "values": [
+                {
+                  "value": "none",
+                  "description": "All deployment groups."
+                },
+                {
+                  "value": "manage",
+                  "description": "Only deployment groups for which caller has **manage** permission."
+                },
+                {
+                  "value": "use",
+                  "description": "Only deployment groups for which caller has **use** permission."
+                }
+              ]
+            }
+          },
+          {
+            "in": "query",
+            "name": "$expand",
+            "description": "Include these additional details in the returned object.",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "none",
+              "machines",
+              "tags"
+            ],
+            "x-ms-enum": {
+              "name": "DeploymentGroupExpands",
+              "values": [
+                {
+                  "value": "none",
+                  "description": "No additional properties."
+                },
+                {
+                  "value": "machines",
+                  "description": "Deprecated: Include all the deployment targets."
+                },
+                {
+                  "value": "tags",
+                  "description": "Include unique list of tags across all deployment targets."
+                }
+              ]
+            }
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/DeploymentGroup"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.machinegroup_manage"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "Get a deployment group by its ID": {
+            "$ref": "./httpExamples/deploymentgroups/GET__distributedtask_DeploymentGroups__Id_.json"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Deploymentgroups"
+        ],
+        "x-ms-docs-override-version": "4.1-preview.1",
+        "x-ms-vss-resource": "deploymentgroups",
+        "x-ms-vss-method": "UpdateDeploymentGroup",
+        "x-ms-preview": true,
+        "description": "Update a deployment group.",
+        "operationId": "Update",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Deployment group to update.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/DeploymentGroupUpdateParameter"
+            }
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "deploymentGroupId",
+            "description": "ID of the deployment group.",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/DeploymentGroup"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.machinegroup_manage"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "Update a deployment group": {
+            "$ref": "./httpExamples/deploymentgroups/PATCH__distributedtask_DeploymentGroups__Id_.json"
+          }
+        }
+      }
+    },
+    "/{project}/_apis/distributedtask/deploymentgroups/{deploymentGroupId}/targets": {
+      "get": {
+        "tags": [
+          "Targets"
+        ],
+        "x-ms-docs-override-version": "4.1-preview.1",
+        "x-ms-vss-resource": "targets",
+        "x-ms-vss-method": "GetDeploymentTargets",
+        "x-ms-preview": true,
+        "description": "Get a list of deployment targets in a deployment group.",
+        "operationId": "List",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "deploymentGroupId",
+            "description": "ID of the deployment group.",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "tags",
+            "description": "Get only the deployment targets that contain all these comma separted list of tags.",
+            "required": false,
+            "type": "string",
+            "format": "array (string)"
+          },
+          {
+            "in": "query",
+            "name": "name",
+            "description": "Name pattern of the deployment targets to return.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "partialNameMatch",
+            "description": "When set to true, treats **name** as pattern. Else treats it as absolute match. Default is **false**.",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "$expand",
+            "description": "Include these additional details in the returned objects.",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "none",
+              "capabilities",
+              "assignedRequest",
+              "lastCompletedRequest"
+            ],
+            "x-ms-enum": {
+              "name": "DeploymentTargetExpands",
+              "values": [
+                {
+                  "value": "none",
+                  "description": "No additional properties."
+                },
+                {
+                  "value": "capabilities",
+                  "description": "Include capabilities of the deployment agent."
+                },
+                {
+                  "value": "assignedRequest",
+                  "description": "Include the job request assigned to the deployment agent."
+                },
+                {
+                  "value": "lastCompletedRequest",
+                  "description": "Include the last completed job request of the deployment agent."
+                }
+              ]
+            }
+          },
+          {
+            "in": "query",
+            "name": "agentStatus",
+            "description": "Get only deployment targets that have this status.",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "offline",
+              "online",
+              "all"
+            ],
+            "x-ms-enum": {
+              "name": "TaskAgentStatusFilter",
+              "values": [
+                {
+                  "value": "offline",
+                  "description": "Only deployment targets that are offline."
+                },
+                {
+                  "value": "online",
+                  "description": "Only deployment targets that are online."
+                },
+                {
+                  "value": "all",
+                  "description": "All deployment targets."
+                }
+              ]
+            }
+          },
+          {
+            "in": "query",
+            "name": "agentJobResult",
+            "description": "Get only deployment targets that have this last job result.",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "failed",
+              "passed",
+              "neverDeployed",
+              "all"
+            ],
+            "x-ms-enum": {
+              "name": "TaskAgentJobResultFilter",
+              "values": [
+                {
+                  "value": "failed",
+                  "description": "Only those deployment targets on which last job failed (**Abandoned**, **Canceled**, **Failed**, **Skipped**)."
+                },
+                {
+                  "value": "passed",
+                  "description": "Only those deployment targets on which last job Passed (**Succeeded**, **Succeeded with issues**)."
+                },
+                {
+                  "value": "neverDeployed",
+                  "description": "Only those deployment targets that never executed a job."
+                },
+                {
+                  "value": "all",
+                  "description": "All deployment targets."
+                }
+              ]
+            }
+          },
+          {
+            "in": "query",
+            "name": "continuationToken",
+            "description": "Get deployment targets with names greater than this continuationToken lexicographically.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "$top",
+            "description": "Maximum number of deployment targets to return. Default is **1000**.",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/DeploymentMachine"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.machinegroup_manage"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "List all deployment targets in a deployment group": {
+            "$ref": "./httpExamples/targets/GET__distributedtask_DeploymentTargets.json"
+          },
+          "Get deployment targets having given tags": {
+            "$ref": "./httpExamples/targets/GET__distributedtask_DeploymentTargets__Tags_.json"
+          },
+          "Get deployment targets by partial name match": {
+            "$ref": "./httpExamples/targets/GET__distributedtask_DeploymentTargets__Name_.json"
+          },
+          "Get deployment targets including their last job requests": {
+            "$ref": "./httpExamples/targets/GET__distributedtask_DeploymentTargets__LastRequest_.json"
+          },
+          "Get deployment targets filtered by agent status": {
+            "$ref": "./httpExamples/targets/GET__distributedtask_DeploymentTargets__AgentStatus_.json"
+          },
+          "Get deployment targets in pages": {
+            "$ref": "./httpExamples/targets/GET__distributedtask_DeploymentTargets__Page_.json"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Targets"
+        ],
+        "x-ms-docs-override-version": "4.1-preview.1",
+        "x-ms-vss-resource": "targets",
+        "x-ms-vss-method": "UpdateDeploymentTargets",
+        "x-ms-preview": true,
+        "description": "Update tags of a list of deployment targets in a deployment group.",
+        "operationId": "Update",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Deployment targets with tags to udpdate.",
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/DeploymentTargetUpdateParameter"
+              }
+            }
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "deploymentGroupId",
+            "description": "ID of the deployment group in which deployment targets are updated.",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/DeploymentMachine"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.machinegroup_manage"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "Update tags of a deployment target": {
+            "$ref": "./httpExamples/targets/PATCH__distributedtask_DeploymentTargets.json"
+          }
+        }
+      }
+    },
+    "/{project}/_apis/distributedtask/deploymentgroups/{deploymentGroupId}/targets/{targetId}": {
+      "delete": {
+        "tags": [
+          "Targets"
+        ],
+        "x-ms-docs-override-version": "4.1-preview.1",
+        "x-ms-vss-resource": "targets",
+        "x-ms-vss-method": "DeleteDeploymentTarget",
+        "x-ms-preview": true,
+        "description": "Delete a deployment target in a deployment group. This deletes the agent from associated deployment pool too.",
+        "operationId": "Delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "deploymentGroupId",
+            "description": "ID of the deployment group in which deployment target is deleted.",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "path",
+            "name": "targetId",
+            "description": "ID of the deployment target to delete.",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.machinegroup_manage"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "Delete a deployment target": {
+            "$ref": "./httpExamples/targets/DELETE_distributedtask_DeploymentTargets__Id_.json"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Targets"
+        ],
+        "x-ms-docs-override-version": "4.1-preview.1",
+        "x-ms-vss-resource": "targets",
+        "x-ms-vss-method": "GetDeploymentTarget",
+        "x-ms-preview": true,
+        "description": "Get a deployment target by its ID in a deployment group",
+        "operationId": "Get",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "deploymentGroupId",
+            "description": "ID of the deployment group to which deployment target belongs.",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "path",
+            "name": "targetId",
+            "description": "ID of the deployment target to return.",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "$expand",
+            "description": "Include these additional details in the returned objects.",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "none",
+              "capabilities",
+              "assignedRequest",
+              "lastCompletedRequest"
+            ],
+            "x-ms-enum": {
+              "name": "DeploymentTargetExpands",
+              "values": [
+                {
+                  "value": "none",
+                  "description": "No additional properties."
+                },
+                {
+                  "value": "capabilities",
+                  "description": "Include capabilities of the deployment agent."
+                },
+                {
+                  "value": "assignedRequest",
+                  "description": "Include the job request assigned to the deployment agent."
+                },
+                {
+                  "value": "lastCompletedRequest",
+                  "description": "Include the last completed job request of the deployment agent."
+                }
+              ]
+            }
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/DeploymentMachine"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.machinegroup_manage"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "Get a deployment target by its ID": {
+            "$ref": "./httpExamples/targets/GET__distributedtask_DeploymentTargets__Id_.json"
+          }
+        }
+      }
+    },
+    "/{project}/_apis/distributedtask/taskgroups": {
+      "post": {
+        "tags": [
+          "Taskgroups"
+        ],
+        "x-ms-docs-override-version": "4.1-preview.1",
+        "x-ms-vss-resource": "taskgroups",
+        "x-ms-vss-method": "AddTaskGroup",
+        "x-ms-preview": true,
+        "description": "Create a task group.",
+        "operationId": "Add",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Task group object to create.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/TaskGroupCreateParameter"
+            }
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/TaskGroup"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.taskgroups_write"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "Create a task group": {
+            "$ref": "./httpExamples/taskgroups/POST__CreateTaskGroup.json"
+          }
+        }
+      }
+    },
+    "/{project}/_apis/distributedtask/taskgroups/{taskGroupId}": {
+      "delete": {
+        "tags": [
+          "Taskgroups"
+        ],
+        "x-ms-docs-override-version": "4.1-preview.1",
+        "x-ms-vss-resource": "taskgroups",
+        "x-ms-vss-method": "DeleteTaskGroup",
+        "x-ms-preview": true,
+        "description": "Delete a task group.",
+        "operationId": "Delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "taskGroupId",
+            "description": "Id of the task group to be deleted.",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "query",
+            "name": "comment",
+            "description": "Comments to delete.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.taskgroups_manage"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "Delete a task group": {
+            "$ref": "./httpExamples/taskgroups/DELETE__DeleteATaskGroup.json"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Taskgroups"
+        ],
+        "x-ms-docs-override-version": "4.1-preview.1",
+        "x-ms-vss-resource": "taskgroups",
+        "x-ms-vss-method": "GetTaskGroups",
+        "x-ms-preview": true,
+        "description": "List task groups.",
+        "operationId": "List",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "taskGroupId",
+            "description": "Id of the task group.",
+            "required": true,
+            "x-ms-required": false,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "query",
+            "name": "expanded",
+            "description": "'true' to recursively expand task groups. Default is 'false'.",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "taskIdFilter",
+            "description": "Guid of the taskId to filter.",
+            "required": false,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "query",
+            "name": "deleted",
+            "description": "'true'to include deleted task groups. Default is 'false'.",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "$top",
+            "description": "Number of task groups to get.",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "continuationToken",
+            "description": "Gets the task groups after the continuation token provided.",
+            "required": false,
+            "type": "string",
+            "format": "date-time"
+          },
+          {
+            "in": "query",
+            "name": "queryOrder",
+            "description": "Gets the results in the defined order. Default is 'CreatedOnDescending'.",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "createdOnAscending",
+              "createdOnDescending"
+            ],
+            "x-ms-enum": {
+              "name": "TaskGroupQueryOrder",
+              "values": [
+                {
+                  "value": "createdOnAscending",
+                  "description": "Order by createdon ascending."
+                },
+                {
+                  "value": "createdOnDescending",
+                  "description": "Order by createdon descending."
+                }
+              ]
+            }
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/TaskGroup"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.taskgroups_read"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "List all task groups": {
+            "$ref": "./httpExamples/taskgroups/LIST__ListAllTaskGroups.json"
+          },
+          "List all versions of a task group": {
+            "$ref": "./httpExamples/taskgroups/LIST__ListAllVersionsOfTaskGroup.json"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Taskgroups"
+        ],
+        "x-ms-docs-override-version": "4.1-preview.1",
+        "x-ms-vss-resource": "taskgroups",
+        "x-ms-vss-method": "UpdateTaskGroup",
+        "x-ms-preview": true,
+        "description": "Update a task group.",
+        "operationId": "Update",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Task group to update.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/TaskGroupUpdateParameter"
+            }
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "taskGroupId",
+            "description": "Id of the task group to update.",
+            "required": true,
+            "x-ms-required": false,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/TaskGroup"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.taskgroups_manage"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "Update a task group": {
+            "$ref": "./httpExamples/taskgroups/PUT__UpdateTaskGroup.json"
+          }
+        }
+      }
+    },
+    "/{project}/_apis/distributedtask/variablegroups": {
+      "post": {
+        "tags": [
+          "Variablegroups"
+        ],
+        "x-ms-docs-override-version": "4.1-preview.1",
+        "x-ms-vss-resource": "variablegroups",
+        "x-ms-vss-method": "AddVariableGroup",
+        "x-ms-preview": true,
+        "description": "Add a variable group.",
+        "operationId": "Add",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Variable group to add.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/VariableGroupParameters"
+            }
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/VariableGroup"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "Add a variable group": {
+            "$ref": "./httpExamples/variablegroups/POST_CreateVariableGroup.json"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Variablegroups"
+        ],
+        "x-ms-docs-override-version": "4.1-preview.1",
+        "x-ms-vss-resource": "variablegroups",
+        "x-ms-vss-method": "GetVariableGroupsById",
+        "x-ms-preview": true,
+        "description": "Get variable groups by ids.",
+        "operationId": "Get Variable Groups By Id",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "groupIds",
+            "description": "Comma separated list of Ids of variable groups.",
+            "required": true,
+            "type": "string",
+            "format": "array (int32)"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/VariableGroup"
+              }
+            }
+          }
+        },
+        "x-ms-examples": {
+          "Get variable groups by ids": {
+            "$ref": "./httpExamples/variablegroups/GET_VariableGroupsByIds.json"
+          }
+        }
+      }
+    },
+    "/{project}/_apis/distributedtask/variablegroups/{groupId}": {
+      "delete": {
+        "tags": [
+          "Variablegroups"
+        ],
+        "x-ms-docs-override-version": "4.1-preview.1",
+        "x-ms-vss-resource": "variablegroups",
+        "x-ms-vss-method": "DeleteVariableGroup",
+        "x-ms-preview": true,
+        "description": "Delete a variable group",
+        "operationId": "Delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "groupId",
+            "description": "Id of the variable group.",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "x-ms-examples": {
+          "Delete a variable group": {
+            "$ref": "./httpExamples/variablegroups/DELETE_VariableGroup.json"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Variablegroups"
+        ],
+        "x-ms-docs-override-version": "4.1-preview.1",
+        "x-ms-vss-resource": "variablegroups",
+        "x-ms-vss-method": "GetVariableGroup",
+        "x-ms-preview": true,
+        "description": "Get a variable group.",
+        "operationId": "Get",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "groupId",
+            "description": "Id of the variable group.",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/VariableGroup"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "Get a variable group": {
+            "$ref": "./httpExamples/variablegroups/GET_VariableGroup.json"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Variablegroups"
+        ],
+        "x-ms-docs-override-version": "4.1-preview.1",
+        "x-ms-vss-resource": "variablegroups",
+        "x-ms-vss-method": "UpdateVariableGroup",
+        "x-ms-preview": true,
+        "description": "Update a variable group.",
+        "operationId": "Update",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Variable group to update.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/VariableGroupParameters"
+            }
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "groupId",
+            "description": "Id of the variable group to update.",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/VariableGroup"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "Update a variable group": {
+            "$ref": "./httpExamples/variablegroups/PUT_UpdateVariableGroup.json"
+          }
+        }
+      }
+    }
+  },
+  "x-ms-paths": {
+    "/{project}/_apis/distributedtask/variablegroups?groupName={groupName}&actionFilter={actionFilter}&top={top}&continuationToken={continuationToken}&queryOrder={queryOrder}": {
+      "get": {
+        "tags": [
+          "Variablegroups"
+        ],
+        "x-ms-docs-override-version": "4.1-preview.1",
+        "x-ms-vss-resource": "variablegroups",
+        "x-ms-vss-method": "GetVariableGroups",
+        "x-ms-preview": true,
+        "description": "Get variable groups.",
+        "operationId": "Get Variable Groups",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "groupName",
+            "description": "Name of variable group.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "actionFilter",
+            "description": "Action filter for the variable group. It specifies the action which can be performed on the variable groups.",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "none",
+              "manage",
+              "use"
+            ],
+            "x-ms-enum": {
+              "name": "VariableGroupActionFilter",
+              "values": [
+                {
+                  "value": "none",
+                  "description": ""
+                },
+                {
+                  "value": "manage",
+                  "description": ""
+                },
+                {
+                  "value": "use",
+                  "description": ""
+                }
+              ]
+            }
+          },
+          {
+            "in": "query",
+            "name": "$top",
+            "description": "Number of variable groups to get.",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "continuationToken",
+            "description": "Gets the variable groups after the continuation token provided.",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "queryOrder",
+            "description": "Gets the results in the defined order. Default is 'IdDescending'.",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "idAscending",
+              "idDescending"
+            ],
+            "x-ms-enum": {
+              "name": "VariableGroupQueryOrder",
+              "values": [
+                {
+                  "value": "idAscending",
+                  "description": "Order by id ascending."
+                },
+                {
+                  "value": "idDescending",
+                  "description": "Order by id descending."
+                }
+              ]
+            }
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/VariableGroup"
+              }
+            }
+          }
+        },
+        "x-ms-examples": {
+          "Get variable groups using group name filter": {
+            "$ref": "./httpExamples/variablegroups/GET_VariableGroupsByGroupName.json"
+          },
+          "Get variable groups using action filter": {
+            "$ref": "./httpExamples/variablegroups/GET_VariableGroupsByActionFilter.json"
+          }
+        }
+      }
+    }
   },
   "definitions": {
     "AadOauthTokenRequest": {
@@ -92,22 +1657,18 @@
       ],
       "properties": {
         "lockedUntil": {
-          "readOnly": true,
           "type": "string",
           "format": "date-time"
         },
         "lockToken": {
-          "readOnly": true,
           "type": "string",
           "format": "uuid"
         },
         "requestId": {
-          "readOnly": true,
           "type": "integer",
           "format": "int64"
         },
         "tasks": {
-          "readOnly": true,
           "type": "array",
           "items": {
             "$ref": "#/definitions/TaskInstance"
@@ -120,7 +1681,6 @@
       "type": "object",
       "properties": {
         "accessToken": {
-          "readOnly": true,
           "type": "string"
         }
       }
@@ -169,16 +1729,13 @@
       "type": "object",
       "properties": {
         "agentId": {
-          "readOnly": true,
           "type": "integer",
           "format": "int32"
         },
         "targetVersion": {
-          "readOnly": true,
           "type": "string"
         },
         "timeout": {
-          "readOnly": true,
           "type": "string",
           "format": "TimeSpan"
         }
@@ -204,9 +1761,11 @@
       "type": "object",
       "properties": {
         "name": {
+          "description": "Gets or sets the name of authorization header.",
           "type": "string"
         },
         "value": {
+          "description": "Gets or sets the value of authorization header.",
           "type": "string"
         }
       }
@@ -344,11 +1903,9 @@
       "type": "object",
       "properties": {
         "errorMessage": {
-          "readOnly": true,
           "type": "string"
         },
         "value": {
-          "readOnly": true,
           "type": "array",
           "items": {
             "$ref": "#/definitions/AzureSubscription"
@@ -356,10 +1913,14 @@
         }
       }
     },
-    "ChildObject": {
+    "ClientCertificate": {
       "description": "",
       "type": "object",
       "properties": {
+        "value": {
+          "description": "Gets or sets the value of client certificate.",
+          "type": "string"
+        }
       }
     },
     "DataSource": {
@@ -397,47 +1958,48 @@
           "$ref": "#/definitions/DataSourceBindingBase"
         }
       ],
-      "properties": {
-      }
+      "properties": {}
     },
     "DataSourceBindingBase": {
-      "description": "",
+      "description": "Represents binding of data source for the service endpoint request.",
       "type": "object",
-      "allOf": [
-        {
-          "$ref": "#/definitions/ChildObject"
-        }
-      ],
       "properties": {
         "dataSourceName": {
+          "description": "Gets or sets the name of the data source.",
           "type": "string"
         },
         "endpointId": {
+          "description": "Gets or sets the endpoint Id.",
           "type": "string"
         },
         "endpointUrl": {
+          "description": "Gets or sets the url of the service endpoint.",
           "type": "string"
         },
         "headers": {
+          "description": "Gets or sets the authorization headers.",
           "type": "array",
           "items": {
             "$ref": "#/definitions/AuthorizationHeader"
           }
         },
         "parameters": {
-          "readOnly": true,
+          "description": "Gets or sets the parameters for the data source.",
           "type": "object",
           "additionalProperties": {
             "type": "string"
           }
         },
         "resultSelector": {
+          "description": "Gets or sets the result selector.",
           "type": "string"
         },
         "resultTemplate": {
+          "description": "Gets or sets the result template.",
           "type": "string"
         },
         "target": {
+          "description": "Gets or sets the target of the data source.",
           "type": "string"
         }
       }
@@ -459,7 +2021,6 @@
           }
         },
         "parameters": {
-          "readOnly": true,
           "type": "object",
           "additionalProperties": {
             "type": "string"
@@ -478,11 +2039,9 @@
       "type": "object",
       "properties": {
         "name": {
-          "readOnly": true,
           "type": "string"
         },
         "value": {
-          "readOnly": true,
           "type": "string"
         }
       }
@@ -492,11 +2051,9 @@
       "type": "object",
       "properties": {
         "key": {
-          "readOnly": true,
           "type": "string"
         },
         "value": {
-          "readOnly": true,
           "type": "string"
         }
       }
@@ -509,10 +2066,18 @@
           "type": "string"
         },
         "map": {
-          "readOnly": true,
           "type": "array",
           "items": {
-            "type": "object"
+            "type": "object",
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "string"
+                }
+              }
+            }
           }
         }
       }
@@ -533,7 +2098,7 @@
       }
     },
     "DeploymentGroup": {
-      "description": "",
+      "description": "Deployment group.",
       "type": "object",
       "allOf": [
         {
@@ -542,22 +2107,23 @@
       ],
       "properties": {
         "description": {
+          "description": "Description of the deployment group.",
           "type": "string"
         },
         "machineCount": {
-          "readOnly": true,
+          "description": "Number of deployment targets in the deployment group.",
           "type": "integer",
           "format": "int32"
         },
         "machines": {
-          "readOnly": true,
+          "description": "List of deployment targets in the deployment group.",
           "type": "array",
           "items": {
             "$ref": "#/definitions/DeploymentMachine"
           }
         },
         "machineTags": {
-          "readOnly": true,
+          "description": "List of unique tags across all deployment targets in the deployment group.",
           "type": "array",
           "items": {
             "type": "string"
@@ -565,18 +2131,54 @@
         }
       }
     },
+    "DeploymentGroupCreateParameter": {
+      "description": "Properties to create Deployment group.",
+      "type": "object",
+      "properties": {
+        "description": {
+          "description": "Description of the deployment group.",
+          "type": "string"
+        },
+        "name": {
+          "description": "Name of the deployment group.",
+          "type": "string"
+        },
+        "pool": {
+          "description": "Deployment pool in which deployment agents are registered. This is obsolete. Kept for compatibility. Will be marked obsolete explicitly by M132.",
+          "$ref": "#/definitions/DeploymentGroupCreateParameterPoolProperty"
+        },
+        "poolId": {
+          "description": "Identifier of the deployment pool in which deployment agents are registered.",
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "DeploymentGroupCreateParameterPoolProperty": {
+      "description": "Properties of Deployment pool to create Deployment group.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "Deployment pool identifier.",
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
     "DeploymentGroupMetrics": {
-      "description": "",
+      "description": "Deployment group metrics.",
       "type": "object",
       "properties": {
         "columnsHeader": {
+          "description": "List of deployment group properties. And types of metrics provided for those properties.",
           "$ref": "#/definitions/MetricsColumnsHeader"
         },
         "deploymentGroup": {
+          "description": "Deployment group.",
           "$ref": "#/definitions/DeploymentGroupReference"
         },
         "rows": {
-          "readOnly": true,
+          "description": "Values of properties and the metrics. E.g. 1: total count of deployment targets for which 'TargetState' is 'offline'. E.g. 2: Average time of deployment to the deployment targets for which 'LastJobStatus' is 'passed' and 'TargetState' is 'online'.",
           "type": "array",
           "items": {
             "$ref": "#/definitions/MetricsRow"
@@ -585,38 +2187,57 @@
       }
     },
     "DeploymentGroupReference": {
-      "description": "",
+      "description": "Deployment group reference. This is useful for referring a deployment group in another object.",
       "type": "object",
       "properties": {
         "id": {
-          "readOnly": true,
+          "description": "Deployment group identifier.",
           "type": "integer",
           "format": "int32"
         },
         "name": {
+          "description": "Name of the deployment group.",
           "type": "string"
         },
         "pool": {
+          "description": "Deployment pool in which deployment agents are registered.",
           "$ref": "#/definitions/TaskAgentPoolReference"
         },
         "project": {
+          "description": "Project to which the deployment group belongs.",
           "$ref": "#/definitions/ProjectReference"
         }
       }
     },
+    "DeploymentGroupUpdateParameter": {
+      "description": "Deployment group update parameter.",
+      "type": "object",
+      "properties": {
+        "description": {
+          "description": "Description of the deployment group.",
+          "type": "string"
+        },
+        "name": {
+          "description": "Name of the deployment group.",
+          "type": "string"
+        }
+      }
+    },
     "DeploymentMachine": {
-      "description": "",
+      "description": "Deployment target.",
       "type": "object",
       "properties": {
         "agent": {
+          "description": "Deployment agent.",
           "$ref": "#/definitions/TaskAgent"
         },
         "id": {
+          "description": "Deployment target Identifier.",
           "type": "integer",
           "format": "int32"
         },
         "tags": {
-          "readOnly": true,
+          "description": "Tags of the deployment target.",
           "type": "array",
           "items": {
             "type": "string"
@@ -634,14 +2255,12 @@
       ],
       "properties": {
         "machines": {
-          "readOnly": true,
           "type": "array",
           "items": {
             "$ref": "#/definitions/DeploymentMachine"
           }
         },
         "size": {
-          "readOnly": true,
           "type": "integer",
           "format": "int32"
         }
@@ -652,7 +2271,6 @@
       "type": "object",
       "properties": {
         "id": {
-          "readOnly": true,
           "type": "integer",
           "format": "int32"
         },
@@ -675,7 +2293,6 @@
           "$ref": "#/definitions/DeploymentGroupReference"
         },
         "machines": {
-          "readOnly": true,
           "type": "array",
           "items": {
             "$ref": "#/definitions/DeploymentMachine"
@@ -684,28 +2301,46 @@
       }
     },
     "DeploymentPoolSummary": {
-      "description": "",
+      "description": "Deployment pool summary.",
       "type": "object",
       "properties": {
         "deploymentGroups": {
-          "readOnly": true,
+          "description": "List of deployment groups referring to the deployment pool.",
           "type": "array",
           "items": {
             "$ref": "#/definitions/DeploymentGroupReference"
           }
         },
         "offlineAgentsCount": {
-          "readOnly": true,
+          "description": "Number of deployment agents that are offline.",
           "type": "integer",
           "format": "int32"
         },
         "onlineAgentsCount": {
-          "readOnly": true,
+          "description": "Number of deployment agents that are online.",
           "type": "integer",
           "format": "int32"
         },
         "pool": {
+          "description": "Deployment pool.",
           "$ref": "#/definitions/TaskAgentPoolReference"
+        }
+      }
+    },
+    "DeploymentTargetUpdateParameter": {
+      "description": "Deployment target update parameter.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "Identifier of the deployment target.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
         }
       }
     },
@@ -740,34 +2375,40 @@
       "type": "object",
       "properties": {
         "parameters": {
-          "readOnly": true,
+          "description": "Gets or sets the parameters for the selected authorization scheme.",
           "type": "object",
           "additionalProperties": {
             "type": "string"
           }
         },
         "scheme": {
+          "description": "Gets or sets the scheme used for service endpoint authentication.",
           "type": "string"
         }
       }
     },
     "EndpointUrl": {
-      "description": "",
+      "description": "Represents url of the service endpoint.",
       "type": "object",
       "properties": {
         "dependsOn": {
+          "description": "Gets or sets the dependency bindings.",
           "$ref": "#/definitions/DependsOn"
         },
         "displayName": {
+          "description": "Gets or sets the display name of service endpoint url.",
           "type": "string"
         },
         "helpText": {
+          "description": "Gets or sets the help text of service endpoint url.",
           "type": "string"
         },
         "isVisible": {
+          "description": "Gets or sets the visibility of service endpoint url.",
           "type": "string"
         },
         "value": {
+          "description": "Gets or sets the value of service endpoint url.",
           "type": "string"
         }
       }
@@ -775,8 +2416,7 @@
     "EventsConfig": {
       "description": "",
       "type": "object",
-      "properties": {
-      }
+      "properties": {}
     },
     "ExpressionValidationItem": {
       "description": "",
@@ -786,7 +2426,28 @@
           "$ref": "#/definitions/ValidationItem"
         }
       ],
+      "properties": {}
+    },
+    "GraphSubjectBase": {
+      "description": "",
+      "type": "object",
       "properties": {
+        "_links": {
+          "description": "This field contains zero or more interesting links about the graph subject. These links may be invoked to obtain additional relationships or more detailed information about this graph subject.",
+          "$ref": "#/definitions/ReferenceLinks"
+        },
+        "descriptor": {
+          "description": "The descriptor is the primary way to reference the graph subject while the system is running. This field will uniquely identify the same graph subject across both Accounts and Organizations.",
+          "type": "string"
+        },
+        "displayName": {
+          "description": "This is the non-unique display name of the graph subject. To change this field, you must alter its value in the source provider.",
+          "type": "string"
+        },
+        "url": {
+          "description": "This url is the full route to the source resource of this graph subject.",
+          "type": "string"
+        }
       }
     },
     "HelpLink": {
@@ -804,11 +2465,13 @@
     "IdentityRef": {
       "description": "",
       "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/GraphSubjectBase"
+        }
+      ],
       "properties": {
         "directoryAlias": {
-          "type": "string"
-        },
-        "displayName": {
           "type": "string"
         },
         "id": {
@@ -830,9 +2493,6 @@
           "type": "string"
         },
         "uniqueName": {
-          "type": "string"
-        },
-        "url": {
           "type": "string"
         }
       }
@@ -886,7 +2546,37 @@
             "textArea"
           ],
           "x-ms-enum": {
-            "name": "Microsoft.VisualStudio.Services.FormInput.InputMode"
+            "name": "InputMode",
+            "values": [
+              {
+                "value": "none",
+                "description": "This input should not be shown in the UI"
+              },
+              {
+                "value": "textBox",
+                "description": "An input text box should be shown"
+              },
+              {
+                "value": "passwordBox",
+                "description": "An password input box should be shown"
+              },
+              {
+                "value": "combo",
+                "description": "A select/combo control should be shown"
+              },
+              {
+                "value": "radioButtons",
+                "description": "Radio buttons should be shown"
+              },
+              {
+                "value": "checkBox",
+                "description": "Checkbox should be shown(for true/false values)"
+              },
+              {
+                "value": "textArea",
+                "description": "A multi-line text area should be shown"
+              }
+            ]
           }
         },
         "isConfidential": {
@@ -940,7 +2630,33 @@
             "uri"
           ],
           "x-ms-enum": {
-            "name": "Microsoft.VisualStudio.Services.FormInput.InputDataType"
+            "name": "InputDataType",
+            "values": [
+              {
+                "value": "none",
+                "description": "No data type is specified."
+              },
+              {
+                "value": "string",
+                "description": "Represents a textual value."
+              },
+              {
+                "value": "number",
+                "description": "Represents a numberic value."
+              },
+              {
+                "value": "boolean",
+                "description": "Represents a value of true or false."
+              },
+              {
+                "value": "guid",
+                "description": "Represents a Guid."
+              },
+              {
+                "value": "uri",
+                "description": "Represents a URI."
+              }
+            ]
           }
         },
         "isRequired": {
@@ -990,7 +2706,6 @@
       "type": "object",
       "properties": {
         "inputs": {
-          "readOnly": true,
           "type": "object",
           "additionalProperties": {
             "$ref": "#/definitions/ValidationItem"
@@ -1074,7 +2789,6 @@
           "type": "string"
         },
         "data": {
-          "readOnly": true,
           "type": "object",
           "additionalProperties": {
             "type": "string"
@@ -1089,7 +2803,17 @@
             "warning"
           ],
           "x-ms-enum": {
-            "name": "Microsoft.TeamFoundation.DistributedTask.WebApi.IssueType"
+            "name": "IssueType",
+            "values": [
+              {
+                "value": "error",
+                "description": ""
+              },
+              {
+                "value": "warning",
+                "description": ""
+              }
+            ]
           }
         }
       }
@@ -1113,12 +2837,10 @@
       "type": "object",
       "properties": {
         "jobId": {
-          "readOnly": true,
           "type": "string",
           "format": "uuid"
         },
         "timeout": {
-          "readOnly": true,
           "type": "string",
           "format": "TimeSpan"
         }
@@ -1147,7 +2869,33 @@
             "abandoned"
           ],
           "x-ms-enum": {
-            "name": "Microsoft.TeamFoundation.DistributedTask.WebApi.TaskResult"
+            "name": "TaskResult",
+            "values": [
+              {
+                "value": "succeeded",
+                "description": ""
+              },
+              {
+                "value": "succeededWithIssues",
+                "description": ""
+              },
+              {
+                "value": "failed",
+                "description": ""
+              },
+              {
+                "value": "canceled",
+                "description": ""
+              },
+              {
+                "value": "skipped",
+                "description": ""
+              },
+              {
+                "value": "abandoned",
+                "description": ""
+              }
+            ]
           }
         }
       }
@@ -1157,28 +2905,24 @@
       "type": "object",
       "properties": {
         "endpoints": {
-          "readOnly": true,
           "type": "array",
           "items": {
             "$ref": "#/definitions/ServiceEndpoint"
           }
         },
         "mask": {
-          "readOnly": true,
           "type": "array",
           "items": {
             "$ref": "#/definitions/MaskHint"
           }
         },
         "options": {
-          "readOnly": true,
           "type": "object",
           "additionalProperties": {
             "$ref": "#/definitions/JobOption"
           }
         },
         "secureFiles": {
-          "readOnly": true,
           "type": "array",
           "items": {
             "$ref": "#/definitions/SecureFile"
@@ -1189,7 +2933,6 @@
           "$ref": "#/definitions/ServiceEndpoint"
         },
         "variables": {
-          "readOnly": true,
           "type": "object",
           "additionalProperties": {
             "type": "string"
@@ -1206,7 +2949,6 @@
           "format": "uuid"
         },
         "name": {
-          "readOnly": true,
           "type": "string"
         }
       }
@@ -1216,7 +2958,6 @@
       "type": "object",
       "properties": {
         "timeout": {
-          "readOnly": true,
           "type": "string"
         }
       }
@@ -1244,18 +2985,11 @@
     "JObject": {
       "description": "",
       "type": "object",
-      "allOf": [
-        {
-          "type": "string",
-          "format": "JContainer"
-        }
-      ],
       "properties": {
         "item": {
           "$ref": "#/definitions/JToken"
         },
         "type": {
-          "readOnly": true,
           "type": "string",
           "format": "JTokenType"
         }
@@ -1266,7 +3000,6 @@
       "type": "object",
       "properties": {
         "data": {
-          "readOnly": true,
           "type": "object",
           "additionalProperties": {
             "type": "string"
@@ -1287,20 +3020,16 @@
           "$ref": "#/definitions/JobEnvironment"
         },
         "jobId": {
-          "readOnly": true,
           "type": "string",
           "format": "uuid"
         },
         "jobName": {
-          "readOnly": true,
           "type": "string"
         },
         "jobRefName": {
-          "readOnly": true,
           "type": "string"
         },
         "messageType": {
-          "readOnly": true,
           "type": "string"
         },
         "plan": {
@@ -1319,8 +3048,7 @@
           "$ref": "#/definitions/JobEvent"
         }
       ],
-      "properties": {
-      }
+      "properties": {}
     },
     "JToken": {
       "description": "",
@@ -1330,7 +3058,6 @@
           "$ref": "#/definitions/JToken"
         },
         "hasValues": {
-          "readOnly": true,
           "type": "boolean"
         },
         "item": {
@@ -1343,12 +3070,10 @@
           "$ref": "#/definitions/JToken"
         },
         "parent": {
-          "readOnly": true,
           "type": "string",
           "format": "JContainer"
         },
         "path": {
-          "readOnly": true,
           "type": "string"
         },
         "previous": {
@@ -1358,7 +3083,6 @@
           "$ref": "#/definitions/JToken"
         },
         "type": {
-          "readOnly": true,
           "type": "string",
           "format": "JTokenType"
         }
@@ -1374,7 +3098,17 @@
             "regex"
           ],
           "x-ms-enum": {
-            "name": "Microsoft.TeamFoundation.DistributedTask.WebApi.MaskType"
+            "name": "MaskType",
+            "values": [
+              {
+                "value": "variable",
+                "description": ""
+              },
+              {
+                "value": "regex",
+                "description": ""
+              }
+            ]
           }
         },
         "value": {
@@ -1383,32 +3117,32 @@
       }
     },
     "MetricsColumnMetaData": {
-      "description": "",
+      "description": "Meta data for a metrics column.",
       "type": "object",
       "properties": {
         "columnName": {
-          "readOnly": true,
+          "description": "Name.",
           "type": "string"
         },
         "columnValueType": {
-          "readOnly": true,
+          "description": "Data type.",
           "type": "string"
         }
       }
     },
     "MetricsColumnsHeader": {
-      "description": "",
+      "description": "Metrics columns header",
       "type": "object",
       "properties": {
         "dimensions": {
-          "readOnly": true,
+          "description": "Properties of deployment group for which metrics are provided. E.g. 1: LastJobStatus E.g. 2: TargetState",
           "type": "array",
           "items": {
             "$ref": "#/definitions/MetricsColumnMetaData"
           }
         },
         "metrics": {
-          "readOnly": true,
+          "description": "The types of metrics. E.g. 1: total count of deployment targets. E.g. 2: Average time of deployment to the deployment targets.",
           "type": "array",
           "items": {
             "$ref": "#/definitions/MetricsColumnMetaData"
@@ -1417,22 +3151,97 @@
       }
     },
     "MetricsRow": {
-      "description": "",
+      "description": "Metrics row.",
       "type": "object",
       "properties": {
         "dimensions": {
-          "readOnly": true,
+          "description": "The values of the properties mentioned as 'Dimensions' in column header. E.g. 1: For a property 'LastJobStatus' - metrics will be provided for 'passed', 'failed', etc. E.g. 2: For a property 'TargetState' - metrics will be provided for 'online', 'offline' targets.",
           "type": "array",
           "items": {
             "type": "string"
           }
         },
         "metrics": {
-          "readOnly": true,
+          "description": "Metrics in serialized format. Should be deserialized based on the data type provided in header.",
           "type": "array",
           "items": {
             "type": "string"
           }
+        }
+      }
+    },
+    "OAuthConfiguration": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "clientId": {
+          "description": "Gets or sets the ClientId",
+          "type": "string"
+        },
+        "clientSecret": {
+          "description": "Gets or sets the ClientSecret",
+          "type": "string"
+        },
+        "createdBy": {
+          "description": "Gets or sets the identity who created the config.",
+          "$ref": "#/definitions/IdentityRef"
+        },
+        "createdOn": {
+          "description": "Gets or sets the time when config was created.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "endpointType": {
+          "description": "Gets or sets the type of the endpoint.",
+          "type": "string"
+        },
+        "id": {
+          "description": "Gets or sets the unique identifier of this field",
+          "type": "integer",
+          "format": "int32"
+        },
+        "modifiedBy": {
+          "description": "Gets or sets the identity who modified the config.",
+          "$ref": "#/definitions/IdentityRef"
+        },
+        "modifiedOn": {
+          "description": "Gets or sets the time when variable group was modified",
+          "type": "string",
+          "format": "date-time"
+        },
+        "name": {
+          "description": "Gets or sets the name",
+          "type": "string"
+        },
+        "url": {
+          "description": "Gets or sets the Url",
+          "type": "string"
+        }
+      }
+    },
+    "OAuthConfigurationParams": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "clientId": {
+          "description": "Gets or sets the ClientId",
+          "type": "string"
+        },
+        "clientSecret": {
+          "description": "Gets or sets the ClientSecret",
+          "type": "string"
+        },
+        "endpointType": {
+          "description": "Gets or sets the type of the endpoint.",
+          "type": "string"
+        },
+        "name": {
+          "description": "Gets or sets the name",
+          "type": "string"
+        },
+        "url": {
+          "description": "Gets or sets the Url",
+          "type": "string"
         }
       }
     },
@@ -1498,21 +3307,18 @@
       "type": "object",
       "properties": {
         "mask": {
-          "readOnly": true,
           "type": "array",
           "items": {
             "$ref": "#/definitions/MaskHint"
           }
         },
         "options": {
-          "readOnly": true,
           "type": "object",
           "additionalProperties": {
             "$ref": "#/definitions/JobOption"
           }
         },
         "variables": {
-          "readOnly": true,
           "type": "object",
           "additionalProperties": {
             "type": "string"
@@ -1539,7 +3345,6 @@
       "properties": {
         "count": {
           "description": "The count of properties in the collection.",
-          "readOnly": true,
           "type": "integer",
           "format": "int32"
         },
@@ -1548,7 +3353,6 @@
         },
         "keys": {
           "description": "The set of keys in the collection.",
-          "readOnly": true,
           "type": "array",
           "items": {
             "type": "string"
@@ -1556,7 +3360,6 @@
         },
         "values": {
           "description": "The set of values in the collection.",
-          "readOnly": true,
           "type": "array",
           "items": {
             "type": "string"
@@ -1594,7 +3397,6 @@
       "properties": {
         "links": {
           "description": "The readonly view of the links.  Because Reference links are readonly, we only want to expose them as read only.",
-          "readOnly": true,
           "type": "object",
           "additionalProperties": {
             "type": "object"
@@ -1607,7 +3409,6 @@
       "type": "object",
       "properties": {
         "runningPlanGroups": {
-          "readOnly": true,
           "type": "array",
           "items": {
             "$ref": "#/definitions/TaskOrchestrationPlanGroup"
@@ -1658,7 +3459,6 @@
           "type": "string"
         },
         "properties": {
-          "readOnly": true,
           "type": "object",
           "additionalProperties": {
             "type": "string"
@@ -1677,7 +3477,6 @@
           "$ref": "#/definitions/JobEventsConfig"
         },
         "variables": {
-          "readOnly": true,
           "type": "object",
           "additionalProperties": {
             "type": "string"
@@ -1693,7 +3492,6 @@
           "$ref": "#/definitions/EventsConfig"
         },
         "handlerName": {
-          "readOnly": true,
           "type": "string"
         }
       }
@@ -1720,6 +3518,7 @@
       "type": "object",
       "properties": {
         "administratorsGroup": {
+          "description": "Gets or sets the identity reference for the administrators group of the service endpoint.",
           "$ref": "#/definitions/IdentityRef"
         },
         "authorization": {
@@ -1727,22 +3526,20 @@
           "$ref": "#/definitions/EndpointAuthorization"
         },
         "createdBy": {
-          "description": "The Gets or sets Identity reference for the user who created the Service endpoint",
+          "description": "Gets or sets the identity reference for the user who created the Service endpoint.",
           "$ref": "#/definitions/IdentityRef"
         },
         "data": {
-          "readOnly": true,
           "type": "object",
           "additionalProperties": {
             "type": "string"
           }
         },
         "description": {
-          "description": "Gets or Sets description of endpoint",
+          "description": "Gets or sets the description of endpoint.",
           "type": "string"
         },
         "groupScopeId": {
-          "readOnly": true,
           "type": "string",
           "format": "uuid"
         },
@@ -1764,6 +3561,7 @@
           "$ref": "#/definitions/JObject"
         },
         "readersGroup": {
+          "description": "Gets or sets the identity reference for the readers group of the service endpoint.",
           "$ref": "#/definitions/IdentityRef"
         },
         "type": {
@@ -1781,22 +3579,32 @@
       "type": "object",
       "properties": {
         "authorizationHeaders": {
+          "description": "Gets or sets the authorization headers of service endpoint authentication scheme.",
           "type": "array",
           "items": {
             "$ref": "#/definitions/AuthorizationHeader"
           }
         },
+        "clientCertificates": {
+          "description": "Gets or sets the certificates of service endpoint authentication scheme.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ClientCertificate"
+          }
+        },
         "displayName": {
+          "description": "Gets or sets the display name for the service endpoint authentication scheme.",
           "type": "string"
         },
         "inputDescriptors": {
-          "readOnly": true,
+          "description": "Gets or sets the input descriptors for the service endpoint authentication scheme.",
           "type": "array",
           "items": {
             "$ref": "#/definitions/InputDescriptor"
           }
         },
         "scheme": {
+          "description": "Gets or sets the scheme for service endpoint authentication.",
           "type": "string"
         }
       }
@@ -1809,7 +3617,6 @@
           "$ref": "#/definitions/EndpointAuthorization"
         },
         "data": {
-          "readOnly": true,
           "type": "object",
           "additionalProperties": {
             "type": "string"
@@ -1824,31 +3631,33 @@
       }
     },
     "ServiceEndpointExecutionData": {
-      "description": "",
+      "description": "Represents service endpoint execution data.",
       "type": "object",
       "properties": {
         "definition": {
+          "description": "Gets the definition of service endpoint execution owner.",
           "$ref": "#/definitions/TaskOrchestrationOwner"
         },
         "finishTime": {
-          "readOnly": true,
+          "description": "Gets the finish time of service endpoint execution.",
           "type": "string",
           "format": "date-time"
         },
         "id": {
-          "readOnly": true,
+          "description": "Gets the Id of service endpoint execution data.",
           "type": "integer",
           "format": "int64"
         },
         "owner": {
+          "description": "Gets the owner of service endpoint execution data.",
           "$ref": "#/definitions/TaskOrchestrationOwner"
         },
         "planType": {
-          "readOnly": true,
+          "description": "Gets the plan type of service endpoint execution data.",
           "type": "string"
         },
         "result": {
-          "readOnly": true,
+          "description": "Gets the result of service endpoint execution.",
           "enum": [
             "succeeded",
             "succeededWithIssues",
@@ -1858,11 +3667,37 @@
             "abandoned"
           ],
           "x-ms-enum": {
-            "name": "Microsoft.TeamFoundation.DistributedTask.WebApi.TaskResult"
+            "name": "TaskResult",
+            "values": [
+              {
+                "value": "succeeded",
+                "description": ""
+              },
+              {
+                "value": "succeededWithIssues",
+                "description": ""
+              },
+              {
+                "value": "failed",
+                "description": ""
+              },
+              {
+                "value": "canceled",
+                "description": ""
+              },
+              {
+                "value": "skipped",
+                "description": ""
+              },
+              {
+                "value": "abandoned",
+                "description": ""
+              }
+            ]
           }
         },
         "startTime": {
-          "readOnly": true,
+          "description": "Gets the start time of service endpoint execution.",
           "type": "string",
           "format": "date-time"
         }
@@ -1873,10 +3708,11 @@
       "type": "object",
       "properties": {
         "data": {
+          "description": "Gets the execution data of service endpoint execution.",
           "$ref": "#/definitions/ServiceEndpointExecutionData"
         },
         "endpointId": {
-          "readOnly": true,
+          "description": "Gets the Id of service endpoint.",
           "type": "string",
           "format": "uuid"
         }
@@ -1890,7 +3726,6 @@
           "$ref": "#/definitions/ServiceEndpointExecutionData"
         },
         "endpointIds": {
-          "readOnly": true,
           "type": "array",
           "items": {
             "type": "string",
@@ -1975,72 +3810,269 @@
             "httpVersionNotSupported"
           ],
           "x-ms-enum": {
-            "name": "System.Net.HttpStatusCode"
+            "name": "HttpStatusCode",
+            "values": [
+              {
+                "value": "continue",
+                "description": ""
+              },
+              {
+                "value": "switchingProtocols",
+                "description": ""
+              },
+              {
+                "value": "oK",
+                "description": ""
+              },
+              {
+                "value": "created",
+                "description": ""
+              },
+              {
+                "value": "accepted",
+                "description": ""
+              },
+              {
+                "value": "nonAuthoritativeInformation",
+                "description": ""
+              },
+              {
+                "value": "noContent",
+                "description": ""
+              },
+              {
+                "value": "resetContent",
+                "description": ""
+              },
+              {
+                "value": "partialContent",
+                "description": ""
+              },
+              {
+                "value": "multipleChoices",
+                "description": ""
+              },
+              {
+                "value": "ambiguous",
+                "description": ""
+              },
+              {
+                "value": "movedPermanently",
+                "description": ""
+              },
+              {
+                "value": "moved",
+                "description": ""
+              },
+              {
+                "value": "found",
+                "description": ""
+              },
+              {
+                "value": "redirect",
+                "description": ""
+              },
+              {
+                "value": "seeOther",
+                "description": ""
+              },
+              {
+                "value": "redirectMethod",
+                "description": ""
+              },
+              {
+                "value": "notModified",
+                "description": ""
+              },
+              {
+                "value": "useProxy",
+                "description": ""
+              },
+              {
+                "value": "unused",
+                "description": ""
+              },
+              {
+                "value": "temporaryRedirect",
+                "description": ""
+              },
+              {
+                "value": "redirectKeepVerb",
+                "description": ""
+              },
+              {
+                "value": "badRequest",
+                "description": ""
+              },
+              {
+                "value": "unauthorized",
+                "description": ""
+              },
+              {
+                "value": "paymentRequired",
+                "description": ""
+              },
+              {
+                "value": "forbidden",
+                "description": ""
+              },
+              {
+                "value": "notFound",
+                "description": ""
+              },
+              {
+                "value": "methodNotAllowed",
+                "description": ""
+              },
+              {
+                "value": "notAcceptable",
+                "description": ""
+              },
+              {
+                "value": "proxyAuthenticationRequired",
+                "description": ""
+              },
+              {
+                "value": "requestTimeout",
+                "description": ""
+              },
+              {
+                "value": "conflict",
+                "description": ""
+              },
+              {
+                "value": "gone",
+                "description": ""
+              },
+              {
+                "value": "lengthRequired",
+                "description": ""
+              },
+              {
+                "value": "preconditionFailed",
+                "description": ""
+              },
+              {
+                "value": "requestEntityTooLarge",
+                "description": ""
+              },
+              {
+                "value": "requestUriTooLong",
+                "description": ""
+              },
+              {
+                "value": "unsupportedMediaType",
+                "description": ""
+              },
+              {
+                "value": "requestedRangeNotSatisfiable",
+                "description": ""
+              },
+              {
+                "value": "expectationFailed",
+                "description": ""
+              },
+              {
+                "value": "upgradeRequired",
+                "description": ""
+              },
+              {
+                "value": "internalServerError",
+                "description": ""
+              },
+              {
+                "value": "notImplemented",
+                "description": ""
+              },
+              {
+                "value": "badGateway",
+                "description": ""
+              },
+              {
+                "value": "serviceUnavailable",
+                "description": ""
+              },
+              {
+                "value": "gatewayTimeout",
+                "description": ""
+              },
+              {
+                "value": "httpVersionNotSupported",
+                "description": ""
+              }
+            ]
           }
         }
       }
     },
     "ServiceEndpointType": {
-      "description": "",
+      "description": "Represents type of the service endpoint.",
       "type": "object",
       "properties": {
         "authenticationSchemes": {
-          "readOnly": true,
+          "description": "Authentication scheme of service endpoint type.",
           "type": "array",
           "items": {
             "$ref": "#/definitions/ServiceEndpointAuthenticationScheme"
           }
         },
         "dataSources": {
-          "readOnly": true,
+          "description": "Data sources of service endpoint type.",
           "type": "array",
           "items": {
             "$ref": "#/definitions/DataSource"
           }
         },
         "dependencyData": {
-          "readOnly": true,
+          "description": "Dependency data of service endpoint type.",
           "type": "array",
           "items": {
             "$ref": "#/definitions/DependencyData"
           }
         },
         "description": {
+          "description": "Gets or sets the description of service endpoint type.",
           "type": "string"
         },
         "displayName": {
+          "description": "Gets or sets the display name of service endpoint type.",
           "type": "string"
         },
         "endpointUrl": {
+          "description": "Gets or sets the endpoint url of service endpoint type.",
           "$ref": "#/definitions/EndpointUrl"
         },
         "helpLink": {
+          "description": "Gets or sets the help link of service endpoint type.",
           "$ref": "#/definitions/HelpLink"
         },
         "helpMarkDown": {
           "type": "string"
         },
         "iconUrl": {
+          "description": "Gets or sets the icon url of service endpoint type.",
           "type": "string"
         },
         "inputDescriptors": {
-          "readOnly": true,
+          "description": "Input descriptor of service endpoint type.",
           "type": "array",
           "items": {
             "$ref": "#/definitions/InputDescriptor"
           }
         },
         "name": {
+          "description": "Gets or sets the name of service endpoint type.",
           "type": "string"
         },
         "trustedHosts": {
-          "readOnly": true,
+          "description": "Trusted hosts of a service endpoint type.",
           "type": "array",
           "items": {
             "type": "string"
           }
         },
         "uiContributionId": {
+          "description": "Gets or sets the ui contribution id of service endpoint type.",
           "type": "string"
         }
       }
@@ -2064,7 +4096,6 @@
         },
         "createdOn": {
           "description": "Gets the date on which this agent was created.",
-          "readOnly": true,
           "type": "string",
           "format": "date-time"
         },
@@ -2086,19 +4117,16 @@
         },
         "statusChangedOn": {
           "description": "Gets the date on which the last connectivity status change occurred.",
-          "readOnly": true,
           "type": "string",
           "format": "date-time"
         },
         "systemCapabilities": {
-          "readOnly": true,
           "type": "object",
           "additionalProperties": {
             "type": "string"
           }
         },
         "userCapabilities": {
-          "readOnly": true,
           "type": "object",
           "additionalProperties": {
             "type": "string"
@@ -2130,7 +4158,6 @@
       "type": "object",
       "properties": {
         "delays": {
-          "readOnly": true,
           "type": "array",
           "items": {
             "type": "string",
@@ -2147,19 +4174,16 @@
       "type": "object",
       "properties": {
         "agentDelays": {
-          "readOnly": true,
           "type": "array",
           "items": {
             "$ref": "#/definitions/TaskAgentDelaySource"
           }
         },
         "assignTime": {
-          "readOnly": true,
           "type": "string",
           "format": "date-time"
         },
         "data": {
-          "readOnly": true,
           "type": "object",
           "additionalProperties": {
             "type": "string"
@@ -2179,7 +4203,6 @@
           "format": "TimeSpan"
         },
         "finishTime": {
-          "readOnly": true,
           "type": "string",
           "format": "date-time"
         },
@@ -2195,12 +4218,10 @@
           "type": "string"
         },
         "lockedUntil": {
-          "readOnly": true,
           "type": "string",
           "format": "date-time"
         },
         "matchedAgents": {
-          "readOnly": true,
           "type": "array",
           "items": {
             "$ref": "#/definitions/TaskAgentReference"
@@ -2220,27 +4241,22 @@
           "type": "string"
         },
         "poolId": {
-          "readOnly": true,
           "type": "integer",
           "format": "int32"
         },
         "queueId": {
-          "readOnly": true,
           "type": "integer",
           "format": "int32"
         },
         "queueTime": {
-          "readOnly": true,
           "type": "string",
           "format": "date-time"
         },
         "receiveTime": {
-          "readOnly": true,
           "type": "string",
           "format": "date-time"
         },
         "requestId": {
-          "readOnly": true,
           "type": "integer",
           "format": "int64"
         },
@@ -2257,7 +4273,33 @@
             "abandoned"
           ],
           "x-ms-enum": {
-            "name": "Microsoft.TeamFoundation.DistributedTask.WebApi.TaskResult"
+            "name": "TaskResult",
+            "values": [
+              {
+                "value": "succeeded",
+                "description": ""
+              },
+              {
+                "value": "succeededWithIssues",
+                "description": ""
+              },
+              {
+                "value": "failed",
+                "description": ""
+              },
+              {
+                "value": "canceled",
+                "description": ""
+              },
+              {
+                "value": "skipped",
+                "description": ""
+              },
+              {
+                "value": "abandoned",
+                "description": ""
+              }
+            ]
           }
         },
         "scopeId": {
@@ -2278,8 +4320,7 @@
           "$ref": "#/definitions/TaskAgentUpdateReason"
         }
       ],
-      "properties": {
-      }
+      "properties": {}
     },
     "TaskAgentMessage": {
       "description": "Provides a contract for receiving messages from the task orchestrator.",
@@ -2347,9 +4388,12 @@
         },
         "createdOn": {
           "description": "Gets the date/time of the pool creation.",
-          "readOnly": true,
           "type": "string",
           "format": "date-time"
+        },
+        "owner": {
+          "description": "Gets the identity who owns or administrates this pool.",
+          "$ref": "#/definitions/IdentityRef"
         },
         "properties": {
           "$ref": "#/definitions/PropertiesCollection"
@@ -2366,7 +4410,6 @@
         },
         "id": {
           "description": "Id",
-          "readOnly": true,
           "type": "integer",
           "format": "int32"
         },
@@ -2406,30 +4449,25 @@
         },
         "errorCount": {
           "description": "The total error counts during the maintenance job",
-          "readOnly": true,
           "type": "integer",
           "format": "int32"
         },
         "finishTime": {
           "description": "Time that the maintenance job was completed",
-          "readOnly": true,
           "type": "string",
           "format": "date-time"
         },
         "jobId": {
           "description": "Id of the maintenance job",
-          "readOnly": true,
           "type": "integer",
           "format": "int32"
         },
         "logsDownloadUrl": {
           "description": "The log download url for the maintenance job",
-          "readOnly": true,
           "type": "string"
         },
         "orchestrationId": {
           "description": "Orchestration/Plan Id for the maintenance job",
-          "readOnly": true,
           "type": "string",
           "format": "uuid"
         },
@@ -2439,7 +4477,6 @@
         },
         "queueTime": {
           "description": "Time that the maintenance job was queued",
-          "readOnly": true,
           "type": "string",
           "format": "date-time"
         },
@@ -2449,19 +4486,31 @@
         },
         "result": {
           "description": "The maintenance job result",
-          "readOnly": true,
           "enum": [
             "succeeded",
             "failed",
             "canceled"
           ],
           "x-ms-enum": {
-            "name": "Microsoft.TeamFoundation.DistributedTask.WebApi.TaskAgentPoolMaintenanceJobResult"
+            "name": "TaskAgentPoolMaintenanceJobResult",
+            "values": [
+              {
+                "value": "succeeded",
+                "description": ""
+              },
+              {
+                "value": "failed",
+                "description": ""
+              },
+              {
+                "value": "canceled",
+                "description": ""
+              }
+            ]
           }
         },
         "startTime": {
           "description": "Time that the maintenance job was started",
-          "readOnly": true,
           "type": "string",
           "format": "date-time"
         },
@@ -2474,11 +4523,28 @@
             "queued"
           ],
           "x-ms-enum": {
-            "name": "Microsoft.TeamFoundation.DistributedTask.WebApi.TaskAgentPoolMaintenanceJobStatus"
+            "name": "TaskAgentPoolMaintenanceJobStatus",
+            "values": [
+              {
+                "value": "inProgress",
+                "description": ""
+              },
+              {
+                "value": "completed",
+                "description": ""
+              },
+              {
+                "value": "cancelling",
+                "description": ""
+              },
+              {
+                "value": "queued",
+                "description": ""
+              }
+            ]
           }
         },
         "targetAgents": {
-          "readOnly": true,
           "type": "array",
           "items": {
             "$ref": "#/definitions/TaskAgentPoolMaintenanceJobTargetAgent"
@@ -2486,7 +4552,6 @@
         },
         "warningCount": {
           "description": "The total warning counts during the maintenance job",
-          "readOnly": true,
           "type": "integer",
           "format": "int32"
         }
@@ -2510,7 +4575,21 @@
             "canceled"
           ],
           "x-ms-enum": {
-            "name": "Microsoft.TeamFoundation.DistributedTask.WebApi.TaskAgentPoolMaintenanceJobResult"
+            "name": "TaskAgentPoolMaintenanceJobResult",
+            "values": [
+              {
+                "value": "succeeded",
+                "description": ""
+              },
+              {
+                "value": "failed",
+                "description": ""
+              },
+              {
+                "value": "canceled",
+                "description": ""
+              }
+            ]
           }
         },
         "status": {
@@ -2521,7 +4600,25 @@
             "queued"
           ],
           "x-ms-enum": {
-            "name": "Microsoft.TeamFoundation.DistributedTask.WebApi.TaskAgentPoolMaintenanceJobStatus"
+            "name": "TaskAgentPoolMaintenanceJobStatus",
+            "values": [
+              {
+                "value": "inProgress",
+                "description": ""
+              },
+              {
+                "value": "completed",
+                "description": ""
+              },
+              {
+                "value": "cancelling",
+                "description": ""
+              },
+              {
+                "value": "queued",
+                "description": ""
+              }
+            ]
           }
         }
       }
@@ -2543,7 +4640,6 @@
       "properties": {
         "numberOfHistoryRecordsToKeep": {
           "description": "Number of records to keep for maintenance job executed with this definition.",
-          "readOnly": true,
           "type": "integer",
           "format": "int32"
         }
@@ -2567,7 +4663,45 @@
             "all"
           ],
           "x-ms-enum": {
-            "name": "Microsoft.TeamFoundation.DistributedTask.WebApi.TaskAgentPoolMaintenanceScheduleDays"
+            "name": "TaskAgentPoolMaintenanceScheduleDays",
+            "values": [
+              {
+                "value": "none",
+                "description": "Do not run."
+              },
+              {
+                "value": "monday",
+                "description": "Run on Monday."
+              },
+              {
+                "value": "tuesday",
+                "description": "Run on Tuesday."
+              },
+              {
+                "value": "wednesday",
+                "description": "Run on Wednesday."
+              },
+              {
+                "value": "thursday",
+                "description": "Run on Thursday."
+              },
+              {
+                "value": "friday",
+                "description": "Run on Friday."
+              },
+              {
+                "value": "saturday",
+                "description": "Run on Saturday."
+              },
+              {
+                "value": "sunday",
+                "description": "Run on Sunday."
+              },
+              {
+                "value": "all",
+                "description": "Run on all days of the week."
+              }
+            ]
           }
         },
         "scheduleJobId": {
@@ -2613,7 +4747,17 @@
             "deployment"
           ],
           "x-ms-enum": {
-            "name": "Microsoft.TeamFoundation.DistributedTask.WebApi.TaskAgentPoolType"
+            "name": "TaskAgentPoolType",
+            "values": [
+              {
+                "value": "automation",
+                "description": ""
+              },
+              {
+                "value": "deployment",
+                "description": ""
+              }
+            ]
           }
         },
         "scope": {
@@ -2635,7 +4779,6 @@
           "$ref": "#/definitions/MetricsColumnsHeader"
         },
         "deploymentGroups": {
-          "readOnly": true,
           "type": "array",
           "items": {
             "$ref": "#/definitions/DeploymentGroupReference"
@@ -2645,14 +4788,12 @@
           "$ref": "#/definitions/TaskAgentPoolReference"
         },
         "queues": {
-          "readOnly": true,
           "type": "array",
           "items": {
             "$ref": "#/definitions/TaskAgentQueue"
           }
         },
         "rows": {
-          "readOnly": true,
           "type": "array",
           "items": {
             "$ref": "#/definitions/MetricsRow"
@@ -2737,7 +4878,17 @@
             "online"
           ],
           "x-ms-enum": {
-            "name": "Microsoft.TeamFoundation.DistributedTask.WebApi.TaskAgentStatus"
+            "name": "TaskAgentStatus",
+            "values": [
+              {
+                "value": "offline",
+                "description": ""
+              },
+              {
+                "value": "online",
+                "description": ""
+              }
+            ]
           }
         },
         "version": {
@@ -2764,12 +4915,10 @@
         },
         "sessionId": {
           "description": "Gets the unique identifier for this session.",
-          "readOnly": true,
           "type": "string",
           "format": "uuid"
         },
         "systemCapabilities": {
-          "readOnly": true,
           "type": "object",
           "additionalProperties": {
             "type": "string"
@@ -2813,7 +4962,6 @@
         },
         "requestTime": {
           "description": "Gets the date on which this agent update was requested.",
-          "readOnly": true,
           "type": "string",
           "format": "date-time"
         },
@@ -2832,13 +4980,22 @@
       "type": "object",
       "properties": {
         "code": {
-          "readOnly": true,
           "enum": [
             "manual",
             "minAgentVersionRequired"
           ],
           "x-ms-enum": {
-            "name": "Microsoft.TeamFoundation.DistributedTask.WebApi.TaskAgentUpdateReasonType"
+            "name": "TaskAgentUpdateReasonType",
+            "values": [
+              {
+                "value": "manual",
+                "description": ""
+              },
+              {
+                "value": "minAgentVersionRequired",
+                "description": ""
+              }
+            ]
           }
         }
       }
@@ -2851,8 +5008,7 @@
           "$ref": "#/definitions/TaskEvent"
         }
       ],
-      "properties": {
-      }
+      "properties": {}
     },
     "TaskAttachment": {
       "description": "",
@@ -2862,22 +5018,18 @@
           "$ref": "#/definitions/ReferenceLinks"
         },
         "createdOn": {
-          "readOnly": true,
           "type": "string",
           "format": "date-time"
         },
         "lastChangedBy": {
-          "readOnly": true,
           "type": "string",
           "format": "uuid"
         },
         "lastChangedOn": {
-          "readOnly": true,
           "type": "string",
           "format": "date-time"
         },
         "name": {
-          "readOnly": true,
           "type": "string"
         },
         "recordId": {
@@ -2889,15 +5041,8 @@
           "format": "uuid"
         },
         "type": {
-          "readOnly": true,
           "type": "string"
         }
-      }
-    },
-    "TaskChangeEvent": {
-      "description": "",
-      "type": "object",
-      "properties": {
       }
     },
     "TaskCompletedEvent": {
@@ -2919,7 +5064,33 @@
             "abandoned"
           ],
           "x-ms-enum": {
-            "name": "Microsoft.TeamFoundation.DistributedTask.WebApi.TaskResult"
+            "name": "TaskResult",
+            "values": [
+              {
+                "value": "succeeded",
+                "description": ""
+              },
+              {
+                "value": "succeededWithIssues",
+                "description": ""
+              },
+              {
+                "value": "failed",
+                "description": ""
+              },
+              {
+                "value": "canceled",
+                "description": ""
+              },
+              {
+                "value": "skipped",
+                "description": ""
+              },
+              {
+                "value": "abandoned",
+                "description": ""
+              }
+            ]
           }
         }
       }
@@ -2947,7 +5118,6 @@
           "type": "string"
         },
         "dataSourceBindings": {
-          "readOnly": true,
           "type": "array",
           "items": {
             "$ref": "#/definitions/DataSourceBinding"
@@ -2957,7 +5127,6 @@
           "type": "string"
         },
         "demands": {
-          "readOnly": true,
           "type": "array",
           "items": {
             "$ref": "#/definitions/Demand"
@@ -2973,7 +5142,6 @@
           "type": "boolean"
         },
         "execution": {
-          "readOnly": true,
           "type": "object",
           "additionalProperties": {
             "$ref": "#/definitions/JObject"
@@ -2983,7 +5151,6 @@
           "type": "string"
         },
         "groups": {
-          "readOnly": true,
           "type": "array",
           "items": {
             "$ref": "#/definitions/TaskGroupDefinition"
@@ -3003,7 +5170,6 @@
           "format": "uuid"
         },
         "inputs": {
-          "readOnly": true,
           "type": "array",
           "items": {
             "$ref": "#/definitions/TaskInputDefinition"
@@ -3019,7 +5185,6 @@
           "type": "string"
         },
         "outputVariables": {
-          "readOnly": true,
           "type": "array",
           "items": {
             "$ref": "#/definitions/TaskOutputVariable"
@@ -3038,14 +5203,12 @@
           "type": "string"
         },
         "runsOn": {
-          "readOnly": true,
           "type": "array",
           "items": {
             "type": "string"
           }
         },
         "satisfies": {
-          "readOnly": true,
           "type": "array",
           "items": {
             "type": "string"
@@ -3055,7 +5218,6 @@
           "type": "boolean"
         },
         "sourceDefinitions": {
-          "readOnly": true,
           "type": "array",
           "items": {
             "$ref": "#/definitions/TaskSourceDefinition"
@@ -3068,7 +5230,6 @@
           "$ref": "#/definitions/TaskVersion"
         },
         "visibility": {
-          "readOnly": true,
           "type": "array",
           "items": {
             "type": "string"
@@ -3152,7 +5313,10 @@
           "description": "If a task is going to run code, then this provides the type/script etc... information by platform. For example, it might look like. net45: { typeName: \"Microsoft.TeamFoundation.Automation.Tasks.PowerShellTask\", assemblyName: \"Microsoft.TeamFoundation.Automation.Tasks.PowerShell.dll\" } net20: { typeName: \"Microsoft.TeamFoundation.Automation.Tasks.PowerShellTask\", assemblyName: \"Microsoft.TeamFoundation.Automation.Tasks.PowerShell.dll\" } java: { jar: \"powershelltask.tasks.automation.teamfoundation.microsoft.com\", } node: { script: \"powershellhost.js\", }",
           "type": "object",
           "additionalProperties": {
-            "type": "object"
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
           }
         }
       }
@@ -3208,7 +5372,6 @@
         },
         "tasks": {
           "description": "Gets or sets the tasks.",
-          "readOnly": true,
           "type": "array",
           "items": {
             "$ref": "#/definitions/TaskGroupStep"
@@ -3242,7 +5405,6 @@
         },
         "inputs": {
           "description": "Sets input for the task group.",
-          "readOnly": true,
           "type": "array",
           "items": {
             "$ref": "#/definitions/TaskInputDefinition"
@@ -3263,7 +5425,6 @@
         },
         "runsOn": {
           "description": "Sets RunsOn of the task group. Value can be 'Agent', 'Server' or 'DeploymentGroup'.",
-          "readOnly": true,
           "type": "array",
           "items": {
             "type": "string"
@@ -3271,7 +5432,6 @@
         },
         "tasks": {
           "description": "Sets tasks for the task group.",
-          "readOnly": true,
           "type": "array",
           "items": {
             "$ref": "#/definitions/TaskGroupStep"
@@ -3297,7 +5457,6 @@
           "type": "string"
         },
         "tags": {
-          "readOnly": true,
           "type": "array",
           "items": {
             "type": "string"
@@ -3327,7 +5486,25 @@
             "undelete"
           ],
           "x-ms-enum": {
-            "name": "Microsoft.TeamFoundation.DistributedTask.WebApi.AuditAction"
+            "name": "AuditAction",
+            "values": [
+              {
+                "value": "add",
+                "description": ""
+              },
+              {
+                "value": "update",
+                "description": ""
+              },
+              {
+                "value": "delete",
+                "description": ""
+              },
+              {
+                "value": "undelete",
+                "description": ""
+              }
+            ]
           }
         },
         "comment": {
@@ -3348,7 +5525,7 @@
       }
     },
     "TaskGroupStep": {
-      "description": "",
+      "description": "Represents tasks in the task group.",
       "type": "object",
       "properties": {
         "alwaysRun": {
@@ -3424,7 +5601,6 @@
         },
         "inputs": {
           "description": "Sets input for the task group.",
-          "readOnly": true,
           "type": "array",
           "items": {
             "$ref": "#/definitions/TaskInputDefinition"
@@ -3450,7 +5626,6 @@
         },
         "runsOn": {
           "description": "Sets RunsOn of the task group. Value can be 'Agent', 'Server' or 'DeploymentGroup'.",
-          "readOnly": true,
           "type": "array",
           "items": {
             "type": "string"
@@ -3458,7 +5633,6 @@
         },
         "tasks": {
           "description": "Sets tasks for the task group.",
-          "readOnly": true,
           "type": "array",
           "items": {
             "$ref": "#/definitions/TaskGroupStep"
@@ -3475,51 +5649,41 @@
       "type": "object",
       "properties": {
         "enterpriseUsersCount": {
-          "readOnly": true,
           "type": "integer",
           "format": "int32"
         },
         "freeHostedLicenseCount": {
-          "readOnly": true,
           "type": "integer",
           "format": "int32"
         },
         "freeLicenseCount": {
-          "readOnly": true,
           "type": "integer",
           "format": "int32"
         },
         "hasLicenseCountEverUpdated": {
-          "readOnly": true,
           "type": "boolean"
         },
         "hostedAgentMinutesFreeCount": {
-          "readOnly": true,
           "type": "integer",
           "format": "int32"
         },
         "hostedAgentMinutesUsedCount": {
-          "readOnly": true,
           "type": "integer",
           "format": "int32"
         },
         "msdnUsersCount": {
-          "readOnly": true,
           "type": "integer",
           "format": "int32"
         },
         "purchasedHostedLicenseCount": {
-          "readOnly": true,
           "type": "integer",
           "format": "int32"
         },
         "purchasedLicenseCount": {
-          "readOnly": true,
           "type": "integer",
           "format": "int32"
         },
         "totalLicenseCount": {
-          "readOnly": true,
           "type": "integer",
           "format": "int32"
         }
@@ -3533,20 +5697,13 @@
           "$ref": "#/definitions/TaskInputDefinitionBase"
         }
       ],
-      "properties": {
-      }
+      "properties": {}
     },
     "TaskInputDefinitionBase": {
       "description": "",
       "type": "object",
-      "allOf": [
-        {
-          "$ref": "#/definitions/ChildObject"
-        }
-      ],
       "properties": {
         "aliases": {
-          "readOnly": true,
           "type": "array",
           "items": {
             "type": "string"
@@ -3568,14 +5725,12 @@
           "type": "string"
         },
         "options": {
-          "readOnly": true,
           "type": "object",
           "additionalProperties": {
             "type": "string"
           }
         },
         "properties": {
-          "readOnly": true,
           "type": "object",
           "additionalProperties": {
             "type": "string"
@@ -3598,11 +5753,6 @@
     "TaskInputValidation": {
       "description": "",
       "type": "object",
-      "allOf": [
-        {
-          "$ref": "#/definitions/ChildObject"
-        }
-      ],
       "properties": {
         "expression": {
           "description": "Conditional expression",
@@ -3639,7 +5789,6 @@
           "type": "boolean"
         },
         "environment": {
-          "readOnly": true,
           "type": "object",
           "additionalProperties": {
             "type": "string"
@@ -3668,7 +5817,6 @@
       ],
       "properties": {
         "createdOn": {
-          "readOnly": true,
           "type": "string",
           "format": "date-time"
         },
@@ -3676,7 +5824,6 @@
           "type": "string"
         },
         "lastChangedOn": {
-          "readOnly": true,
           "type": "string",
           "format": "date-time"
         },
@@ -3712,7 +5859,6 @@
       ],
       "properties": {
         "children": {
-          "readOnly": true,
           "type": "array",
           "items": {
             "$ref": "#/definitions/TaskOrchestrationItem"
@@ -3722,7 +5868,6 @@
           "type": "boolean"
         },
         "data": {
-          "readOnly": true,
           "type": "object",
           "additionalProperties": {
             "type": "string"
@@ -3745,13 +5890,22 @@
       "type": "object",
       "properties": {
         "itemType": {
-          "readOnly": true,
           "enum": [
             "container",
             "job"
           ],
           "x-ms-enum": {
-            "name": "Microsoft.TeamFoundation.DistributedTask.WebApi.TaskOrchestrationItemType"
+            "name": "TaskOrchestrationItemType",
+            "values": [
+              {
+                "value": "container",
+                "description": ""
+              },
+              {
+                "value": "job",
+                "description": ""
+              }
+            ]
           }
         }
       }
@@ -3766,7 +5920,6 @@
       ],
       "properties": {
         "demands": {
-          "readOnly": true,
           "type": "array",
           "items": {
             "$ref": "#/definitions/Demand"
@@ -3793,14 +5946,12 @@
           "type": "string"
         },
         "tasks": {
-          "readOnly": true,
           "type": "array",
           "items": {
             "$ref": "#/definitions/TaskInstance"
           }
         },
         "variables": {
-          "readOnly": true,
           "type": "object",
           "additionalProperties": {
             "type": "string"
@@ -3861,7 +6012,33 @@
             "abandoned"
           ],
           "x-ms-enum": {
-            "name": "Microsoft.TeamFoundation.DistributedTask.WebApi.TaskResult"
+            "name": "TaskResult",
+            "values": [
+              {
+                "value": "succeeded",
+                "description": ""
+              },
+              {
+                "value": "succeededWithIssues",
+                "description": ""
+              },
+              {
+                "value": "failed",
+                "description": ""
+              },
+              {
+                "value": "canceled",
+                "description": ""
+              },
+              {
+                "value": "skipped",
+                "description": ""
+              },
+              {
+                "value": "abandoned",
+                "description": ""
+              }
+            ]
           }
         },
         "resultCode": {
@@ -3878,7 +6055,21 @@
             "completed"
           ],
           "x-ms-enum": {
-            "name": "Microsoft.TeamFoundation.DistributedTask.WebApi.TaskOrchestrationPlanState"
+            "name": "TaskOrchestrationPlanState",
+            "values": [
+              {
+                "value": "inProgress",
+                "description": ""
+              },
+              {
+                "value": "queued",
+                "description": ""
+              },
+              {
+                "value": "completed",
+                "description": ""
+              }
+            ]
           }
         },
         "timeline": {
@@ -3891,14 +6082,12 @@
       "type": "object",
       "properties": {
         "planGroup": {
-          "readOnly": true,
           "type": "string"
         },
         "project": {
           "$ref": "#/definitions/ProjectReference"
         },
         "runningRequests": {
-          "readOnly": true,
           "type": "array",
           "items": {
             "$ref": "#/definitions/TaskAgentJobRequest"
@@ -3921,7 +6110,21 @@
             "all"
           ],
           "x-ms-enum": {
-            "name": "Microsoft.TeamFoundation.DistributedTask.WebApi.PlanGroupStatus"
+            "name": "PlanGroupStatus",
+            "values": [
+              {
+                "value": "running",
+                "description": ""
+              },
+              {
+                "value": "queued",
+                "description": ""
+              },
+              {
+                "value": "all",
+                "description": ""
+              }
+            ]
           }
         }
       }
@@ -4012,11 +6215,9 @@
           "$ref": "#/definitions/TaskOrchestrationOwner"
         },
         "planGroup": {
-          "readOnly": true,
           "type": "string"
         },
         "plans": {
-          "readOnly": true,
           "type": "array",
           "items": {
             "$ref": "#/definitions/TaskOrchestrationQueuedPlan"
@@ -4026,7 +6227,6 @@
           "$ref": "#/definitions/ProjectReference"
         },
         "queuePosition": {
-          "readOnly": true,
           "type": "integer",
           "format": "int32"
         }
@@ -4050,17 +6250,14 @@
       "properties": {
         "type": {
           "description": "Gets the name of the package.",
-          "readOnly": true,
           "type": "string"
         },
         "url": {
           "description": "Gets the url of the package.",
-          "readOnly": true,
           "type": "string"
         },
         "version": {
           "description": "Gets the version of the package.",
-          "readOnly": true,
           "type": "string"
         }
       }
@@ -4074,7 +6271,6 @@
           "format": "uuid"
         },
         "inputs": {
-          "readOnly": true,
           "type": "object",
           "additionalProperties": {
             "type": "string"
@@ -4096,17 +6292,11 @@
           "$ref": "#/definitions/TaskSourceDefinitionBase"
         }
       ],
-      "properties": {
-      }
+      "properties": {}
     },
     "TaskSourceDefinitionBase": {
       "description": "",
       "type": "object",
-      "allOf": [
-        {
-          "$ref": "#/definitions/ChildObject"
-        }
-      ],
       "properties": {
         "authKey": {
           "type": "string"
@@ -4133,8 +6323,7 @@
           "$ref": "#/definitions/TaskEvent"
         }
       ],
-      "properties": {
-      }
+      "properties": {}
     },
     "TaskVersion": {
       "description": "",
@@ -4167,17 +6356,14 @@
       ],
       "properties": {
         "lastChangedBy": {
-          "readOnly": true,
           "type": "string",
           "format": "uuid"
         },
         "lastChangedOn": {
-          "readOnly": true,
           "type": "string",
           "format": "date-time"
         },
         "records": {
-          "readOnly": true,
           "type": "array",
           "items": {
             "$ref": "#/definitions/TimelineRecord"
@@ -4212,7 +6398,6 @@
           "format": "uuid"
         },
         "issues": {
-          "readOnly": true,
           "type": "array",
           "items": {
             "$ref": "#/definitions/Issue"
@@ -4256,7 +6441,33 @@
             "abandoned"
           ],
           "x-ms-enum": {
-            "name": "Microsoft.TeamFoundation.DistributedTask.WebApi.TaskResult"
+            "name": "TaskResult",
+            "values": [
+              {
+                "value": "succeeded",
+                "description": ""
+              },
+              {
+                "value": "succeededWithIssues",
+                "description": ""
+              },
+              {
+                "value": "failed",
+                "description": ""
+              },
+              {
+                "value": "canceled",
+                "description": ""
+              },
+              {
+                "value": "skipped",
+                "description": ""
+              },
+              {
+                "value": "abandoned",
+                "description": ""
+              }
+            ]
           }
         },
         "resultCode": {
@@ -4273,7 +6484,21 @@
             "completed"
           ],
           "x-ms-enum": {
-            "name": "Microsoft.TeamFoundation.DistributedTask.WebApi.TimelineRecordState"
+            "name": "TimelineRecordState",
+            "values": [
+              {
+                "value": "pending",
+                "description": ""
+              },
+              {
+                "value": "inProgress",
+                "description": ""
+              },
+              {
+                "value": "completed",
+                "description": ""
+              }
+            ]
           }
         },
         "task": {
@@ -4283,7 +6508,6 @@
           "type": "string"
         },
         "variables": {
-          "readOnly": true,
           "type": "object",
           "additionalProperties": {
             "$ref": "#/definitions/VariableValue"
@@ -4303,12 +6527,10 @@
       "type": "object",
       "properties": {
         "changeId": {
-          "readOnly": true,
           "type": "integer",
           "format": "int32"
         },
         "id": {
-          "readOnly": true,
           "type": "string",
           "format": "uuid"
         },
@@ -4331,7 +6553,6 @@
         },
         "type": {
           "description": "Type of validation item",
-          "readOnly": true,
           "type": "string"
         },
         "value": {
@@ -4385,7 +6606,6 @@
         },
         "variables": {
           "description": "Gets or sets variables contained in the variable group.",
-          "readOnly": true,
           "type": "object",
           "additionalProperties": {
             "$ref": "#/definitions/VariableValue"
@@ -4415,7 +6635,6 @@
         },
         "variables": {
           "description": "Sets variables contained in the variable group.",
-          "readOnly": true,
           "type": "object",
           "additionalProperties": {
             "$ref": "#/definitions/VariableValue"
@@ -4426,8 +6645,7 @@
     "VariableGroupProviderData": {
       "description": "Defines provider data of the variable group.",
       "type": "object",
-      "properties": {
-      }
+      "properties": {}
     },
     "VariableValue": {
       "description": "",
@@ -4451,7 +6669,6 @@
       ],
       "properties": {
         "value": {
-          "readOnly": true,
           "type": "string",
           "format": "T"
         }
@@ -4462,7 +6679,6 @@
       "type": "object",
       "properties": {
         "count": {
-          "readOnly": true,
           "type": "integer",
           "format": "int32"
         }
@@ -4470,6 +6686,13 @@
     }
   },
   "parameters": {
+    "api-Version": {
+      "name": "api-version",
+      "in": "query",
+      "description": "Version of the API to use.  This should be set to '4.1' to use this version of the api.",
+      "required": true,
+      "type": "string"
+    },
     "api-Version-preview.1": {
       "name": "api-version",
       "in": "query",
@@ -4489,8 +6712,8 @@
     "accessToken": {
       "type": "basic",
       "description": "Personal access token. Use any value for the user name and the token as the password."
-     },
-     "oauth2": {
+    },
+    "oauth2": {
       "type": "oauth2",
       "flow": "accessCode",
       "authorizationUrl": "https://app.vssps.visualstudio.com/oauth2/authorize&response_type=Assertion",
