@@ -45,6 +45,9 @@
       "description": "Discover notification event types, filterable fields, and related metadata."
     },
     {
+      "name": "Settings"
+    },
+    {
       "name": "Subscribers"
     },
     {
@@ -267,6 +270,74 @@
         "x-ms-examples": {
           "": {
             "$ref": "./httpExamples/EventTypes/GET__notification_eventTypes__eventTypeId_.json"
+          }
+        }
+      }
+    },
+    "/_apis/notification/settings": {
+      "get": {
+        "tags": [
+          "Settings"
+        ],
+        "x-ms-docs-override-version": "5.0-preview.1",
+        "x-ms-vss-resource": "settings",
+        "x-ms-vss-method": "GetSettings",
+        "x-ms-preview": true,
+        "description": "",
+        "operationId": "Get",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/NotificationAdminSettings"
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Settings"
+        ],
+        "x-ms-docs-override-version": "5.0-preview.1",
+        "x-ms-vss-resource": "settings",
+        "x-ms-vss-method": "UpdateSettings",
+        "x-ms-preview": true,
+        "description": "",
+        "operationId": "Update",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/NotificationAdminSettingsUpdateParameters"
+            }
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/NotificationAdminSettings"
+            }
           }
         }
       }
@@ -519,7 +590,38 @@
             "description": "",
             "required": false,
             "type": "string",
-            "format": "SubscriptionQueryFlags"
+            "enum": [
+              "none",
+              "includeInvalidSubscriptions",
+              "includeDeletedSubscriptions",
+              "includeFilterDetails",
+              "alwaysReturnBasicInformation"
+            ],
+            "x-ms-enum": {
+              "name": "SubscriptionQueryFlags",
+              "values": [
+                {
+                  "value": "none",
+                  "description": ""
+                },
+                {
+                  "value": "includeInvalidSubscriptions",
+                  "description": "Include subscriptions with invalid subscribers."
+                },
+                {
+                  "value": "includeDeletedSubscriptions",
+                  "description": "Include subscriptions marked for deletion."
+                },
+                {
+                  "value": "includeFilterDetails",
+                  "description": "Include the full filter details with each subscription."
+                },
+                {
+                  "value": "alwaysReturnBasicInformation",
+                  "description": "For a subscription the caller does not have permission to view, return basic (non-confidential) information."
+                }
+              ]
+            }
           },
           {
             "$ref": "#/parameters/api-Version-preview.1"
@@ -621,7 +723,38 @@
             "description": "",
             "required": false,
             "type": "string",
-            "format": "SubscriptionQueryFlags"
+            "enum": [
+              "none",
+              "includeInvalidSubscriptions",
+              "includeDeletedSubscriptions",
+              "includeFilterDetails",
+              "alwaysReturnBasicInformation"
+            ],
+            "x-ms-enum": {
+              "name": "SubscriptionQueryFlags",
+              "values": [
+                {
+                  "value": "none",
+                  "description": ""
+                },
+                {
+                  "value": "includeInvalidSubscriptions",
+                  "description": "Include subscriptions with invalid subscribers."
+                },
+                {
+                  "value": "includeDeletedSubscriptions",
+                  "description": "Include subscriptions marked for deletion."
+                },
+                {
+                  "value": "includeFilterDetails",
+                  "description": "Include the full filter details with each subscription."
+                },
+                {
+                  "value": "alwaysReturnBasicInformation",
+                  "description": "For a subscription the caller does not have permission to view, return basic (non-confidential) information."
+                }
+              ]
+            }
           },
           {
             "$ref": "#/parameters/api-Version-preview.1"
@@ -988,7 +1121,7 @@
             "suspendUnprocessed"
           ],
           "x-ms-enum": {
-            "name": "Microsoft.VisualStudio.Services.Notifications.WebApi.NotificationOperation",
+            "name": "NotificationOperation",
             "values": [
               {
                 "value": "none",
@@ -1271,6 +1404,41 @@
           "description": "Count of matched events.",
           "type": "integer",
           "format": "int32"
+        }
+      }
+    },
+    "EventTransformRequest": {
+      "description": "A transform request specify the properties of a notification event to be transformed.",
+      "type": "object",
+      "properties": {
+        "eventPayload": {
+          "description": "Event payload.",
+          "type": "string"
+        },
+        "eventType": {
+          "description": "Event type.",
+          "type": "string"
+        }
+      }
+    },
+    "EventTransformResult": {
+      "description": "Result of transforming a notification event.",
+      "type": "object",
+      "properties": {
+        "content": {
+          "description": "Transformed html content.",
+          "type": "string"
+        },
+        "data": {
+          "description": "Calculated data.",
+          "type": "object"
+        },
+        "systemInputs": {
+          "description": "Calculated system inputs.",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
         }
       }
     },
@@ -1665,6 +1833,87 @@
         }
       }
     },
+    "NotificationAdminSettings": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "defaultGroupDeliveryPreference": {
+          "description": "The default group delivery preference for groups in this collection",
+          "enum": [
+            "none",
+            "preferredEmailAddress",
+            "eachMember",
+            "noDelivery",
+            "notSet"
+          ],
+          "x-ms-enum": {
+            "name": "NotificationSubscriberDeliveryPreference",
+            "values": [
+              {
+                "value": "none",
+                "description": ""
+              },
+              {
+                "value": "preferredEmailAddress",
+                "description": "Deliver notifications to the subscriber's preferred email address."
+              },
+              {
+                "value": "eachMember",
+                "description": ""
+              },
+              {
+                "value": "noDelivery",
+                "description": ""
+              },
+              {
+                "value": "notSet",
+                "description": ""
+              }
+            ]
+          }
+        }
+      }
+    },
+    "NotificationAdminSettingsUpdateParameters": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "defaultGroupDeliveryPreference": {
+          "enum": [
+            "none",
+            "preferredEmailAddress",
+            "eachMember",
+            "noDelivery",
+            "notSet"
+          ],
+          "x-ms-enum": {
+            "name": "NotificationSubscriberDeliveryPreference",
+            "values": [
+              {
+                "value": "none",
+                "description": ""
+              },
+              {
+                "value": "preferredEmailAddress",
+                "description": "Deliver notifications to the subscriber's preferred email address."
+              },
+              {
+                "value": "eachMember",
+                "description": ""
+              },
+              {
+                "value": "noDelivery",
+                "description": ""
+              },
+              {
+                "value": "notSet",
+                "description": ""
+              }
+            ]
+          }
+        }
+      }
+    },
     "NotificationBacklogStatus": {
       "description": "",
       "type": "object",
@@ -1907,7 +2156,7 @@
             "teamProject"
           ],
           "x-ms-enum": {
-            "name": "Microsoft.VisualStudio.Services.Notifications.WebApi.SubscriptionFieldType",
+            "name": "SubscriptionFieldType",
             "values": [
               {
                 "value": "string",
@@ -2145,7 +2394,7 @@
             "aliasMemberGroupRole"
           ],
           "x-ms-enum": {
-            "name": "Microsoft.VisualStudio.Services.Notifications.WebApi.NotificationReasonType",
+            "name": "NotificationReasonType",
             "values": [
               {
                 "value": "unknown",
@@ -2265,7 +2514,7 @@
             "hourlyEventPipelineTime"
           ],
           "x-ms-enum": {
-            "name": "Microsoft.VisualStudio.Services.Notifications.WebApi.NotificationStatisticType",
+            "name": "NotificationStatisticType",
             "values": [
               {
                 "value": "notificationBySubscription",
@@ -2455,7 +2704,7 @@
             "hourlyEventPipelineTime"
           ],
           "x-ms-enum": {
-            "name": "Microsoft.VisualStudio.Services.Notifications.WebApi.NotificationStatisticType",
+            "name": "NotificationStatisticType",
             "values": [
               {
                 "value": "notificationBySubscription",
@@ -2595,7 +2844,7 @@
             "notSet"
           ],
           "x-ms-enum": {
-            "name": "Microsoft.VisualStudio.Services.Notifications.WebApi.NotificationSubscriberDeliveryPreference",
+            "name": "NotificationSubscriberDeliveryPreference",
             "values": [
               {
                 "value": "none",
@@ -2632,7 +2881,7 @@
             "isTeam"
           ],
           "x-ms-enum": {
-            "name": "Microsoft.VisualStudio.Services.Notifications.WebApi.SubscriberFlags",
+            "name": "SubscriberFlags",
             "values": [
               {
                 "value": "none",
@@ -2694,7 +2943,7 @@
             "notSet"
           ],
           "x-ms-enum": {
-            "name": "Microsoft.VisualStudio.Services.Notifications.WebApi.NotificationSubscriberDeliveryPreference",
+            "name": "NotificationSubscriberDeliveryPreference",
             "values": [
               {
                 "value": "none",
@@ -2770,7 +3019,7 @@
             "teamSubscription"
           ],
           "x-ms-enum": {
-            "name": "Microsoft.VisualStudio.Services.Notifications.WebApi.SubscriptionFlags",
+            "name": "SubscriptionFlags",
             "values": [
               {
                 "value": "none",
@@ -2817,7 +3066,7 @@
             "delete"
           ],
           "x-ms-enum": {
-            "name": "Microsoft.VisualStudio.Services.Notifications.WebApi.SubscriptionPermissions",
+            "name": "SubscriptionPermissions",
             "values": [
               {
                 "value": "none",
@@ -2861,7 +3110,7 @@
             "enabledOnProbation"
           ],
           "x-ms-enum": {
-            "name": "Microsoft.VisualStudio.Services.Notifications.WebApi.SubscriptionStatus",
+            "name": "SubscriptionStatus",
             "values": [
               {
                 "value": "jailedByNotificationsVolume",
@@ -2990,7 +3239,7 @@
             "none"
           ],
           "x-ms-enum": {
-            "name": "Microsoft.VisualStudio.Services.Notifications.WebApi.SubscriptionTemplateType",
+            "name": "SubscriptionTemplateType",
             "values": [
               {
                 "value": "user",
@@ -3056,7 +3305,7 @@
             "enabledOnProbation"
           ],
           "x-ms-enum": {
-            "name": "Microsoft.VisualStudio.Services.Notifications.WebApi.SubscriptionStatus",
+            "name": "SubscriptionStatus",
             "values": [
               {
                 "value": "jailedByNotificationsVolume",
@@ -3364,7 +3613,7 @@
             "notFound"
           ],
           "x-ms-enum": {
-            "name": "Microsoft.VisualStudio.Services.Notifications.WebApi.EvaluationOperationStatus",
+            "name": "EvaluationOperationStatus",
             "values": [
               {
                 "value": "notSet",
@@ -3475,7 +3724,7 @@
             "alwaysReturnBasicInformation"
           ],
           "x-ms-enum": {
-            "name": "Microsoft.VisualStudio.Services.Notifications.WebApi.SubscriptionQueryFlags",
+            "name": "SubscriptionQueryFlags",
             "values": [
               {
                 "value": "none",
@@ -3520,7 +3769,7 @@
             "teamSubscription"
           ],
           "x-ms-enum": {
-            "name": "Microsoft.VisualStudio.Services.Notifications.WebApi.SubscriptionFlags",
+            "name": "SubscriptionFlags",
             "values": [
               {
                 "value": "none",

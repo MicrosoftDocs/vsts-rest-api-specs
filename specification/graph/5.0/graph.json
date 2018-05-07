@@ -431,7 +431,28 @@
             "description": "Defaults to Up.",
             "required": false,
             "type": "string",
-            "format": "GraphTraversalDirection"
+            "enum": [
+              "unknown",
+              "down",
+              "up"
+            ],
+            "x-ms-enum": {
+              "name": "GraphTraversalDirection",
+              "values": [
+                {
+                  "value": "unknown",
+                  "description": ""
+                },
+                {
+                  "value": "down",
+                  "description": ""
+                },
+                {
+                  "value": "up",
+                  "description": ""
+                }
+              ]
+            }
           },
           {
             "in": "query",
@@ -1125,6 +1146,33 @@
         }
       }
     },
+    "GraphFederatedProviderData": {
+      "description": "Represents a set of data used to communicate with a federated provider on behalf of a particular user.",
+      "type": "object",
+      "properties": {
+        "accessToken": {
+          "description": "The access token that can be used to communicated with the federated provider on behalf on the target identity, if we were able to successfully acquire one, otherwise <code>null</code>, if we were not.",
+          "type": "string"
+        },
+        "canQueryAccessToken": {
+          "description": "Whether or not the immediate provider (i.e. AAD) has indicated that we can call them to attempt to get an access token to communicate with the federated provider on behalf of the target identity.",
+          "type": "boolean"
+        },
+        "providerName": {
+          "description": "The name of the federated provider, e.g. \"github.com\".",
+          "type": "string"
+        },
+        "subjectDescriptor": {
+          "description": "The descriptor of the graph subject to which this federated provider data corresponds.",
+          "type": "string"
+        },
+        "version": {
+          "description": "The version number of this federated provider data, which corresponds to when it was last updated. Can be used to prevent returning stale provider data from the cache when the caller is aware of a newer version, such as to prevent local cache poisoning from a remote cache or store. This is the app layer equivalent of the data layer sequence ID.",
+          "type": "integer",
+          "format": "int64"
+        }
+      }
+    },
     "GraphGlobalExtendedPropertyBatch": {
       "description": "",
       "type": "object",
@@ -1352,14 +1400,15 @@
       }
     },
     "GraphProviderInfo": {
-      "description": "This is a subset of the GraphUser class.",
+      "description": "Who is the provider for this user and what is the identifier and domain that is used to uniquely identify the user.",
       "type": "object",
       "properties": {
-        "descriptorString": {
+        "descriptor": {
+          "description": "The descriptor is the primary way to reference the graph subject while the system is running. This field will uniquely identify the same graph subject across both Accounts and Organizations.",
           "type": "string"
         },
         "domain": {
-          "description": "This represents the name of the container of origin for a graph member. (For MSA this is \"Windows Live ID\", for AAD the tenantID of the directory.",
+          "description": "This represents the name of the container of origin for a graph member. (For MSA this is \"Windows Live ID\", for AAD the tenantID of the directory.)",
           "type": "string"
         },
         "origin": {
@@ -1367,7 +1416,7 @@
           "type": "string"
         },
         "originId": {
-          "description": "The unique identifier from the system of origin. Typically a sid, object id or Guid.",
+          "description": "The unique identifier from the system of origin. (For MSA this is the PUID in hex notation, for AAD this is the object id.)",
           "type": "string"
         }
       }
@@ -1401,7 +1450,7 @@
             "teamProject"
           ],
           "x-ms-enum": {
-            "name": "Microsoft.VisualStudio.Services.Identity.GroupScopeType",
+            "name": "GroupScopeType",
             "values": [
               {
                 "value": "generic",
@@ -1453,7 +1502,7 @@
             "teamProject"
           ],
           "x-ms-enum": {
-            "name": "Microsoft.VisualStudio.Services.Identity.GroupScopeType",
+            "name": "GroupScopeType",
             "values": [
               {
                 "value": "generic",
@@ -1677,7 +1726,7 @@
             "test"
           ],
           "x-ms-enum": {
-            "name": "Microsoft.VisualStudio.Services.WebApi.Patch.Operation",
+            "name": "Operation",
             "values": [
               {
                 "value": "add",

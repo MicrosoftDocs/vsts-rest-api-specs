@@ -2946,7 +2946,33 @@
             "description": "Details to include with test results. Default is None. Other values are Iterations and WorkItems.",
             "required": false,
             "type": "string",
-            "format": "ResultDetails"
+            "enum": [
+              "none",
+              "iterations",
+              "workItems",
+              "subResults"
+            ],
+            "x-ms-enum": {
+              "name": "ResultDetails",
+              "values": [
+                {
+                  "value": "none",
+                  "description": "Core fields of test result. Core fields includes State, Outcome, Priority, AutomatedTestName, AutomatedTestStorage, Comments, ErrorMessage etc."
+                },
+                {
+                  "value": "iterations",
+                  "description": "Test iteration details in a test result."
+                },
+                {
+                  "value": "workItems",
+                  "description": "Workitems associated with a test result."
+                },
+                {
+                  "value": "subResults",
+                  "description": "Subresults in a test result."
+                }
+              ]
+            }
           },
           {
             "in": "query",
@@ -3123,7 +3149,33 @@
             "description": "Details to include with test results. Default is None. Other values are Iterations, WorkItems and SubResults.",
             "required": false,
             "type": "string",
-            "format": "ResultDetails"
+            "enum": [
+              "none",
+              "iterations",
+              "workItems",
+              "subResults"
+            ],
+            "x-ms-enum": {
+              "name": "ResultDetails",
+              "values": [
+                {
+                  "value": "none",
+                  "description": "Core fields of test result. Core fields includes State, Outcome, Priority, AutomatedTestName, AutomatedTestStorage, Comments, ErrorMessage etc."
+                },
+                {
+                  "value": "iterations",
+                  "description": "Test iteration details in a test result."
+                },
+                {
+                  "value": "workItems",
+                  "description": "Workitems associated with a test result."
+                },
+                {
+                  "value": "subResults",
+                  "description": "Subresults in a test result."
+                }
+              ]
+            }
           },
           {
             "$ref": "#/parameters/api-Version-preview.5"
@@ -4343,7 +4395,48 @@
             "description": "Source of the test session.",
             "required": false,
             "type": "string",
-            "format": "TestSessionSource"
+            "enum": [
+              "unknown",
+              "xTDesktop",
+              "feedbackDesktop",
+              "xTWeb",
+              "feedbackWeb",
+              "xTDesktop2",
+              "sessionInsightsForAll"
+            ],
+            "x-ms-enum": {
+              "name": "TestSessionSource",
+              "values": [
+                {
+                  "value": "unknown",
+                  "description": "Source of test session uncertain as it is stale"
+                },
+                {
+                  "value": "xTDesktop",
+                  "description": "The session was created from Microsoft Test Manager exploratory desktop tool."
+                },
+                {
+                  "value": "feedbackDesktop",
+                  "description": "The session was created from feedback client."
+                },
+                {
+                  "value": "xTWeb",
+                  "description": "The session was created from browser extension."
+                },
+                {
+                  "value": "feedbackWeb",
+                  "description": "The session was created from browser extension."
+                },
+                {
+                  "value": "xTDesktop2",
+                  "description": "The session was created from web access using Microsoft Test Manager exploratory desktop tool."
+                },
+                {
+                  "value": "sessionInsightsForAll",
+                  "description": "To show sessions from all supported sources."
+                }
+              ]
+            }
           },
           {
             "in": "query",
@@ -4493,7 +4586,48 @@
             "description": "Current state of the Runs to be queried.",
             "required": false,
             "type": "string",
-            "format": "TestRunState"
+            "enum": [
+              "unspecified",
+              "notStarted",
+              "inProgress",
+              "completed",
+              "aborted",
+              "waiting",
+              "needsInvestigation"
+            ],
+            "x-ms-enum": {
+              "name": "TestRunState",
+              "values": [
+                {
+                  "value": "unspecified",
+                  "description": "Only used during an update to preserve the existing value."
+                },
+                {
+                  "value": "notStarted",
+                  "description": "The run is still being created.  No tests have started yet."
+                },
+                {
+                  "value": "inProgress",
+                  "description": "Tests are running."
+                },
+                {
+                  "value": "completed",
+                  "description": "All tests have completed or been skipped."
+                },
+                {
+                  "value": "aborted",
+                  "description": "Run is stopped and remaing tests have been aborted"
+                },
+                {
+                  "value": "waiting",
+                  "description": "Run is currently initializing This is a legacy state and should not be used any more"
+                },
+                {
+                  "value": "needsInvestigation",
+                  "description": "Run requires investigation because of a test point failure This is a legacy state and should not be used any more"
+                }
+              ]
+            }
           },
           {
             "in": "query",
@@ -4516,7 +4650,28 @@
             "description": "PublishContext of the Runs to be queried.",
             "required": false,
             "type": "string",
-            "format": "TestRunPublishContext"
+            "enum": [
+              "build",
+              "release",
+              "all"
+            ],
+            "x-ms-enum": {
+              "name": "TestRunPublishContext",
+              "values": [
+                {
+                  "value": "build",
+                  "description": "Run is published for Build Context."
+                },
+                {
+                  "value": "release",
+                  "description": "Run is published for Release Context."
+                },
+                {
+                  "value": "all",
+                  "description": "Run is published for any Context."
+                }
+              ]
+            }
           },
           {
             "in": "query",
@@ -4901,6 +5056,12 @@
         "resultsDifference": {
           "$ref": "#/definitions/AggregatedResultsDifference"
         },
+        "runSummaryByOutcome": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/AggregatedRunsByOutcome"
+          }
+        },
         "runSummaryByState": {
           "type": "object",
           "additionalProperties": {
@@ -4951,7 +5112,7 @@
             "maxValue"
           ],
           "x-ms-enum": {
-            "name": "Microsoft.TeamFoundation.TestManagement.WebApi.TestOutcome",
+            "name": "TestOutcome",
             "values": [
               {
                 "value": "unspecified",
@@ -5052,6 +5213,45 @@
         }
       }
     },
+    "AggregatedRunsByOutcome": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "outcome": {
+          "enum": [
+            "passed",
+            "failed",
+            "notImpacted",
+            "others"
+          ],
+          "x-ms-enum": {
+            "name": "TestRunOutcome",
+            "values": [
+              {
+                "value": "passed",
+                "description": "Run with zero failed tests and has atleast one impacted test"
+              },
+              {
+                "value": "failed",
+                "description": "Run with at-least one failed test."
+              },
+              {
+                "value": "notImpacted",
+                "description": "Run with no impacted tests."
+              },
+              {
+                "value": "others",
+                "description": "Runs with All tests in other category."
+              }
+            ]
+          }
+        },
+        "runsCount": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
     "AggregatedRunsByState": {
       "description": "",
       "type": "object",
@@ -5077,7 +5277,7 @@
             "needsInvestigation"
           ],
           "x-ms-enum": {
-            "name": "Microsoft.TeamFoundation.TestManagement.WebApi.TestRunState",
+            "name": "TestRunState",
             "values": [
               {
                 "value": "unspecified",
@@ -5176,7 +5376,7 @@
             "httpVersionNotSupported"
           ],
           "x-ms-enum": {
-            "name": "System.Net.HttpStatusCode",
+            "name": "HttpStatusCode",
             "values": [
               {
                 "value": "continue",
@@ -5382,6 +5582,13 @@
           "type": "integer",
           "format": "int32"
         },
+        "buildSystem": {
+          "type": "string"
+        },
+        "creationDate": {
+          "type": "string",
+          "format": "date-time"
+        },
         "flavor": {
           "type": "string"
         },
@@ -5398,9 +5605,11 @@
         "project": {
           "$ref": "#/definitions/ShallowReference"
         },
-        "repositoryId": {
-          "type": "integer",
-          "format": "int32"
+        "repositoryGuid": {
+          "type": "string"
+        },
+        "repositoryType": {
+          "type": "string"
         },
         "sourceVersion": {
           "type": "string"
@@ -5475,6 +5684,66 @@
         }
       }
     },
+    "BuildReference2": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "branchName": {
+          "type": "string"
+        },
+        "buildConfigurationId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "buildDefinitionId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "buildDeleted": {
+          "type": "boolean"
+        },
+        "buildFlavor": {
+          "type": "string"
+        },
+        "buildId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "buildNumber": {
+          "type": "string"
+        },
+        "buildPlatform": {
+          "type": "string"
+        },
+        "buildSystem": {
+          "type": "string"
+        },
+        "buildUri": {
+          "type": "string"
+        },
+        "coverageId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "createdDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "projectId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "repoId": {
+          "type": "string"
+        },
+        "repoType": {
+          "type": "string"
+        },
+        "sourceVersion": {
+          "type": "string"
+        }
+      }
+    },
     "CloneOperationInformation": {
       "description": "Detail About Clone Operation.",
       "type": "object",
@@ -5521,7 +5790,7 @@
             "testPlan"
           ],
           "x-ms-enum": {
-            "name": "Microsoft.TeamFoundation.TestManagement.WebApi.ResultObjectType",
+            "name": "ResultObjectType",
             "values": [
               {
                 "value": "testSuite",
@@ -5555,7 +5824,7 @@
             "succeeded"
           ],
           "x-ms-enum": {
-            "name": "Microsoft.TeamFoundation.TestManagement.WebApi.CloneOperationState",
+            "name": "CloneOperationState",
             "values": [
               {
                 "value": "failed",
@@ -5783,7 +6052,7 @@
             "guid"
           ],
           "x-ms-enum": {
-            "name": "Microsoft.TeamFoundation.TestManagement.WebApi.CustomTestFieldType",
+            "name": "CustomTestFieldType",
             "values": [
               {
                 "value": "bit",
@@ -5821,7 +6090,7 @@
             "all"
           ],
           "x-ms-enum": {
-            "name": "Microsoft.TeamFoundation.TestManagement.WebApi.CustomTestFieldScope",
+            "name": "CustomTestFieldScope",
             "values": [
               {
                 "value": "none",
@@ -6300,10 +6569,22 @@
       "description": "Reference to a release.",
       "type": "object",
       "properties": {
+        "attempt": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "creationDate": {
+          "type": "string",
+          "format": "date-time"
+        },
         "definitionId": {
           "description": "Release definition ID.",
           "type": "integer",
           "format": "int32"
+        },
+        "environmentCreationDate": {
+          "type": "string",
+          "format": "date-time"
         },
         "environmentDefinitionId": {
           "description": "Release environment definition ID.",
@@ -6450,7 +6731,7 @@
             "httpVersionNotSupported"
           ],
           "x-ms-enum": {
-            "name": "System.Net.HttpStatusCode",
+            "name": "HttpStatusCode",
             "values": [
               {
                 "value": "continue",
@@ -6777,6 +7058,9 @@
           "description": "Platform of the build used for test run. (E.g.: x86, amd64)",
           "type": "string"
         },
+        "buildReference": {
+          "$ref": "#/definitions/BuildConfiguration"
+        },
         "comment": {
           "description": "Comments entered by those analyzing the run.",
           "type": "string"
@@ -6852,6 +7136,9 @@
         "releaseEnvironmentUri": {
           "description": "URI of release environment associated with the run.",
           "type": "string"
+        },
+        "releaseReference": {
+          "$ref": "#/definitions/ReleaseReference"
         },
         "releaseUri": {
           "description": "URI of release associated with the run.",
@@ -7019,7 +7306,7 @@
             "cancellationInProgress"
           ],
           "x-ms-enum": {
-            "name": "Microsoft.TeamFoundation.TestManagement.WebApi.TestRunSubstate",
+            "name": "TestRunSubstate",
             "values": [
               {
                 "value": "none",
@@ -7328,7 +7615,7 @@
             "deleted"
           ],
           "x-ms-enum": {
-            "name": "Microsoft.TeamFoundation.Core.WebApi.ProjectState",
+            "name": "ProjectState",
             "values": [
               {
                 "value": "deleting",
@@ -7373,7 +7660,7 @@
             "organization"
           ],
           "x-ms-enum": {
-            "name": "Microsoft.TeamFoundation.Core.WebApi.ProjectVisibility",
+            "name": "ProjectVisibility",
             "values": [
               {
                 "value": "unchanged",
@@ -7445,7 +7732,7 @@
             "consoleLog"
           ],
           "x-ms-enum": {
-            "name": "Microsoft.TeamFoundation.TestManagement.WebApi.AttachmentType",
+            "name": "AttachmentType",
             "values": [
               {
                 "value": "generalAttachment",
@@ -7726,7 +8013,7 @@
             "generic"
           ],
           "x-ms-enum": {
-            "name": "Microsoft.TeamFoundation.TestManagement.WebApi.ResultGroupType",
+            "name": "ResultGroupType",
             "values": [
               {
                 "value": "none",
@@ -7977,7 +8264,7 @@
             "inactive"
           ],
           "x-ms-enum": {
-            "name": "Microsoft.TeamFoundation.TestManagement.WebApi.TestConfigurationState",
+            "name": "TestConfigurationState",
             "values": [
               {
                 "value": "active",
@@ -8695,7 +8982,7 @@
             "release"
           ],
           "x-ms-enum": {
-            "name": "Microsoft.TeamFoundation.TestManagement.WebApi.TestResultsContextType",
+            "name": "TestResultsContextType",
             "values": [
               {
                 "value": "build",
@@ -9032,7 +9319,7 @@
             "cancellationInProgress"
           ],
           "x-ms-enum": {
-            "name": "Microsoft.TeamFoundation.TestManagement.WebApi.TestRunSubstate",
+            "name": "TestRunSubstate",
             "values": [
               {
                 "value": "none",
@@ -9241,7 +9528,7 @@
             "sessionInsightsForAll"
           ],
           "x-ms-enum": {
-            "name": "Microsoft.TeamFoundation.TestManagement.WebApi.TestSessionSource",
+            "name": "TestSessionSource",
             "values": [
               {
                 "value": "unknown",
@@ -9290,7 +9577,7 @@
             "declined"
           ],
           "x-ms-enum": {
-            "name": "Microsoft.TeamFoundation.TestManagement.WebApi.TestSessionState",
+            "name": "TestSessionState",
             "values": [
               {
                 "value": "unspecified",
@@ -9526,7 +9813,7 @@
             "generic"
           ],
           "x-ms-enum": {
-            "name": "Microsoft.TeamFoundation.TestManagement.WebApi.ResultGroupType",
+            "name": "ResultGroupType",
             "values": [
               {
                 "value": "none",
