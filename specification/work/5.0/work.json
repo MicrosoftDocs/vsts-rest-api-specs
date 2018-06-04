@@ -3848,6 +3848,27 @@
         }
       }
     },
+    "Link": {
+      "description": "Link description.",
+      "type": "object",
+      "properties": {
+        "attributes": {
+          "description": "Collection of link attributes.",
+          "type": "object",
+          "additionalProperties": {
+            "type": "object"
+          }
+        },
+        "rel": {
+          "description": "Relation type.",
+          "type": "string"
+        },
+        "url": {
+          "description": "Link url.",
+          "type": "string"
+        }
+      }
+    },
     "Marker": {
       "description": "Client serialization contract for Delivery Timeline Markers.",
       "type": "object",
@@ -4084,6 +4105,39 @@
         "revision": {
           "type": "integer",
           "format": "int32"
+        }
+      }
+    },
+    "PredefinedQuery": {
+      "description": "Represents a single pre-defined query.",
+      "type": "object",
+      "properties": {
+        "hasMore": {
+          "description": "Whether or not the query returned the complete set of data or if the data was truncated.",
+          "type": "boolean"
+        },
+        "id": {
+          "description": "Id of the query",
+          "type": "string"
+        },
+        "name": {
+          "description": "Localized name of the query",
+          "type": "string"
+        },
+        "results": {
+          "description": "The results of the query.  This will be a set of WorkItem objects with only the 'id' set.  The client is responsible for paging in the data as needed.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/WorkItem"
+          }
+        },
+        "url": {
+          "description": "REST API Url to use to retrieve results for this query",
+          "type": "string"
+        },
+        "webUrl": {
+          "description": "Url to use to display a page in the browser with the results of this query",
+          "type": "string"
         }
       }
     },
@@ -4888,6 +4942,41 @@
         }
       }
     },
+    "WorkItem": {
+      "description": "Describes a work item.",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/WorkItemTrackingResource"
+        }
+      ],
+      "properties": {
+        "fields": {
+          "description": "Map of field and values for the work item.",
+          "type": "object",
+          "additionalProperties": {
+            "type": "object"
+          }
+        },
+        "id": {
+          "description": "The work item ID.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "relations": {
+          "description": "Relations of the work item.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/WorkItemRelation"
+          }
+        },
+        "rev": {
+          "description": "Revision number of the work item.",
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
     "WorkItemColor": {
       "description": "Work item color and icon.",
       "type": "object",
@@ -4951,6 +5040,31 @@
         "url": {
           "description": "REST API URL of the resource",
           "type": "string"
+        }
+      }
+    },
+    "WorkItemRelation": {
+      "description": "",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/Link"
+        }
+      ],
+      "properties": {}
+    },
+    "WorkItemTrackingResource": {
+      "description": "Base class for WIT REST resources.",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/WorkItemTrackingResourceReference"
+        }
+      ],
+      "properties": {
+        "_links": {
+          "description": "Link references to related REST resources.",
+          "$ref": "#/definitions/ReferenceLinks"
         }
       }
     },

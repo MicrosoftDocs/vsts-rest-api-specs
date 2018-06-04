@@ -59,6 +59,10 @@
       "description": "Provides methods for working with folders of build definitions."
     },
     {
+      "name": "Latest",
+      "description": "Provides methods to return the latest builds for definitions."
+    },
+    {
       "name": "Metrics",
       "description": "Provides methods for getting summary information about builds that have run in the system."
     },
@@ -85,6 +89,10 @@
     {
       "name": "Source Providers",
       "description": "Provides methods for working with source providers."
+    },
+    {
+      "name": "Status",
+      "description": "Provides methods to generate SVG images representing the status of builds."
     },
     {
       "name": "Tags",
@@ -419,7 +427,8 @@
         "x-ms-vss-resource": "badge",
         "x-ms-vss-method": "GetBadge",
         "x-ms-preview": true,
-        "description": "Gets a badge that indicates the status of the most recent build for a definition.",
+        "deprecated": true,
+        "description": "Use StatusBadgeController.GetStatusBadge",
         "operationId": "Get",
         "produces": [
           "application/json"
@@ -2313,7 +2322,14 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.build"
+            ]
+          }
+        ]
       }
     },
     "/{project}/_apis/build/definitions": {
@@ -2366,6 +2382,13 @@
             "required": false,
             "type": "integer",
             "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "validateProcessOnly",
+            "description": "",
+            "required": false,
+            "type": "boolean"
           },
           {
             "$ref": "#/parameters/api-Version-preview.6"
@@ -2544,6 +2567,21 @@
             "required": false,
             "type": "string",
             "format": "uuid"
+          },
+          {
+            "in": "query",
+            "name": "processType",
+            "description": "If specified, filters to definitions with the given process type.",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "yamlFilename",
+            "description": "If specified, filters to YAML definitions that match the given filename.",
+            "required": false,
+            "type": "string"
           },
           {
             "$ref": "#/parameters/api-Version-preview.6"
@@ -3759,6 +3797,56 @@
         ]
       }
     },
+    "/{project}/_apis/build/latest/{definition}": {
+      "get": {
+        "tags": [
+          "Latest"
+        ],
+        "x-ms-docs-override-version": "5.0-preview.1",
+        "x-ms-vss-resource": "latest",
+        "x-ms-vss-method": "GetLatestBuild",
+        "x-ms-preview": true,
+        "description": "Gets the latest build for a definition, optionally scoped to a specific branch.",
+        "operationId": "Get",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "definition",
+            "description": "definition name with optional leading folder path, or the definition id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "branchName",
+            "description": "optional parameter that indicates the specific branch to use",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/Build"
+            }
+          }
+        }
+      }
+    },
     "/{project}/_apis/build/metrics/{metricAggregationType}": {
       "get": {
         "tags": [
@@ -3923,6 +4011,56 @@
             ]
           }
         ]
+      }
+    },
+    "/{project}/_apis/build/status/{definition}": {
+      "get": {
+        "tags": [
+          "Status"
+        ],
+        "x-ms-docs-override-version": "5.0-preview.1",
+        "x-ms-vss-resource": "status",
+        "x-ms-vss-method": "GetStatusBadge",
+        "x-ms-preview": true,
+        "description": "Gets the build status for a definition, optionally scoped to a specific branch.",
+        "operationId": "Get",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "definition",
+            "description": "definition name with optional leading folder path, or the definition id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "branchName",
+            "description": "optional parameter that indicates the specific branch to use",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
       }
     },
     "/{project}/_apis/build/tags": {

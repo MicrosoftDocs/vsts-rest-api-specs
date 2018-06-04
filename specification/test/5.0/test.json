@@ -8363,6 +8363,71 @@
         }
       }
     },
+    "TestHistoryQuery": {
+      "description": "Filter to get TestCase result history.",
+      "type": "object",
+      "properties": {
+        "automatedTestName": {
+          "description": "Automated test name of the TestCase.",
+          "type": "string"
+        },
+        "branch": {
+          "description": "Results to be get for a particular branches.",
+          "type": "string"
+        },
+        "buildDefinitionId": {
+          "description": "Get the results history only for this BuildDefinationId. This to get used in query GroupBy should be Branch. If this is provided, Branch will have no use.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "continuationToken": {
+          "description": "It will be filled by server. If not null means there are some results still to be get, and we need to call this REST API with this ContinuousToken.",
+          "type": "string"
+        },
+        "groupBy": {
+          "description": "Group the result on the basis of TestResultGroupBy. This can be Branch, Environment or null(if results are fetched by BuildDefinitionId)",
+          "enum": [
+            "branch",
+            "environment"
+          ],
+          "x-ms-enum": {
+            "name": "TestResultGroupBy",
+            "values": [
+              {
+                "value": "branch",
+                "description": "Group the results by branches"
+              },
+              {
+                "value": "environment",
+                "description": "Group the results by environment"
+              }
+            ]
+          }
+        },
+        "maxCompleteDate": {
+          "description": "History to get between time interval MaxCompleteDate and  (MaxCompleteDate - TrendDays). Default is current date time.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "releaseEnvDefinitionId": {
+          "description": "Get the results history only for this ReleaseEnvDefinitionId. This to get used in query GroupBy should be Environment.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "resultsForGroup": {
+          "description": "List of TestResultHistoryForGroup which are grouped by GroupBy",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TestResultHistoryForGroup"
+          }
+        },
+        "trendDays": {
+          "description": "Number of days for which history to collect. Maximum supported value is 7 days. Default is 7 days.",
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
     "TestIterationDetailsModel": {
       "description": "Represents a test iteration result.",
       "type": "object",
@@ -8897,6 +8962,27 @@
         },
         "latestResult": {
           "$ref": "#/definitions/TestCaseResult"
+        }
+      }
+    },
+    "TestResultHistoryForGroup": {
+      "description": "List of test results filtered on the basis of GroupByValue",
+      "type": "object",
+      "properties": {
+        "displayName": {
+          "description": "Display name of the group.",
+          "type": "string"
+        },
+        "groupByValue": {
+          "description": "Name or Id of the group identifier by which results are grouped together.",
+          "type": "object"
+        },
+        "results": {
+          "description": "List of results for GroupByValue",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TestCaseResult"
+          }
         }
       }
     },
