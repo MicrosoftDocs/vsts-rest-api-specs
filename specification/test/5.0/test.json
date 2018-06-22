@@ -95,6 +95,10 @@
       "description": "Controller to handle TestCase REST calls"
     },
     {
+      "name": "Test History",
+      "description": "Controller to get test execution history of a test method."
+    },
+    {
       "name": "Variables",
       "description": "Test Variable Apis"
     }
@@ -2232,6 +2236,61 @@
         }
       }
     },
+    "/{project}/_apis/test/Results/testhistory": {
+      "post": {
+        "tags": [
+          "Test History"
+        ],
+        "x-ms-docs-override-version": "5.0-preview.1",
+        "x-ms-vss-resource": "testHistory",
+        "x-ms-vss-method": "QueryTestHistory",
+        "x-ms-preview": true,
+        "description": "Get history of a test method using TestHistoryQuery",
+        "operationId": "Query",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "TestHistoryQuery to get history",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/TestHistoryQuery"
+            }
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/TestHistoryQuery"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.test_write"
+            ]
+          }
+        ]
+      }
+    },
     "/{project}/_apis/test/runs": {
       "post": {
         "tags": [
@@ -2483,6 +2542,13 @@
             "required": true,
             "type": "integer",
             "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "includeDetails",
+            "description": "Defualt value is true. It includes details like run statistics,release,build,Test enviornment,Post process state and more",
+            "required": false,
+            "type": "boolean"
           },
           {
             "$ref": "#/parameters/api-Version-preview.2"
@@ -6679,6 +6745,43 @@
         }
       }
     },
+    "RequirementsToTestsMapping2": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "createdBy": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "creationDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "deletedBy": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "deletionDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "isMigratedToWIT": {
+          "type": "boolean"
+        },
+        "projectId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "testMetadataId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "workItemId": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
     "Response": {
       "description": "",
       "type": "object",
@@ -6974,6 +7077,30 @@
         "branch": {
           "type": "string"
         },
+        "executedIn": {
+          "enum": [
+            "any",
+            "tcm",
+            "tfs"
+          ],
+          "x-ms-enum": {
+            "name": "Service",
+            "values": [
+              {
+                "value": "any",
+                "description": ""
+              },
+              {
+                "value": "tcm",
+                "description": ""
+              },
+              {
+                "value": "tfs",
+                "description": ""
+              }
+            ]
+          }
+        },
         "groupBy": {
           "type": "string"
         },
@@ -6986,6 +7113,17 @@
           "format": "int32"
         },
         "testCaseReferenceIds": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "testPlanId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "testPointIds": {
           "type": "array",
           "items": {
             "type": "integer",
@@ -7861,6 +7999,108 @@
         }
       }
     },
+    "TestCaseMetadata2": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "container": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "projectId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "testMetadataId": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "TestCaseReference2": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "areaId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "automatedTestId": {
+          "type": "string"
+        },
+        "automatedTestName": {
+          "type": "string"
+        },
+        "automatedTestNameHash": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "byte"
+          }
+        },
+        "automatedTestStorage": {
+          "type": "string"
+        },
+        "automatedTestStorageHash": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "byte"
+          }
+        },
+        "automatedTestType": {
+          "type": "string"
+        },
+        "configurationId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "createdBy": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "creationDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "lastRefTestRunDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "owner": {
+          "type": "string"
+        },
+        "priority": {
+          "type": "string",
+          "format": "byte"
+        },
+        "projectId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "testCaseId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "testCaseRefId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "testCaseRevision": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "testCaseTitle": {
+          "type": "string"
+        },
+        "testPointId": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
     "TestCaseResult": {
       "description": "Represents a test result.",
       "type": "object",
@@ -8083,6 +8323,11 @@
         },
         "testCaseReferenceId": {
           "description": "Reference ID of test used by test result.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "testCaseRevision": {
+          "description": "Name of test.",
           "type": "integer",
           "format": "int32"
         },
@@ -8363,6 +8608,36 @@
         }
       }
     },
+    "TestFieldsEx2": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "fieldId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "fieldName": {
+          "type": "string"
+        },
+        "fieldType": {
+          "type": "string",
+          "format": "byte"
+        },
+        "isResultScoped": {
+          "type": "boolean"
+        },
+        "isRunScoped": {
+          "type": "boolean"
+        },
+        "isSystemField": {
+          "type": "boolean"
+        },
+        "projectId": {
+          "type": "string",
+          "format": "uuid"
+        }
+      }
+    },
     "TestHistoryQuery": {
       "description": "Filter to get TestCase result history.",
       "type": "object",
@@ -8491,6 +8766,16 @@
         }
       }
     },
+    "TestMessageLog2": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "testMessageLogId": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
     "TestMessageLogDetails": {
       "description": "An abstracted reference to some other resource. This class is used to provide the build data contracts with a uniform way to reference other resources in a way that provides easy traversal through links.",
       "type": "object",
@@ -8508,6 +8793,35 @@
         "message": {
           "description": "Message of the resource",
           "type": "string"
+        }
+      }
+    },
+    "TestMessageLogEntry2": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "dateCreated": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "entryId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "logLevel": {
+          "type": "string",
+          "format": "byte"
+        },
+        "logUser": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "message": {
+          "type": "string"
+        },
+        "testMessageLogId": {
+          "type": "integer",
+          "format": "int32"
         }
       }
     },
@@ -8791,6 +9105,70 @@
         }
       }
     },
+    "TestPointReference": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "state": {
+          "enum": [
+            "none",
+            "ready",
+            "completed",
+            "notReady",
+            "inProgress",
+            "maxValue"
+          ],
+          "x-ms-enum": {
+            "name": "TestPointState",
+            "values": [
+              {
+                "value": "none",
+                "description": "Default"
+              },
+              {
+                "value": "ready",
+                "description": "The test point needs to be executed in order for the test pass to be considered complete.  Either the test has not been run before or the previous run failed."
+              },
+              {
+                "value": "completed",
+                "description": "The test has passed successfully and does not need to be re-run for the test pass to be considered complete."
+              },
+              {
+                "value": "notReady",
+                "description": "The test point needs to be executed but is not able to."
+              },
+              {
+                "value": "inProgress",
+                "description": "The test is being executed."
+              },
+              {
+                "value": "maxValue",
+                "description": ""
+              }
+            ]
+          }
+        }
+      }
+    },
+    "TestPointsEvent": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "projectName": {
+          "type": "string"
+        },
+        "testPoints": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TestPointReference"
+          }
+        }
+      }
+    },
     "TestPointsQuery": {
       "description": "Test point query class.",
       "type": "object",
@@ -8819,6 +9197,16 @@
         }
       }
     },
+    "TestPointsUpdatedEvent": {
+      "description": "",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/TestPointsEvent"
+        }
+      ],
+      "properties": {}
+    },
     "TestResolutionState": {
       "description": "",
       "type": "object",
@@ -8832,6 +9220,91 @@
         },
         "project": {
           "$ref": "#/definitions/ShallowReference"
+        }
+      }
+    },
+    "TestResult2": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "afnStripId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "computerName": {
+          "type": "string"
+        },
+        "creationDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "dateCompleted": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "dateStarted": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "effectivePointState": {
+          "type": "string",
+          "format": "byte"
+        },
+        "failureType": {
+          "type": "string",
+          "format": "byte"
+        },
+        "lastUpdated": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "lastUpdatedBy": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "outcome": {
+          "type": "string",
+          "format": "byte"
+        },
+        "owner": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "projectId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "resetCount": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "resolutionStateId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "revision": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "runBy": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "state": {
+          "type": "string",
+          "format": "byte"
+        },
+        "testCaseRefId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "testResultId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "testRunId": {
+          "type": "integer",
+          "format": "int32"
         }
       }
     },
@@ -8975,7 +9448,7 @@
         },
         "groupByValue": {
           "description": "Name or Id of the group identifier by which results are grouped together.",
-          "type": "object"
+          "type": "string"
         },
         "results": {
           "description": "List of results for GroupByValue",
@@ -9129,6 +9602,54 @@
           "additionalProperties": {
             "$ref": "#/definitions/AggregatedResultsByOutcome"
           }
+        }
+      }
+    },
+    "TestResultsEx2": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "bitValue": {
+          "type": "boolean"
+        },
+        "creationDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "dateTimeValue": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "fieldId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "floatValue": {
+          "type": "number",
+          "format": "double"
+        },
+        "guidValue": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "intValue": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "projectId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "stringValue": {
+          "type": "string"
+        },
+        "testResultId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "testRunId": {
+          "type": "integer",
+          "format": "int32"
         }
       }
     },
@@ -9485,6 +10006,164 @@
         }
       }
     },
+    "TestRun2": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "buildConfigurationId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "buildNumber": {
+          "type": "string"
+        },
+        "comment": {
+          "type": "string"
+        },
+        "completeDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "controller": {
+          "type": "string"
+        },
+        "coverageId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "creationDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "dropLocation": {
+          "type": "string"
+        },
+        "dueDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "errorMessage": {
+          "type": "string"
+        },
+        "incompleteTests": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "isAutomated": {
+          "type": "boolean"
+        },
+        "isBvt": {
+          "type": "boolean"
+        },
+        "isMigrated": {
+          "type": "boolean"
+        },
+        "iterationId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "lastUpdated": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "lastUpdatedBy": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "legacySharePath": {
+          "type": "string"
+        },
+        "maxReservedResultId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "notApplicableTests": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "owner": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "passedTests": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "postProcessState": {
+          "type": "string",
+          "format": "byte"
+        },
+        "projectId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "publicTestSettingsId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "releaseEnvironmentUri": {
+          "type": "string"
+        },
+        "releaseUri": {
+          "type": "string"
+        },
+        "revision": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "startDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "state": {
+          "type": "string",
+          "format": "byte"
+        },
+        "testEnvironmentId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "testMessageLogId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "testPlanId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "testRunContextId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "testRunId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "testSettingsId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "title": {
+          "type": "string"
+        },
+        "totalTests": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "type": {
+          "type": "string",
+          "format": "byte"
+        },
+        "unanalyzedTests": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "version": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
     "TestRunCanceledEvent": {
       "description": "",
       "type": "object",
@@ -9494,6 +10173,31 @@
         }
       ],
       "properties": {}
+    },
+    "TestRunContext2": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "buildRefId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "projectId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "releaseRefId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "sourceWorkflow": {
+          "type": "string"
+        },
+        "testRunContextId": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
     },
     "TestRunCoverage": {
       "description": "Test Run Code Coverage Details",
@@ -9561,6 +10265,51 @@
           "items": {
             "$ref": "#/definitions/RunStatistic"
           }
+        }
+      }
+    },
+    "TestRunSummary2": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "isRerun": {
+          "type": "boolean"
+        },
+        "projectId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "resultCount": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "resultDuration": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "runDuration": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "testOutcome": {
+          "type": "string",
+          "format": "byte"
+        },
+        "testRunCompletedDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "testRunContextId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "testRunId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "testRunStatsId": {
+          "type": "integer",
+          "format": "int32"
         }
       }
     },
@@ -10220,6 +10969,30 @@
       "description": "",
       "type": "object",
       "properties": {
+        "executedIn": {
+          "enum": [
+            "any",
+            "tcm",
+            "tfs"
+          ],
+          "x-ms-enum": {
+            "name": "Service",
+            "values": [
+              {
+                "value": "any",
+                "description": ""
+              },
+              {
+                "value": "tcm",
+                "description": ""
+              },
+              {
+                "value": "tfs",
+                "description": ""
+              }
+            ]
+          }
+        },
         "tests": {
           "type": "array",
           "items": {

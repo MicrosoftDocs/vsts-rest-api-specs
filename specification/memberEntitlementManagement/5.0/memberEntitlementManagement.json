@@ -522,7 +522,7 @@
         "tags": [
           "User Entitlements"
         ],
-        "x-ms-docs-override-version": "5.0-preview.1",
+        "x-ms-docs-override-version": "5.0-preview.2",
         "x-ms-vss-resource": "userEntitlements",
         "x-ms-vss-method": "AddUserEntitlement",
         "x-ms-preview": true,
@@ -545,7 +545,7 @@
             }
           },
           {
-            "$ref": "#/parameters/api-Version-preview.1"
+            "$ref": "#/parameters/api-Version-preview.2"
           }
         ],
         "responses": {
@@ -573,12 +573,12 @@
         "tags": [
           "User Entitlements"
         ],
-        "x-ms-docs-override-version": "5.0-preview.1",
+        "x-ms-docs-override-version": "5.0-preview.2",
         "x-ms-vss-resource": "userEntitlements",
         "x-ms-vss-method": "GetUserEntitlements",
         "x-ms-preview": true,
         "description": "Get a paged set of user entitlements matching the filter criteria. If no filter is is passed, a page from all the account users is returned.",
-        "operationId": "List",
+        "operationId": "Get User Entitlements",
         "produces": [
           "application/json"
         ],
@@ -608,23 +608,20 @@
           },
           {
             "in": "query",
-            "name": "select",
-            "description": "Comma (\",\") separated list of properties to select in the result entitlements. names of the properties are - 'Projects, 'Extensions' and 'Grouprules'.",
+            "name": "sortOption",
+            "description": "PropertyName and Order (separated by a space ( )) to sort on (e.g. LastAccessDate Desc)",
             "required": false,
             "type": "string"
           },
           {
-            "$ref": "#/parameters/api-Version-preview.1"
+            "$ref": "#/parameters/api-Version-preview.2"
           }
         ],
         "responses": {
           "200": {
             "description": "successful operation",
             "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/UserEntitlement"
-              }
+              "$ref": "#/definitions/PagedGraphMemberList"
             }
           }
         },
@@ -634,18 +631,13 @@
               "vso.memberEntitlementManagement"
             ]
           }
-        ],
-        "x-ms-examples": {
-          "": {
-            "$ref": "./httpExamples/UserEntitlements/GET__memberEntitlementManagement_UserEntitlements.json"
-          }
-        }
+        ]
       },
       "patch": {
         "tags": [
           "User Entitlements"
         ],
-        "x-ms-docs-override-version": "5.0-preview.1",
+        "x-ms-docs-override-version": "5.0-preview.2",
         "x-ms-vss-resource": "userEntitlements",
         "x-ms-vss-method": "UpdateUserEntitlements",
         "x-ms-preview": true,
@@ -675,7 +667,7 @@
             "type": "boolean"
           },
           {
-            "$ref": "#/parameters/api-Version-preview.1"
+            "$ref": "#/parameters/api-Version-preview.2"
           }
         ],
         "responses": {
@@ -705,7 +697,7 @@
         "tags": [
           "User Entitlements"
         ],
-        "x-ms-docs-override-version": "5.0-preview.1",
+        "x-ms-docs-override-version": "5.0-preview.2",
         "x-ms-vss-resource": "userEntitlements",
         "x-ms-vss-method": "DeleteUserEntitlement",
         "x-ms-preview": true,
@@ -721,7 +713,7 @@
             "format": "uuid"
           },
           {
-            "$ref": "#/parameters/api-Version-preview.1"
+            "$ref": "#/parameters/api-Version-preview.2"
           }
         ],
         "responses": {
@@ -741,12 +733,12 @@
         "tags": [
           "User Entitlements"
         ],
-        "x-ms-docs-override-version": "5.0-preview.1",
+        "x-ms-docs-override-version": "5.0-preview.2",
         "x-ms-vss-resource": "userEntitlements",
         "x-ms-vss-method": "GetUserEntitlement",
         "x-ms-preview": true,
         "description": "Get User Entitlement for a user.",
-        "operationId": "Get",
+        "operationId": "Get User Entitlement",
         "produces": [
           "application/json"
         ],
@@ -760,7 +752,7 @@
             "format": "uuid"
           },
           {
-            "$ref": "#/parameters/api-Version-preview.1"
+            "$ref": "#/parameters/api-Version-preview.2"
           }
         ],
         "responses": {
@@ -788,7 +780,7 @@
         "tags": [
           "User Entitlements"
         ],
-        "x-ms-docs-override-version": "5.0-preview.1",
+        "x-ms-docs-override-version": "5.0-preview.2",
         "x-ms-vss-resource": "userEntitlements",
         "x-ms-vss-method": "UpdateUserEntitlement",
         "x-ms-preview": true,
@@ -819,7 +811,7 @@
             "format": "uuid"
           },
           {
-            "$ref": "#/parameters/api-Version-preview.1"
+            "$ref": "#/parameters/api-Version-preview.2"
           }
         ],
         "responses": {
@@ -2014,15 +2006,37 @@
     "PagedGraphMemberList": {
       "description": "",
       "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/PagedList"
+        }
+      ],
       "properties": {
-        "continuationToken": {
-          "type": "string"
-        },
         "members": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/UserEntitlement"
           }
+        }
+      }
+    },
+    "PagedList": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "continuationToken": {
+          "type": "string"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "T"
+          }
+        },
+        "totalCount": {
+          "type": "integer",
+          "format": "int32"
         }
       }
     },
@@ -2364,6 +2378,13 @@
       "name": "api-version",
       "in": "query",
       "description": "Version of the API to use.  This should be set to '5.0-preview.1' to use this version of the api.",
+      "required": true,
+      "type": "string"
+    },
+    "api-Version-preview.2": {
+      "name": "api-version",
+      "in": "query",
+      "description": "Version of the API to use.  This should be set to '5.0-preview.2' to use this version of the api.",
       "required": true,
       "type": "string"
     }

@@ -1869,6 +1869,34 @@
         }
       }
     },
+    "FeedBatchData": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "data": {
+          "$ref": "#/definitions/FeedBatchOperationData"
+        },
+        "operation": {
+          "enum": [
+            "saveCachedPackages"
+          ],
+          "x-ms-enum": {
+            "name": "FeedBatchOperation",
+            "values": [
+              {
+                "value": "saveCachedPackages",
+                "description": ""
+              }
+            ]
+          }
+        }
+      }
+    },
+    "FeedBatchOperationData": {
+      "description": "",
+      "type": "object",
+      "properties": {}
+    },
     "FeedChange": {
       "description": "A container that encapsulates the state of the feed after a create, update, or delete.",
       "type": "object",
@@ -1943,6 +1971,7 @@
           "enum": [
             "none",
             "upstreamV2",
+            "underMaintenance",
             "defaultCapabilities"
           ],
           "x-ms-enum": {
@@ -1955,6 +1984,10 @@
               {
                 "value": "upstreamV2",
                 "description": "This feed can serve packages from upstream sources Upstream packages must be manually promoted to views"
+              },
+              {
+                "value": "underMaintenance",
+                "description": "This feed is currently under maintenance and may have reduced functionality"
               },
               {
                 "value": "defaultCapabilities",
@@ -2600,6 +2633,30 @@
           "type": "object",
           "additionalProperties": {
             "type": "object"
+          }
+        }
+      }
+    },
+    "SaveCachedPackagesData": {
+      "description": "",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/FeedBatchOperationData"
+        }
+      ],
+      "properties": {
+        "normalizedPackageNames": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "viewsForPromotion": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uuid"
           }
         }
       }

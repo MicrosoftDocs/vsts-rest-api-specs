@@ -797,19 +797,19 @@
                 },
                 {
                   "value": "queueTimeDescending",
-                  "description": "Order by finish time descending."
+                  "description": "Order by queue time descending."
                 },
                 {
                   "value": "queueTimeAscending",
-                  "description": "Order by finish time descending."
+                  "description": "Order by queue time ascending."
                 },
                 {
                   "value": "startTimeDescending",
-                  "description": "Order by finish time descending."
+                  "description": "Order by start time descending."
                 },
                 {
                   "value": "startTimeAscending",
-                  "description": "Order by finish time descending."
+                  "description": "Order by start time ascending."
                 }
               ]
             }
@@ -4282,7 +4282,7 @@
         "x-ms-vss-method": "GetFileContents",
         "x-ms-preview": true,
         "description": "Gets the contents of a file in the given source code repository.",
-        "operationId": "Get",
+        "operationId": "Get File Contents",
         "produces": [
           "text/plain"
         ],
@@ -4415,6 +4415,71 @@
               "items": {
                 "$ref": "#/definitions/SourceRepositoryItem"
               }
+            }
+          }
+        }
+      }
+    },
+    "/{project}/_apis/sourceProviders/{providerName}/pullrequests/{pullRequestId}": {
+      "get": {
+        "tags": [
+          "Source Providers"
+        ],
+        "x-ms-docs-override-version": "5.0-preview.1",
+        "x-ms-vss-resource": "pullRequests",
+        "x-ms-vss-method": "GetPullRequest",
+        "x-ms-preview": true,
+        "description": "Gets a pull request object from source provider.",
+        "operationId": "Get Pull Request",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "providerName",
+            "description": "The name of the source provider.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "pullRequestId",
+            "description": "Vendor-specific id of the pull request.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "repositoryId",
+            "description": "Vendor-specific identifier or the name of the repository that contains the pull request.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "serviceEndpointId",
+            "description": "If specified, the ID of the service endpoint to query. Can only be omitted for providers that do not use service endpoints, e.g. TFVC or TFGit.",
+            "required": false,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/PullRequest"
             }
           }
         }
@@ -8578,6 +8643,43 @@
           "items": {
             "type": "string"
           }
+        }
+      }
+    },
+    "PullRequest": {
+      "description": "Represents a pull request object.  These are retrieved from Source Providers.",
+      "type": "object",
+      "properties": {
+        "_links": {
+          "$ref": "#/definitions/ReferenceLinks"
+        },
+        "currentState": {
+          "description": "Current state of the pull request, e.g. open, merged, closed, conflicts, etc.",
+          "type": "string"
+        },
+        "description": {
+          "description": "Description for the pull request.",
+          "type": "string"
+        },
+        "id": {
+          "description": "Unique identifier for the pull request",
+          "type": "string"
+        },
+        "providerName": {
+          "description": "The name of the provider this pull request is associated with.",
+          "type": "string"
+        },
+        "sourceBranchRef": {
+          "description": "Source branch ref of this pull request",
+          "type": "string"
+        },
+        "targetBranchRef": {
+          "description": "Target branch ref of this pull request",
+          "type": "string"
+        },
+        "title": {
+          "description": "Title of the pull request.",
+          "type": "string"
         }
       }
     },

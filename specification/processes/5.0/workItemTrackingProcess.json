@@ -173,13 +173,72 @@
       }
     },
     "/_apis/work/processes/{processId}/behaviors": {
+      "post": {
+        "tags": [
+          "Behaviors"
+        ],
+        "x-ms-docs-override-version": "5.0-preview.2",
+        "x-ms-vss-resource": "behaviors",
+        "x-ms-vss-method": "CreateProcessBehavior",
+        "x-ms-preview": true,
+        "description": "Creates a single behavior in the given process.",
+        "operationId": "Create",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ProcessBehaviorCreateRequest"
+            }
+          },
+          {
+            "in": "path",
+            "name": "processId",
+            "description": "The ID of the process",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.2"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ProcessBehavior"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.work_write"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "Create a process behavior": {
+            "$ref": "./httpExamples/behaviors/POST__process_behavior.json"
+          }
+        }
+      },
       "get": {
         "tags": [
           "Behaviors"
         ],
-        "x-ms-docs-override-version": "5.0-preview.1",
+        "x-ms-docs-override-version": "5.0-preview.2",
         "x-ms-vss-resource": "behaviors",
-        "x-ms-vss-method": "GetBehaviors",
+        "x-ms-vss-method": "GetProcessBehaviors",
         "x-ms-preview": true,
         "description": "Returns a list of all behaviors in the process.",
         "operationId": "List",
@@ -203,24 +262,29 @@
             "type": "string",
             "enum": [
               "none",
-              "fields"
+              "fields",
+              "combinedFields"
             ],
             "x-ms-enum": {
               "name": "GetBehaviorsExpand",
               "values": [
                 {
                   "value": "none",
-                  "description": ""
+                  "description": "Default none option."
                 },
                 {
                   "value": "fields",
-                  "description": ""
+                  "description": "This option returns fields associated with a behavior."
+                },
+                {
+                  "value": "combinedFields",
+                  "description": "This option returns fields associated with this behavior and all behaviors from which it inherits."
                 }
               ]
             }
           },
           {
-            "$ref": "#/parameters/api-Version-preview.1"
+            "$ref": "#/parameters/api-Version-preview.2"
           }
         ],
         "responses": {
@@ -229,7 +293,7 @@
             "schema": {
               "type": "array",
               "items": {
-                "$ref": "#/definitions/WorkItemBehavior"
+                "$ref": "#/definitions/ProcessBehavior"
               }
             }
           }
@@ -243,19 +307,73 @@
         ],
         "x-ms-examples": {
           "Get the list of process behaviors": {
-            "$ref": "./httpExamples/behaviors/GET__behaviors_list.json"
+            "$ref": "./httpExamples/behaviors/GET__process_behavior_list.json"
+          },
+          "Get the list of process behaviors with Fields option": {
+            "$ref": "./httpExamples/behaviors/GET__process_behavior_list_fields.json"
+          },
+          "Get the list of process behaviors with CombinedFields option": {
+            "$ref": "./httpExamples/behaviors/GET__process_behavior_list_combined_fields.json"
           }
         }
       }
     },
     "/_apis/work/processes/{processId}/behaviors/{behaviorRefName}": {
+      "delete": {
+        "tags": [
+          "Behaviors"
+        ],
+        "x-ms-docs-override-version": "5.0-preview.2",
+        "x-ms-vss-resource": "behaviors",
+        "x-ms-vss-method": "DeleteProcessBehavior",
+        "x-ms-preview": true,
+        "description": "Removes a behavior in the process.",
+        "operationId": "Delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "processId",
+            "description": "The ID of the process",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "path",
+            "name": "behaviorRefName",
+            "description": "The reference name of the behavior",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.2"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.work_write"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "Delete a process behavior": {
+            "$ref": "./httpExamples/behaviors/DELETE__process_behavior.json"
+          }
+        }
+      },
       "get": {
         "tags": [
           "Behaviors"
         ],
-        "x-ms-docs-override-version": "5.0-preview.1",
+        "x-ms-docs-override-version": "5.0-preview.2",
         "x-ms-vss-resource": "behaviors",
-        "x-ms-vss-method": "GetBehavior",
+        "x-ms-vss-method": "GetProcessBehavior",
         "x-ms-preview": true,
         "description": "Returns a behavior of the process.",
         "operationId": "Get",
@@ -274,7 +392,7 @@
           {
             "in": "path",
             "name": "behaviorRefName",
-            "description": "Reference name of the behavior",
+            "description": "The reference name of the behavior",
             "required": true,
             "type": "string"
           },
@@ -286,31 +404,36 @@
             "type": "string",
             "enum": [
               "none",
-              "fields"
+              "fields",
+              "combinedFields"
             ],
             "x-ms-enum": {
               "name": "GetBehaviorsExpand",
               "values": [
                 {
                   "value": "none",
-                  "description": ""
+                  "description": "Default none option."
                 },
                 {
                   "value": "fields",
-                  "description": ""
+                  "description": "This option returns fields associated with a behavior."
+                },
+                {
+                  "value": "combinedFields",
+                  "description": "This option returns fields associated with this behavior and all behaviors from which it inherits."
                 }
               ]
             }
           },
           {
-            "$ref": "#/parameters/api-Version-preview.1"
+            "$ref": "#/parameters/api-Version-preview.2"
           }
         ],
         "responses": {
           "200": {
             "description": "successful operation",
             "schema": {
-              "$ref": "#/definitions/WorkItemBehavior"
+              "$ref": "#/definitions/ProcessBehavior"
             }
           }
         },
@@ -322,8 +445,80 @@
           }
         ],
         "x-ms-examples": {
-          "Get the process behavior definition": {
-            "$ref": "./httpExamples/behaviors/GET__behavior.json"
+          "Get the process behavior": {
+            "$ref": "./httpExamples/behaviors/GET__process_behavior.json"
+          },
+          "Get the process behavior with Fields option": {
+            "$ref": "./httpExamples/behaviors/GET__process_behavior_fields.json"
+          },
+          "Get the process behavior with CombinedFields option": {
+            "$ref": "./httpExamples/behaviors/GET__process_behavior_combined_fields.json"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Behaviors"
+        ],
+        "x-ms-docs-override-version": "5.0-preview.2",
+        "x-ms-vss-resource": "behaviors",
+        "x-ms-vss-method": "UpdateProcessBehavior",
+        "x-ms-preview": true,
+        "description": "Replaces a behavior in the process.",
+        "operationId": "Update",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ProcessBehaviorUpdateRequest"
+            }
+          },
+          {
+            "in": "path",
+            "name": "processId",
+            "description": "The ID of the process",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "path",
+            "name": "behaviorRefName",
+            "description": "The reference name of the behavior",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.2"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ProcessBehavior"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.work_write"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "Update a process behavior": {
+            "$ref": "./httpExamples/behaviors/PUT__process_behavior.json"
           }
         }
       }
@@ -381,13 +576,67 @@
       }
     },
     "/_apis/work/processes/{processId}/workitemtypes": {
+      "post": {
+        "tags": [
+          "Work Item Types"
+        ],
+        "x-ms-docs-override-version": "5.0-preview.2",
+        "x-ms-vss-resource": "workItemTypes",
+        "x-ms-vss-method": "CreateProcessWorkItemType",
+        "x-ms-preview": true,
+        "description": "Creates a work item type in the process.",
+        "operationId": "Create",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CreateProcessWorkItemTypeRequest"
+            }
+          },
+          {
+            "in": "path",
+            "name": "processId",
+            "description": "The ID of the process on which to create work item type.",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.2"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ProcessWorkItemType"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.work_write"
+            ]
+          }
+        ]
+      },
       "get": {
         "tags": [
           "Work Item Types"
         ],
-        "x-ms-docs-override-version": "5.0-preview.1",
+        "x-ms-docs-override-version": "5.0-preview.2",
         "x-ms-vss-resource": "workItemTypes",
-        "x-ms-vss-method": "GetWorkItemTypes",
+        "x-ms-vss-method": "GetProcessWorkItemTypes",
         "x-ms-preview": true,
         "description": "Returns a list of all work item types in a process.",
         "operationId": "List",
@@ -404,41 +653,7 @@
             "format": "uuid"
           },
           {
-            "in": "query",
-            "name": "$expand",
-            "description": "",
-            "required": false,
-            "type": "string",
-            "enum": [
-              "none",
-              "states",
-              "behaviors",
-              "layout"
-            ],
-            "x-ms-enum": {
-              "name": "GetWorkItemTypeExpand",
-              "values": [
-                {
-                  "value": "none",
-                  "description": ""
-                },
-                {
-                  "value": "states",
-                  "description": ""
-                },
-                {
-                  "value": "behaviors",
-                  "description": ""
-                },
-                {
-                  "value": "layout",
-                  "description": ""
-                }
-              ]
-            }
-          },
-          {
-            "$ref": "#/parameters/api-Version-preview.1"
+            "$ref": "#/parameters/api-Version-preview.2"
           }
         ],
         "responses": {
@@ -447,7 +662,7 @@
             "schema": {
               "type": "array",
               "items": {
-                "$ref": "#/definitions/WorkItemTypeModel"
+                "$ref": "#/definitions/ProcessWorkItemType"
               }
             }
           }
@@ -458,22 +673,60 @@
               "vso.work"
             ]
           }
-        ],
-        "x-ms-examples": {
-          "Get work item types": {
-            "$ref": "./httpExamples/workItemTypes/GET__wits.json"
-          }
-        }
+        ]
       }
     },
     "/_apis/work/processes/{processId}/workitemtypes/{witRefName}": {
+      "delete": {
+        "tags": [
+          "Work Item Types"
+        ],
+        "x-ms-docs-override-version": "5.0-preview.2",
+        "x-ms-vss-resource": "workItemTypes",
+        "x-ms-vss-method": "DeleteProcessWorkItemType",
+        "x-ms-preview": true,
+        "description": "Removes a work itewm type in the process.",
+        "operationId": "Delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "processId",
+            "description": "The ID of the process.",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "path",
+            "name": "witRefName",
+            "description": "The reference name of the work item type.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.2"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.work_write"
+            ]
+          }
+        ]
+      },
       "get": {
         "tags": [
           "Work Item Types"
         ],
-        "x-ms-docs-override-version": "5.0-preview.1",
+        "x-ms-docs-override-version": "5.0-preview.2",
         "x-ms-vss-resource": "workItemTypes",
-        "x-ms-vss-method": "GetWorkItemType",
+        "x-ms-vss-method": "GetProcessWorkItemType",
         "x-ms-preview": true,
         "description": "Returns a single work item type in a process.",
         "operationId": "Get",
@@ -497,48 +750,14 @@
             "type": "string"
           },
           {
-            "in": "query",
-            "name": "$expand",
-            "description": "",
-            "required": false,
-            "type": "string",
-            "enum": [
-              "none",
-              "states",
-              "behaviors",
-              "layout"
-            ],
-            "x-ms-enum": {
-              "name": "GetWorkItemTypeExpand",
-              "values": [
-                {
-                  "value": "none",
-                  "description": ""
-                },
-                {
-                  "value": "states",
-                  "description": ""
-                },
-                {
-                  "value": "behaviors",
-                  "description": ""
-                },
-                {
-                  "value": "layout",
-                  "description": ""
-                }
-              ]
-            }
-          },
-          {
-            "$ref": "#/parameters/api-Version-preview.1"
+            "$ref": "#/parameters/api-Version-preview.2"
           }
         ],
         "responses": {
           "200": {
             "description": "successful operation",
             "schema": {
-              "$ref": "#/definitions/WorkItemTypeModel"
+              "$ref": "#/definitions/ProcessWorkItemType"
             }
           }
         },
@@ -548,12 +767,68 @@
               "vso.work"
             ]
           }
+        ]
+      },
+      "patch": {
+        "tags": [
+          "Work Item Types"
         ],
-        "x-ms-examples": {
-          "Get work item type": {
-            "$ref": "./httpExamples/workItemTypes/GET__wit.json"
+        "x-ms-docs-override-version": "5.0-preview.2",
+        "x-ms-vss-resource": "workItemTypes",
+        "x-ms-vss-method": "UpdateProcessWorkItemType",
+        "x-ms-preview": true,
+        "description": "Updates a work item type of the process.",
+        "operationId": "Update",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UpdateProcessWorkItemTypeRequest"
+            }
+          },
+          {
+            "in": "path",
+            "name": "processId",
+            "description": "The ID of the process",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "path",
+            "name": "witRefName",
+            "description": "The reference name of the work item type",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.2"
           }
-        }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ProcessWorkItemType"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.work_write"
+            ]
+          }
+        ]
       }
     },
     "/_apis/work/processes/{processId}/workItemTypes/{witRefName}/fields": {
@@ -935,6 +1210,72 @@
       }
     },
     "/_apis/work/processes/{processId}/workItemTypes/{witRefName}/states": {
+      "post": {
+        "tags": [
+          "States"
+        ],
+        "x-ms-docs-override-version": "5.0-preview.1",
+        "x-ms-vss-resource": "states",
+        "x-ms-vss-method": "CreateStateDefinition",
+        "x-ms-preview": true,
+        "description": "Creates a state definition in the work item type of the process.",
+        "operationId": "Create",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/WorkItemStateInputModel"
+            }
+          },
+          {
+            "in": "path",
+            "name": "processId",
+            "description": "The ID of the process",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "path",
+            "name": "witRefName",
+            "description": "The reference name of the work item type",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/WorkItemStateResultModel"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.work_write"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "Create state definition": {
+            "$ref": "./httpExamples/states/CREATE__wit_state.json"
+          }
+        }
+      },
       "get": {
         "tags": [
           "States"
@@ -994,6 +1335,62 @@
       }
     },
     "/_apis/work/processes/{processId}/workItemTypes/{witRefName}/states/{stateId}": {
+      "delete": {
+        "tags": [
+          "States"
+        ],
+        "x-ms-docs-override-version": "5.0-preview.1",
+        "x-ms-vss-resource": "states",
+        "x-ms-vss-method": "DeleteStateDefinition",
+        "x-ms-preview": true,
+        "description": "Removes a state definition in the work item type of the process.",
+        "operationId": "Delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "processId",
+            "description": "ID of the process",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "path",
+            "name": "witRefName",
+            "description": "The reference name of the work item type",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "stateId",
+            "description": "ID of the state",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.work_write"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "Delete state definition": {
+            "$ref": "./httpExamples/states/DELETE__wit_state.json"
+          }
+        }
+      },
       "get": {
         "tags": [
           "States"
@@ -1053,6 +1450,154 @@
         "x-ms-examples": {
           "Get state definition": {
             "$ref": "./httpExamples/states/GET__wit_state.json"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "States"
+        ],
+        "x-ms-docs-override-version": "5.0-preview.1",
+        "x-ms-vss-resource": "states",
+        "x-ms-vss-method": "HideStateDefinition",
+        "x-ms-preview": true,
+        "description": "Hides a state definition in the work item type of the process.Only states with customizationType:System can be hidden.",
+        "operationId": "Hide State Definition",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/HideStateModel"
+            }
+          },
+          {
+            "in": "path",
+            "name": "processId",
+            "description": "The ID of the process",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "path",
+            "name": "witRefName",
+            "description": "The reference name of the work item type",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "stateId",
+            "description": "The ID of the state",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/WorkItemStateResultModel"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.work_write"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "Hide state definition": {
+            "$ref": "./httpExamples/states/HIDE__wit_state.json"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "States"
+        ],
+        "x-ms-docs-override-version": "5.0-preview.1",
+        "x-ms-vss-resource": "states",
+        "x-ms-vss-method": "UpdateStateDefinition",
+        "x-ms-preview": true,
+        "description": "Updates a given state definition in the work item type of the process.",
+        "operationId": "Update",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/WorkItemStateInputModel"
+            }
+          },
+          {
+            "in": "path",
+            "name": "processId",
+            "description": "ID of the process",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "path",
+            "name": "witRefName",
+            "description": "The reference name of the work item type",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "stateId",
+            "description": "ID of the state",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/WorkItemStateResultModel"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.work_write"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "Update state definition": {
+            "$ref": "./httpExamples/states/UPDATE__wit_state.json"
           }
         }
       }
@@ -1314,6 +1859,32 @@
         }
       }
     },
+    "CreateProcessWorkItemTypeRequest": {
+      "description": "Class for create work item type request",
+      "type": "object",
+      "properties": {
+        "color": {
+          "description": "Color hexadecimal code to represent the work item type",
+          "type": "string"
+        },
+        "description": {
+          "description": "Description of the work item type",
+          "type": "string"
+        },
+        "icon": {
+          "description": "Icon to represent the work item typ",
+          "type": "string"
+        },
+        "inheritsFrom": {
+          "description": "Parent work item type for work item type",
+          "type": "string"
+        },
+        "name": {
+          "description": "Name of work item type",
+          "type": "string"
+        }
+      }
+    },
     "Extension": {
       "description": "Represents the extensions part of the layout",
       "type": "object",
@@ -1532,6 +2103,15 @@
         }
       }
     },
+    "HideStateModel": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "hidden": {
+          "type": "boolean"
+        }
+      }
+    },
     "Page": {
       "description": "",
       "type": "object",
@@ -1609,6 +2189,141 @@
         "visible": {
           "description": "A value indicating if the page should be hidden or not.",
           "type": "boolean"
+        }
+      }
+    },
+    "ProcessBehavior": {
+      "description": "Process Behavior Model.",
+      "type": "object",
+      "properties": {
+        "color": {
+          "description": "Color.",
+          "type": "string"
+        },
+        "customization": {
+          "description": "Indicates the type of customization on this work item. System behaviors are inherited from parent process but not modified. Inherited behaviors are modified modified behaviors that were inherited from parent process. Custom behaviors are behaviors created by user in current process.",
+          "enum": [
+            "system",
+            "inherited",
+            "custom"
+          ],
+          "x-ms-enum": {
+            "name": "CustomizationType",
+            "values": [
+              {
+                "value": "system",
+                "description": ""
+              },
+              {
+                "value": "inherited",
+                "description": ""
+              },
+              {
+                "value": "custom",
+                "description": ""
+              }
+            ]
+          }
+        },
+        "description": {
+          "description": ". Description",
+          "type": "string"
+        },
+        "fields": {
+          "description": "Process Behavior Fields.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ProcessBehaviorField"
+          }
+        },
+        "inherits": {
+          "description": "Parent behavior reference.",
+          "$ref": "#/definitions/ProcessBehaviorReference"
+        },
+        "name": {
+          "description": "Behavior Name.",
+          "type": "string"
+        },
+        "rank": {
+          "description": "Rank of the behavior",
+          "type": "integer",
+          "format": "int32"
+        },
+        "referenceName": {
+          "description": "Behavior Id",
+          "type": "string"
+        },
+        "url": {
+          "description": "Url of the behavior.",
+          "type": "string"
+        }
+      }
+    },
+    "ProcessBehaviorCreateRequest": {
+      "description": "Process Behavior Create Payload.",
+      "type": "object",
+      "properties": {
+        "color": {
+          "description": "Color.",
+          "type": "string"
+        },
+        "inherits": {
+          "description": "Parent behavior id.",
+          "type": "string"
+        },
+        "name": {
+          "description": "Name of the behavior.",
+          "type": "string"
+        },
+        "referenceName": {
+          "description": "ReferenceName is optional, if not specified will be auto-generated.",
+          "type": "string"
+        }
+      }
+    },
+    "ProcessBehaviorField": {
+      "description": "Process Behavior Field.",
+      "type": "object",
+      "properties": {
+        "name": {
+          "description": "Name of the field.",
+          "type": "string"
+        },
+        "referenceName": {
+          "description": "Reference name of the field.",
+          "type": "string"
+        },
+        "url": {
+          "description": "Url to field.",
+          "type": "string"
+        }
+      }
+    },
+    "ProcessBehaviorReference": {
+      "description": "Process behavior Reference.",
+      "type": "object",
+      "properties": {
+        "behaviorRefName": {
+          "description": "Id of a Behavior.",
+          "type": "string"
+        },
+        "url": {
+          "description": "Url to behavior.",
+          "type": "string"
+        }
+      }
+    },
+    "ProcessBehaviorUpdateRequest": {
+      "description": "Process Behavior Replace Payload.",
+      "type": "object",
+      "properties": {
+        "color": {
+          "description": "Color.",
+          "type": "string"
+        },
+        "name": {
+          "description": "Behavior Name.",
+          "type": "string"
         }
       }
     },
@@ -1690,6 +2405,65 @@
         },
         "version": {
           "description": "Version of the process",
+          "type": "string"
+        }
+      }
+    },
+    "ProcessWorkItemType": {
+      "description": "Class that describes a work item type object",
+      "type": "object",
+      "properties": {
+        "color": {
+          "description": "Color hexadecimal code to represent the work item type",
+          "type": "string"
+        },
+        "customization": {
+          "description": "Indicates the type of customization on this work item System work item types are inherited from parent process but not modified Inherited work item types are modified work item that were inherited from parent process Custom work item types are work item types that were created in the current process",
+          "enum": [
+            "system",
+            "inherited",
+            "custom"
+          ],
+          "x-ms-enum": {
+            "name": "CustomizationType",
+            "values": [
+              {
+                "value": "system",
+                "description": ""
+              },
+              {
+                "value": "inherited",
+                "description": ""
+              },
+              {
+                "value": "custom",
+                "description": ""
+              }
+            ]
+          }
+        },
+        "description": {
+          "description": "Description of the work item type",
+          "type": "string"
+        },
+        "icon": {
+          "description": "Icon to represent the work item typ",
+          "type": "string"
+        },
+        "isDisabled": {
+          "description": "Indicates if a work item type is disabled",
+          "type": "boolean"
+        },
+        "name": {
+          "description": "Name of the work item type",
+          "type": "string"
+        },
+        "referenceName": {
+          "description": "Reference name of work item type",
+          "type": "string"
+        },
+        "url": {
+          "description": "Url of the work item type",
           "type": "string"
         }
       }
@@ -1782,6 +2556,28 @@
         },
         "name": {
           "type": "string"
+        }
+      }
+    },
+    "UpdateProcessWorkItemTypeRequest": {
+      "description": "Class for update request on a work item type",
+      "type": "object",
+      "properties": {
+        "color": {
+          "description": "Color of the work item type",
+          "type": "string"
+        },
+        "description": {
+          "description": "Description of the work item type",
+          "type": "string"
+        },
+        "icon": {
+          "description": "Icon of the work item type",
+          "type": "string"
+        },
+        "isDisabled": {
+          "description": "If set will disable the work item type",
+          "type": "boolean"
         }
       }
     },
@@ -1903,12 +2699,59 @@
         }
       }
     },
+    "WorkItemStateInputModel": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "color": {
+          "description": "Color of the state",
+          "type": "string"
+        },
+        "name": {
+          "description": "Name of the state",
+          "type": "string"
+        },
+        "order": {
+          "description": "Order in which state should appear",
+          "type": "integer",
+          "format": "int32"
+        },
+        "stateCategory": {
+          "description": "Category of the state",
+          "type": "string"
+        }
+      }
+    },
     "WorkItemStateResultModel": {
       "description": "",
       "type": "object",
       "properties": {
         "color": {
           "type": "string"
+        },
+        "customizationType": {
+          "enum": [
+            "system",
+            "inherited",
+            "custom"
+          ],
+          "x-ms-enum": {
+            "name": "CustomizationType",
+            "values": [
+              {
+                "value": "system",
+                "description": ""
+              },
+              {
+                "value": "inherited",
+                "description": ""
+              },
+              {
+                "value": "custom",
+                "description": ""
+              }
+            ]
+          }
         },
         "hidden": {
           "type": "boolean"
@@ -2023,6 +2866,13 @@
       "name": "api-version",
       "in": "query",
       "description": "Version of the API to use.  This should be set to '5.0-preview.1' to use this version of the api.",
+      "required": true,
+      "type": "string"
+    },
+    "api-Version-preview.2": {
+      "name": "api-version",
+      "in": "query",
+      "description": "Version of the API to use.  This should be set to '5.0-preview.2' to use this version of the api.",
       "required": true,
       "type": "string"
     }
