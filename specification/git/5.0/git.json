@@ -136,6 +136,10 @@
       "description": "Controller to handle REST requests for git refs"
     },
     {
+      "name": "Refs Favorites",
+      "description": "Controller to handle REST requests for Git Ref Favorites"
+    },
+    {
       "name": "Repositories",
       "description": "Controller to handle all REST calls against Git Repositories"
     },
@@ -205,7 +209,7 @@
     "/{project}/_apis/git/favorites/refs": {
       "post": {
         "tags": [
-          "Refs"
+          "Refs Favorites"
         ],
         "x-ms-docs-override-version": "5.0-preview.1",
         "x-ms-vss-resource": "refsFavorites",
@@ -258,14 +262,14 @@
       },
       "get": {
         "tags": [
-          "Refs"
+          "Refs Favorites"
         ],
         "x-ms-docs-override-version": "5.0-preview.1",
         "x-ms-vss-resource": "refsFavorites",
         "x-ms-vss-method": "GetRefFavorites",
         "x-ms-preview": true,
         "description": "Gets the refs favorites for a repo and an identity.",
-        "operationId": "Get Ref Favorites",
+        "operationId": "List",
         "produces": [
           "application/json"
         ],
@@ -318,7 +322,7 @@
     "/{project}/_apis/git/favorites/refs/{favoriteId}": {
       "delete": {
         "tags": [
-          "Refs"
+          "Refs Favorites"
         ],
         "x-ms-docs-override-version": "5.0-preview.1",
         "x-ms-vss-resource": "refsFavorites",
@@ -354,7 +358,7 @@
       },
       "get": {
         "tags": [
-          "Refs"
+          "Refs Favorites"
         ],
         "x-ms-docs-override-version": "5.0-preview.1",
         "x-ms-vss-resource": "refsFavorites",
@@ -8042,7 +8046,7 @@
         ]
       }
     },
-    "/{project}/_apis/git/repositories/{repositoryId}/commits?searchCriteria.historyMode={searchCriteria.historyMode}&searchCriteria.includeUserImageUrl={searchCriteria.includeUserImageUrl}&searchCriteria.includeWorkItems={searchCriteria.includeWorkItems}&searchCriteria.includeLinks={searchCriteria.includeLinks}&searchCriteria.$top={searchCriteria.$top}&searchCriteria.$skip={searchCriteria.$skip}&searchCriteria.excludeDeletes={searchCriteria.excludeDeletes}&searchCriteria.itemPath={searchCriteria.itemPath}&searchCriteria.author={searchCriteria.author}&searchCriteria.user={searchCriteria.user}&searchCriteria.toCommitId={searchCriteria.toCommitId}&searchCriteria.fromCommitId={searchCriteria.fromCommitId}&searchCriteria.compareVersion.versionOptions={searchCriteria.compareVersion.versionOptions}&searchCriteria.compareVersion.version={searchCriteria.compareVersion.version}&searchCriteria.compareVersion.versionType={searchCriteria.compareVersion.versionType}&searchCriteria.compareVersion={searchCriteria.compareVersion}&searchCriteria.itemVersion.versionOptions={searchCriteria.itemVersion.versionOptions}&searchCriteria.itemVersion.version={searchCriteria.itemVersion.version}&searchCriteria.itemVersion.versionType={searchCriteria.itemVersion.versionType}&searchCriteria.itemVersion={searchCriteria.itemVersion}&searchCriteria.toDate={searchCriteria.toDate}&searchCriteria.fromDate={searchCriteria.fromDate}&searchCriteria.ids={searchCriteria.ids}&skip={skip}&top={top}": {
+    "/{project}/_apis/git/repositories/{repositoryId}/commits?searchCriteria.historyMode={searchCriteria.historyMode}&searchCriteria.includePushData={searchCriteria.includePushData}&searchCriteria.includeUserImageUrl={searchCriteria.includeUserImageUrl}&searchCriteria.includeWorkItems={searchCriteria.includeWorkItems}&searchCriteria.includeLinks={searchCriteria.includeLinks}&searchCriteria.$top={searchCriteria.$top}&searchCriteria.$skip={searchCriteria.$skip}&searchCriteria.excludeDeletes={searchCriteria.excludeDeletes}&searchCriteria.itemPath={searchCriteria.itemPath}&searchCriteria.author={searchCriteria.author}&searchCriteria.user={searchCriteria.user}&searchCriteria.toCommitId={searchCriteria.toCommitId}&searchCriteria.fromCommitId={searchCriteria.fromCommitId}&searchCriteria.compareVersion.versionOptions={searchCriteria.compareVersion.versionOptions}&searchCriteria.compareVersion.version={searchCriteria.compareVersion.version}&searchCriteria.compareVersion.versionType={searchCriteria.compareVersion.versionType}&searchCriteria.compareVersion={searchCriteria.compareVersion}&searchCriteria.itemVersion.versionOptions={searchCriteria.itemVersion.versionOptions}&searchCriteria.itemVersion.version={searchCriteria.itemVersion.version}&searchCriteria.itemVersion.versionType={searchCriteria.itemVersion.versionType}&searchCriteria.itemVersion={searchCriteria.itemVersion}&searchCriteria.toDate={searchCriteria.toDate}&searchCriteria.fromDate={searchCriteria.fromDate}&searchCriteria.ids={searchCriteria.ids}&skip={skip}&top={top}": {
       "get": {
         "tags": [
           "Commits"
@@ -8105,6 +8109,13 @@
                 }
               ]
             }
+          },
+          {
+            "in": "query",
+            "name": "searchCriteria.includePushData",
+            "description": "Whether to include the push information",
+            "required": false,
+            "type": "boolean"
           },
           {
             "in": "query",
@@ -9913,9 +9924,6 @@
         }
       ],
       "properties": {
-        "push": {
-          "$ref": "#/definitions/GitPushRef"
-        },
         "treeId": {
           "type": "string"
         }
@@ -10020,6 +10028,10 @@
           "items": {
             "type": "string"
           }
+        },
+        "push": {
+          "description": "The push associated with this commit.",
+          "$ref": "#/definitions/GitPushRef"
         },
         "remoteUrl": {
           "description": "Remote URL path to the commit.",
@@ -12161,6 +12173,10 @@
         },
         "includeLinks": {
           "description": "Whether to include the _links field on the shallow references",
+          "type": "boolean"
+        },
+        "includePushData": {
+          "description": "Whether to include the push information",
           "type": "boolean"
         },
         "includeUserImageUrl": {
@@ -15205,7 +15221,7 @@
       "authorizationUrl": "https://app.vssps.visualstudio.com/oauth2/authorize&response_type=Assertion",
       "tokenUrl": "https://app.vssps.visualstudio.com/oauth2/token?client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer&grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer",
       "scopes": {
-        "vso.code": "Grants the ability to read source code and metadata about commits, changesets, branches, and other version control artifacts. Also grants the ability to get notified about version control events via service hooks.",
+        "vso.code": "Grants the ability to read source code and metadata about commits, changesets, branches, and other version control artifacts. Also grants the ability to search code and get notified about version control events via service hooks.",
         "vso.code_manage": "Grants the ability to read, update, and delete source code, access metadata about commits, changesets, branches, and other version control artifacts. Also grants the ability to create and manage code repositories, create and manage pull requests and code reviews, and to receive notifications about version control events via service hooks.",
         "vso.code_write": "Grants the ability to read, update, and delete source code, access metadata about commits, changesets, branches, and other version control artifacts. Also grants the ability to create and manage pull requests and code reviews and to receive notifications about version control events via service hooks.",
         "vso.code_status": "Grants the ability to read and write commit and pull request status."

@@ -34,7 +34,26 @@
       "name": "Behaviors"
     },
     {
+      "name": "Controls",
+      "description": "Manage the controls in the work item form layout for a process using inherited customization."
+    },
+    {
       "name": "Fields"
+    },
+    {
+      "name": "Groups",
+      "description": "Manage the groups in the work item form layout for a process using inherited customization."
+    },
+    {
+      "name": "Layout",
+      "description": "Gets the full work item form layout for a process using inherited customization."
+    },
+    {
+      "name": "Lists"
+    },
+    {
+      "name": "Pages",
+      "description": "Manage the pages in the work item form layout for a process using inherited customization."
     },
     {
       "name": "Processes"
@@ -58,9 +77,9 @@
         "tags": [
           "Processes"
         ],
-        "x-ms-docs-override-version": "5.0-preview.1",
+        "x-ms-docs-override-version": "5.0-preview.2",
         "x-ms-vss-resource": "processes",
-        "x-ms-vss-method": "CreateProcess",
+        "x-ms-vss-method": "CreateNewProcess",
         "x-ms-preview": true,
         "description": "Creates a process.",
         "operationId": "Create",
@@ -74,21 +93,21 @@
           {
             "in": "body",
             "name": "body",
-            "description": "",
+            "description": "CreateProcessModel.",
             "required": true,
             "schema": {
               "$ref": "#/definitions/CreateProcessModel"
             }
           },
           {
-            "$ref": "#/parameters/api-Version-preview.1"
+            "$ref": "#/parameters/api-Version-preview.2"
           }
         ],
         "responses": {
           "200": {
             "description": "successful operation",
             "schema": {
-              "$ref": "#/definitions/ProcessModel"
+              "$ref": "#/definitions/ProcessInfo"
             }
           }
         },
@@ -109,11 +128,11 @@
         "tags": [
           "Processes"
         ],
-        "x-ms-docs-override-version": "5.0-preview.1",
+        "x-ms-docs-override-version": "5.0-preview.2",
         "x-ms-vss-resource": "processes",
-        "x-ms-vss-method": "GetProcesses",
+        "x-ms-vss-method": "GetListOfProcesses",
         "x-ms-preview": true,
-        "description": "Returns a list of all processes.",
+        "description": "Get list of all processes including system and inherited.",
         "operationId": "List",
         "produces": [
           "application/json"
@@ -144,7 +163,7 @@
             }
           },
           {
-            "$ref": "#/parameters/api-Version-preview.1"
+            "$ref": "#/parameters/api-Version-preview.2"
           }
         ],
         "responses": {
@@ -153,7 +172,7 @@
             "schema": {
               "type": "array",
               "items": {
-                "$ref": "#/definitions/ProcessModel"
+                "$ref": "#/definitions/ProcessInfo"
               }
             }
           }
@@ -523,58 +542,6 @@
         }
       }
     },
-    "/_apis/work/processes/{processId}/fields": {
-      "get": {
-        "tags": [
-          "Fields"
-        ],
-        "x-ms-docs-override-version": "5.0-preview.1",
-        "x-ms-vss-resource": "fields",
-        "x-ms-vss-method": "GetFields",
-        "x-ms-preview": true,
-        "description": "Returns a list of all fields in a process.",
-        "operationId": "Get Fields",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "processId",
-            "description": "The ID of the process",
-            "required": true,
-            "type": "string",
-            "format": "uuid"
-          },
-          {
-            "$ref": "#/parameters/api-Version-preview.1"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/FieldModel"
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "oauth2": [
-              "vso.work"
-            ]
-          }
-        ],
-        "x-ms-examples": {
-          "Get the list of process fields": {
-            "$ref": "./httpExamples/fields/GET__process_fields.json"
-          }
-        }
-      }
-    },
     "/_apis/work/processes/{processId}/workitemtypes": {
       "post": {
         "tags": [
@@ -832,20 +799,751 @@
       }
     },
     "/_apis/work/processes/{processId}/workItemTypes/{witRefName}/fields": {
-      "get": {
+      "post": {
         "tags": [
           "Fields"
         ],
-        "x-ms-docs-override-version": "5.0-preview.1",
+        "x-ms-docs-override-version": "5.0-preview.2",
         "x-ms-vss-resource": "fields",
-        "x-ms-vss-method": "GetWorkItemTypeFields",
+        "x-ms-vss-method": "AddFieldToWorkItemType",
         "x-ms-preview": true,
-        "description": "Returns a list of all fields in a work item type.",
-        "operationId": "Get Work Item Type Fields",
+        "description": "Adds a field to a work item type.",
+        "operationId": "Add",
+        "consumes": [
+          "application/json"
+        ],
         "produces": [
           "application/json"
         ],
         "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/AddProcessWorkItemTypeFieldRequest"
+            }
+          },
+          {
+            "in": "path",
+            "name": "processId",
+            "description": "The ID of the process.",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "path",
+            "name": "witRefName",
+            "description": "The reference name of the work item type.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.2"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ProcessWorkItemTypeField"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.work_write"
+            ]
+          }
+        ]
+      },
+      "get": {
+        "tags": [
+          "Fields"
+        ],
+        "x-ms-docs-override-version": "5.0-preview.2",
+        "x-ms-vss-resource": "fields",
+        "x-ms-vss-method": "GetAllWorkItemTypeFields",
+        "x-ms-preview": true,
+        "description": "Returns a list of all fields in a work item type.",
+        "operationId": "List",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "processId",
+            "description": "The ID of the process.",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "path",
+            "name": "witRefName",
+            "description": "The reference name of the work item type.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.2"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/ProcessWorkItemTypeField"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.work"
+            ]
+          }
+        ]
+      }
+    },
+    "/_apis/work/processes/{processId}/workItemTypes/{witRefName}/fields/{fieldRefName}": {
+      "get": {
+        "tags": [
+          "Fields"
+        ],
+        "x-ms-docs-override-version": "5.0-preview.2",
+        "x-ms-vss-resource": "fields",
+        "x-ms-vss-method": "GetWorkItemTypeField",
+        "x-ms-preview": true,
+        "description": "Returns a field in a work item type.",
+        "operationId": "Get",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "processId",
+            "description": "The ID of the process.",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "path",
+            "name": "witRefName",
+            "description": "The reference name of the work item type.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "fieldRefName",
+            "description": "The reference name of the field.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.2"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ProcessWorkItemTypeField"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.work"
+            ]
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "Fields"
+        ],
+        "x-ms-docs-override-version": "5.0-preview.2",
+        "x-ms-vss-resource": "fields",
+        "x-ms-vss-method": "RemoveWorkItemTypeField",
+        "x-ms-preview": true,
+        "description": "Removes a field from a work item type. Does not permanently delete the field.",
+        "operationId": "Remove Work Item Type Field",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "processId",
+            "description": "The ID of the process.",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "path",
+            "name": "witRefName",
+            "description": "The reference name of the work item type.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "fieldRefName",
+            "description": "The reference name of the field.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.2"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.work_write"
+            ]
+          }
+        ]
+      },
+      "patch": {
+        "tags": [
+          "Fields"
+        ],
+        "x-ms-docs-override-version": "5.0-preview.2",
+        "x-ms-vss-resource": "fields",
+        "x-ms-vss-method": "UpdateWorkItemTypeField",
+        "x-ms-preview": true,
+        "description": "Updates a field in a work item type.",
+        "operationId": "Update",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UpdateProcessWorkItemTypeFieldRequest"
+            }
+          },
+          {
+            "in": "path",
+            "name": "processId",
+            "description": "The ID of the process.",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "path",
+            "name": "witRefName",
+            "description": "The reference name of the work item type.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "fieldRefName",
+            "description": "The reference name of the field.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.2"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ProcessWorkItemTypeField"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.work_write"
+            ]
+          }
+        ]
+      }
+    },
+    "/_apis/work/processes/{processId}/workItemTypes/{witRefName}/layout": {
+      "get": {
+        "tags": [
+          "Layout"
+        ],
+        "x-ms-docs-override-version": "5.0-preview.1",
+        "x-ms-vss-resource": "layout",
+        "x-ms-vss-method": "GetFormLayout",
+        "x-ms-preview": true,
+        "description": "Gets the form layout.",
+        "operationId": "Get",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "processId",
+            "description": "The ID of the process.",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "path",
+            "name": "witRefName",
+            "description": "The reference name of the work item type.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/FormLayout"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.work"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "Get the form layout": {
+            "$ref": "./httpExamples/layout/GET__layout.json"
+          }
+        }
+      }
+    },
+    "/_apis/work/processes/{processId}/workItemTypes/{witRefName}/layout/groups/{groupId}/controls": {
+      "post": {
+        "tags": [
+          "Controls"
+        ],
+        "x-ms-docs-override-version": "5.0-preview.1",
+        "x-ms-vss-resource": "controls",
+        "x-ms-vss-method": "CreateControlInGroup",
+        "x-ms-preview": true,
+        "description": "Creates a control in a group.",
+        "operationId": "Create",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "The control.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Control"
+            }
+          },
+          {
+            "in": "path",
+            "name": "processId",
+            "description": "The ID of the process.",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "path",
+            "name": "witRefName",
+            "description": "The reference name of the work item type.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "groupId",
+            "description": "The ID of the group to add the control to.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/Control"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.work_write"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "Create a control in a group": {
+            "$ref": "./httpExamples/Controls/POST__control.json"
+          }
+        }
+      }
+    },
+    "/_apis/work/processes/{processId}/workItemTypes/{witRefName}/layout/groups/{groupId}/controls/{controlId}": {
+      "put": {
+        "tags": [
+          "Controls"
+        ],
+        "x-ms-docs-override-version": "5.0-preview.1",
+        "x-ms-vss-resource": "controls",
+        "x-ms-vss-method": "MoveControlToGroup",
+        "x-ms-preview": true,
+        "description": "Moves a control to a specified group.",
+        "operationId": "Move Control To Group",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "The control.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Control"
+            }
+          },
+          {
+            "in": "path",
+            "name": "processId",
+            "description": "The ID of the process.",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "path",
+            "name": "witRefName",
+            "description": "The reference name of the work item type.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "groupId",
+            "description": "The ID of the group to move the control to.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "controlId",
+            "description": "The ID of the control.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "removeFromGroupId",
+            "description": "The group ID to remove the control from.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/Control"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.work_write"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "Move a control to a new group": {
+            "$ref": "./httpExamples/Controls/PUT__control.json"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Controls"
+        ],
+        "x-ms-docs-override-version": "5.0-preview.1",
+        "x-ms-vss-resource": "controls",
+        "x-ms-vss-method": "RemoveControlFromGroup",
+        "x-ms-preview": true,
+        "description": "Removes a control from the work item form.",
+        "operationId": "Remove Control From Group",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "processId",
+            "description": "The ID of the process.",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "path",
+            "name": "witRefName",
+            "description": "The reference name of the work item type.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "groupId",
+            "description": "The ID of the group.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "controlId",
+            "description": "The ID of the control to remove.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.work_write"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "Remove a control from the work item form": {
+            "$ref": "./httpExamples/Controls/DELETE__control.json"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Controls"
+        ],
+        "x-ms-docs-override-version": "5.0-preview.1",
+        "x-ms-vss-resource": "controls",
+        "x-ms-vss-method": "UpdateControl",
+        "x-ms-preview": true,
+        "description": "Updates a control on the work item form.",
+        "operationId": "Update",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "The updated control.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Control"
+            }
+          },
+          {
+            "in": "path",
+            "name": "processId",
+            "description": "The ID of the process.",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "path",
+            "name": "witRefName",
+            "description": "The reference name of the work item type.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "groupId",
+            "description": "The ID of the group.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "controlId",
+            "description": "The ID of the control.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/Control"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.work_write"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "Update a control on the work item form": {
+            "$ref": "./httpExamples/Controls/PATCH__control.json"
+          }
+        }
+      }
+    },
+    "/_apis/work/processes/{processId}/workItemTypes/{witRefName}/layout/pages": {
+      "post": {
+        "tags": [
+          "Pages"
+        ],
+        "x-ms-docs-override-version": "5.0-preview.1",
+        "x-ms-vss-resource": "pages",
+        "x-ms-vss-method": "AddPage",
+        "x-ms-preview": true,
+        "description": "Adds a page to the work item form.",
+        "operationId": "Add",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "The page.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Page"
+            }
+          },
+          {
+            "in": "path",
+            "name": "processId",
+            "description": "The ID of the process.",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "path",
+            "name": "witRefName",
+            "description": "The reference name of the work item type.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/Page"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.work_write"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "Add a page": {
+            "$ref": "./httpExamples/Pages/POST__page.json"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Pages"
+        ],
+        "x-ms-docs-override-version": "5.0-preview.1",
+        "x-ms-vss-resource": "pages",
+        "x-ms-vss-method": "UpdatePage",
+        "x-ms-preview": true,
+        "description": "Updates a page on the work item form",
+        "operationId": "Update",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "The page",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Page"
+            }
+          },
           {
             "in": "path",
             "name": "processId",
@@ -869,23 +1567,411 @@
           "200": {
             "description": "successful operation",
             "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/FieldModel"
-              }
+              "$ref": "#/definitions/Page"
             }
           }
         },
         "security": [
           {
             "oauth2": [
-              "vso.work"
+              "vso.work_write"
             ]
           }
         ],
         "x-ms-examples": {
-          "Get the list of work item type fields": {
-            "$ref": "./httpExamples/fields/GET__wit_fields.json"
+          "Update page": {
+            "$ref": "./httpExamples/Pages/PATCH__page.json"
+          }
+        }
+      }
+    },
+    "/_apis/work/processes/{processId}/workItemTypes/{witRefName}/layout/pages/{pageId}": {
+      "delete": {
+        "tags": [
+          "Pages"
+        ],
+        "x-ms-docs-override-version": "5.0-preview.1",
+        "x-ms-vss-resource": "pages",
+        "x-ms-vss-method": "RemovePage",
+        "x-ms-preview": true,
+        "description": "Removes a page from the work item form",
+        "operationId": "Remove Page",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "processId",
+            "description": "The ID of the process",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "path",
+            "name": "witRefName",
+            "description": "The reference name of the work item type",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "pageId",
+            "description": "The ID of the page",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.work_write"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "Delete the page": {
+            "$ref": "./httpExamples/Pages/DELETE__page.json"
+          }
+        }
+      }
+    },
+    "/_apis/work/processes/{processId}/workItemTypes/{witRefName}/layout/pages/{pageId}/sections/{sectionId}/groups": {
+      "post": {
+        "tags": [
+          "Groups"
+        ],
+        "x-ms-docs-override-version": "5.0-preview.1",
+        "x-ms-vss-resource": "groups",
+        "x-ms-vss-method": "AddGroup",
+        "x-ms-preview": true,
+        "description": "Adds a group to the work item form.",
+        "operationId": "Add",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "The group.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Group"
+            }
+          },
+          {
+            "in": "path",
+            "name": "processId",
+            "description": "The ID of the process.",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "path",
+            "name": "witRefName",
+            "description": "The reference name of the work item type.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "pageId",
+            "description": "The ID of the page to add the group to.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "sectionId",
+            "description": "The ID of the section to add the group to.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/Group"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.work_write"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "Add a group": {
+            "$ref": "./httpExamples/Groups/POST__group.json"
+          }
+        }
+      }
+    },
+    "/_apis/work/processes/{processId}/workItemTypes/{witRefName}/layout/pages/{pageId}/sections/{sectionId}/groups/{groupId}": {
+      "put": {
+        "tags": [
+          "Groups"
+        ],
+        "x-ms-docs-override-version": "5.0-preview.1",
+        "x-ms-vss-resource": "groups",
+        "x-ms-vss-method": "MoveGroupToSection",
+        "x-ms-preview": true,
+        "description": "Moves a group to a different section.",
+        "operationId": "Move Group To Section",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "The updated group.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Group"
+            }
+          },
+          {
+            "in": "path",
+            "name": "processId",
+            "description": "The ID of the process.",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "path",
+            "name": "witRefName",
+            "description": "The reference name of the work item type.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "pageId",
+            "description": "The ID of the page the group is in.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "sectionId",
+            "description": "The ID of the section the group is in.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "groupId",
+            "description": "The ID of the group.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "removeFromSectionId",
+            "description": "ID of the section to remove the group from.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/Group"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.work_write"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "Move a group to a different section": {
+            "$ref": "./httpExamples/Groups/PUT__group_section.json"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Groups"
+        ],
+        "x-ms-docs-override-version": "5.0-preview.1",
+        "x-ms-vss-resource": "groups",
+        "x-ms-vss-method": "RemoveGroup",
+        "x-ms-preview": true,
+        "description": "Removes a group from the work item form.",
+        "operationId": "Remove Group",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "processId",
+            "description": "The ID of the process",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "path",
+            "name": "witRefName",
+            "description": "The reference name of the work item type",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "pageId",
+            "description": "The ID of the page the group is in",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "sectionId",
+            "description": "The ID of the section to the group is in",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "groupId",
+            "description": "The ID of the group",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.work_write"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "Removes a group from the work item form": {
+            "$ref": "./httpExamples/Groups/DELETE__group.json"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Groups"
+        ],
+        "x-ms-docs-override-version": "5.0-preview.1",
+        "x-ms-vss-resource": "groups",
+        "x-ms-vss-method": "UpdateGroup",
+        "x-ms-preview": true,
+        "description": "Updates a group in the work item form.",
+        "operationId": "Update",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "The updated group.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Group"
+            }
+          },
+          {
+            "in": "path",
+            "name": "processId",
+            "description": "The ID of the process.",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "path",
+            "name": "witRefName",
+            "description": "The reference name of the work item type.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "pageId",
+            "description": "The ID of the page the group is in.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "sectionId",
+            "description": "The ID of the section the group is in.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "groupId",
+            "description": "The ID of the group.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/Group"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.work_write"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "Update group": {
+            "$ref": "./httpExamples/Groups/PATCH__group.json"
           }
         }
       }
@@ -895,9 +1981,9 @@
         "tags": [
           "Rules"
         ],
-        "x-ms-docs-override-version": "5.0-preview.1",
+        "x-ms-docs-override-version": "5.0-preview.2",
         "x-ms-vss-resource": "rules",
-        "x-ms-vss-method": "AddWorkItemTypeRule",
+        "x-ms-vss-method": "AddProcessWorkItemTypeRule",
         "x-ms-preview": true,
         "description": "Adds a rule to work item type in the process.",
         "operationId": "Add",
@@ -914,7 +2000,7 @@
             "description": "",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/FieldRuleModel"
+              "$ref": "#/definitions/CreateProcessRuleRequest"
             }
           },
           {
@@ -933,14 +2019,14 @@
             "type": "string"
           },
           {
-            "$ref": "#/parameters/api-Version-preview.1"
+            "$ref": "#/parameters/api-Version-preview.2"
           }
         ],
         "responses": {
           "200": {
             "description": "successful operation",
             "schema": {
-              "$ref": "#/definitions/FieldRuleModel"
+              "$ref": "#/definitions/ProcessRule"
             }
           }
         },
@@ -961,9 +2047,9 @@
         "tags": [
           "Rules"
         ],
-        "x-ms-docs-override-version": "5.0-preview.1",
+        "x-ms-docs-override-version": "5.0-preview.2",
         "x-ms-vss-resource": "rules",
-        "x-ms-vss-method": "GetWorkItemTypeRules",
+        "x-ms-vss-method": "GetProcessWorkItemTypeRules",
         "x-ms-preview": true,
         "description": "Returns a list of all rules in the work item type of the process.",
         "operationId": "List",
@@ -987,7 +2073,7 @@
             "type": "string"
           },
           {
-            "$ref": "#/parameters/api-Version-preview.1"
+            "$ref": "#/parameters/api-Version-preview.2"
           }
         ],
         "responses": {
@@ -996,7 +2082,7 @@
             "schema": {
               "type": "array",
               "items": {
-                "$ref": "#/definitions/FieldRuleModel"
+                "$ref": "#/definitions/ProcessRule"
               }
             }
           }
@@ -1020,9 +2106,9 @@
         "tags": [
           "Rules"
         ],
-        "x-ms-docs-override-version": "5.0-preview.1",
+        "x-ms-docs-override-version": "5.0-preview.2",
         "x-ms-vss-resource": "rules",
-        "x-ms-vss-method": "DeleteWorkItemTypeRule",
+        "x-ms-vss-method": "DeleteProcessWorkItemTypeRule",
         "x-ms-preview": true,
         "description": "Removes a rule from the work item type in the process.",
         "operationId": "Delete",
@@ -1051,7 +2137,7 @@
             "format": "uuid"
           },
           {
-            "$ref": "#/parameters/api-Version-preview.1"
+            "$ref": "#/parameters/api-Version-preview.2"
           }
         ],
         "responses": {
@@ -1076,9 +2162,9 @@
         "tags": [
           "Rules"
         ],
-        "x-ms-docs-override-version": "5.0-preview.1",
+        "x-ms-docs-override-version": "5.0-preview.2",
         "x-ms-vss-resource": "rules",
-        "x-ms-vss-method": "GetWorkItemTypeRule",
+        "x-ms-vss-method": "GetProcessWorkItemTypeRule",
         "x-ms-preview": true,
         "description": "Returns a single rule in the work item type of the process.",
         "operationId": "Get",
@@ -1110,14 +2196,14 @@
             "format": "uuid"
           },
           {
-            "$ref": "#/parameters/api-Version-preview.1"
+            "$ref": "#/parameters/api-Version-preview.2"
           }
         ],
         "responses": {
           "200": {
             "description": "successful operation",
             "schema": {
-              "$ref": "#/definitions/FieldRuleModel"
+              "$ref": "#/definitions/ProcessRule"
             }
           }
         },
@@ -1138,9 +2224,9 @@
         "tags": [
           "Rules"
         ],
-        "x-ms-docs-override-version": "5.0-preview.1",
+        "x-ms-docs-override-version": "5.0-preview.2",
         "x-ms-vss-resource": "rules",
-        "x-ms-vss-method": "UpdateWorkItemTypeRule",
+        "x-ms-vss-method": "UpdateProcessWorkItemTypeRule",
         "x-ms-preview": true,
         "description": "Updates a rule in the work item type of the process.",
         "operationId": "Update",
@@ -1157,7 +2243,7 @@
             "description": "",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/FieldRuleModel"
+              "$ref": "#/definitions/UpdateProcessRuleRequest"
             }
           },
           {
@@ -1184,14 +2270,14 @@
             "format": "uuid"
           },
           {
-            "$ref": "#/parameters/api-Version-preview.1"
+            "$ref": "#/parameters/api-Version-preview.2"
           }
         ],
         "responses": {
           "200": {
             "description": "successful operation",
             "schema": {
-              "$ref": "#/definitions/FieldRuleModel"
+              "$ref": "#/definitions/ProcessRule"
             }
           }
         },
@@ -1607,9 +2693,9 @@
         "tags": [
           "Processes"
         ],
-        "x-ms-docs-override-version": "5.0-preview.1",
+        "x-ms-docs-override-version": "5.0-preview.2",
         "x-ms-vss-resource": "processes",
-        "x-ms-vss-method": "DeleteProcess",
+        "x-ms-vss-method": "DeleteProcessById",
         "x-ms-preview": true,
         "description": "Removes a process of a specific ID.",
         "operationId": "Delete",
@@ -1623,7 +2709,7 @@
             "format": "uuid"
           },
           {
-            "$ref": "#/parameters/api-Version-preview.1"
+            "$ref": "#/parameters/api-Version-preview.2"
           }
         ],
         "responses": {
@@ -1639,8 +2725,67 @@
           }
         ],
         "x-ms-examples": {
-          "Delete the process definition": {
+          "Delete the process": {
             "$ref": "./httpExamples/processes/DELETE__process.json"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Processes"
+        ],
+        "x-ms-docs-override-version": "5.0-preview.2",
+        "x-ms-vss-resource": "processes",
+        "x-ms-vss-method": "EditProcess",
+        "x-ms-preview": true,
+        "description": "Edit a process of a specific ID.",
+        "operationId": "Edit Process",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UpdateProcessModel"
+            }
+          },
+          {
+            "in": "path",
+            "name": "processTypeId",
+            "description": "",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.2"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ProcessInfo"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.work_write"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "Edit the process": {
+            "$ref": "./httpExamples/processes/PATCH__edit_process.json"
           }
         }
       },
@@ -1648,11 +2793,11 @@
         "tags": [
           "Processes"
         ],
-        "x-ms-docs-override-version": "5.0-preview.1",
+        "x-ms-docs-override-version": "5.0-preview.2",
         "x-ms-vss-resource": "processes",
-        "x-ms-vss-method": "GetProcessById",
+        "x-ms-vss-method": "GetProcessByItsId",
         "x-ms-preview": true,
-        "description": "Returns a single process of a specified ID.",
+        "description": "Get a single process of a specified ID.",
         "operationId": "Get",
         "produces": [
           "application/json"
@@ -1691,14 +2836,14 @@
             }
           },
           {
-            "$ref": "#/parameters/api-Version-preview.1"
+            "$ref": "#/parameters/api-Version-preview.2"
           }
         ],
         "responses": {
           "200": {
             "description": "successful operation",
             "schema": {
-              "$ref": "#/definitions/ProcessModel"
+              "$ref": "#/definitions/ProcessInfo"
             }
           }
         },
@@ -1710,20 +2855,205 @@
           }
         ],
         "x-ms-examples": {
-          "Get the specific process definition": {
+          "Get the specific process": {
             "$ref": "./httpExamples/processes/GET__process.json"
           }
         }
-      },
-      "patch": {
+      }
+    },
+    "/_apis/work/processes/lists": {
+      "post": {
         "tags": [
-          "Processes"
+          "Lists"
         ],
         "x-ms-docs-override-version": "5.0-preview.1",
-        "x-ms-vss-resource": "processes",
-        "x-ms-vss-method": "UpdateProcess",
+        "x-ms-vss-resource": "lists",
+        "x-ms-vss-method": "CreateList",
         "x-ms-preview": true,
-        "description": "Updates a process of a specific ID.",
+        "description": "Creates a picklist.",
+        "operationId": "Create",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Picklist",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/PickList"
+            }
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/PickList"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.work_write"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "Create the picklist": {
+            "$ref": "./httpExamples/lists/POST__list.json"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Lists"
+        ],
+        "x-ms-docs-override-version": "5.0-preview.1",
+        "x-ms-vss-resource": "lists",
+        "x-ms-vss-method": "GetListsMetadata",
+        "x-ms-preview": true,
+        "description": "Returns meta data of the picklist.",
+        "operationId": "List",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/PickListMetadata"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.work"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "Get lists metadata": {
+            "$ref": "./httpExamples/lists/GET__lists.json"
+          }
+        }
+      }
+    },
+    "/_apis/work/processes/lists/{listId}": {
+      "delete": {
+        "tags": [
+          "Lists"
+        ],
+        "x-ms-docs-override-version": "5.0-preview.1",
+        "x-ms-vss-resource": "lists",
+        "x-ms-vss-method": "DeleteList",
+        "x-ms-preview": true,
+        "description": "Removes a picklist.",
+        "operationId": "Delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "listId",
+            "description": "The ID of the list",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.work_write"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "Delete the picklist": {
+            "$ref": "./httpExamples/lists/DELETE__list.json"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Lists"
+        ],
+        "x-ms-docs-override-version": "5.0-preview.1",
+        "x-ms-vss-resource": "lists",
+        "x-ms-vss-method": "GetList",
+        "x-ms-preview": true,
+        "description": "Returns a picklist.",
+        "operationId": "Get",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "listId",
+            "description": "The ID of the list",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/PickList"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.work"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "Get list metadata": {
+            "$ref": "./httpExamples/lists/GET__list.json"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Lists"
+        ],
+        "x-ms-docs-override-version": "5.0-preview.1",
+        "x-ms-vss-resource": "lists",
+        "x-ms-vss-method": "UpdateList",
+        "x-ms-preview": true,
+        "description": "Updates a list.",
         "operationId": "Update",
         "consumes": [
           "application/json"
@@ -1738,13 +3068,13 @@
             "description": "",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/UpdateProcessModel"
+              "$ref": "#/definitions/PickList"
             }
           },
           {
             "in": "path",
-            "name": "processTypeId",
-            "description": "",
+            "name": "listId",
+            "description": "The ID of the list",
             "required": true,
             "type": "string",
             "format": "uuid"
@@ -1757,7 +3087,7 @@
           "200": {
             "description": "successful operation",
             "schema": {
-              "$ref": "#/definitions/ProcessModel"
+              "$ref": "#/definitions/PickList"
             }
           }
         },
@@ -1769,14 +3099,145 @@
           }
         ],
         "x-ms-examples": {
-          "Update the process definition": {
-            "$ref": "./httpExamples/processes/PATCH__update_process.json"
+          "Update the picklist": {
+            "$ref": "./httpExamples/lists/PUT__list.json"
+          }
+        }
+      }
+    }
+  },
+  "x-ms-paths": {
+    "/_apis/work/processes/{processId}/workItemTypes/{witRefName}/layout/pages/{pageId}/sections/{sectionId}/groups/{groupId}?removeFromPageId={removeFromPageId}&removeFromSectionId={removeFromSectionId}": {
+      "put": {
+        "tags": [
+          "Groups"
+        ],
+        "x-ms-docs-override-version": "5.0-preview.1",
+        "x-ms-vss-resource": "groups",
+        "x-ms-vss-method": "MoveGroupToPage",
+        "x-ms-preview": true,
+        "description": "Moves a group to a different page and section.",
+        "operationId": "Move Group To Page",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "The updated group.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Group"
+            }
+          },
+          {
+            "in": "path",
+            "name": "processId",
+            "description": "The ID of the process.",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "path",
+            "name": "witRefName",
+            "description": "The reference name of the work item type.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "pageId",
+            "description": "The ID of the page the group is in.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "sectionId",
+            "description": "The ID of the section the group is i.n",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "groupId",
+            "description": "The ID of the group.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "removeFromPageId",
+            "description": "ID of the page to remove the group from.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "removeFromSectionId",
+            "description": "ID of the section to remove the group from.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/Group"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.work_write"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "Moves a group to a different page and section": {
+            "$ref": "./httpExamples/Groups/PUT__group_page.json"
           }
         }
       }
     }
   },
   "definitions": {
+    "AddProcessWorkItemTypeFieldRequest": {
+      "description": "Class that describes a request to add a field in a work item type.",
+      "type": "object",
+      "properties": {
+        "allowGroups": {
+          "description": "Allow setting field value to a group identity. Only applies to identity fields.",
+          "type": "boolean"
+        },
+        "defaultValue": {
+          "description": "The default value of the field.",
+          "type": "object"
+        },
+        "readOnly": {
+          "description": "If true the field cannot be edited.",
+          "type": "boolean"
+        },
+        "referenceName": {
+          "description": "Reference name of the field.",
+          "type": "string"
+        },
+        "required": {
+          "description": "If true the field cannot be empty.",
+          "type": "boolean"
+        }
+      }
+    },
     "Control": {
       "description": "Represent a control in the form.",
       "type": "object",
@@ -1799,7 +3260,7 @@
           "type": "string"
         },
         "inherited": {
-          "description": "A value indicating whether this layout node has been inherited from a parent layout.  This is expected to only be only set by the combiner.",
+          "description": "A value indicating whether this layout node has been inherited. from a parent layout.  This is expected to only be only set by the combiner.",
           "type": "boolean"
         },
         "isContribution": {
@@ -1807,7 +3268,7 @@
           "type": "boolean"
         },
         "label": {
-          "description": "Label for the field",
+          "description": "Label for the field.",
           "type": "string"
         },
         "metadata": {
@@ -1819,7 +3280,7 @@
           "format": "int32"
         },
         "overridden": {
-          "description": "A value indicating whether this layout node has been overridden by a child layout.",
+          "description": "A value indicating whether this layout node has been overridden . by a child layout.",
           "type": "boolean"
         },
         "readOnly": {
@@ -1855,6 +3316,34 @@
         },
         "referenceName": {
           "description": "Reference name of the process",
+          "type": "string"
+        }
+      }
+    },
+    "CreateProcessRuleRequest": {
+      "description": "Request object/class for creating a rule on a work item type.",
+      "type": "object",
+      "properties": {
+        "actions": {
+          "description": "List of actions to take when the rule is triggered.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/RuleAction"
+          }
+        },
+        "conditions": {
+          "description": "List of conditions when the rule should be triggered.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/RuleCondition"
+          }
+        },
+        "isDisabled": {
+          "description": "Indicates if the rule is disabled.",
+          "type": "boolean"
+        },
+        "name": {
+          "description": "Name for the rule.",
           "type": "string"
         }
       }
@@ -2030,7 +3519,7 @@
       "type": "object",
       "properties": {
         "extensions": {
-          "description": "Gets and sets extensions list",
+          "description": "Gets and sets extensions list.",
           "type": "array",
           "items": {
             "$ref": "#/definitions/Extension"
@@ -2192,6 +3681,51 @@
         }
       }
     },
+    "PickList": {
+      "description": "Picklist.",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/PickListMetadata"
+        }
+      ],
+      "properties": {
+        "items": {
+          "description": "A list of PicklistItemModel.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "PickListMetadata": {
+      "description": "Metadata for picklist.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "ID of the picklist",
+          "type": "string",
+          "format": "uuid"
+        },
+        "isSuggested": {
+          "description": "Indicates whether items outside of suggested list are allowed",
+          "type": "boolean"
+        },
+        "name": {
+          "description": "Name of the picklist",
+          "type": "string"
+        },
+        "type": {
+          "description": "DataType of picklist",
+          "type": "string"
+        },
+        "url": {
+          "description": "Url of the picklist",
+          "type": "string"
+        }
+      }
+    },
     "ProcessBehavior": {
       "description": "Process Behavior Model.",
       "type": "object",
@@ -2212,15 +3746,15 @@
             "values": [
               {
                 "value": "system",
-                "description": ""
+                "description": "Customization-type is System if is system generated workitemtype."
               },
               {
                 "value": "inherited",
-                "description": ""
+                "description": "Customization-type is Inherited if the existing workitemtype of inherited process is customized."
               },
               {
                 "value": "custom",
-                "description": ""
+                "description": "Customization-type is Custom if the newly created workitemtype is customized."
               }
             ]
           }
@@ -2327,6 +3861,70 @@
         }
       }
     },
+    "ProcessInfo": {
+      "description": "Process.",
+      "type": "object",
+      "properties": {
+        "customizationType": {
+          "description": "Indicates the type of customization on this process. System Process is default process. Inherited Process is modified process that was System process before.",
+          "enum": [
+            "system",
+            "inherited",
+            "custom"
+          ],
+          "x-ms-enum": {
+            "name": "CustomizationType",
+            "values": [
+              {
+                "value": "system",
+                "description": "Customization-type is System if is system generated workitemtype."
+              },
+              {
+                "value": "inherited",
+                "description": "Customization-type is Inherited if the existing workitemtype of inherited process is customized."
+              },
+              {
+                "value": "custom",
+                "description": "Customization-type is Custom if the newly created workitemtype is customized."
+              }
+            ]
+          }
+        },
+        "description": {
+          "description": "Description of the process.",
+          "type": "string"
+        },
+        "isEnabled": {
+          "description": "Is the process enabled.",
+          "type": "boolean"
+        },
+        "name": {
+          "description": "Name of the process.",
+          "type": "string"
+        },
+        "parentProcessTypeId": {
+          "description": "ID of the parent process.",
+          "type": "string",
+          "format": "uuid"
+        },
+        "projects": {
+          "description": "Projects in this process to which the user is subscribed to.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ProjectReference"
+          }
+        },
+        "referenceName": {
+          "description": "Reference name of the process.",
+          "type": "string"
+        },
+        "typeId": {
+          "description": "The ID of the process.",
+          "type": "string",
+          "format": "uuid"
+        }
+      }
+    },
     "ProcessModel": {
       "description": "",
       "type": "object",
@@ -2362,11 +3960,11 @@
       }
     },
     "ProcessProperties": {
-      "description": "Properties of the process",
+      "description": "Properties of the process.",
       "type": "object",
       "properties": {
         "class": {
-          "description": "Class of the process",
+          "description": "Class of the process.",
           "enum": [
             "system",
             "derived",
@@ -2391,20 +3989,65 @@
           }
         },
         "isDefault": {
-          "description": "Is the process default process",
+          "description": "Is the process default process.",
           "type": "boolean"
         },
         "isEnabled": {
-          "description": "Is the process enabled",
+          "description": "Is the process enabled.",
           "type": "boolean"
         },
         "parentProcessTypeId": {
-          "description": "ID of the parent process",
+          "description": "ID of the parent process.",
           "type": "string",
           "format": "uuid"
         },
         "version": {
-          "description": "Version of the process",
+          "description": "Version of the process.",
+          "type": "string"
+        }
+      }
+    },
+    "ProcessRule": {
+      "description": "Process Rule Response.",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/CreateProcessRuleRequest"
+        }
+      ],
+      "properties": {
+        "customizationType": {
+          "description": "Indicates if the rule is system generated or created by user.",
+          "enum": [
+            "system",
+            "inherited",
+            "custom"
+          ],
+          "x-ms-enum": {
+            "name": "CustomizationType",
+            "values": [
+              {
+                "value": "system",
+                "description": "Customization-type is System if is system generated workitemtype."
+              },
+              {
+                "value": "inherited",
+                "description": "Customization-type is Inherited if the existing workitemtype of inherited process is customized."
+              },
+              {
+                "value": "custom",
+                "description": "Customization-type is Custom if the newly created workitemtype is customized."
+              }
+            ]
+          }
+        },
+        "id": {
+          "description": "Id to uniquely identify the rule.",
+          "type": "string",
+          "format": "uuid"
+        },
+        "url": {
+          "description": "Resource Url.",
           "type": "string"
         }
       }
@@ -2429,15 +4072,15 @@
             "values": [
               {
                 "value": "system",
-                "description": ""
+                "description": "Customization-type is System if is system generated workitemtype."
               },
               {
                 "value": "inherited",
-                "description": ""
+                "description": "Customization-type is Inherited if the existing workitemtype of inherited process is customized."
               },
               {
                 "value": "custom",
-                "description": ""
+                "description": "Customization-type is Custom if the newly created workitemtype is customized."
               }
             ]
           }
@@ -2468,6 +4111,124 @@
         }
       }
     },
+    "ProcessWorkItemTypeField": {
+      "description": "Class that describes a field in a work item type and its properties.",
+      "type": "object",
+      "properties": {
+        "allowGroups": {
+          "description": "Allow setting field value to a group identity. Only applies to identity fields.",
+          "type": "boolean"
+        },
+        "defaultValue": {
+          "description": "The default value of the field.",
+          "type": "object"
+        },
+        "description": {
+          "description": "Description of the field.",
+          "type": "string"
+        },
+        "name": {
+          "description": "Name of the field.",
+          "type": "string"
+        },
+        "readOnly": {
+          "description": "If true the field cannot be edited.",
+          "type": "boolean"
+        },
+        "referenceName": {
+          "description": "Reference name of the field.",
+          "type": "string"
+        },
+        "required": {
+          "description": "If true the field cannot be empty.",
+          "type": "boolean"
+        },
+        "type": {
+          "description": "Type of the field.",
+          "enum": [
+            "string",
+            "integer",
+            "dateTime",
+            "plainText",
+            "html",
+            "treePath",
+            "history",
+            "double",
+            "guid",
+            "boolean",
+            "identity",
+            "picklistInteger",
+            "picklistString",
+            "picklistDouble"
+          ],
+          "x-ms-enum": {
+            "name": "FieldType",
+            "values": [
+              {
+                "value": "string",
+                "description": ""
+              },
+              {
+                "value": "integer",
+                "description": ""
+              },
+              {
+                "value": "dateTime",
+                "description": ""
+              },
+              {
+                "value": "plainText",
+                "description": ""
+              },
+              {
+                "value": "html",
+                "description": ""
+              },
+              {
+                "value": "treePath",
+                "description": ""
+              },
+              {
+                "value": "history",
+                "description": ""
+              },
+              {
+                "value": "double",
+                "description": ""
+              },
+              {
+                "value": "guid",
+                "description": ""
+              },
+              {
+                "value": "boolean",
+                "description": ""
+              },
+              {
+                "value": "identity",
+                "description": ""
+              },
+              {
+                "value": "picklistInteger",
+                "description": ""
+              },
+              {
+                "value": "picklistString",
+                "description": ""
+              },
+              {
+                "value": "picklistDouble",
+                "description": ""
+              }
+            ]
+          }
+        },
+        "url": {
+          "description": "Resource URL of the field.",
+          "type": "string"
+        }
+      }
+    },
     "ProjectReference": {
       "description": "",
       "type": "object",
@@ -2491,6 +4252,95 @@
         }
       }
     },
+    "RuleAction": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "actionType": {
+          "description": "Type of action to take when the rule is triggered.",
+          "enum": [
+            "makeRequired",
+            "makeReadOnly",
+            "setDefaultValue",
+            "setDefaultFromClock",
+            "setDefaultFromCurrentUser",
+            "setDefaultFromField",
+            "copyValue",
+            "copyFromClock",
+            "copyFromCurrentUser",
+            "copyFromField",
+            "setValueToEmpty",
+            "copyFromServerClock",
+            "copyFromServerCurrentUser"
+          ],
+          "x-ms-enum": {
+            "name": "RuleActionType",
+            "values": [
+              {
+                "value": "makeRequired",
+                "description": "Make the target field required. Example : {\"actionType\":\"$makeRequired\",\"targetField\":\"Microsoft.VSTS.Common.Activity\",\"value\":\"\"}"
+              },
+              {
+                "value": "makeReadOnly",
+                "description": "Make the target field read-only. Example : {\"actionType\":\"$makeReadOnly\",\"targetField\":\"Microsoft.VSTS.Common.Activity\",\"value\":\"\"}"
+              },
+              {
+                "value": "setDefaultValue",
+                "description": "Set a default value on the target field. This is used if the user creates a integer/string field and sets a default value of this field."
+              },
+              {
+                "value": "setDefaultFromClock",
+                "description": "Set the default value on the target field from server clock. This is used if user creates the field like Date/Time and uses default value."
+              },
+              {
+                "value": "setDefaultFromCurrentUser",
+                "description": "Set the default current user value on the target field. This is used if the user creates the field of type identity and uses default value."
+              },
+              {
+                "value": "setDefaultFromField",
+                "description": "Set the default value on from existing field to the target field.  This used wants to set a existing field value to the current field."
+              },
+              {
+                "value": "copyValue",
+                "description": "Set the value of target field to given value. Example : {actionType: \"$copyValue\", targetField: \"ScrumInherited.mypicklist\", value: \"samplevalue\"}"
+              },
+              {
+                "value": "copyFromClock",
+                "description": "Set the value from clock."
+              },
+              {
+                "value": "copyFromCurrentUser",
+                "description": "Set the current user to the target field. Example : {\"actionType\":\"$copyFromCurrentUser\",\"targetField\":\"System.AssignedTo\",\"value\":\"\"}."
+              },
+              {
+                "value": "copyFromField",
+                "description": "Copy the value from a specified field and set to target field. Example : {actionType: \"$copyFromField\", targetField: \"System.AssignedTo\", value:\"System.ChangedBy\"}. Here, value is copied from \"System.ChangedBy\" and set to \"System.AssingedTo\" field."
+              },
+              {
+                "value": "setValueToEmpty",
+                "description": "Set the value of the target field to empty."
+              },
+              {
+                "value": "copyFromServerClock",
+                "description": "Use the current time to set the value of the target field. Example : {actionType: \"$copyFromServerClock\", targetField: \"System.CreatedDate\", value: \"\"}"
+              },
+              {
+                "value": "copyFromServerCurrentUser",
+                "description": "Use the current user to set the value of the target field."
+              }
+            ]
+          }
+        },
+        "targetField": {
+          "description": "Field on which the action should be taken.",
+          "type": "string"
+        },
+        "value": {
+          "description": "Value to apply on target field, once the action is taken.",
+          "type": "string"
+        }
+      }
+    },
     "RuleActionModel": {
       "description": "",
       "type": "object",
@@ -2502,6 +4352,55 @@
           "type": "string"
         },
         "value": {
+          "type": "string"
+        }
+      }
+    },
+    "RuleCondition": {
+      "description": "Defines a condition on a field when the rule should be triggered.",
+      "type": "object",
+      "properties": {
+        "conditionType": {
+          "description": "Type of condition. $When. This condition limits the execution of its children to cases when another field has a particular value, i.e. when the Is value of the referenced field is equal to the given literal value. $WhenNot.This condition limits the execution of its children to cases when another field does not have a particular value, i.e.when the Is value of the referenced field is not equal to the given literal value. $WhenChanged.This condition limits the execution of its children to cases when another field has changed, i.e.when the Is value of the referenced field is not equal to the Was value of that field. $WhenNotChanged.This condition limits the execution of its children to cases when another field has not changed, i.e.when the Is value of the referenced field is equal to the Was value of that field.",
+          "enum": [
+            "when",
+            "whenNot",
+            "whenChanged",
+            "whenNotChanged",
+            "whenWas"
+          ],
+          "x-ms-enum": {
+            "name": "RuleConditionType",
+            "values": [
+              {
+                "value": "when",
+                "description": "$When. This condition limits the execution of its children to cases when another field has a particular value, i.e. when the Is value of the referenced field is equal to the given literal value."
+              },
+              {
+                "value": "whenNot",
+                "description": "$WhenNot.This condition limits the execution of its children to cases when another field does not have a particular value, i.e.when the Is value of the referenced field is not equal to the given literal value."
+              },
+              {
+                "value": "whenChanged",
+                "description": "$WhenChanged.This condition limits the execution of its children to cases when another field has changed, i.e.when the Is value of the referenced field is not equal to the Was value of that field."
+              },
+              {
+                "value": "whenNotChanged",
+                "description": "$WhenNotChanged.This condition limits the execution of its children to cases when another field has not changed, i.e.when the Is value of the referenced field is equal to the Was value of that field."
+              },
+              {
+                "value": "whenWas",
+                "description": ""
+              }
+            ]
+          }
+        },
+        "field": {
+          "description": "Field that defines condition.",
+          "type": "string"
+        },
+        "value": {
+          "description": "Value of field to define the condition for rule.",
           "type": "string"
         }
       }
@@ -2556,6 +4455,44 @@
         },
         "name": {
           "type": "string"
+        }
+      }
+    },
+    "UpdateProcessRuleRequest": {
+      "description": "Request class/object to update the rule.",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/CreateProcessRuleRequest"
+        }
+      ],
+      "properties": {
+        "id": {
+          "description": "Id to uniquely identify the rule.",
+          "type": "string",
+          "format": "uuid"
+        }
+      }
+    },
+    "UpdateProcessWorkItemTypeFieldRequest": {
+      "description": "Class to describe a request that updates a field's properties in a work item type.",
+      "type": "object",
+      "properties": {
+        "allowGroups": {
+          "description": "Allow setting field value to a group identity. Only applies to identity fields.",
+          "type": "boolean"
+        },
+        "defaultValue": {
+          "description": "The default value of the field.",
+          "type": "object"
+        },
+        "readOnly": {
+          "description": "If true the field cannot be edited.",
+          "type": "boolean"
+        },
+        "required": {
+          "description": "The default value of the field.",
+          "type": "boolean"
         }
       }
     },
@@ -2740,15 +4677,15 @@
             "values": [
               {
                 "value": "system",
-                "description": ""
+                "description": "Customization-type is System if is system generated workitemtype."
               },
               {
                 "value": "inherited",
-                "description": ""
+                "description": "Customization-type is Inherited if the existing workitemtype of inherited process is customized."
               },
               {
                 "value": "custom",
-                "description": ""
+                "description": "Customization-type is Custom if the newly created workitemtype is customized."
               }
             ]
           }
@@ -2888,8 +4825,8 @@
       "authorizationUrl": "https://app.vssps.visualstudio.com/oauth2/authorize&response_type=Assertion",
       "tokenUrl": "https://app.vssps.visualstudio.com/oauth2/token?client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer&grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer",
       "scopes": {
-        "vso.work_write": "Grants the ability to read, create, and update work items and queries, update board metadata, read area and iterations paths other work item tracking related metadata, execute queries, and to receive notifications about work item events via service hooks.",
-        "vso.work": "Grants the ability to read work items, queries, boards, area and iterations paths, and other work item tracking related metadata. Also grants the ability to execute queries and to receive notifications about work item events via service hooks."
+        "vso.work": "Grants the ability to read work items, queries, boards, area and iterations paths, and other work item tracking related metadata. Also grants the ability to execute queries, search work items and to receive notifications about work item events via service hooks.",
+        "vso.work_write": "Grants the ability to read, create, and update work items and queries, update board metadata, read area and iterations paths other work item tracking related metadata, execute queries, and to receive notifications about work item events via service hooks."
       }
     }
   },

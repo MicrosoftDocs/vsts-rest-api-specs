@@ -4825,7 +4825,8 @@
             "undefined",
             "agentBasedDeployment",
             "runOnServer",
-            "machineGroupBasedDeployment"
+            "machineGroupBasedDeployment",
+            "deploymentGates"
           ],
           "x-ms-enum": {
             "name": "DeployPhaseTypes",
@@ -4845,6 +4846,10 @@
               {
                 "value": "machineGroupBasedDeployment",
                 "description": ""
+              },
+              {
+                "value": "deploymentGates",
+                "description": "Phase type which contains tasks which acts as Gates for the deployment to go forward."
               }
             ]
           }
@@ -5074,6 +5079,43 @@
         },
         "path": {
           "type": "string"
+        }
+      }
+    },
+    "GatesDeploymentInput": {
+      "description": "",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/BaseDeploymentInput"
+        }
+      ],
+      "properties": {
+        "minimumSuccessDuration": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "samplingInterval": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "stabilizationTime": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "GatesDeployPhase": {
+      "description": "",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/DeployPhase"
+        }
+      ],
+      "properties": {
+        "deploymentInput": {
+          "$ref": "#/definitions/GatesDeploymentInput"
         }
       }
     },
@@ -6005,6 +6047,9 @@
         },
         "pullRequestConfiguration": {
           "$ref": "#/definitions/PullRequestConfiguration"
+        },
+        "statusPolicyName": {
+          "type": "string"
         },
         "triggerConditions": {
           "type": "array",
@@ -7149,7 +7194,8 @@
             "undefined",
             "agentBasedDeployment",
             "runOnServer",
-            "machineGroupBasedDeployment"
+            "machineGroupBasedDeployment",
+            "deploymentGates"
           ],
           "x-ms-enum": {
             "name": "DeployPhaseTypes",
@@ -7169,6 +7215,10 @@
               {
                 "value": "machineGroupBasedDeployment",
                 "description": ""
+              },
+              {
+                "value": "deploymentGates",
+                "description": "Phase type which contains tasks which acts as Gates for the deployment to go forward."
               }
             ]
           }
@@ -7180,6 +7230,11 @@
         "runPlanId": {
           "type": "string",
           "format": "uuid"
+        },
+        "startedOn": {
+          "description": "Phase start time",
+          "type": "string",
+          "format": "date-time"
         },
         "status": {
           "enum": [
@@ -8913,6 +8968,12 @@
         },
         "enabled": {
           "type": "boolean"
+        },
+        "environment": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
         },
         "inputs": {
           "type": "object",
