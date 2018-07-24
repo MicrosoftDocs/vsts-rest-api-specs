@@ -14,4 +14,4 @@ $Headers = @{
 }
 $Uri = "https://$accountName.visualstudio.com/$projectName/_apis/git/deletedrepositories?api-version=4.1-preview.1"
 $Result = Invoke-RestMethod -Method Delete -Uri $Uri -ContentType 'application/json' -Headers $Headers
-$Result
+$Result.value
