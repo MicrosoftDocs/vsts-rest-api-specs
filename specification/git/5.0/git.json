@@ -67,6 +67,10 @@
       "description": "Ways to find merge base(s) between commits."
     },
     {
+      "name": "Policy Configurations",
+      "description": "This API provides a way to list Git policy configurations.  For more information, see \n[Improve code quality with branch policies](https://go.microsoft.com/fwlink/?linkid=859025)"
+    },
+    {
       "name": "Pull Request Attachments",
       "description": "This API provides a way to create and retrieve files that have been attached to a pull request"
     },
@@ -406,6 +410,68 @@
         ]
       }
     },
+    "/{project}/_apis/git/policy/configurations": {
+      "get": {
+        "tags": [
+          "Policy Configurations"
+        ],
+        "x-ms-docs-override-version": "5.0-preview.1",
+        "x-ms-vss-resource": "policyConfigurations",
+        "x-ms-vss-method": "GetPolicyConfigurations",
+        "x-ms-preview": true,
+        "description": "Retrieve a list of policy configurations by a given set of scope/filtering criteria.\n\nBelow is a short description of how all of the query parameters interact with each other:\n- repositoryId set, refName set: returns all policy configurations that *apply* to a particular branch in a repository\n- repositoryId set, refName unset: returns all policy configurations that *apply* to a particular repository\n- repositoryId unset, refName unset: returns all policy configurations that are *defined* at the project level\n- repositoryId unset, refName set: returns all project-level branch policies, plus the project level configurations\nFor all of the examples above, when policyType is set, it'll restrict results to the given policy type",
+        "operationId": "List",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "repositoryId",
+            "description": "The repository id.",
+            "required": false,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "query",
+            "name": "refName",
+            "description": "The fully-qualified Git ref name (e.g. refs/heads/master).",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "policyType",
+            "description": "The policy type filter.",
+            "required": false,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/PolicyConfiguration"
+              }
+            }
+          }
+        }
+      }
+    },
     "/{project}/_apis/git/pullrequests": {
       "get": {
         "tags": [
@@ -460,7 +526,7 @@
           {
             "in": "query",
             "name": "searchCriteria.status",
-            "description": "If set, search for pull requests that are in this state.",
+            "description": "If set, search for pull requests that are in this state. Defaults to Active if unset.",
             "required": false,
             "type": "string",
             "enum": [
@@ -803,7 +869,7 @@
           {
             "in": "body",
             "name": "body",
-            "description": "Specify the repo name, team project and/or parent repository",
+            "description": "Specify the repo name, team project and/or parent repository. Team project information can be ommitted from gitRepositoryToCreate if the request is project-scoped (i.e., includes project Id).",
             "required": true,
             "schema": {
               "$ref": "#/definitions/GitRepositoryCreateOptions"
@@ -829,8 +895,8 @@
           }
         ],
         "responses": {
-          "200": {
-            "description": "successful operation",
+          "201": {
+            "description": "Created",
             "schema": {
               "$ref": "#/definitions/GitRepository"
             }
@@ -3030,7 +3096,7 @@
           {
             "in": "query",
             "name": "searchCriteria.status",
-            "description": "If set, search for pull requests that are in this state.",
+            "description": "If set, search for pull requests that are in this state. Defaults to Active if unset.",
             "required": false,
             "type": "string",
             "enum": [
@@ -3253,7 +3319,7 @@
         "x-ms-vss-resource": "pullRequests",
         "x-ms-vss-method": "UpdatePullRequest",
         "x-ms-preview": true,
-        "description": "Update a pull request.",
+        "description": "Update a pull request.\n\nThese are the properties that can be updated with the API:\n - Status\n - Title\n - Description\n - CompletionOptions\n - MergeOptions\n - AutoCompleteSetBy.Id\n - TargetRefName (when the PR retargeting feature is enabled)\n Attempting to update other properties outside of this list will either cause the server to throw an `InvalidArgumentValueException`,\n or to silently ignore the update.",
         "operationId": "Update",
         "consumes": [
           "application/json"
@@ -8055,7 +8121,7 @@
         "x-ms-vss-resource": "commits",
         "x-ms-vss-method": "GetCommits",
         "x-ms-preview": true,
-        "description": "Retrieve git commits for a project",
+        "description": "Retrieve git commits for a project\n\nParameters that use the searchCriteria prefix in their name can be specified without it as query parameters, e.g. searchCriteria.$top -> $top",
         "operationId": "Get Commits",
         "produces": [
           "application/json"
@@ -8349,22 +8415,6 @@
             "items": {
               "type": "string"
             }
-          },
-          {
-            "in": "query",
-            "name": "$skip",
-            "description": "",
-            "required": false,
-            "type": "integer",
-            "format": "int32"
-          },
-          {
-            "in": "query",
-            "name": "$top",
-            "description": "",
-            "required": false,
-            "type": "integer",
-            "format": "int32"
           },
           {
             "$ref": "#/parameters/api-Version-preview.1"
@@ -11702,6 +11752,10 @@
           "type": "integer",
           "format": "int32"
         },
+        "newTargetRefName": {
+          "description": "If the iteration reason is Retarget, this is the refName of the new target",
+          "type": "string"
+        },
         "push": {
           "description": "The Git push information associated with this pull request iteration.",
           "$ref": "#/definitions/GitPushRef"
@@ -11713,7 +11767,8 @@
             "forcePush",
             "create",
             "rebase",
-            "unknown"
+            "unknown",
+            "retarget"
           ],
           "x-ms-enum": {
             "name": "IterationReason",
@@ -11736,6 +11791,10 @@
               },
               {
                 "value": "unknown",
+                "description": ""
+              },
+              {
+                "value": "retarget",
                 "description": ""
               }
             ]
@@ -11906,7 +11965,7 @@
           "format": "uuid"
         },
         "status": {
-          "description": "If set, search for pull requests that are in this state.",
+          "description": "If set, search for pull requests that are in this state. Defaults to Active if unset.",
           "enum": [
             "notSet",
             "active",
@@ -13789,6 +13848,66 @@
       ],
       "properties": {}
     },
+    "PolicyConfiguration": {
+      "description": "The full policy configuration with settings.",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/VersionedPolicyConfigurationRef"
+        }
+      ],
+      "properties": {
+        "_links": {
+          "description": "The links to other objects related to this object.",
+          "$ref": "#/definitions/ReferenceLinks"
+        },
+        "createdBy": {
+          "description": "A reference to the identity that created the policy.",
+          "$ref": "#/definitions/IdentityRef"
+        },
+        "createdDate": {
+          "description": "The date and time when the policy was created.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "isBlocking": {
+          "description": "Indicates whether the policy is blocking.",
+          "type": "boolean"
+        },
+        "isDeleted": {
+          "description": "Indicates whether the policy has been (soft) deleted.",
+          "type": "boolean"
+        },
+        "isEnabled": {
+          "description": "Indicates whether the policy is enabled.",
+          "type": "boolean"
+        },
+        "settings": {
+          "description": "The policy configuration settings.",
+          "type": "string",
+          "format": "JObject"
+        }
+      }
+    },
+    "PolicyConfigurationRef": {
+      "description": "Policy configuration reference.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "The policy configuration ID.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "type": {
+          "description": "The policy configuration type.",
+          "$ref": "#/definitions/PolicyTypeRef"
+        },
+        "url": {
+          "description": "The URL where the policy configuration can be retrieved.",
+          "type": "string"
+        }
+      }
+    },
     "PolicyEvaluationUpdatedEvent": {
       "description": "Real time event (SignalR) for a policy evaluation update on a pull request",
       "type": "object",
@@ -13798,6 +13917,25 @@
         }
       ],
       "properties": {}
+    },
+    "PolicyTypeRef": {
+      "description": "Policy type reference.",
+      "type": "object",
+      "properties": {
+        "displayName": {
+          "description": "Display name of the policy type.",
+          "type": "string"
+        },
+        "id": {
+          "description": "The policy type ID.",
+          "type": "string",
+          "format": "uuid"
+        },
+        "url": {
+          "description": "The URL where the policy type can be retrieved.",
+          "type": "string"
+        }
+      }
     },
     "PropertiesCollection": {
       "description": "The class represents a property bag as a collection of key-value pairs. Values of all primitive types (any type with a `TypeCode != TypeCode.Object`) except for `DBNull` are accepted. Values of type Byte[], Int32, Double, DateType and String preserve their type, other primitives are retuned as a String. Byte[] expected as base64 encoded string.",
@@ -15114,6 +15252,22 @@
         },
         "supportsTFVC": {
           "type": "boolean"
+        }
+      }
+    },
+    "VersionedPolicyConfigurationRef": {
+      "description": "A particular revision for a policy configuration.",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/PolicyConfigurationRef"
+        }
+      ],
+      "properties": {
+        "revision": {
+          "description": "The policy configuration revision ID.",
+          "type": "integer",
+          "format": "int32"
         }
       }
     },

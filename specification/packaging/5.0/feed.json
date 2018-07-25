@@ -44,6 +44,9 @@
       "name": "Global Permissions"
     },
     {
+      "name": "Metrics Batch"
+    },
+    {
       "name": "Package Changes"
     },
     {
@@ -443,6 +446,64 @@
           {
             "oauth2": [
               "vso.packaging_manage"
+            ]
+          }
+        ]
+      }
+    },
+    "/_apis/packaging/Feeds/{feedId}/metricsbatch": {
+      "post": {
+        "tags": [
+          "Metrics Batch"
+        ],
+        "x-ms-docs-override-version": "5.0-preview.1",
+        "x-ms-vss-resource": "metricsBatch",
+        "x-ms-vss-method": "GetMetrics",
+        "x-ms-preview": true,
+        "description": "",
+        "operationId": "List",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/PackageMetricsQuery"
+            }
+          },
+          {
+            "in": "path",
+            "name": "feedId",
+            "description": "",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/PackageMetrics"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.packaging_write"
             ]
           }
         ]
@@ -2343,6 +2404,43 @@
         }
       }
     },
+    "Metric": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "metricType": {
+          "enum": [
+            "downloadsDetail",
+            "totalDownloads",
+            "uniqueUsers"
+          ],
+          "x-ms-enum": {
+            "name": "MetricType",
+            "values": [
+              {
+                "value": "downloadsDetail",
+                "description": ""
+              },
+              {
+                "value": "totalDownloads",
+                "description": ""
+              },
+              {
+                "value": "uniqueUsers",
+                "description": ""
+              }
+            ]
+          }
+        },
+        "name": {
+          "type": "string"
+        },
+        "value": {
+          "type": "number",
+          "format": "double"
+        }
+      }
+    },
     "MinimalPackageVersion": {
       "description": "",
       "type": "object",
@@ -2501,6 +2599,68 @@
         }
       }
     },
+    "PackageMetrics": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "aggregatedMetrics": {
+          "description": "Aggregated metrics such as the total number of downloads",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Metric"
+          }
+        },
+        "packageDescriptor": {
+          "$ref": "#/definitions/PackageVersionDescriptor"
+        },
+        "segmentedMetrics": {
+          "description": "Detailed metrics such as the number of downloads per user",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SegmentedMetric"
+          }
+        }
+      }
+    },
+    "PackageMetricsQuery": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "aggregatedMetricsQuery": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "downloadsDetail",
+              "totalDownloads",
+              "uniqueUsers"
+            ],
+            "x-ms-enum": {
+              "name": "MetricType",
+              "values": [
+                {
+                  "value": "downloadsDetail",
+                  "description": ""
+                },
+                {
+                  "value": "totalDownloads",
+                  "description": ""
+                },
+                {
+                  "value": "uniqueUsers",
+                  "description": ""
+                }
+              ]
+            }
+          }
+        },
+        "packageVersionDescriptors": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PackageVersionDescriptor"
+          }
+        }
+      }
+    },
     "PackageVersion": {
       "description": "",
       "type": "object",
@@ -2596,6 +2756,20 @@
         }
       }
     },
+    "PackageVersionDescriptor": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "packageId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "packageVersionId": {
+          "type": "string",
+          "format": "uuid"
+        }
+      }
+    },
     "ProtocolMetadata": {
       "description": "",
       "type": "object",
@@ -2661,6 +2835,42 @@
         }
       }
     },
+    "SegmentedMetric": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "metrics": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Metric"
+          }
+        },
+        "metricType": {
+          "enum": [
+            "downloadsDetail",
+            "totalDownloads",
+            "uniqueUsers"
+          ],
+          "x-ms-enum": {
+            "name": "MetricType",
+            "values": [
+              {
+                "value": "downloadsDetail",
+                "description": ""
+              },
+              {
+                "value": "totalDownloads",
+                "description": ""
+              },
+              {
+                "value": "uniqueUsers",
+                "description": ""
+              }
+            ]
+          }
+        }
+      }
+    },
     "UpstreamSource": {
       "description": "",
       "type": "object",
@@ -2697,7 +2907,8 @@
         "upstreamSourceType": {
           "enum": [
             "public",
-            "internal"
+            "internal",
+            "customPublic"
           ],
           "x-ms-enum": {
             "name": "UpstreamSourceType",
@@ -2708,6 +2919,10 @@
               },
               {
                 "value": "internal",
+                "description": ""
+              },
+              {
+                "value": "customPublic",
                 "description": ""
               }
             ]

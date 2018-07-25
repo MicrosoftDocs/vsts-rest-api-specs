@@ -405,7 +405,7 @@
           {
             "in": "query",
             "name": "searchText",
-            "description": "Get release definitions with names starting with searchText.",
+            "description": "Get release definitions with names containing searchText.",
             "required": false,
             "type": "string"
           },
@@ -2437,7 +2437,7 @@
           {
             "in": "query",
             "name": "searchText",
-            "description": "Releases with names starting with searchText.",
+            "description": "Releases with names containing searchText.",
             "required": false,
             "type": "string"
           },
@@ -3016,6 +3016,9 @@
       "description": "",
       "type": "object",
       "properties": {
+        "artifactTriggerConfiguration": {
+          "$ref": "#/definitions/ArtifactTriggerConfiguration"
+        },
         "artifactType": {
           "type": "string"
         },
@@ -3225,10 +3228,37 @@
         }
       }
     },
+    "ArtifactTriggerConfiguration": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "isTriggerSupported": {
+          "type": "boolean"
+        },
+        "isTriggerSupportedOnlyInHosted": {
+          "type": "boolean"
+        },
+        "isWebhookSupportedAtServerLevel": {
+          "type": "boolean"
+        },
+        "payloadHashHeaderName": {
+          "type": "string"
+        },
+        "webhookPayloadMapping": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        }
+      }
+    },
     "ArtifactTypeDefinition": {
       "description": "",
       "type": "object",
       "properties": {
+        "artifactTriggerConfiguration": {
+          "$ref": "#/definitions/ArtifactTriggerConfiguration"
+        },
         "displayName": {
           "type": "string"
         },
@@ -3729,6 +3759,12 @@
           "additionalProperties": {
             "type": "string"
           }
+        },
+        "requestContent": {
+          "type": "string"
+        },
+        "requestVerb": {
+          "type": "string"
         },
         "resultSelector": {
           "type": "string"
@@ -7848,6 +7884,31 @@
         }
       }
     },
+    "ReleaseGatesPhase": {
+      "description": "",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/ReleaseDeployPhase"
+        }
+      ],
+      "properties": {
+        "ignoredGates": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/IgnoredGate"
+          }
+        },
+        "stabilizationCompletedOn": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "succeedingSince": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
     "ReleaseManagementInputValue": {
       "description": "",
       "type": "object",
@@ -8195,14 +8256,6 @@
       "properties": {
         "agentName": {
           "type": "string"
-        },
-        "dateEnded": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "dateStarted": {
-          "type": "string",
-          "format": "date-time"
         },
         "finishTime": {
           "type": "string",

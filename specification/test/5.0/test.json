@@ -1400,7 +1400,7 @@
         "x-ms-vss-method": "UpdateTestSuite",
         "x-ms-preview": true,
         "description": "Update a test suite.",
-        "operationId": "Update",
+        "operationId": "Update Test Suite",
         "consumes": [
           "application/json"
         ],
@@ -2041,6 +2041,90 @@
         "x-ms-examples": {
           "": {
             "$ref": "./httpExamples/Suites/DELETE_testmanagement_testsuite_testcase_ids.json"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Test  Suites"
+        ],
+        "x-ms-docs-override-version": "5.0-preview.3",
+        "x-ms-vss-resource": "suites",
+        "x-ms-vss-method": "UpdateSuiteTestCases",
+        "x-ms-preview": true,
+        "description": "Updates the properties of the test case association in a suite.",
+        "operationId": "Update Suite Test Cases",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Model for updation of the properties of test case suite association.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/SuiteTestCaseUpdateModel"
+            }
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "planId",
+            "description": "ID of the test plan that contains the suite.",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "path",
+            "name": "suiteId",
+            "description": "ID of the test suite to which the test cases must be added.",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "path",
+            "name": "testCaseIds",
+            "description": "IDs of the test cases to add to the suite. Ids are specified in comma separated format.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.3"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/SuiteTestCase"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.test_write"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "": {
+            "$ref": "./httpExamples/Suites/PATCH_testmanagement_testsuite_testcase_ids.json"
           }
         }
       }
@@ -6518,6 +6602,10 @@
         "state": {
           "description": "State of the test plan.",
           "type": "string"
+        },
+        "testOutcomeSettings": {
+          "description": "Test Outcome settings",
+          "$ref": "#/definitions/TestOutcomeSettings"
         }
       }
     },
@@ -7670,6 +7758,19 @@
         "testCase": {
           "description": "Test case workItem reference.",
           "$ref": "#/definitions/WorkItemReference"
+        }
+      }
+    },
+    "SuiteTestCaseUpdateModel": {
+      "description": "Test suite update model.",
+      "type": "object",
+      "properties": {
+        "configurations": {
+          "description": "Shallow reference of configurations for the test cases in the suite.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ShallowReference"
+          }
         }
       }
     },
@@ -8837,6 +8938,21 @@
         }
       }
     },
+    "TestLogStoreEndpointDetails": {
+      "description": "Represents Test Log store endpoint details.",
+      "type": "object",
+      "properties": {
+        "blobContainerSASUri": {
+          "description": "Test log store connection Uri.",
+          "type": "string"
+        },
+        "runId": {
+          "description": "Test Run Id.",
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
     "TestMessageLog2": {
       "description": "",
       "type": "object",
@@ -8920,6 +9036,16 @@
         },
         "url": {
           "type": "string"
+        }
+      }
+    },
+    "TestOutcomeSettings": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "syncOutcomeAcrossSuites": {
+          "description": "Value to configure how test outcomes for the same tests across suites are shown",
+          "type": "boolean"
         }
       }
     },
@@ -9043,6 +9169,10 @@
         "state": {
           "description": "State of the test plan.",
           "type": "string"
+        },
+        "testOutcomeSettings": {
+          "description": "Value to configure how same tests across test suites under a test plan need to behave",
+          "$ref": "#/definitions/TestOutcomeSettings"
         },
         "updatedBy": {
           "$ref": "#/definitions/IdentityRef"

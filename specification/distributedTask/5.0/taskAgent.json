@@ -35,7 +35,13 @@
       "name": "Agentclouds"
     },
     {
+      "name": "Agentcloudtypes"
+    },
+    {
       "name": "Deploymentgroups"
+    },
+    {
+      "name": "Requests"
     },
     {
       "name": "Targets"
@@ -123,6 +129,41 @@
       }
     },
     "/_apis/distributedtask/agentclouds/{agentCloudId}": {
+      "delete": {
+        "tags": [
+          "Agentclouds"
+        ],
+        "x-ms-docs-override-version": "5.0-preview.1",
+        "x-ms-vss-resource": "agentclouds",
+        "x-ms-vss-method": "DeleteAgentCloud",
+        "x-ms-preview": true,
+        "description": "",
+        "operationId": "Delete",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "agentCloudId",
+            "description": "",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/TaskAgentCloud"
+            }
+          }
+        }
+      },
       "get": {
         "tags": [
           "Agentclouds"
@@ -154,6 +195,78 @@
             "description": "successful operation",
             "schema": {
               "$ref": "#/definitions/TaskAgentCloud"
+            }
+          }
+        }
+      }
+    },
+    "/_apis/distributedtask/agentclouds/{agentCloudId}/requests": {
+      "get": {
+        "tags": [
+          "Requests"
+        ],
+        "x-ms-docs-override-version": "5.0-preview.1",
+        "x-ms-vss-resource": "requests",
+        "x-ms-vss-method": "GetAgentCloudRequests",
+        "x-ms-preview": true,
+        "description": "",
+        "operationId": "List",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "agentCloudId",
+            "description": "",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/TaskAgentCloudRequest"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/_apis/distributedtask/agentcloudtypes": {
+      "get": {
+        "tags": [
+          "Agentcloudtypes"
+        ],
+        "x-ms-docs-override-version": "5.0-preview.1",
+        "x-ms-vss-resource": "agentcloudtypes",
+        "x-ms-vss-method": "GetAgentCloudTypes",
+        "x-ms-preview": true,
+        "description": "Get agent cloud types.",
+        "operationId": "List",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/TaskAgentCloudType"
+              }
             }
           }
         }
@@ -4355,6 +4468,7 @@
       "type": "object",
       "properties": {
         "acquireAgentEndpoint": {
+          "description": "Gets or sets a AcquireAgentEndpoint using which a request can be made to acquire new agent",
           "type": "string"
         },
         "agentCloudId": {
@@ -4372,6 +4486,10 @@
         },
         "releaseAgentEndpoint": {
           "type": "string"
+        },
+        "type": {
+          "description": "Gets or sets the type of the endpoint.",
+          "type": "string"
         }
       }
     },
@@ -4379,6 +4497,9 @@
       "description": "",
       "type": "object",
       "properties": {
+        "agent": {
+          "$ref": "#/definitions/TaskAgentReference"
+        },
         "agentCloudId": {
           "type": "integer",
           "format": "int32"
@@ -4390,16 +4511,11 @@
         "agentData": {
           "$ref": "#/definitions/JObject"
         },
-        "agentId": {
-          "type": "integer",
-          "format": "int32"
-        },
         "agentSpecification": {
           "$ref": "#/definitions/JObject"
         },
-        "poolId": {
-          "type": "integer",
-          "format": "int32"
+        "pool": {
+          "$ref": "#/definitions/TaskAgentPoolReference"
         },
         "provisionedTime": {
           "type": "string",
@@ -4416,6 +4532,27 @@
         "requestId": {
           "type": "string",
           "format": "uuid"
+        }
+      }
+    },
+    "TaskAgentCloudType": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "displayName": {
+          "description": "Gets or sets the display name of agnet cloud type.",
+          "type": "string"
+        },
+        "inputDescriptors": {
+          "description": "Gets or sets the input descriptors",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/InputDescriptor"
+          }
+        },
+        "name": {
+          "description": "Gets or sets the name of agent cloud type.",
+          "type": "string"
         }
       }
     },
@@ -4647,8 +4784,17 @@
         }
       ],
       "properties": {
+        "agentCloudId": {
+          "description": "Gets or sets an agentCloudId",
+          "type": "integer",
+          "format": "int32"
+        },
         "autoProvision": {
           "description": "Gets or sets a value indicating whether or not a queue should be automatically provisioned for each project collection or not.",
+          "type": "boolean"
+        },
+        "autoSize": {
+          "description": "Gets or sets a value indicating whether or not the pool should autosize itself based on the Agent Cloud Provider settings",
           "type": "boolean"
         },
         "createdBy": {
