@@ -1,0 +1,480 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "WorkTracking",
+    "description": "",
+    "termsOfService": "https://go.microsoft.com/fwlink/?LinkId=329770",
+    "contact": {
+      "name": "nugetvss",
+      "email": "nugetvss@microsoft.com"
+    },
+    "license": {
+      "name": "MICROSOFT SOFTWARE LICENSE TERMS",
+      "url": "https://go.microsoft.com/fwlink/?LinkId=329770"
+    },
+    "version": "5.0-preview"
+  },
+  "host": "fabrikam-fiber-inc.visualstudio.com",
+  "x-ms-parameterized-host": {
+    "hostTemplate": "{accountName}.visualstudio.com",
+    "parameters": [
+      {
+        "name": "accountName",
+        "description": "The name of the Visual Studio Team Services account.",
+        "required": true,
+        "type": "string",
+        "in": "path"
+      }
+    ]
+  },
+  "x-ms-vss-area": "WorkTracking",
+  "x-ms-vss-resource-area-id": "85f8c7b6-92fe-4ba6-8b6d-fbb67c809341",
+  "basePath": "/",
+  "tags": [],
+  "schemes": [
+    "https"
+  ],
+  "paths": {},
+  "definitions": {
+    "Board": {
+      "description": "",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/BoardReference"
+        }
+      ],
+      "properties": {
+        "_links": {
+          "description": "Links to other related objects.",
+          "$ref": "#/definitions/ReferenceLinks"
+        },
+        "description": {
+          "description": "Description of the board.",
+          "type": "string"
+        },
+        "type": {
+          "description": "Type of the board.",
+          "enum": [
+            "idBoundBoard",
+            "queryBoundBoard",
+            "kanbanBoard",
+            "taskBoard"
+          ],
+          "x-ms-enum": {
+            "name": "BoardTypeEnum",
+            "values": [
+              {
+                "value": "idBoundBoard",
+                "description": ""
+              },
+              {
+                "value": "queryBoundBoard",
+                "description": ""
+              },
+              {
+                "value": "kanbanBoard",
+                "description": ""
+              },
+              {
+                "value": "taskBoard",
+                "description": ""
+              }
+            ]
+          }
+        }
+      }
+    },
+    "BoardColumn": {
+      "description": "Provides properties that describe a column in a board.",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/BoardColumnReference"
+        }
+      ],
+      "properties": {
+        "_links": {
+          "description": "Links to other related objects.",
+          "$ref": "#/definitions/ReferenceLinks"
+        },
+        "description": {
+          "description": "Board column description.",
+          "type": "string"
+        },
+        "order": {
+          "description": "Order of this board column with respect to other columns in the board.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "properties": {
+          "description": "Board column properties.",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "BoardColumnReference": {
+      "description": "",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/EntityReference"
+        }
+      ],
+      "properties": {
+        "id": {
+          "description": "Id of the resource.",
+          "type": "string",
+          "format": "uuid"
+        }
+      }
+    },
+    "BoardItem": {
+      "description": "Provides properties that describe an item in a board.",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/BoardItemReference"
+        }
+      ],
+      "properties": {
+        "_links": {
+          "description": "Links to other related objects.",
+          "$ref": "#/definitions/ReferenceLinks"
+        },
+        "column": {
+          "description": "Board column for this item.",
+          "$ref": "#/definitions/BoardColumnReference"
+        },
+        "order": {
+          "description": "Order of this item with respect to other items in the same board column.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "row": {
+          "description": "Board row for this item.",
+          "$ref": "#/definitions/BoardRowReference"
+        },
+        "type": {
+          "description": "Item type.",
+          "enum": [
+            "workItem"
+          ],
+          "x-ms-enum": {
+            "name": "BoardItemType",
+            "values": [
+              {
+                "value": "workItem",
+                "description": ""
+              }
+            ]
+          }
+        }
+      }
+    },
+    "BoardItemReference": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "Board's item identifier.",
+          "type": "string"
+        },
+        "url": {
+          "description": "Full http link to the resource.",
+          "type": "string"
+        }
+      }
+    },
+    "BoardReference": {
+      "description": "",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/EntityReference"
+        }
+      ],
+      "properties": {
+        "id": {
+          "description": "Id of the resource.",
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "BoardRow": {
+      "description": "Provides properties that describe a row in a board.",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/BoardRowReference"
+        }
+      ],
+      "properties": {
+        "_links": {
+          "description": "Links to other related objects.",
+          "$ref": "#/definitions/ReferenceLinks"
+        },
+        "order": {
+          "description": "Order of this row with respect to other rows in the board.",
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "BoardRowReference": {
+      "description": "",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/EntityReference"
+        }
+      ],
+      "properties": {
+        "id": {
+          "description": "Id of the resource.",
+          "type": "string",
+          "format": "uuid"
+        }
+      }
+    },
+    "CreateBoard": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "description": {
+          "description": "Description of the board.",
+          "type": "string"
+        },
+        "name": {
+          "description": "Name of the board to create.",
+          "type": "string"
+        },
+        "type": {
+          "description": "Type of board to create.",
+          "enum": [
+            "idBoundBoard",
+            "queryBoundBoard",
+            "kanbanBoard",
+            "taskBoard"
+          ],
+          "x-ms-enum": {
+            "name": "BoardTypeEnum",
+            "values": [
+              {
+                "value": "idBoundBoard",
+                "description": ""
+              },
+              {
+                "value": "queryBoundBoard",
+                "description": ""
+              },
+              {
+                "value": "kanbanBoard",
+                "description": ""
+              },
+              {
+                "value": "taskBoard",
+                "description": ""
+              }
+            ]
+          }
+        }
+      }
+    },
+    "EntityReference": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "name": {
+          "description": "Name of the resource.",
+          "type": "string"
+        },
+        "url": {
+          "description": "Full http link to the resource.",
+          "type": "string"
+        }
+      }
+    },
+    "NewBoardItem": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "columnId": {
+          "description": "Board column identifier.",
+          "type": "string",
+          "format": "uuid"
+        },
+        "id": {
+          "description": "Item identifier.",
+          "type": "string"
+        },
+        "rowId": {
+          "description": "Board row identifier.",
+          "type": "string",
+          "format": "uuid"
+        },
+        "type": {
+          "description": "Item type.",
+          "enum": [
+            "workItem"
+          ],
+          "x-ms-enum": {
+            "name": "BoardItemType",
+            "values": [
+              {
+                "value": "workItem",
+                "description": ""
+              }
+            ]
+          }
+        }
+      }
+    },
+    "ReferenceLinks": {
+      "description": "The class to represent a collection of REST reference links.",
+      "type": "object",
+      "properties": {
+        "links": {
+          "description": "The readonly view of the links.  Because Reference links are readonly, we only want to expose them as read only.",
+          "type": "object",
+          "additionalProperties": {
+            "type": "object"
+          }
+        }
+      }
+    },
+    "UpdateBoard": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "description": {
+          "description": "New description of the board.",
+          "type": "string"
+        },
+        "name": {
+          "description": "New name of the board.",
+          "type": "string"
+        }
+      }
+    },
+    "UpdateBoardColumn": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "description": {
+          "description": "New column description.",
+          "type": "string"
+        },
+        "id": {
+          "description": "Board column identifier.",
+          "type": "string",
+          "format": "uuid"
+        },
+        "name": {
+          "description": "New column name.",
+          "type": "string"
+        },
+        "order": {
+          "description": "New column order with respect to other columns in the board.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "properties": {
+          "description": "New board column properties.",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "UpdateBoardItem": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "columnId": {
+          "description": "Board column identifier.",
+          "type": "string",
+          "format": "uuid"
+        },
+        "id": {
+          "description": "Item identifier.",
+          "type": "string"
+        },
+        "order": {
+          "description": "Item's order with respect to other items in the same board column.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "rowId": {
+          "description": "Board row identifier.",
+          "type": "string",
+          "format": "uuid"
+        }
+      }
+    },
+    "VssJsonCollectionWrapper": {
+      "description": "This class is used to serialized collections as a single JSON object on the wire, to avoid serializing JSON arrays directly to the client, which can be a security hole",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/VssJsonCollectionWrapperBase"
+        }
+      ],
+      "properties": {
+        "value": {
+          "type": "string",
+          "format": "T"
+        }
+      }
+    },
+    "VssJsonCollectionWrapperBase": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "count": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    }
+  },
+  "parameters": {
+    "api-Version-preview.1": {
+      "name": "api-version",
+      "in": "query",
+      "description": "Version of the API to use.  This should be set to '5.0-preview.1' to use this version of the api.",
+      "required": true,
+      "type": "string"
+    }
+  },
+  "securityDefinitions": {
+    "accessToken": {
+      "type": "basic",
+      "description": "Personal access token. Use any value for the user name and the token as the password."
+    },
+    "oauth2": {
+      "type": "oauth2",
+      "flow": "accessCode",
+      "authorizationUrl": "https://app.vssps.visualstudio.com/oauth2/authorize&response_type=Assertion",
+      "tokenUrl": "https://app.vssps.visualstudio.com/oauth2/token?client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer&grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer",
+      "scopes": {
+        "vso.work": "Grants the ability to read work items, queries, boards, area and iterations paths, and other work item tracking related metadata. Also grants the ability to execute queries, search work items and to receive notifications about work item events via service hooks.",
+        "vso.work_write": "Grants the ability to read, create, and update work items and queries, update board metadata, read area and iterations paths other work item tracking related metadata, execute queries, and to receive notifications about work item events via service hooks."
+      }
+    }
+  },
+  "security": [
+    {
+      "accessToken": []
+    }
+  ],
+  "externalDocs": {
+    "description": "Visual Studio Team Services REST APIs",
+    "url": "https://www.visualstudio.com/docs/integrate/api/overview"
+  }
+}

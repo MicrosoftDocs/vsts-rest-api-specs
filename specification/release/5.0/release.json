@@ -2937,6 +2937,22 @@
         }
       }
     },
+    "AgentPoolQueueReference": {
+      "description": "Represents a reference to an agent queue.",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/ResourceReference"
+        }
+      ],
+      "properties": {
+        "id": {
+          "description": "The ID of the queue.",
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
     "ApprovalOptions": {
       "description": "",
       "type": "object",
@@ -3243,6 +3259,12 @@
         },
         "payloadHashHeaderName": {
           "type": "string"
+        },
+        "resources": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
         },
         "webhookPayloadMapping": {
           "type": "object",
@@ -8591,6 +8613,16 @@
         }
       }
     },
+    "ResourceReference": {
+      "description": "Represents a reference to a resource.",
+      "type": "object",
+      "properties": {
+        "alias": {
+          "description": "An alias to be used when referencing the resource.",
+          "type": "string"
+        }
+      }
+    },
     "RetentionPolicy": {
       "description": "",
       "type": "object",
@@ -8657,6 +8689,22 @@
       "properties": {
         "parallelExecution": {
           "$ref": "#/definitions/ExecutionInput"
+        }
+      }
+    },
+    "ServiceEndpointReference": {
+      "description": "Represents a referenec to a service endpoint.",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/ResourceReference"
+        }
+      ],
+      "properties": {
+        "id": {
+          "description": "The ID of the service endpoint.",
+          "type": "string",
+          "format": "uuid"
         }
       }
     },
@@ -9074,6 +9122,94 @@
           "type": "string"
         },
         "version": {
+          "type": "string"
+        }
+      }
+    },
+    "YamlFileSource": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "sourceReference": {
+          "description": "Gets or sets definition reference. e.g. {\"project\":{\"id\":\"fed755ea-49c5-4399-acea-fd5b5aa90a6c\",\"name\":\"myProject\"},\"definition\":{\"id\":\"1\",\"name\":\"mybuildDefinition\"},\"connection\":{\"id\":\"1\",\"name\":\"myConnection\"}}",
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/YamlSourceReference"
+          }
+        },
+        "type": {
+          "enum": [
+            "none",
+            "tFSGit"
+          ],
+          "x-ms-enum": {
+            "name": "YamlFileSourceTypes",
+            "values": [
+              {
+                "value": "none",
+                "description": ""
+              },
+              {
+                "value": "tFSGit",
+                "description": ""
+              }
+            ]
+          }
+        }
+      }
+    },
+    "YamlPipelineProcess": {
+      "description": "",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/PipelineProcess"
+        }
+      ],
+      "properties": {
+        "errors": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "filename": {
+          "type": "string"
+        },
+        "fileSource": {
+          "$ref": "#/definitions/YamlFileSource"
+        },
+        "resources": {
+          "$ref": "#/definitions/YamlPipelineProcessResources"
+        }
+      }
+    },
+    "YamlPipelineProcessResources": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "endpoints": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ServiceEndpointReference"
+          }
+        },
+        "queues": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AgentPoolQueueReference"
+          }
+        }
+      }
+    },
+    "YamlSourceReference": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
           "type": "string"
         }
       }

@@ -41,7 +41,7 @@
     },
     {
       "name": "Security Namespaces",
-      "description": "Security namespaces are used to store [access control lists](https://www.visualstudio.com/docs/integrate/api/security/acls) (ACLs) on [tokens](https://www.visualstudio.com/docs/integrate/api/security/tokens) (arbitrary strings).\n\nLocal vs. remote\n * Security namespaces may have their data mastered in one microservice, but still be visible in other microservices.\n * If a security namespace's data is mastered in microservice X, it is said to be local to that microservice. Otherwise, it is said to be remote."
+      "description": "Security namespaces are used to store [access control lists](https://docs.microsoft.com/en-us/rest/api/vsts/security/access%20control%20lists/query?#accesscontrollist) (ACLs) on tokens.\n\n Local vs. remote\n  * Security namespaces may have their data mastered in one microservice, but still be visible in other microservices.\n  * If a security namespace's data is mastered in microservice X, it is said to be local to that microservice. Otherwise, it is said to be remote."
     }
   ],
   "schemes": [
@@ -66,7 +66,7 @@
           {
             "in": "path",
             "name": "securityNamespaceId",
-            "description": "",
+            "description": "Security namespace identifier.",
             "required": true,
             "type": "string",
             "format": "uuid"
@@ -81,7 +81,7 @@
           {
             "in": "query",
             "name": "descriptors",
-            "description": "",
+            "description": "String containing a list of identity descriptors separated by ',' whose entries should be removed.",
             "required": false,
             "type": "string"
           },
@@ -167,7 +167,7 @@
           }
         ],
         "x-ms-examples": {
-          "": {
+          "Replace": {
             "$ref": "./httpExamples/AccessControlEntries/POST__accesscontrolentries__securityNamespaceId__.json"
           },
           "Merge": {
@@ -185,7 +185,7 @@
         "x-ms-vss-resource": "accessControlLists",
         "x-ms-vss-method": "QueryAccessControlLists",
         "x-ms-preview": true,
-        "description": "Return a list of access control lists for the specified security namespace and token.",
+        "description": "Return a list of access control lists for the specified security namespace and token. All ACLs in the security namespace will be retrieved if no optional parameters are provided.",
         "operationId": "Query",
         "produces": [
           "application/json"
@@ -209,7 +209,7 @@
           {
             "in": "query",
             "name": "descriptors",
-            "description": "",
+            "description": "An optional filter string containing a list of identity descriptors separated by ',' whose ACEs should be retrieved. If this is left null, entire ACLs will be returned.",
             "required": false,
             "type": "string"
           },
@@ -243,8 +243,20 @@
           }
         },
         "x-ms-examples": {
-          "": {
+          "All ACLs in a security namespace": {
             "$ref": "./httpExamples/AccessControlLists/GET__accesscontrollists__securityNamespaceId__.json"
+          },
+          "Filter by token": {
+            "$ref": "./httpExamples/AccessControlLists/GET__accesscontrollists__securityNamespaceId___token-_existingToken_.json"
+          },
+          "Filter by descriptors": {
+            "$ref": "./httpExamples/AccessControlLists/GET__accesscontrollists__securityNamespaceId___descriptors-_descriptor1_.json"
+          },
+          "Include extended info properties": {
+            "$ref": "./httpExamples/AccessControlLists/GET__accesscontrollists__securityNamespaceId___token-_existingToken__includeExtendedInfo-True.json"
+          },
+          "Include child ACLs": {
+            "$ref": "./httpExamples/AccessControlLists/GET__accesscontrollists__securityNamespaceId___token-_existingToken__includeExtendedInfo-False_recurse-True.json"
           }
         }
       },
@@ -302,7 +314,12 @@
               "vso.security_manage"
             ]
           }
-        ]
+        ],
+        "x-ms-examples": {
+          "": {
+            "$ref": "./httpExamples/AccessControlLists/DELETE__accesscontrollists__securityNamespaceId___tokens-_newToken1_,_newToken2__recurse-False.json"
+          }
+        }
       },
       "post": {
         "tags": [
@@ -312,7 +329,7 @@
         "x-ms-vss-resource": "accessControlLists",
         "x-ms-vss-method": "SetAccessControlLists",
         "x-ms-preview": true,
-        "description": "Create one or more access control lists.",
+        "description": "Create or update one or more access control lists. All data that currently exists for the ACLs supplied will be overwritten.",
         "operationId": "Set Access Control Lists",
         "consumes": [
           "application/json"
@@ -350,7 +367,12 @@
               "vso.security_manage"
             ]
           }
-        ]
+        ],
+        "x-ms-examples": {
+          "": {
+            "$ref": "./httpExamples/AccessControlLists/POST__accesscontrollists__securityNamespaceId__.json"
+          }
+        }
       }
     },
     "/_apis/permissions/{securityNamespaceId}/{permissions}": {
@@ -420,6 +442,14 @@
               }
             }
           }
+        },
+        "x-ms-examples": {
+          "Singular token": {
+            "$ref": "./httpExamples/Permissions/GET__permissions__securityNamespaceId__8__token-_token1__alwaysAllowAdministrators-False.json"
+          },
+          "A list of tokens": {
+            "$ref": "./httpExamples/Permissions/GET__permissions__securityNamespaceId__8__api-version-2.2_tokens-_token1_,_token2_,_token3__alwaysAllowAdministrators-False.json"
+          }
         }
       },
       "delete": {
@@ -445,6 +475,13 @@
             "format": "uuid"
           },
           {
+            "in": "query",
+            "name": "descriptor",
+            "description": "Identity descriptor of the user to remove permissions for.",
+            "required": true,
+            "type": "string"
+          },
+          {
             "in": "path",
             "name": "permissions",
             "description": "Permissions to remove.",
@@ -457,13 +494,6 @@
             "in": "query",
             "name": "token",
             "description": "Security token to remove permissions for.",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "in": "query",
-            "name": "descriptor",
-            "description": "Identity descriptor of the user to remove permissions for. Defaults to the caller.",
             "required": false,
             "type": "string"
           },
@@ -485,7 +515,12 @@
               "vso.security_manage"
             ]
           }
-        ]
+        ],
+        "x-ms-examples": {
+          "": {
+            "$ref": "./httpExamples/Permissions/DELETE__permissions__securityNamespaceId__4__token-_token1__descriptor-_descriptor_.json"
+          }
+        }
       }
     },
     "/_apis/security/permissionevaluationbatch": {
@@ -580,8 +615,11 @@
           }
         },
         "x-ms-examples": {
-          "": {
+          "All security namespaces": {
             "$ref": "./httpExamples/SecurityNamespaces/GET__securitynamespaces_.json"
+          },
+          "Get the specified security namespace": {
+            "$ref": "./httpExamples/SecurityNamespaces/GET__securitynamespaces__securityNamespaceId__.json"
           }
         }
       }
@@ -757,6 +795,7 @@
       "type": "object",
       "properties": {
         "alwaysAllowAdministrators": {
+          "description": "True if members of the Administrators group should always pass the security check.",
           "type": "boolean"
         },
         "evaluations": {

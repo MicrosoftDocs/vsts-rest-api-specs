@@ -8145,7 +8145,7 @@
           {
             "in": "query",
             "name": "searchCriteria.historyMode",
-            "description": "What Git history mode should be used. This only applies to the search criteria when Ids = null.",
+            "description": "What Git history mode should be used. This only applies to the search criteria when Ids = null and an itemPath is specified.",
             "required": false,
             "type": "string",
             "enum": [
@@ -8223,7 +8223,7 @@
           {
             "in": "query",
             "name": "searchCriteria.excludeDeletes",
-            "description": "If true, don't include delete history entries",
+            "description": "Only applies when an itemPath is specified. This determines whether to exclude delete entries of the specified path.",
             "required": false,
             "type": "boolean"
           },
@@ -12164,7 +12164,7 @@
           "$ref": "#/definitions/GitVersionDescriptor"
         },
         "excludeDeletes": {
-          "description": "If true, don't include delete history entries",
+          "description": "Only applies when an itemPath is specified. This determines whether to exclude delete entries of the specified path.",
           "type": "boolean"
         },
         "fromCommitId": {
@@ -12176,7 +12176,7 @@
           "type": "string"
         },
         "historyMode": {
-          "description": "What Git history mode should be used. This only applies to the search criteria when Ids = null.",
+          "description": "What Git history mode should be used. This only applies to the search criteria when Ids = null and an itemPath is specified.",
           "enum": [
             "simplifiedHistory",
             "firstParent",
@@ -14029,6 +14029,16 @@
         }
       }
     },
+    "RetargetEvent": {
+      "description": "Real time event (SignalR) for when the target branch of a pull request is changed",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/RealTimePullRequestEvent"
+        }
+      ],
+      "properties": {}
+    },
     "ReviewersUpdatedEvent": {
       "description": "Real time event (SignalR) for an update to reviewers on a pull request",
       "type": "object",
@@ -14144,6 +14154,7 @@
             "rubyMine",
             "tower",
             "visualStudio",
+            "vSCode",
             "webStorm"
           ],
           "x-ms-enum": {
@@ -14199,6 +14210,10 @@
               },
               {
                 "value": "visualStudio",
+                "description": ""
+              },
+              {
+                "value": "vSCode",
                 "description": ""
               },
               {
@@ -14286,31 +14301,31 @@
             "values": [
               {
                 "value": "deleting",
-                "description": ""
+                "description": "Project is in the process of being deleted."
               },
               {
                 "value": "new",
-                "description": ""
+                "description": "Project is in the process of being created."
               },
               {
                 "value": "wellFormed",
-                "description": ""
+                "description": "Project is completely created and ready to use."
               },
               {
                 "value": "createPending",
-                "description": ""
+                "description": "Project has been queued for creation, but the process has not yet started."
               },
               {
                 "value": "all",
-                "description": ""
+                "description": "All projects regardless of state."
               },
               {
                 "value": "unchanged",
-                "description": ""
+                "description": "Project has not been changed."
               },
               {
                 "value": "deleted",
-                "description": ""
+                "description": "Project has been deleted."
               }
             ]
           }
@@ -14322,23 +14337,18 @@
         "visibility": {
           "description": "Project visibility.",
           "enum": [
-            "unchanged",
             "private",
-            "organization"
+            "public"
           ],
           "x-ms-enum": {
             "name": "ProjectVisibility",
             "values": [
               {
-                "value": "unchanged",
-                "description": ""
-              },
-              {
                 "value": "private",
                 "description": ""
               },
               {
-                "value": "organization",
+                "value": "public",
                 "description": ""
               }
             ]
@@ -15095,6 +15105,22 @@
         "owner": {
           "description": "Owner's ID. Could be a name or a guid.",
           "type": "string"
+        }
+      }
+    },
+    "TfvcStatistics": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "changesetId": {
+          "description": "Id of the last changeset the stats are based on.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "fileCountTotal": {
+          "description": "Count of files at the requested scope.",
+          "type": "integer",
+          "format": "int64"
         }
       }
     },

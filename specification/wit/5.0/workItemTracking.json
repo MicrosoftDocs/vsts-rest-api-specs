@@ -1271,54 +1271,6 @@
             "$ref": "./httpExamples/fields/GET__wit_fields__fieldName_.json"
           }
         }
-      },
-      "patch": {
-        "tags": [
-          "Fields"
-        ],
-        "x-ms-docs-override-version": "5.0-preview.2",
-        "x-ms-vss-resource": "fields",
-        "x-ms-vss-method": "UpdateField",
-        "x-ms-preview": true,
-        "description": "Updates the field.",
-        "operationId": "Update",
-        "consumes": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "body",
-            "name": "body",
-            "description": "New field definition",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/WorkItemField"
-            }
-          },
-          {
-            "in": "path",
-            "name": "fieldNameOrRefName",
-            "description": "Field simple name or reference name",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "in": "path",
-            "name": "project",
-            "description": "Project ID or project name",
-            "required": true,
-            "x-ms-required": false,
-            "type": "string"
-          },
-          {
-            "$ref": "#/parameters/api-Version-preview.2"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation"
-          }
-        }
       }
     },
     "/{project}/_apis/wit/queries": {
@@ -3508,6 +3460,70 @@
         }
       }
     },
+    "/{project}/_apis/wit/workitemsbatch": {
+      "post": {
+        "tags": [
+          "Work Items"
+        ],
+        "x-ms-docs-override-version": "5.0-preview.1",
+        "x-ms-vss-resource": "workItemsBatch",
+        "x-ms-vss-method": "GetWorkItemsBatch",
+        "x-ms-preview": true,
+        "description": "Gets work items for a list of work item ids",
+        "operationId": "Get Work Items Batch",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/WorkItemBatchGetRequest"
+            }
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "x-ms-required": false,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/WorkItem"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.work"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "Get list of work items for specific fields": {
+            "$ref": "./httpExamples/workItemsBatch/POST__wit_WorkItemsBatch_ids-_ids__fields-_columns_.json"
+          }
+        }
+      }
+    },
     "/{project}/_apis/wit/workitemtypecategories": {
       "get": {
         "tags": [
@@ -5636,6 +5652,87 @@
           "description": "Revision number of the work item.",
           "type": "integer",
           "format": "int32"
+        }
+      }
+    },
+    "WorkItemBatchGetRequest": {
+      "description": "Describes a request to get a set of work items",
+      "type": "object",
+      "properties": {
+        "$expand": {
+          "description": "The expand parameters for work item attributes. Possible options are { None, Relations, Fields, Links, All }",
+          "enum": [
+            "none",
+            "relations",
+            "fields",
+            "links",
+            "all"
+          ],
+          "x-ms-enum": {
+            "name": "WorkItemExpand",
+            "values": [
+              {
+                "value": "none",
+                "description": ""
+              },
+              {
+                "value": "relations",
+                "description": ""
+              },
+              {
+                "value": "fields",
+                "description": ""
+              },
+              {
+                "value": "links",
+                "description": ""
+              },
+              {
+                "value": "all",
+                "description": ""
+              }
+            ]
+          }
+        },
+        "asOf": {
+          "description": "AsOf UTC date time string",
+          "type": "string",
+          "format": "date-time"
+        },
+        "errorPolicy": {
+          "description": "The flag to control error policy in a bulk get work items request. Possible options are {Fail, Omit}.",
+          "enum": [
+            "fail",
+            "omit"
+          ],
+          "x-ms-enum": {
+            "name": "WorkItemErrorPolicy",
+            "values": [
+              {
+                "value": "fail",
+                "description": ""
+              },
+              {
+                "value": "omit",
+                "description": ""
+              }
+            ]
+          }
+        },
+        "fields": {
+          "description": "The requested fields",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "ids": {
+          "description": "The requested work item ids",
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "format": "int32"
+          }
         }
       }
     },

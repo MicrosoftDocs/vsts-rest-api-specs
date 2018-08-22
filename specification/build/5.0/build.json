@@ -847,6 +847,14 @@
             "type": "string"
           },
           {
+            "in": "query",
+            "name": "sourceBuildId",
+            "description": "",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
             "$ref": "#/parameters/api-Version-preview.4"
           }
         ],
@@ -5996,6 +6004,10 @@
             "$ref": "#/definitions/Change"
           }
         },
+        "pullRequest": {
+          "description": "Pull request for the build used for build notifications",
+          "$ref": "#/definitions/PullRequest"
+        },
         "testResults": {
           "description": "Test results associated with a build used for build notifications",
           "$ref": "#/definitions/AggregatedResultsAnalysis"
@@ -8667,6 +8679,7 @@
       "type": "object",
       "properties": {
         "_links": {
+          "description": "The links to other objects related to this object.",
           "$ref": "#/definitions/ReferenceLinks"
         },
         "currentState": {
@@ -8714,11 +8727,11 @@
             "type": "string"
           }
         },
-        "commentIntegration": {
-          "type": "boolean"
-        },
         "forks": {
           "$ref": "#/definitions/Forks"
+        },
+        "isCommentRequiredForPullRequest": {
+          "type": "boolean"
         }
       }
     },
@@ -9606,31 +9619,31 @@
             "values": [
               {
                 "value": "deleting",
-                "description": ""
+                "description": "Project is in the process of being deleted."
               },
               {
                 "value": "new",
-                "description": ""
+                "description": "Project is in the process of being created."
               },
               {
                 "value": "wellFormed",
-                "description": ""
+                "description": "Project is completely created and ready to use."
               },
               {
                 "value": "createPending",
-                "description": ""
+                "description": "Project has been queued for creation, but the process has not yet started."
               },
               {
                 "value": "all",
-                "description": ""
+                "description": "All projects regardless of state."
               },
               {
                 "value": "unchanged",
-                "description": ""
+                "description": "Project has not been changed."
               },
               {
                 "value": "deleted",
-                "description": ""
+                "description": "Project has been deleted."
               }
             ]
           }
@@ -9642,23 +9655,18 @@
         "visibility": {
           "description": "Project visibility.",
           "enum": [
-            "unchanged",
             "private",
-            "organization"
+            "public"
           ],
           "x-ms-enum": {
             "name": "ProjectVisibility",
             "values": [
               {
-                "value": "unchanged",
-                "description": ""
-              },
-              {
                 "value": "private",
                 "description": ""
               },
               {
-                "value": "organization",
+                "value": "public",
                 "description": ""
               }
             ]
