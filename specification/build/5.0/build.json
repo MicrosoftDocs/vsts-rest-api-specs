@@ -1152,6 +1152,13 @@
             "type": "string"
           },
           {
+            "in": "query",
+            "name": "retry",
+            "description": "",
+            "required": false,
+            "type": "boolean"
+          },
+          {
             "$ref": "#/parameters/api-Version-preview.4"
           }
         ],
@@ -4440,7 +4447,7 @@
         "x-ms-vss-resource": "status",
         "x-ms-vss-method": "GetStatusBadge",
         "x-ms-preview": true,
-        "description": "<p>Gets the build status for a definition, optionally scoped to a specific branch.</p>",
+        "description": "<p>Gets the build status for a definition, optionally scoped to a specific branch, stage, job, and configuration.</p> <p>If there are more than one, then it is required to pass in a stageName value when specifying a jobName, and the same rule then applies for both if passing a configuration parameter.</p>",
         "operationId": "Get",
         "produces": [
           "application/json"
@@ -4471,6 +4478,27 @@
             "in": "query",
             "name": "branchName",
             "description": "Only consider the most recent build for this branch.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "stageName",
+            "description": "Use this stage within the pipeline to render the status.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "jobName",
+            "description": "Use this job within a stage of the pipeline to render the status.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "configuration",
+            "description": "Use this job configuration to render the status",
             "required": false,
             "type": "string"
           },
@@ -8854,6 +8882,9 @@
         "isContainer": {
           "type": "boolean"
         },
+        "isDeletedInOrigin": {
+          "type": "boolean"
+        },
         "profileUrl": {
           "type": "string"
         },
@@ -9208,8 +9239,16 @@
           "description": "Source branch ref of this pull request",
           "type": "string"
         },
+        "sourceRepositoryOwner": {
+          "description": "Owner of the source repository of this pull request",
+          "type": "string"
+        },
         "targetBranchRef": {
           "description": "Target branch ref of this pull request",
+          "type": "string"
+        },
+        "targetRepositoryOwner": {
+          "description": "Owner of the target repository of this pull request",
           "type": "string"
         },
         "title": {
@@ -9238,6 +9277,12 @@
         },
         "isCommentRequiredForPullRequest": {
           "type": "boolean"
+        },
+        "pathFilters": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
         }
       }
     },

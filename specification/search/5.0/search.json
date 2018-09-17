@@ -157,6 +157,13 @@
             }
           }
         },
+        "security": [
+          {
+            "oauth2": [
+              "vso.wiki"
+            ]
+          }
+        ],
         "x-ms-examples": {
           "": {
             "$ref": "./httpExamples/wikiSearchResults/POST__WikiSearchResults.json"
@@ -325,8 +332,13 @@
       }
     },
     "EntitySearchRequest": {
-      "description": "Base contract for search request types.",
+      "description": "Base contract for search request types without scroll support.",
       "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/EntitySearchRequestBase"
+        }
+      ],
       "properties": {
         "$orderBy": {
           "description": "Options for sorting search results. If set to null, the results will be returned sorted by relevance. If more than one sort option is provided, the results are sorted in the order specified in the OrderBy.",
@@ -345,6 +357,16 @@
           "type": "integer",
           "format": "int32"
         },
+        "includeFacets": {
+          "description": "Flag to opt for faceting in the result. Default behavior is false.",
+          "type": "boolean"
+        }
+      }
+    },
+    "EntitySearchRequestBase": {
+      "description": "Base class for search request types.",
+      "type": "object",
+      "properties": {
         "filters": {
           "description": "Filters to be applied. Set it to null if there are no filters to be applied.",
           "type": "object",
@@ -354,10 +376,6 @@
               "type": "string"
             }
           }
-        },
-        "includeFacets": {
-          "description": "Flag to opt for faceting in the result. Default behavior is false.",
-          "type": "boolean"
         },
         "searchText": {
           "description": "The search text.",
@@ -731,7 +749,8 @@
       "tokenUrl": "https://app.vssps.visualstudio.com/oauth2/token?client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer&grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer",
       "scopes": {
         "vso.code": "Grants the ability to read source code and metadata about commits, changesets, branches, and other version control artifacts. Also grants the ability to search code and get notified about version control events via service hooks.",
-        "vso.work": "Grants the ability to read work items, queries, boards, area and iterations paths, and other work item tracking related metadata. Also grants the ability to execute queries, search work items and to receive notifications about work item events via service hooks."
+        "vso.work": "Grants the ability to read work items, queries, boards, area and iterations paths, and other work item tracking related metadata. Also grants the ability to execute queries, search work items and to receive notifications about work item events via service hooks.",
+        "vso.wiki": "Grants the ability to read wikis, wiki pages and wiki attachments. Also grants the ability to search wiki pages."
       }
     }
   },

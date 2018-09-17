@@ -80,11 +80,11 @@
     },
     {
       "name": "Pull Request Iteration Statuses",
-      "description": "Pull request statuses can be posted on pull request iteration to indicate that status links particular iteration. Iteration statuses behave the same way\nas pull request statuses, but can expire on new source updates when StatusPolicy is properly configured."
+      "description": "Pull request statuses can be posted on pull request iteration to indicate that status links particular iteration. Iteration statuses behave the same way\nas pull request statuses, but can expire on new source updates when StatusPolicy is properly configured.\n\nPull request statuses provide extensibility to the pull request experience. Third party services or users with read permission to the repository\ncan create and get statuses associated with a pull request or an iteration via this REST API. An example of pull request status can be \"CI Build Passed\",\n\"Integration tests pending\", \"Linting check succeeded\".\nIn order to update a status create a new status with the same genre and name values."
     },
     {
       "name": "Pull Request Labels",
-      "description": "Pull Request labels provide extensibility to the pull request experience. \nThird party services or users with read permission in the repository can\ncreate, get, and delete labels associated with a pull request via this REST API.\nLabels are used to provide quick insights into a pull request, an example\ncan be labelling a Pull request as \"WIP\", \"Feature\", or \"Bug\" to let others\nknow the state and purpose of the Pull Request."
+      "description": "Pull Request labels provide extensibility to the pull request experience. \nThird party services or users with read permission in the repository can\ncreate, get, and delete labels associated with a pull request via this REST API.\nLabels are used to provide quick insights into a pull request, an example\ncan be labelling a Pull request as \"WIP\", \"Feature\", or \"Bug\" to let others\nknow the state and purpose of the Pull Request.\n\nLabels are posted to the pull request and will be displayed in both the details and list views for pull requests."
     },
     {
       "name": "Pull Request Properties",
@@ -6575,7 +6575,7 @@
           {
             "in": "path",
             "name": "repositoryId",
-            "description": "The repository ID of the pull request’s target branch.",
+            "description": "The repository ID of the pull request's target branch.",
             "required": true,
             "type": "string"
           },
@@ -6652,7 +6652,7 @@
           {
             "in": "path",
             "name": "repositoryId",
-            "description": "The repository ID of the pull request’s target branch.",
+            "description": "The repository ID of the pull request's target branch.",
             "required": true,
             "type": "string"
           },
@@ -6726,7 +6726,7 @@
           {
             "in": "path",
             "name": "repositoryId",
-            "description": "The repository ID of the pull request’s target branch.",
+            "description": "The repository ID of the pull request's target branch.",
             "required": true,
             "type": "string"
           },
@@ -6808,7 +6808,7 @@
           {
             "in": "path",
             "name": "repositoryId",
-            "description": "The repository ID of the pull request’s target branch.",
+            "description": "The repository ID of the pull request's target branch.",
             "required": true,
             "type": "string"
           },
@@ -6900,7 +6900,7 @@
           {
             "in": "path",
             "name": "repositoryId",
-            "description": "The repository ID of the pull request’s target branch.",
+            "description": "The repository ID of the pull request's target branch.",
             "required": true,
             "type": "string"
           },
@@ -6979,7 +6979,7 @@
           {
             "in": "path",
             "name": "repositoryId",
-            "description": "The repository ID of the pull request’s target branch.",
+            "description": "The repository ID of the pull request's target branch.",
             "required": true,
             "type": "string"
           },
@@ -7053,7 +7053,7 @@
           {
             "in": "path",
             "name": "repositoryId",
-            "description": "The repository ID of the pull request’s target branch.",
+            "description": "The repository ID of the pull request's target branch.",
             "required": true,
             "type": "string"
           },
@@ -7130,7 +7130,7 @@
           {
             "in": "path",
             "name": "repositoryId",
-            "description": "The repository ID of the pull request’s target branch.",
+            "description": "The repository ID of the pull request's target branch.",
             "required": true,
             "type": "string"
           },
@@ -7621,7 +7621,7 @@
           {
             "in": "query",
             "name": "filter",
-            "description": "[optional] A filter to apply to the refs.",
+            "description": "[optional] A filter to apply to the refs (starts with).",
             "required": false,
             "type": "string"
           },
@@ -7661,6 +7661,28 @@
             "type": "boolean"
           },
           {
+            "in": "query",
+            "name": "filterContains",
+            "description": "[optional] A filter to apply to the refs (contains).",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "$top",
+            "description": "[optional] Maximum number of refs to return. It cannot be bigger than 1000. If it is not provided but continuationToken is, top will default to 100.",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "continuationToken",
+            "description": "The continuation token used for pagination.",
+            "required": false,
+            "type": "string"
+          },
+          {
             "$ref": "#/parameters/api-Version-preview.1"
           }
         ],
@@ -7694,6 +7716,9 @@
           },
           "Refs tags": {
             "$ref": "./httpExamples/refs/GET__git_repositories__repositoryId__refs_tags.json"
+          },
+          "Refs heads that contain a word": {
+            "$ref": "./httpExamples/refs/GET__git_repositories__repositoryId__refs_heads_contains_replacer.json"
           }
         }
       },
@@ -12493,6 +12518,10 @@
           "description": "If the iteration reason is Retarget, this is the refName of the new target",
           "type": "string"
         },
+        "oldTargetRefName": {
+          "description": "If the iteration reason is Retarget, this is the original target refName",
+          "type": "string"
+        },
         "push": {
           "description": "The Git push information associated with this pull request iteration.",
           "$ref": "#/definitions/GitPushRef"
@@ -12645,7 +12674,7 @@
               },
               {
                 "value": "commit",
-                "description": "Search for pull requests that merged the suppliest commits."
+                "description": "Search for pull requests that merged the supplied commits."
               }
             ]
           }
@@ -14317,6 +14346,9 @@
           "type": "boolean"
         },
         "isContainer": {
+          "type": "boolean"
+        },
+        "isDeletedInOrigin": {
           "type": "boolean"
         },
         "profileUrl": {

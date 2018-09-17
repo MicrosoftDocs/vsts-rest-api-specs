@@ -5624,6 +5624,27 @@
     }
   },
   "definitions": {
+    "AbortTestRunRequest": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "options": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "projectName": {
+          "type": "string"
+        },
+        "revision": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "testRunId": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
     "AfnStrip": {
       "description": "",
       "type": "object",
@@ -6428,6 +6449,21 @@
         }
       }
     },
+    "BulkResultUpdateRequest": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "projectName": {
+          "type": "string"
+        },
+        "requests": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ResultUpdateRequest"
+          }
+        }
+      }
+    },
     "CloneOperationInformation": {
       "description": "Detail About Clone Operation.",
       "type": "object",
@@ -6755,6 +6791,61 @@
         }
       }
     },
+    "CreateTestMessageLogEntryRequest": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "projectName": {
+          "type": "string"
+        },
+        "testMessageLogEntry": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TestMessageLogEntry"
+          }
+        },
+        "testRunId": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "CreateTestResultsRequest": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "projectName": {
+          "type": "string"
+        },
+        "results": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/LegacyTestCaseResult"
+          }
+        }
+      }
+    },
+    "CreateTestRunRequest": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "projectName": {
+          "type": "string"
+        },
+        "results": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/LegacyTestCaseResult"
+          }
+        },
+        "testRun": {
+          "$ref": "#/definitions/LegacyTestRun"
+        },
+        "testSettings": {
+          "$ref": "#/definitions/LegacyTestSettings"
+        }
+      }
+    },
     "CustomTestField": {
       "description": "A custom field information.",
       "type": "object",
@@ -6868,6 +6959,40 @@
         }
       }
     },
+    "DefaultAfnStripBinding": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "testCaseId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "testResultId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "testRunId": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "DeleteTestRunRequest": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "projectName": {
+          "type": "string"
+        },
+        "testRunIds": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      }
+    },
     "DtlEnvironmentDetails": {
       "description": "This is a temporary class to provide the details for the test run environment.",
       "type": "object",
@@ -6899,6 +7024,60 @@
         "release": {
           "description": "Release reference since failing.",
           "$ref": "#/definitions/ReleaseReference"
+        }
+      }
+    },
+    "FetchTestResultsRequest": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "idAndRevs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TestCaseResultIdAndRev"
+          }
+        },
+        "includeActionResults": {
+          "type": "boolean"
+        },
+        "projectName": {
+          "type": "string"
+        }
+      }
+    },
+    "FetchTestResultsResponse": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "actionResults": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TestActionResult"
+          }
+        },
+        "attachments": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TestResultAttachment"
+          }
+        },
+        "deletedIds": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/LegacyTestCaseResultIdentifier"
+          }
+        },
+        "results": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/LegacyTestCaseResult"
+          }
+        },
+        "testParameters": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TestResultParameter"
+          }
         }
       }
     },
@@ -7012,6 +7191,25 @@
         }
       }
     },
+    "HttpPostedTcmAttachment": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "attachmentContent": {
+          "type": "string"
+        },
+        "contentLength": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "contentType": {
+          "type": "string"
+        },
+        "fileName": {
+          "type": "string"
+        }
+      }
+    },
     "IdentityRef": {
       "description": "",
       "type": "object",
@@ -7039,6 +7237,9 @@
         "isContainer": {
           "type": "boolean"
         },
+        "isDeletedInOrigin": {
+          "type": "boolean"
+        },
         "profileUrl": {
           "type": "string"
         },
@@ -7061,6 +7262,717 @@
         },
         "runBy": {
           "$ref": "#/definitions/IdentityRef"
+        }
+      }
+    },
+    "LegacyBuildConfiguration": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "branchName": {
+          "type": "string"
+        },
+        "buildConfigurationId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "buildDefinitionId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "buildDefinitionName": {
+          "type": "string"
+        },
+        "buildFlavor": {
+          "type": "string"
+        },
+        "buildId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "buildNumber": {
+          "type": "string"
+        },
+        "buildPlatform": {
+          "type": "string"
+        },
+        "buildQuality": {
+          "type": "string"
+        },
+        "buildSystem": {
+          "type": "string"
+        },
+        "buildUri": {
+          "type": "string"
+        },
+        "completedDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "createdDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "oldBuildConfigurationId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "repositoryId": {
+          "type": "string"
+        },
+        "repositoryType": {
+          "type": "string"
+        },
+        "sourceVersion": {
+          "type": "string"
+        },
+        "teamProjectName": {
+          "type": "string"
+        }
+      }
+    },
+    "LegacyReleaseReference": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "attempt": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "environmentCreationDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "primaryArtifactBuildId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "primaryArtifactProjectId": {
+          "type": "string"
+        },
+        "primaryArtifactType": {
+          "type": "string"
+        },
+        "releaseCreationDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "releaseDefId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "releaseEnvDefId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "releaseEnvId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "releaseEnvName": {
+          "type": "string"
+        },
+        "releaseEnvUri": {
+          "type": "string"
+        },
+        "releaseId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "releaseName": {
+          "type": "string"
+        },
+        "releaseRefId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "releaseUri": {
+          "type": "string"
+        }
+      }
+    },
+    "LegacyTestCaseResult": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "afnStripId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "areaId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "areaUri": {
+          "type": "string"
+        },
+        "automatedTestId": {
+          "type": "string"
+        },
+        "automatedTestName": {
+          "type": "string"
+        },
+        "automatedTestStorage": {
+          "type": "string"
+        },
+        "automatedTestType": {
+          "type": "string"
+        },
+        "automatedTestTypeId": {
+          "type": "string"
+        },
+        "buildNumber": {
+          "type": "string"
+        },
+        "buildReference": {
+          "$ref": "#/definitions/LegacyBuildConfiguration"
+        },
+        "comment": {
+          "type": "string"
+        },
+        "computerName": {
+          "type": "string"
+        },
+        "configurationId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "configurationName": {
+          "type": "string"
+        },
+        "creationDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "customFields": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TestExtensionField"
+          }
+        },
+        "dateCompleted": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "dateStarted": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "duration": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "errorMessage": {
+          "type": "string"
+        },
+        "failingSince": {
+          "$ref": "#/definitions/FailingSince"
+        },
+        "failureType": {
+          "type": "string",
+          "format": "byte"
+        },
+        "id": {
+          "$ref": "#/definitions/LegacyTestCaseResultIdentifier"
+        },
+        "isRerun": {
+          "type": "boolean"
+        },
+        "lastUpdated": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "lastUpdatedBy": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "lastUpdatedByName": {
+          "type": "string"
+        },
+        "outcome": {
+          "type": "string",
+          "format": "byte"
+        },
+        "owner": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "ownerName": {
+          "type": "string"
+        },
+        "priority": {
+          "type": "string",
+          "format": "byte"
+        },
+        "releaseReference": {
+          "$ref": "#/definitions/LegacyReleaseReference"
+        },
+        "resetCount": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "resolutionStateId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "resultGroupType": {
+          "enum": [
+            "none",
+            "rerun",
+            "dataDriven",
+            "orderedTest",
+            "generic"
+          ],
+          "x-ms-enum": {
+            "name": "ResultGroupType",
+            "values": [
+              {
+                "value": "none",
+                "description": "Leaf node of test result."
+              },
+              {
+                "value": "rerun",
+                "description": "Hierarchy type of test result."
+              },
+              {
+                "value": "dataDriven",
+                "description": "Hierarchy type of test result."
+              },
+              {
+                "value": "orderedTest",
+                "description": "Hierarchy type of test result."
+              },
+              {
+                "value": "generic",
+                "description": "Unknown hierarchy type."
+              }
+            ]
+          }
+        },
+        "revision": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "runBy": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "runByName": {
+          "type": "string"
+        },
+        "sequenceId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "stackTrace": {
+          "$ref": "#/definitions/TestExtensionField"
+        },
+        "state": {
+          "type": "string",
+          "format": "byte"
+        },
+        "subResultCount": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "suiteName": {
+          "type": "string"
+        },
+        "testCaseArea": {
+          "type": "string"
+        },
+        "testCaseAreaUri": {
+          "type": "string"
+        },
+        "testCaseId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "testCaseReferenceId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "testCaseRevision": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "testCaseTitle": {
+          "type": "string"
+        },
+        "testPlanId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "testPointId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "testResultId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "testRunId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "testRunTitle": {
+          "type": "string"
+        },
+        "testSuiteId": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "LegacyTestCaseResultIdentifier": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "areaUri": {
+          "type": "string"
+        },
+        "testResultId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "testRunId": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "LegacyTestRun": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "bugsCount": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "buildConfigurationId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "buildFlavor": {
+          "type": "string"
+        },
+        "buildNumber": {
+          "type": "string"
+        },
+        "buildPlatform": {
+          "type": "string"
+        },
+        "buildReference": {
+          "$ref": "#/definitions/LegacyBuildConfiguration"
+        },
+        "buildUri": {
+          "type": "string"
+        },
+        "comment": {
+          "type": "string"
+        },
+        "completeDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "configurationIds": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "controller": {
+          "type": "string"
+        },
+        "creationDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "csmContent": {
+          "type": "string"
+        },
+        "csmParameters": {
+          "type": "string"
+        },
+        "customFields": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TestExtensionField"
+          }
+        },
+        "dropLocation": {
+          "type": "string"
+        },
+        "dtlAutEnvironment": {
+          "$ref": "#/definitions/ShallowReference"
+        },
+        "dtlTestEnvironment": {
+          "$ref": "#/definitions/ShallowReference"
+        },
+        "dueDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "errorMessage": {
+          "type": "string"
+        },
+        "filter": {
+          "$ref": "#/definitions/RunFilter"
+        },
+        "incompleteTests": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "isAutomated": {
+          "type": "boolean"
+        },
+        "isBvt": {
+          "type": "boolean"
+        },
+        "iteration": {
+          "type": "string"
+        },
+        "iterationId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "lastUpdated": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "lastUpdatedBy": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "lastUpdatedByName": {
+          "type": "string"
+        },
+        "legacySharePath": {
+          "type": "string"
+        },
+        "notApplicableTests": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "owner": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "ownerName": {
+          "type": "string"
+        },
+        "passedTests": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "postProcessState": {
+          "type": "string",
+          "format": "byte"
+        },
+        "publicTestSettingsId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "releaseEnvironmentUri": {
+          "type": "string"
+        },
+        "releaseReference": {
+          "$ref": "#/definitions/LegacyReleaseReference"
+        },
+        "releaseUri": {
+          "type": "string"
+        },
+        "revision": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "rowVersion": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "byte"
+          }
+        },
+        "runHasDtlEnvironment": {
+          "type": "boolean"
+        },
+        "runTimeout": {
+          "type": "string",
+          "format": "TimeSpan"
+        },
+        "serviceVersion": {
+          "type": "string"
+        },
+        "sourceWorkflow": {
+          "type": "string"
+        },
+        "startDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "state": {
+          "type": "string",
+          "format": "byte"
+        },
+        "subscriptionName": {
+          "type": "string"
+        },
+        "substate": {
+          "type": "string",
+          "format": "byte"
+        },
+        "teamProject": {
+          "type": "string"
+        },
+        "teamProjectUri": {
+          "type": "string"
+        },
+        "testConfigurationsMapping": {
+          "type": "string"
+        },
+        "testEnvironmentId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "testMessageLogEntries": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TestMessageLogDetails"
+          }
+        },
+        "testMessageLogId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "testPlanId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "testRunId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "testRunStatistics": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/LegacyTestRunStatistic"
+          }
+        },
+        "testSettingsId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "title": {
+          "type": "string"
+        },
+        "totalTests": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "type": {
+          "type": "string",
+          "format": "byte"
+        },
+        "unanalyzedTests": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "version": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "LegacyTestRunStatistic": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "count": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "outcome": {
+          "type": "string",
+          "format": "byte"
+        },
+        "resolutionState": {
+          "$ref": "#/definitions/TestResolutionState"
+        },
+        "state": {
+          "type": "string",
+          "format": "byte"
+        },
+        "testRunId": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "LegacyTestSettings": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "areaId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "areaPath": {
+          "type": "string"
+        },
+        "createdBy": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "createdByName": {
+          "type": "string"
+        },
+        "createdDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "description": {
+          "type": "string"
+        },
+        "id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "isAutomated": {
+          "type": "boolean"
+        },
+        "isPublic": {
+          "type": "boolean"
+        },
+        "lastUpdated": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "lastUpdatedBy": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "lastUpdatedByName": {
+          "type": "string"
+        },
+        "machineRoles": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TestSettingsMachineRole"
+          }
+        },
+        "name": {
+          "type": "string"
+        },
+        "revision": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "settings": {
+          "type": "string"
+        },
+        "teamProjectUri": {
+          "type": "string"
         }
       }
     },
@@ -7399,12 +8311,171 @@
         }
       }
     },
+    "QueryByPointRequest": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "projectName": {
+          "type": "string"
+        },
+        "testPlanId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "testPointId": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "QueryByRunRequest": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "includeActionResults": {
+          "type": "boolean"
+        },
+        "outcome": {
+          "type": "string",
+          "format": "byte"
+        },
+        "owner": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "pageSize": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "projectName": {
+          "type": "string"
+        },
+        "state": {
+          "type": "string",
+          "format": "byte"
+        },
+        "testRunId": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
     "QueryModel": {
       "description": "",
       "type": "object",
       "properties": {
         "query": {
           "type": "string"
+        }
+      }
+    },
+    "QueryTestActionResultRequest": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "identifier": {
+          "$ref": "#/definitions/LegacyTestCaseResultIdentifier"
+        },
+        "projectName": {
+          "type": "string"
+        }
+      }
+    },
+    "QueryTestActionResultResponse": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "testActionResults": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TestActionResult"
+          }
+        },
+        "testAttachments": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TestResultAttachment"
+          }
+        },
+        "testResultParameters": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TestResultParameter"
+          }
+        }
+      }
+    },
+    "QueryTestMessageLogEntryRequest": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "projectName": {
+          "type": "string"
+        },
+        "testMessageLogId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "testRunId": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "QueryTestRuns2Request": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "includeStatistics": {
+          "type": "boolean"
+        },
+        "query": {
+          "$ref": "#/definitions/ResultsStoreQuery"
+        }
+      }
+    },
+    "QueryTestRunsRequest": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "buildUri": {
+          "type": "string"
+        },
+        "owner": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "planId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "skip": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "teamProjectName": {
+          "type": "string"
+        },
+        "testRunId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "top": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "QueryTestRunStatsRequest": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "teamProjectName": {
+          "type": "string"
+        },
+        "testRunId": {
+          "type": "integer",
+          "format": "int32"
         }
       }
     },
@@ -7575,6 +8646,21 @@
         "workItemId": {
           "type": "integer",
           "format": "int32"
+        }
+      }
+    },
+    "ResetTestResultsRequest": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/LegacyTestCaseResultIdentifier"
+          }
+        },
+        "projectName": {
+          "type": "string"
         }
       }
     },
@@ -7863,6 +8949,37 @@
         }
       }
     },
+    "ResultsByQueryRequest": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "pageSize": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "query": {
+          "$ref": "#/definitions/ResultsStoreQuery"
+        }
+      }
+    },
+    "ResultsByQueryResponse": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "excessIds": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/LegacyTestCaseResultIdentifier"
+          }
+        },
+        "testResults": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/LegacyTestCaseResult"
+          }
+        }
+      }
+    },
     "ResultsFilter": {
       "description": "",
       "type": "object",
@@ -7939,6 +9056,77 @@
         }
       }
     },
+    "ResultsStoreQuery": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "dayPrecision": {
+          "type": "boolean"
+        },
+        "queryText": {
+          "type": "string"
+        },
+        "teamProjectName": {
+          "type": "string"
+        },
+        "timeZone": {
+          "type": "string"
+        }
+      }
+    },
+    "ResultUpdateRequest": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "actionResultDeletes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TestActionResult"
+          }
+        },
+        "actionResults": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TestActionResult"
+          }
+        },
+        "attachmentDeletes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TestResultAttachmentIdentity"
+          }
+        },
+        "attachments": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TestResultAttachment"
+          }
+        },
+        "parameterDeletes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TestResultParameter"
+          }
+        },
+        "parameters": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TestResultParameter"
+          }
+        },
+        "testCaseResult": {
+          "$ref": "#/definitions/LegacyTestCaseResult"
+        },
+        "testResultId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "testRunId": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
     "ResultUpdateRequestModel": {
       "description": "",
       "type": "object",
@@ -7969,6 +9157,42 @@
         },
         "testCaseResult": {
           "$ref": "#/definitions/TestCaseResultUpdateModel"
+        }
+      }
+    },
+    "ResultUpdateResponse": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "attachmentIds": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "lastUpdated": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "lastUpdatedBy": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "lastUpdatedByName": {
+          "type": "string"
+        },
+        "maxReservedSubResultId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "revision": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "testResultId": {
+          "type": "integer",
+          "format": "int32"
         }
       }
     },
@@ -8329,6 +9553,10 @@
         "automatedTestStorage": {
           "type": "string"
         },
+        "durationInMs": {
+          "type": "number",
+          "format": "double"
+        },
         "id": {
           "type": "integer",
           "format": "int32"
@@ -8652,6 +9880,64 @@
               }
             ]
           }
+        }
+      }
+    },
+    "TestActionResult": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "actionPath": {
+          "type": "string"
+        },
+        "comment": {
+          "type": "string"
+        },
+        "creationDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "dateCompleted": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "dateStarted": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "duration": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "errorMessage": {
+          "type": "string"
+        },
+        "id": {
+          "$ref": "#/definitions/LegacyTestCaseResultIdentifier"
+        },
+        "iterationId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "lastUpdated": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "lastUpdatedBy": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "outcome": {
+          "type": "string",
+          "format": "byte"
+        },
+        "sharedStepId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "sharedStepRevision": {
+          "type": "integer",
+          "format": "int32"
         }
       }
     },
@@ -9299,6 +10585,19 @@
         }
       }
     },
+    "TestCaseResultIdAndRev": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "id": {
+          "$ref": "#/definitions/LegacyTestCaseResultIdentifier"
+        },
+        "revision": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
     "TestCaseResultIdentifier": {
       "description": "Reference to a test result.",
       "type": "object",
@@ -9479,6 +10778,204 @@
           "type": "array",
           "items": {
             "$ref": "#/definitions/DatedTestFieldData"
+          }
+        }
+      }
+    },
+    "TestExtensionField": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "field": {
+          "$ref": "#/definitions/TestExtensionFieldDetails"
+        },
+        "value": {
+          "type": "object"
+        }
+      }
+    },
+    "TestExtensionFieldDetails": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "isResultScoped": {
+          "type": "boolean"
+        },
+        "isRunScoped": {
+          "type": "boolean"
+        },
+        "isSystemField": {
+          "type": "boolean"
+        },
+        "name": {
+          "type": "string"
+        },
+        "type": {
+          "enum": [
+            "bigInt",
+            "binary",
+            "bit",
+            "char",
+            "dateTime",
+            "decimal",
+            "float",
+            "image",
+            "int",
+            "money",
+            "nChar",
+            "nText",
+            "nVarChar",
+            "real",
+            "uniqueIdentifier",
+            "smallDateTime",
+            "smallInt",
+            "smallMoney",
+            "text",
+            "timestamp",
+            "tinyInt",
+            "varBinary",
+            "varChar",
+            "variant",
+            "xml",
+            "udt",
+            "structured",
+            "date",
+            "time",
+            "dateTime2",
+            "dateTimeOffset"
+          ],
+          "x-ms-enum": {
+            "name": "SqlDbType",
+            "values": [
+              {
+                "value": "bigInt",
+                "description": ""
+              },
+              {
+                "value": "binary",
+                "description": ""
+              },
+              {
+                "value": "bit",
+                "description": ""
+              },
+              {
+                "value": "char",
+                "description": ""
+              },
+              {
+                "value": "dateTime",
+                "description": ""
+              },
+              {
+                "value": "decimal",
+                "description": ""
+              },
+              {
+                "value": "float",
+                "description": ""
+              },
+              {
+                "value": "image",
+                "description": ""
+              },
+              {
+                "value": "int",
+                "description": ""
+              },
+              {
+                "value": "money",
+                "description": ""
+              },
+              {
+                "value": "nChar",
+                "description": ""
+              },
+              {
+                "value": "nText",
+                "description": ""
+              },
+              {
+                "value": "nVarChar",
+                "description": ""
+              },
+              {
+                "value": "real",
+                "description": ""
+              },
+              {
+                "value": "uniqueIdentifier",
+                "description": ""
+              },
+              {
+                "value": "smallDateTime",
+                "description": ""
+              },
+              {
+                "value": "smallInt",
+                "description": ""
+              },
+              {
+                "value": "smallMoney",
+                "description": ""
+              },
+              {
+                "value": "text",
+                "description": ""
+              },
+              {
+                "value": "timestamp",
+                "description": ""
+              },
+              {
+                "value": "tinyInt",
+                "description": ""
+              },
+              {
+                "value": "varBinary",
+                "description": ""
+              },
+              {
+                "value": "varChar",
+                "description": ""
+              },
+              {
+                "value": "variant",
+                "description": ""
+              },
+              {
+                "value": "xml",
+                "description": ""
+              },
+              {
+                "value": "udt",
+                "description": ""
+              },
+              {
+                "value": "structured",
+                "description": ""
+              },
+              {
+                "value": "date",
+                "description": ""
+              },
+              {
+                "value": "time",
+                "description": ""
+              },
+              {
+                "value": "dateTime2",
+                "description": ""
+              },
+              {
+                "value": "dateTimeOffset",
+                "description": ""
+              }
+            ]
           }
         }
       }
@@ -9707,18 +11204,200 @@
         }
       }
     },
+    "TestLog": {
+      "description": "Represents Test Log Result object.",
+      "type": "object",
+      "properties": {
+        "createdDate": {
+          "description": "LastUpdatedDate for Log file",
+          "type": "string",
+          "format": "date-time"
+        },
+        "lastUpdatedDate": {
+          "description": "LastUpdatedDate for Log file",
+          "type": "string",
+          "format": "date-time"
+        },
+        "logReference": {
+          "description": "Test Log Context run, build",
+          "$ref": "#/definitions/TestLogReference"
+        },
+        "metaData": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "size": {
+          "description": "Size in Bytes for Log file",
+          "type": "integer",
+          "format": "int64"
+        },
+        "url": {
+          "description": "Url for Log file",
+          "type": "string"
+        }
+      }
+    },
+    "TestLogQueryParameters": {
+      "description": "Represents Test Log query parameters.",
+      "type": "object",
+      "properties": {
+        "continuationToken": {
+          "description": "ContinuationToken acts as a waterMark. Used while quering large results.",
+          "type": "string"
+        },
+        "directoryPath": {
+          "description": "directory path of test log.",
+          "type": "string"
+        },
+        "fetchMetaData": {
+          "description": "controls whether metadata information should be returned along with test log.",
+          "type": "boolean"
+        },
+        "fileNamePrefix": {
+          "description": "prefix for the file name.",
+          "type": "string"
+        },
+        "type": {
+          "description": "Test log type.",
+          "enum": [
+            "generalAttachment",
+            "codeCoverage",
+            "testImpactDetails",
+            "intermediate"
+          ],
+          "x-ms-enum": {
+            "name": "TestLogType",
+            "values": [
+              {
+                "value": "generalAttachment",
+                "description": "Any gereric attachment."
+              },
+              {
+                "value": "codeCoverage",
+                "description": "Code Coverage files"
+              },
+              {
+                "value": "testImpactDetails",
+                "description": "Test Impact details."
+              },
+              {
+                "value": "intermediate",
+                "description": "Temporary files"
+              }
+            ]
+          }
+        }
+      }
+    },
+    "TestLogReference": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "buildId": {
+          "description": "BuildId for test log, if context is build",
+          "type": "integer",
+          "format": "int32"
+        },
+        "context": {
+          "description": "Test Log Reference object",
+          "enum": [
+            "run",
+            "build"
+          ],
+          "x-ms-enum": {
+            "name": "TestLogStoreContext",
+            "values": [
+              {
+                "value": "run",
+                "description": "Log file is associated with Run, result, subresult"
+              },
+              {
+                "value": "build",
+                "description": "Log File associated with Build"
+              }
+            ]
+          }
+        },
+        "filePath": {
+          "description": "FileName for log file",
+          "type": "string"
+        },
+        "resultId": {
+          "description": "Resultid for test log, if context is run and log is related to result",
+          "type": "integer",
+          "format": "int32"
+        },
+        "runId": {
+          "description": "runid for test log, if context is run",
+          "type": "integer",
+          "format": "int32"
+        },
+        "subResultId": {
+          "description": "SubResultid for test log, if context is run and log is related to subresult",
+          "type": "integer",
+          "format": "int32"
+        },
+        "type": {
+          "description": "Log Type",
+          "enum": [
+            "generalAttachment",
+            "codeCoverage",
+            "testImpactDetails",
+            "intermediate"
+          ],
+          "x-ms-enum": {
+            "name": "TestLogType",
+            "values": [
+              {
+                "value": "generalAttachment",
+                "description": "Any gereric attachment."
+              },
+              {
+                "value": "codeCoverage",
+                "description": "Code Coverage files"
+              },
+              {
+                "value": "testImpactDetails",
+                "description": "Test Impact details."
+              },
+              {
+                "value": "intermediate",
+                "description": "Temporary files"
+              }
+            ]
+          }
+        }
+      }
+    },
     "TestLogStoreEndpointDetails": {
       "description": "Represents Test Log store endpoint details.",
       "type": "object",
       "properties": {
-        "blobContainerSASUri": {
+        "endpointSASUri": {
           "description": "Test log store connection Uri.",
           "type": "string"
         },
-        "runId": {
-          "description": "Test Run Id.",
-          "type": "integer",
-          "format": "int32"
+        "endpointType": {
+          "description": "Test log store endpoint type.",
+          "enum": [
+            "root",
+            "file"
+          ],
+          "x-ms-enum": {
+            "name": "TestLogStoreEndpointType",
+            "values": [
+              {
+                "value": "root",
+                "description": ""
+              },
+              {
+                "value": "file",
+                "description": ""
+              }
+            ]
+          }
         }
       }
     },
@@ -9749,6 +11428,38 @@
         "message": {
           "description": "Message of the resource",
           "type": "string"
+        }
+      }
+    },
+    "TestMessageLogEntry": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "dateCreated": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "entryId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "logLevel": {
+          "type": "string",
+          "format": "byte"
+        },
+        "logUser": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "logUserName": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "testMessageLogId": {
+          "type": "integer",
+          "format": "int32"
         }
       }
     },
@@ -10328,6 +12039,162 @@
         }
       }
     },
+    "TestResultAcrossProjectResponse": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "projectName": {
+          "type": "string"
+        },
+        "testResult": {
+          "$ref": "#/definitions/LegacyTestCaseResult"
+        }
+      }
+    },
+    "TestResultAttachment": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "actionPath": {
+          "type": "string"
+        },
+        "attachmentType": {
+          "enum": [
+            "generalAttachment",
+            "afnStrip",
+            "bugFilingData",
+            "codeCoverage",
+            "intermediateCollectorData",
+            "runConfig",
+            "testImpactDetails",
+            "tmiTestRunDeploymentFiles",
+            "tmiTestRunReverseDeploymentFiles",
+            "tmiTestResultDetail",
+            "tmiTestRunSummary",
+            "consoleLog"
+          ],
+          "x-ms-enum": {
+            "name": "AttachmentType",
+            "values": [
+              {
+                "value": "generalAttachment",
+                "description": ""
+              },
+              {
+                "value": "afnStrip",
+                "description": ""
+              },
+              {
+                "value": "bugFilingData",
+                "description": ""
+              },
+              {
+                "value": "codeCoverage",
+                "description": ""
+              },
+              {
+                "value": "intermediateCollectorData",
+                "description": ""
+              },
+              {
+                "value": "runConfig",
+                "description": ""
+              },
+              {
+                "value": "testImpactDetails",
+                "description": ""
+              },
+              {
+                "value": "tmiTestRunDeploymentFiles",
+                "description": ""
+              },
+              {
+                "value": "tmiTestRunReverseDeploymentFiles",
+                "description": ""
+              },
+              {
+                "value": "tmiTestResultDetail",
+                "description": ""
+              },
+              {
+                "value": "tmiTestRunSummary",
+                "description": ""
+              },
+              {
+                "value": "consoleLog",
+                "description": ""
+              }
+            ]
+          }
+        },
+        "comment": {
+          "type": "string"
+        },
+        "creationDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "downloadQueryString": {
+          "type": "string"
+        },
+        "fileName": {
+          "type": "string"
+        },
+        "id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "isComplete": {
+          "type": "boolean"
+        },
+        "iterationId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "length": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "sessionId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "testResultId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "testRunId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "tmiRunId": {
+          "type": "string",
+          "format": "uuid"
+        }
+      }
+    },
+    "TestResultAttachmentIdentity": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "attachmentId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "sessionId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "testResultId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "testRunId": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
     "TestResultCreateModel": {
       "description": "",
       "type": "object",
@@ -10509,6 +12376,44 @@
           "description": "Time when execution started.",
           "type": "string",
           "format": "date-time"
+        }
+      }
+    },
+    "TestResultParameter": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "actionPath": {
+          "type": "string"
+        },
+        "actual": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "byte"
+          }
+        },
+        "expected": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "byte"
+          }
+        },
+        "iterationId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "parameterName": {
+          "type": "string"
+        },
+        "testResultId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "testRunId": {
+          "type": "integer",
+          "format": "int32"
         }
       }
     },
@@ -11734,6 +13639,18 @@
         }
       }
     },
+    "TestSettingsMachineRole": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "isExecution": {
+          "type": "boolean"
+        },
+        "name": {
+          "type": "string"
+        }
+      }
+    },
     "TestSubResult": {
       "description": "Represents a sub result of a test result.",
       "type": "object",
@@ -12060,6 +13977,92 @@
           "description": "List of allowed values",
           "type": "array",
           "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "UpdatedProperties": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "lastUpdated": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "lastUpdatedBy": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "lastUpdatedByName": {
+          "type": "string"
+        },
+        "revision": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "UpdateTestRunRequest": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "attachmentsToAdd": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TestResultAttachment"
+          }
+        },
+        "attachmentsToDelete": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TestResultAttachmentIdentity"
+          }
+        },
+        "projectName": {
+          "type": "string"
+        },
+        "shouldHyderate": {
+          "type": "boolean"
+        },
+        "testRun": {
+          "$ref": "#/definitions/LegacyTestRun"
+        }
+      }
+    },
+    "UpdateTestRunResponse": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "attachmentIds": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "updatedProperties": {
+          "$ref": "#/definitions/UpdatedProperties"
+        }
+      }
+    },
+    "UploadAttachmentsRequest": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "attachments": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/HttpPostedTcmAttachment"
+          }
+        },
+        "requestParams": {
+          "type": "object",
+          "additionalProperties": {
             "type": "string"
           }
         }
