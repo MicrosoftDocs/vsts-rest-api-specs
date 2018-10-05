@@ -1,4 +1,4 @@
-{
+﻿{
   "swagger": "2.0",
   "info": {
     "title": "TestPlan",
@@ -23,8 +23,20 @@
       "description": "Test Configuration Apis"
     },
     {
-      "name": "Plans",
-      "description": "Test Plan Apis"
+      "name": "Test  Plans",
+      "description": "Work with test plans programmatically using the REST APIs for Azure DevOps Services and Azure DevOps Server."
+    },
+    {
+      "name": "Test  Suite  Entry",
+      "description": "Reorder test suite entries (test cases and child test suites) in a given test suite."
+    },
+    {
+      "name": "Test  Suites",
+      "description": "Test suites help in organizing test cases in a test plan. A test suite can contain child test suites, helping you build a folder structure under a test plan or it can contain test cases. Leaf test suites typically contain test cases, where are intermediate suites represent a folder hierarchy. Intermediate suites can on Static type, whereas leaf suites can be of static suites, requirement based suites or query based suites."
+    },
+    {
+      "name": "Test Cases",
+      "description": "Controller to handle WIT scoped TestCase APIs"
     },
     {
       "name": "Variables",
@@ -35,6 +47,58 @@
     "https"
   ],
   "paths": {
+    "/{organization}/_apis/testplan/suites": {
+      "get": {
+        "tags": [
+          "Test  Suites"
+        ],
+        "x-ms-docs-override-version": "5.0-preview.1",
+        "x-ms-vss-resource": "suites",
+        "x-ms-vss-method": "GetSuitesByTestCaseId",
+        "x-ms-preview": true,
+        "description": "Find the list of all test suites in which a given test case is present. This is helpful if you need to find out which test suites are using a test case, when you need to make changes to a test case.",
+        "operationId": "Get Suites By Test Case Id",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "testCaseId",
+            "description": "ID of the test case for which suites need to be fetched.",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/TestSuite"
+              }
+            }
+          }
+        },
+        "x-ms-examples": {
+          "Get a test suites which contains testcase across projects.": {
+            "$ref": "./httpExamples/Suites/GetTestSuitesByCase.json"
+          }
+        }
+      }
+    },
     "/{organization}/{project}/_apis/testplan/configurations": {
       "post": {
         "tags": [
@@ -324,7 +388,7 @@
     "/{organization}/{project}/_apis/testplan/plans": {
       "post": {
         "tags": [
-          "Plans"
+          "Test  Plans"
         ],
         "x-ms-docs-override-version": "5.0-preview.1",
         "x-ms-vss-resource": "plans",
@@ -349,7 +413,7 @@
           {
             "in": "body",
             "name": "body",
-            "description": "",
+            "description": "A testPlanCreateParams object.TestPlanCreateParams",
             "required": true,
             "schema": {
               "$ref": "#/definitions/TestPlanCreateParams"
@@ -385,7 +449,7 @@
       },
       "get": {
         "tags": [
-          "Plans"
+          "Test  Plans"
         ],
         "x-ms-docs-override-version": "5.0-preview.1",
         "x-ms-vss-resource": "plans",
@@ -421,7 +485,7 @@
           {
             "in": "query",
             "name": "continuationToken",
-            "description": "",
+            "description": "If the list of plans returned is not complete, a continuation token to query next batch of plans is included in the response header as \"x-ms-continuationtoken\". Omit this parameter to get the first batch of test plans.",
             "required": false,
             "type": "string"
           },
@@ -467,7 +531,7 @@
     "/{organization}/{project}/_apis/testplan/plans/{planId}": {
       "delete": {
         "tags": [
-          "Plans"
+          "Test  Plans"
         ],
         "x-ms-docs-override-version": "5.0-preview.1",
         "x-ms-vss-resource": "plans",
@@ -515,13 +579,13 @@
       },
       "get": {
         "tags": [
-          "Plans"
+          "Test  Plans"
         ],
         "x-ms-docs-override-version": "5.0-preview.1",
         "x-ms-vss-resource": "plans",
         "x-ms-vss-method": "GetTestPlanById",
         "x-ms-preview": true,
-        "description": "Get a test plan by its ID.",
+        "description": "Get a test plan by Id.",
         "operationId": "Get",
         "produces": [
           "application/json"
@@ -569,7 +633,7 @@
       },
       "patch": {
         "tags": [
-          "Plans"
+          "Test  Plans"
         ],
         "x-ms-docs-override-version": "5.0-preview.1",
         "x-ms-vss-resource": "plans",
@@ -594,7 +658,7 @@
           {
             "in": "body",
             "name": "body",
-            "description": "",
+            "description": "A testPlanUpdateParams object.TestPlanUpdateParams",
             "required": true,
             "schema": {
               "$ref": "#/definitions/TestPlanUpdateParams"
@@ -633,6 +697,626 @@
           },
           "Update test plan details.": {
             "$ref": "./httpExamples/Plans/UpdateTestPlan.json"
+          }
+        }
+      }
+    },
+    "/{organization}/{project}/_apis/testplan/Plans/{planId}/suites": {
+      "post": {
+        "tags": [
+          "Test  Suites"
+        ],
+        "x-ms-docs-override-version": "5.0-preview.1",
+        "x-ms-vss-resource": "suites",
+        "x-ms-vss-method": "CreateTestSuite",
+        "x-ms-preview": true,
+        "description": "Create test suite.",
+        "operationId": "Create",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Parameters for suite creation",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/TestSuiteCreateParams"
+            }
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "planId",
+            "description": "ID of the test plan that contains the suites.",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/TestSuite"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "Create a test suite.": {
+            "$ref": "./httpExamples/Suites/CreateTestSuite.json"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Test  Suites"
+        ],
+        "x-ms-docs-override-version": "5.0-preview.1",
+        "x-ms-vss-resource": "suites",
+        "x-ms-vss-method": "GetTestSuitesForPlan",
+        "x-ms-preview": true,
+        "description": "Get test suites for plan.",
+        "operationId": "Get Test Suites For Plan",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "planId",
+            "description": "ID of the test plan for which suites are requested.",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "expand",
+            "description": "Include the children suites and testers details.",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "none",
+              "children",
+              "defaultTesters"
+            ],
+            "x-ms-enum": {
+              "name": "SuiteExpand",
+              "values": [
+                {
+                  "value": "none",
+                  "description": "Dont include any of the expansions in output."
+                },
+                {
+                  "value": "children",
+                  "description": "Include children in response."
+                },
+                {
+                  "value": "defaultTesters",
+                  "description": "Include default testers in response."
+                }
+              ]
+            }
+          },
+          {
+            "in": "query",
+            "name": "continuationToken",
+            "description": "If the list of suites returned is not complete, a continuation token to query next batch of suites is included in the response header as \"x-ms-continuationtoken\". Omit this parameter to get the first batch of test suites.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "asTreeView",
+            "description": "If the suites returned should be in a tree structure.",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/TestSuite"
+              }
+            }
+          }
+        },
+        "x-ms-examples": {
+          "Get a test suites for plan.": {
+            "$ref": "./httpExamples/Suites/GetTestSuitesForPlan.json"
+          },
+          "Get a test suites for plan as tree view.": {
+            "$ref": "./httpExamples/Suites/GetTestSuitesAsTreeView.json"
+          }
+        }
+      }
+    },
+    "/{organization}/{project}/_apis/testplan/Plans/{planId}/suites/{suiteId}": {
+      "delete": {
+        "tags": [
+          "Test  Suites"
+        ],
+        "x-ms-docs-override-version": "5.0-preview.1",
+        "x-ms-vss-resource": "suites",
+        "x-ms-vss-method": "DeleteTestSuite",
+        "x-ms-preview": true,
+        "description": "Delete test suite.",
+        "operationId": "Delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "planId",
+            "description": "ID of the test plan that contains the suite.",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "path",
+            "name": "suiteId",
+            "description": "ID of the test suite to delete.",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "x-ms-examples": {
+          "Delete a test suite.": {
+            "$ref": "./httpExamples/Suites/DeleteTestSuite.json"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Test  Suites"
+        ],
+        "x-ms-docs-override-version": "5.0-preview.1",
+        "x-ms-vss-resource": "suites",
+        "x-ms-vss-method": "GetTestSuiteById",
+        "x-ms-preview": true,
+        "description": "Get test suite by suite id.",
+        "operationId": "Get",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "planId",
+            "description": "ID of the test plan that contains the suites.",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "path",
+            "name": "suiteId",
+            "description": "ID of the suite to get.",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "expand",
+            "description": "Include the children suites and testers details",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "none",
+              "children",
+              "defaultTesters"
+            ],
+            "x-ms-enum": {
+              "name": "SuiteExpand",
+              "values": [
+                {
+                  "value": "none",
+                  "description": "Dont include any of the expansions in output."
+                },
+                {
+                  "value": "children",
+                  "description": "Include children in response."
+                },
+                {
+                  "value": "defaultTesters",
+                  "description": "Include default testers in response."
+                }
+              ]
+            }
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/TestSuite"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "Get a test suite by Id.": {
+            "$ref": "./httpExamples/Suites/GetTestSuiteById.json"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Test  Suites"
+        ],
+        "x-ms-docs-override-version": "5.0-preview.1",
+        "x-ms-vss-resource": "suites",
+        "x-ms-vss-method": "UpdateTestSuite",
+        "x-ms-preview": true,
+        "description": "Update test suite.",
+        "operationId": "Update",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Parameters for suite updation",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/TestSuiteUpdateParams"
+            }
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "planId",
+            "description": "ID of the test plan that contains the suites.",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "path",
+            "name": "suiteId",
+            "description": "ID of the parent suite.",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/TestSuite"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "Update a test suites parent.": {
+            "$ref": "./httpExamples/Suites/UpdateTestSuiteParent.json"
+          },
+          "Update a test suites tester.": {
+            "$ref": "./httpExamples/Suites/UpdateTestSuiteProperties.json"
+          }
+        }
+      }
+    },
+    "/{organization}/{project}/_apis/testplan/suiteentry/{suiteId}": {
+      "get": {
+        "tags": [
+          "Test  Suite  Entry"
+        ],
+        "x-ms-docs-override-version": "5.0-preview.1",
+        "x-ms-vss-resource": "suiteEntry",
+        "x-ms-vss-method": "GetSuiteEntries",
+        "x-ms-preview": true,
+        "description": "Get a list of test suite entries in the test suite.",
+        "operationId": "List",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "suiteId",
+            "description": "Id of the parent suite.",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "suiteEntryType",
+            "description": "",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "testCase",
+              "suite"
+            ],
+            "x-ms-enum": {
+              "name": "SuiteEntryTypes",
+              "values": [
+                {
+                  "value": "testCase",
+                  "description": ""
+                },
+                {
+                  "value": "suite",
+                  "description": ""
+                }
+              ]
+            }
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/SuiteEntry"
+              }
+            }
+          }
+        },
+        "x-ms-examples": {
+          "Get a list of all suite Entries": {
+            "$ref": "./httpExamples/SuiteEntry/GetSuiteEntries.json"
+          },
+          "Get a list of child suites": {
+            "$ref": "./httpExamples/SuiteEntry/GetChildSuiteEntries.json"
+          },
+          "Get a list of test cases in a suite": {
+            "$ref": "./httpExamples/SuiteEntry/GetTestCaseEntries.json"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Test  Suite  Entry"
+        ],
+        "x-ms-docs-override-version": "5.0-preview.1",
+        "x-ms-vss-resource": "suiteEntry",
+        "x-ms-vss-method": "ReorderSuiteEntries",
+        "x-ms-preview": true,
+        "description": "Reorder test suite entries in the test suite.",
+        "operationId": "Reorder Suite Entries",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "List of SuiteEntry to reorder.",
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/SuiteEntryUpdateParams"
+              }
+            }
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "suiteId",
+            "description": "Id of the parent test suite.",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/SuiteEntry"
+              }
+            }
+          }
+        },
+        "x-ms-examples": {
+          "Reorder test cases in a suite": {
+            "$ref": "./httpExamples/SuiteEntry/UpdateTestCaseEntryOrder.json"
+          },
+          "Reorder child suites in a suite": {
+            "$ref": "./httpExamples/SuiteEntry/UpdateChildSuiteEntryOrder.json"
+          },
+          "Reorder both test cases and child suites": {
+            "$ref": "./httpExamples/SuiteEntry/UpdateTestCaseAndChildSuiteEntryOrder.json"
+          },
+          "Reorder test cases with conflicting sequence Number": {
+            "$ref": "./httpExamples/SuiteEntry/UpdateTestCaseEntryOrderWithConflcitingSequenceNumber.json"
+          },
+          "Reorder test cases with ovrflowing sequence number": {
+            "$ref": "./httpExamples/SuiteEntry/UpdateTestCaseEntryOrderWithOverflowingSequenceOrder.json"
+          }
+        }
+      }
+    },
+    "/{organization}/{project}/_apis/testplan/testcases/{testCaseId}": {
+      "delete": {
+        "tags": [
+          "Test Cases"
+        ],
+        "x-ms-docs-override-version": "5.0-preview.1",
+        "x-ms-vss-resource": "testCases",
+        "x-ms-vss-method": "DeleteTestCase",
+        "x-ms-preview": true,
+        "description": "Delete a test case.",
+        "operationId": "Delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "testCaseId",
+            "description": "Id of test case to be deleted.",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "x-ms-examples": {
+          "Delete a test case": {
+            "$ref": "./httpExamples/TestCases/DeleteTestCases.json"
           }
         }
       }
@@ -1041,6 +1725,58 @@
         }
       }
     },
+    "SuiteEntry": {
+      "description": "A suite entry defines properties for a test suite.",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/SuiteEntryUpdateParams"
+        }
+      ],
+      "properties": {
+        "suiteId": {
+          "description": "Id for the test suite.",
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "SuiteEntryUpdateParams": {
+      "description": "A suite entry defines properties for a test suite.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "Id of the suite entry in the test suite: either a test case id or child suite id.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "sequenceNumber": {
+          "description": "Sequence number for the suite entry object in the test suite.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "suiteEntryType": {
+          "description": "Defines whther the entry is of type test case or suite.",
+          "enum": [
+            "testCase",
+            "suite"
+          ],
+          "x-ms-enum": {
+            "name": "SuiteEntryTypes",
+            "values": [
+              {
+                "value": "testCase",
+                "description": ""
+              },
+              {
+                "value": "suite",
+                "description": ""
+              }
+            ]
+          }
+        }
+      }
+    },
     "TeamProjectReference": {
       "description": "Represents a shallow reference to a TeamProject.",
       "type": "object",
@@ -1200,6 +1936,21 @@
           "items": {
             "$ref": "#/definitions/NameValuePair"
           }
+        }
+      }
+    },
+    "TestConfigurationReference": {
+      "description": "Test Configuration Reference",
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "Id of the configuration",
+          "type": "integer",
+          "format": "int32"
+        },
+        "name": {
+          "description": "Name of the configuration",
+          "type": "string"
         }
       }
     },
@@ -1388,6 +2139,146 @@
         }
       }
     },
+    "TestSuite": {
+      "description": "Test suite",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/TestSuiteCreateParams"
+        }
+      ],
+      "properties": {
+        "_links": {
+          "description": "Links: self, testPoints, testCases, parent",
+          "$ref": "#/definitions/ReferenceLinks"
+        },
+        "children": {
+          "description": "Child test suites of current test suite.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TestSuite"
+          }
+        },
+        "id": {
+          "description": "Id of test suite.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "lastError": {
+          "description": "Last error for test suite.",
+          "type": "string"
+        },
+        "lastPopulatedDate": {
+          "description": "Last populated date.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "lastUpdatedBy": {
+          "description": "IdentityRef of user who has updated test suite recently.",
+          "$ref": "#/definitions/IdentityRef"
+        },
+        "lastUpdatedDate": {
+          "description": "Last update date.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "plan": {
+          "description": "Test plan to which the test suite belongs.",
+          "$ref": "#/definitions/TestPlanReference"
+        },
+        "project": {
+          "description": "Test suite project shallow reference.",
+          "$ref": "#/definitions/TeamProjectReference"
+        },
+        "revision": {
+          "description": "Test suite revision.",
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "TestSuiteCreateParams": {
+      "description": "Test suite Create Parameters",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/TestSuiteCreateUpdateCommonParams"
+        }
+      ],
+      "properties": {
+        "requirementId": {
+          "description": "Test suite requirement id.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "suiteType": {
+          "description": "Test suite type.",
+          "enum": [
+            "none",
+            "dynamicTestSuite",
+            "staticTestSuite",
+            "requirementTestSuite"
+          ],
+          "x-ms-enum": {
+            "name": "TestSuiteType",
+            "values": [
+              {
+                "value": "none",
+                "description": ""
+              },
+              {
+                "value": "dynamicTestSuite",
+                "description": ""
+              },
+              {
+                "value": "staticTestSuite",
+                "description": ""
+              },
+              {
+                "value": "requirementTestSuite",
+                "description": ""
+              }
+            ]
+          }
+        }
+      }
+    },
+    "TestSuiteCreateUpdateCommonParams": {
+      "description": "Test Suite Create/Update Common Parameters",
+      "type": "object",
+      "properties": {
+        "defaultConfigurations": {
+          "description": "Test suite default configurations.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TestConfigurationReference"
+          }
+        },
+        "defaultTesters": {
+          "description": "Test suite default testers.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/IdentityRef"
+          }
+        },
+        "inheritDefaultConfigurations": {
+          "description": "Default configuration was inherited or not.",
+          "type": "boolean"
+        },
+        "name": {
+          "description": "Name of test suite.",
+          "type": "string"
+        },
+        "parentSuite": {
+          "description": "Test suite parent shallow reference.",
+          "$ref": "#/definitions/TestSuiteReference"
+        },
+        "queryString": {
+          "description": "Test suite query string, for dynamic suites.",
+          "type": "string"
+        }
+      }
+    },
     "TestSuiteReference": {
       "description": "The test suite reference resource.",
       "type": "object",
@@ -1400,14 +2291,22 @@
         "name": {
           "description": "Name of the test suite.",
           "type": "string"
-        },
-        "parent": {
-          "description": "Test suite parent shallow reference.",
-          "$ref": "#/definitions/TestSuiteReference"
-        },
-        "plan": {
-          "description": "Test plan shallow reference.",
-          "$ref": "#/definitions/TestPlanReference"
+        }
+      }
+    },
+    "TestSuiteUpdateParams": {
+      "description": "Test Suite Update Parameters",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/TestSuiteCreateUpdateCommonParams"
+        }
+      ],
+      "properties": {
+        "revision": {
+          "description": "Test suite revision.",
+          "type": "integer",
+          "format": "int32"
         }
       }
     },
@@ -1499,6 +2398,6 @@
   ],
   "externalDocs": {
     "description": "Azure DevOps REST APIs",
-    "url": "https://aka.ms/azure-devops-rest-apis"
+    "url": "https://docs.microsoft.com/en-us/rest/api/vsts/?view=vsts-rest-5.0"
   }
 }

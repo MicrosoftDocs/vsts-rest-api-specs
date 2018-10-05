@@ -1,4 +1,4 @@
-{
+﻿{
   "swagger": "2.0",
   "info": {
     "title": "Build",
@@ -65,6 +65,9 @@
     {
       "name": "Report",
       "description": "Provides methods for working with build reports."
+    },
+    {
+      "name": "Resources"
     },
     {
       "name": "Resource Usage",
@@ -2536,13 +2539,6 @@
             "format": "int32"
           },
           {
-            "in": "query",
-            "name": "validateProcessOnly",
-            "description": "",
-            "required": false,
-            "type": "boolean"
-          },
-          {
             "$ref": "#/parameters/api-Version-preview.6"
           }
         ],
@@ -3254,6 +3250,141 @@
           {
             "oauth2": [
               "vso.build_execute"
+            ]
+          }
+        ]
+      }
+    },
+    "/{organization}/{project}/_apis/build/definitions/{definitionId}/resources": {
+      "patch": {
+        "tags": [
+          "Resources"
+        ],
+        "x-ms-docs-override-version": "5.0-preview.1",
+        "x-ms-vss-resource": "resources",
+        "x-ms-vss-method": "AuthorizeDefinitionResources",
+        "x-ms-preview": true,
+        "description": "",
+        "operationId": "Authorize Definition Resources",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/DefinitionResourceReference"
+              }
+            }
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "definitionId",
+            "description": "",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/DefinitionResourceReference"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.build_execute"
+            ]
+          }
+        ]
+      },
+      "get": {
+        "tags": [
+          "Resources"
+        ],
+        "x-ms-docs-override-version": "5.0-preview.1",
+        "x-ms-vss-resource": "resources",
+        "x-ms-vss-method": "GetDefinitionResources",
+        "x-ms-preview": true,
+        "description": "",
+        "operationId": "List",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "definitionId",
+            "description": "",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/DefinitionResourceReference"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.build"
             ]
           }
         ]
@@ -8660,6 +8791,28 @@
         }
       }
     },
+    "DefinitionResourceReference": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "authorized": {
+          "description": "Indicates whether the resource is authorized for use.",
+          "type": "boolean"
+        },
+        "id": {
+          "description": "The id of the resource.",
+          "type": "string"
+        },
+        "name": {
+          "description": "A friendly name for the resource.",
+          "type": "string"
+        },
+        "type": {
+          "description": "The type of the resource.",
+          "type": "string"
+        }
+      }
+    },
     "Demand": {
       "description": "Represents a demand used by a definition or build.",
       "type": "object",
@@ -8757,6 +8910,16 @@
           }
         }
       }
+    },
+    "DockerProcess": {
+      "description": "",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/BuildProcess"
+        }
+      ],
+      "properties": {}
     },
     "Folder": {
       "description": "Represents a folder that contains build definitions.",
@@ -9218,6 +9381,10 @@
         "_links": {
           "description": "The links to other objects related to this object.",
           "$ref": "#/definitions/ReferenceLinks"
+        },
+        "author": {
+          "description": "Author of the pull request.",
+          "$ref": "#/definitions/IdentityRef"
         },
         "currentState": {
           "description": "Current state of the pull request, e.g. open, merged, closed, conflicts, etc.",
@@ -11037,6 +11204,6 @@
   ],
   "externalDocs": {
     "description": "Azure DevOps REST APIs",
-    "url": "https://aka.ms/azure-devops-rest-apis"
+    "url": "https://docs.microsoft.com/en-us/rest/api/vsts/?view=vsts-rest-5.0"
   }
 }
