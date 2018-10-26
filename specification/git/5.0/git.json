@@ -5422,7 +5422,7 @@
         "x-ms-vss-resource": "pullRequestReviewers",
         "x-ms-vss-method": "UpdatePullRequestReviewers",
         "x-ms-preview": true,
-        "description": "Reset the votes of multiple reviewers on a pull request.",
+        "description": "Reset the votes of multiple reviewers on a pull request.  NOTE: This endpoint only supports updating votes, but does not support updating required reviewers (use policy) or display names.",
         "operationId": "Update",
         "consumes": [
           "application/json"
@@ -10342,6 +10342,62 @@
         }
       }
     },
+    "FileDiff": {
+      "description": "Provides properties that describe file differences",
+      "type": "object",
+      "properties": {
+        "lineDiffBlocks": {
+          "description": "The collection of line diff blocks",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/LineDiffBlock"
+          }
+        },
+        "originalPath": {
+          "description": "Original path of item if different from current path.",
+          "type": "string"
+        },
+        "path": {
+          "description": "Current path of item",
+          "type": "string"
+        }
+      }
+    },
+    "FileDiffParams": {
+      "description": "Provides parameters that describe inputs for the file diff",
+      "type": "object",
+      "properties": {
+        "originalPath": {
+          "description": "Original path of the file",
+          "type": "string"
+        },
+        "path": {
+          "description": "Current path of the file",
+          "type": "string"
+        }
+      }
+    },
+    "FileDiffsCriteria": {
+      "description": "Provides properties that describe inputs for the file diffs",
+      "type": "object",
+      "properties": {
+        "baseVersionCommit": {
+          "description": "Commit ID of the base version",
+          "type": "string"
+        },
+        "fileDiffParams": {
+          "description": "List of parameters for each of the files for which we need to get the file diff",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/FileDiffParams"
+          }
+        },
+        "targetVersionCommit": {
+          "description": "Commit ID of the target version",
+          "type": "string"
+        }
+      }
+    },
     "GitAnnotatedTag": {
       "description": "A Git annotated tag.",
       "type": "object",
@@ -14621,6 +14677,62 @@
       ],
       "properties": {}
     },
+    "LineDiffBlock": {
+      "description": "The class to represent the line diff block",
+      "type": "object",
+      "properties": {
+        "changeType": {
+          "description": "Type of change that was made to the block.",
+          "enum": [
+            "none",
+            "add",
+            "delete",
+            "edit"
+          ],
+          "x-ms-enum": {
+            "name": "LineDiffBlockChangeType",
+            "values": [
+              {
+                "value": "none",
+                "description": "No change - both the blocks are identical"
+              },
+              {
+                "value": "add",
+                "description": "Lines were added to the block in the modified file"
+              },
+              {
+                "value": "delete",
+                "description": "Lines were deleted from the block in the original file"
+              },
+              {
+                "value": "edit",
+                "description": "Lines were modified"
+              }
+            ]
+          }
+        },
+        "modifiedLineNumberStart": {
+          "description": "Line number where this block starts in modified file.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "modifiedLinesCount": {
+          "description": "Count of lines in this block in modified file.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "originalLineNumberStart": {
+          "description": "Line number where this block starts in original file.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "originalLinesCount": {
+          "description": "Count of lines in this block in original file.",
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
     "MergeCompletedEvent": {
       "description": "Real time event (SignalR) for a merge completed on a pull request",
       "type": "object",
@@ -16180,6 +16292,6 @@
   ],
   "externalDocs": {
     "description": "Azure DevOps REST APIs",
-    "url": "https://docs.microsoft.com/en-us/rest/api/vsts/?view=vsts-rest-5.0"
+    "url": "https://aka.ms/azure-devops-rest-apis"
   }
 }

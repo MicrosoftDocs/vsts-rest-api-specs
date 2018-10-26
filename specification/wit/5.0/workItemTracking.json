@@ -78,7 +78,7 @@
     },
     {
       "name": "Work Items",
-      "description": "This controller version exists to support returning identity values for work items"
+      "description": "The Work Item API is used for listing, creating and updating work items"
     },
     {
       "name": "Work Item Transitions",
@@ -509,7 +509,7 @@
         "x-ms-vss-resource": "attachments",
         "x-ms-vss-method": "CreateAttachment",
         "x-ms-preview": true,
-        "description": "Uploads an attachment.",
+        "description": "Uploads an attachment.\n\nOn accounts with higher attachment upload limits (>130MB), you will need to use chunked upload.\nTo upload an attachment in multiple chunks, you first need to [**Start a Chunked Upload**](#start_a_chunked_upload) and then follow the example from the **Upload Chunk** section.",
         "operationId": "Create",
         "consumes": [
           "application/octet-stream"
@@ -590,14 +590,8 @@
           "Upload a binary file": {
             "$ref": "./httpExamples/attachments/POST__wit_attachments_fileName-_binaryFile_.json"
           },
-          "Chunked Upload Step #1": {
+          "Start a Chunked Upload": {
             "$ref": "./httpExamples/attachments/POST_wit_attachments_fileName_chunked_register.json"
-          },
-          "Chunked Upload Step #2": {
-            "$ref": "./httpExamples/attachments/POST_wit_attachments_fileName_chunked_content1.json"
-          },
-          "Chunked Upload Step #3": {
-            "$ref": "./httpExamples/attachments/POST_wit_attachments_fileName_chunked_content2.json"
           }
         }
       }
@@ -684,6 +678,88 @@
           },
           "Download Attachment": {
             "$ref": "./httpExamples/attachments/GET__wit_attachments_download_attachment.json"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Attachments"
+        ],
+        "x-ms-docs-override-version": "5.0-preview.3",
+        "x-ms-vss-resource": "attachments",
+        "x-ms-vss-method": "UploadAttachment",
+        "x-ms-preview": true,
+        "description": "Uploads an attachment chunk.\n\nBefore performing [**Upload a Chunk**](#upload_a_chunk), make sure to have an attachment id returned in **Start a Chunked Upload** example on **Create** section. Specify the byte range of the chunk using Content-Length. For example: \"Content - Length\": \"bytes 0 - 39999 / 50000\" for the first 40000 bytes of a 50000 byte file.",
+        "operationId": "Upload Chunk",
+        "consumes": [
+          "application/octet-stream"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Stream to upload",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "Stream"
+            }
+          },
+          {
+            "in": "path",
+            "name": "id",
+            "description": "The id of the attachment",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "x-ms-required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "fileName",
+            "description": "",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.3"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/AttachmentReference"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.work_write"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "Upload a Chunk": {
+            "$ref": "./httpExamples/attachments/PUT_wit_attachments_fileName_chunked_content1.json"
           }
         }
       }
@@ -1867,6 +1943,76 @@
         }
       }
     },
+    "/{organization}/{project}/_apis/wit/queriesbatch": {
+      "post": {
+        "tags": [
+          "Queries"
+        ],
+        "x-ms-docs-override-version": "5.0-preview.1",
+        "x-ms-vss-resource": "queriesBatch",
+        "x-ms-vss-method": "GetQueriesBatch",
+        "x-ms-preview": true,
+        "description": "Gets a list of queries by ids (Maximum 1000)",
+        "operationId": "Get Queries Batch",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/QueryBatchGetRequest"
+            }
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/QueryHierarchyItem"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.work"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "Gets a list of queries by ids": {
+            "$ref": "./httpExamples/queriesBatch/POST__wit_queriesbatch_ids-_ids_.json"
+          }
+        }
+      }
+    },
     "/{organization}/{project}/_apis/wit/recyclebin": {
       "get": {
         "tags": [
@@ -2478,7 +2624,7 @@
         "x-ms-vss-resource": "workItems",
         "x-ms-vss-method": "GetWorkItems",
         "x-ms-preview": true,
-        "description": "Returns a list of work items.",
+        "description": "Returns a list of work items (Maximum 200)",
         "operationId": "List",
         "produces": [
           "application/json"
@@ -2494,7 +2640,7 @@
           {
             "in": "query",
             "name": "ids",
-            "description": "The comma-separated list of requested work item ids",
+            "description": "The comma-separated list of requested work item ids. (Maximum 200 ids allowed).",
             "required": true,
             "type": "string",
             "format": "array (int32)"
@@ -3753,7 +3899,7 @@
         "x-ms-vss-resource": "workItemsBatch",
         "x-ms-vss-method": "GetWorkItemsBatch",
         "x-ms-preview": true,
-        "description": "Gets work items for a list of work item ids",
+        "description": "Gets work items for a list of work item ids (Maximum 200)",
         "operationId": "Get Work Items Batch",
         "consumes": [
           "application/json"
@@ -4804,6 +4950,14 @@
             "type": "boolean"
           },
           {
+            "in": "query",
+            "name": "$top",
+            "description": "The max number of results to return.",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
             "$ref": "#/parameters/api-Version-preview.2"
           }
         ],
@@ -4873,6 +5027,14 @@
             "description": "Whether or not to use time precision.",
             "required": false,
             "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "$top",
+            "description": "The max number of results to return.",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
           },
           {
             "$ref": "#/parameters/api-Version-preview.2"
@@ -5644,6 +5806,75 @@
           "type": "array",
           "items": {
             "type": "string"
+          }
+        }
+      }
+    },
+    "QueryBatchGetRequest": {
+      "description": "Describes a request to get a list of queries",
+      "type": "object",
+      "properties": {
+        "$expand": {
+          "description": "The expand parameters for queries. Possible options are { None, Wiql, Clauses, All, Minimal }",
+          "enum": [
+            "none",
+            "wiql",
+            "clauses",
+            "all",
+            "minimal"
+          ],
+          "x-ms-enum": {
+            "name": "QueryExpand",
+            "values": [
+              {
+                "value": "none",
+                "description": "Expands Columns, Links and ChangeInfo"
+              },
+              {
+                "value": "wiql",
+                "description": "Expands Columns, Links,  ChangeInfo and WIQL text"
+              },
+              {
+                "value": "clauses",
+                "description": "Expands Columns, Links, ChangeInfo, WIQL text and clauses"
+              },
+              {
+                "value": "all",
+                "description": "Expands all properties"
+              },
+              {
+                "value": "minimal",
+                "description": "Displays minimal properties and the WIQL text"
+              }
+            ]
+          }
+        },
+        "errorPolicy": {
+          "description": "The flag to control error policy in a query batch request. Possible options are { Fail, Omit }.",
+          "enum": [
+            "fail",
+            "omit"
+          ],
+          "x-ms-enum": {
+            "name": "QueryErrorPolicy",
+            "values": [
+              {
+                "value": "fail",
+                "description": ""
+              },
+              {
+                "value": "omit",
+                "description": ""
+              }
+            ]
+          }
+        },
+        "ids": {
+          "description": "The requested query ids",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uuid"
           }
         }
       }
@@ -7403,6 +7634,6 @@
   ],
   "externalDocs": {
     "description": "Azure DevOps REST APIs",
-    "url": "https://docs.microsoft.com/en-us/rest/api/vsts/?view=vsts-rest-5.0"
+    "url": "https://aka.ms/azure-devops-rest-apis"
   }
 }
