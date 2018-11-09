@@ -48,7 +48,7 @@
         "x-ms-vss-resource": "configurations",
         "x-ms-vss-method": "GetPolicyConfigurations",
         "x-ms-preview": true,
-        "description": "Get a list of policy configurations in a project.\n\nThe optional `scope` parameter can be used to retrieve a subset of policies from one or more branches\nin one or more repos that are **defined** at the given scope.\nThe format of a `scope` is `{repoId}:{branch}` where the `repoId` must either be a GUID (32 hex digits\nwith no dashes) or a single wildcard, which matches a repository ID.\nFor example, `*:refs/heads/master` could be used to return all policy configurations that define a scope\non a branch named \"master\" in all repos in the project.\nSimilarly, `{repoId}:refs/heads/releases/*` could be used to return all policy configurations on all\nbranches that begin with \"releases/\" in a specific repo with the ID `repoID`.  Omitting `scope` entirely\nreturns all policy configurations in the project.  Omitting `branch` from the scope returns all branches.\nThe optional `policyType` parameter can be used to filter the set of policies returned from this method.",
+        "description": "Get a list of policy configurations in a project.\n\nThe 'scope' parameter for this API should not be used, except for legacy compatability reasons. It returns specifically\nscoped policies and does not support heirarchical nesting. Instead, use the /_apis/git/policy/configurations API, which provides\nfirst class scope filtering support.\n\nThe optional `policyType` parameter can be used to filter the set of policies returned from this method.",
         "operationId": "List",
         "produces": [
           "application/json"
@@ -71,7 +71,7 @@
           {
             "in": "query",
             "name": "scope",
-            "description": "The scope on which a subset of policies is defined.",
+            "description": "[Provided for legacy reasons] The scope on which a subset of policies is defined.",
             "required": false,
             "type": "string"
           },
@@ -247,6 +247,13 @@
             "description": "NoContent"
           }
         },
+        "security": [
+          {
+            "oauth2": [
+              "vso.code_write"
+            ]
+          }
+        ],
         "x-ms-examples": {
           "": {
             "$ref": "./httpExamples/Configurations/DELETE__policy_configurations__configurationId_.json"

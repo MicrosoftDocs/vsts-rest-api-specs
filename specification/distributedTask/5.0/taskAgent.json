@@ -2978,6 +2978,90 @@
         }
       }
     },
+    "Environment": {
+      "description": "Environment.",
+      "type": "object",
+      "properties": {
+        "createdBy": {
+          "description": "Identity reference of the user who created the Environment.",
+          "$ref": "#/definitions/IdentityRef"
+        },
+        "createdOn": {
+          "description": "Creation time of the Environment",
+          "type": "string",
+          "format": "date-time"
+        },
+        "description": {
+          "description": "Description of the Environment.",
+          "type": "string"
+        },
+        "id": {
+          "description": "Id of the Environment",
+          "type": "integer",
+          "format": "int32"
+        },
+        "lastModifiedBy": {
+          "description": "Identity reference of the user who last modified the Environment.",
+          "$ref": "#/definitions/IdentityRef"
+        },
+        "lastModifiedOn": {
+          "description": "Last modified time of the Environment",
+          "type": "string",
+          "format": "date-time"
+        },
+        "name": {
+          "description": "Name of the Environment.",
+          "type": "string"
+        },
+        "serviceGroups": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ServiceGroupReference"
+          }
+        }
+      }
+    },
+    "EnvironmentCreateParameter": {
+      "description": "Properties to create Environment.",
+      "type": "object",
+      "properties": {
+        "description": {
+          "description": "Description of the environment.",
+          "type": "string"
+        },
+        "name": {
+          "description": "Name of the environment.",
+          "type": "string"
+        }
+      }
+    },
+    "EnvironmentReference": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "EnvironmentUpdateParameter": {
+      "description": "Properties to update Environment.",
+      "type": "object",
+      "properties": {
+        "description": {
+          "description": "Description of the environment.",
+          "type": "string"
+        },
+        "name": {
+          "description": "Name of the environment.",
+          "type": "string"
+        }
+      }
+    },
     "EventsConfig": {
       "description": "",
       "type": "object",
@@ -3653,6 +3737,40 @@
         "type": {
           "type": "string",
           "format": "JTokenType"
+        }
+      }
+    },
+    "KubernetesServiceGroup": {
+      "description": "",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/ServiceGroup"
+        }
+      ],
+      "properties": {
+        "namespace": {
+          "type": "string"
+        },
+        "serviceEndpointId": {
+          "type": "string",
+          "format": "uuid"
+        }
+      }
+    },
+    "KubernetesServiceGroupCreateParameters": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "namespace": {
+          "type": "string"
+        },
+        "serviceEndpointId": {
+          "type": "string",
+          "format": "uuid"
         }
       }
     },
@@ -4629,6 +4747,110 @@
         "uiContributionId": {
           "description": "Gets or sets the ui contribution id of service endpoint type.",
           "type": "string"
+        }
+      }
+    },
+    "ServiceGroup": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "createdBy": {
+          "$ref": "#/definitions/IdentityRef"
+        },
+        "createdOn": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "environmentReference": {
+          "$ref": "#/definitions/EnvironmentReference"
+        },
+        "id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "lastModifiedBy": {
+          "$ref": "#/definitions/IdentityRef"
+        },
+        "lastModifiedOn": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "name": {
+          "type": "string"
+        },
+        "type": {
+          "enum": [
+            "undefined",
+            "generic",
+            "virtualMachine",
+            "kubernetes"
+          ],
+          "x-ms-enum": {
+            "name": "ServiceGroupType",
+            "values": [
+              {
+                "value": "undefined",
+                "description": ""
+              },
+              {
+                "value": "generic",
+                "description": "Unknown service group type"
+              },
+              {
+                "value": "virtualMachine",
+                "description": "Virtual machine service group type"
+              },
+              {
+                "value": "kubernetes",
+                "description": "Kubernetes service group type"
+              }
+            ]
+          }
+        }
+      }
+    },
+    "ServiceGroupReference": {
+      "description": "ServiceGroupReference.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "Id of the Service Group.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "name": {
+          "description": "Name of the service group.",
+          "type": "string"
+        },
+        "type": {
+          "description": "Type of the service group.",
+          "enum": [
+            "undefined",
+            "generic",
+            "virtualMachine",
+            "kubernetes"
+          ],
+          "x-ms-enum": {
+            "name": "ServiceGroupType",
+            "values": [
+              {
+                "value": "undefined",
+                "description": ""
+              },
+              {
+                "value": "generic",
+                "description": "Unknown service group type"
+              },
+              {
+                "value": "virtualMachine",
+                "description": "Virtual machine service group type"
+              },
+              {
+                "value": "kubernetes",
+                "description": "Kubernetes service group type"
+              }
+            ]
+          }
         }
       }
     },
@@ -7369,6 +7591,10 @@
           "description": "Gets or sets id of the variable group.",
           "type": "integer",
           "format": "int32"
+        },
+        "isShared": {
+          "description": "Indicates whether variable group is shared with other projects or not.",
+          "type": "boolean"
         },
         "modifiedBy": {
           "description": "Gets or sets the identity who modified the variable group.",

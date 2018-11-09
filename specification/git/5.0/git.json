@@ -499,7 +499,14 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.code"
+            ]
+          }
+        ]
       }
     },
     "/{organization}/{project}/_apis/git/pullrequests": {
@@ -12052,6 +12059,79 @@
         }
       }
     },
+    "GitMerge": {
+      "description": "",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/GitMergeParameters"
+        }
+      ],
+      "properties": {
+        "_links": {
+          "description": "Reference links.",
+          "$ref": "#/definitions/ReferenceLinks"
+        },
+        "detailedStatus": {
+          "description": "Detailed status of the merge operation.",
+          "$ref": "#/definitions/GitMergeOperationStatusDetail"
+        },
+        "mergeOperationId": {
+          "description": "Unique identifier for the merge operation.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "status": {
+          "description": "Status of the merge operation.",
+          "enum": [
+            "queued",
+            "inProgress",
+            "completed",
+            "failed",
+            "abandoned"
+          ],
+          "x-ms-enum": {
+            "name": "GitAsyncOperationStatus",
+            "values": [
+              {
+                "value": "queued",
+                "description": "The operation is waiting in a queue and has not yet started."
+              },
+              {
+                "value": "inProgress",
+                "description": "The operation is currently in progress."
+              },
+              {
+                "value": "completed",
+                "description": "The operation has completed."
+              },
+              {
+                "value": "failed",
+                "description": "The operation has failed. Check for an error message."
+              },
+              {
+                "value": "abandoned",
+                "description": "The operation has been abandoned."
+              }
+            ]
+          }
+        }
+      }
+    },
+    "GitMergeOperationStatusDetail": {
+      "description": "Status information about a requested merge operation.",
+      "type": "object",
+      "properties": {
+        "failureMessage": {
+          "description": "Error message if the operation failed.",
+          "type": "string"
+        },
+        "mergeCommitId": {
+          "description": "The commitId of the resultant merge commit.",
+          "type": "string"
+        }
+      }
+    },
     "GitMergeOriginRef": {
       "description": "",
       "type": "object",
@@ -12059,6 +12139,23 @@
         "pullRequestId": {
           "type": "integer",
           "format": "int32"
+        }
+      }
+    },
+    "GitMergeParameters": {
+      "description": "Parameters required for performing git merge.",
+      "type": "object",
+      "properties": {
+        "comment": {
+          "description": "Comment or message of the commit.",
+          "type": "string"
+        },
+        "parents": {
+          "description": "An enumeration of the parent commit IDs for the merge  commit.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
         }
       }
     },
@@ -15160,6 +15257,10 @@
       "properties": {
         "abbreviation": {
           "description": "Project abbreviation.",
+          "type": "string"
+        },
+        "defaultTeamImageUrl": {
+          "description": "Url to default team identity image.",
           "type": "string"
         },
         "description": {
