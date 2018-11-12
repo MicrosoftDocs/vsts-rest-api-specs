@@ -1,0 +1,2045 @@
+﻿{
+  "swagger": "2.0",
+  "info": {
+    "title": "WorkItemTracking",
+    "description": "",
+    "termsOfService": "https://go.microsoft.com/fwlink/?LinkId=329770",
+    "contact": {
+      "name": "nugetvss",
+      "email": "nugetvss@microsoft.com"
+    },
+    "license": {
+      "name": "MICROSOFT SOFTWARE LICENSE TERMS",
+      "url": "https://go.microsoft.com/fwlink/?LinkId=329770"
+    },
+    "version": "4.1-preview"
+  },
+  "host": "https://fabrikam-fiber-inc:8080/DefaultCollection",
+  "x-ms-parameterized-host" : {
+    "hostTemplate": "{instance}",
+    "parameters": [
+      {
+        "name": "instance",
+        "description": "TFS server name ({server:port})",
+        "required": true,
+        "type": "string",
+        "in": "path"
+      }
+    ]
+  },
+  "x-ms-vss-area": "WorkItemTracking",
+  "basePath": "/",
+  "tags": [
+    {
+      "name": "Behaviors"
+    },
+    {
+      "name": "Fields"
+    },
+    {
+      "name": "Processes"
+    },
+    {
+      "name": "Rules"
+    },
+    {
+      "name": "States"
+    },
+    {
+      "name": "Work Item Types"
+    }
+  ],
+  "schemes": [
+    "https"
+  ],
+  "paths": {
+    "/{collection}/_apis/work/processes": {
+      "post": {
+        "tags": [
+          "Processes"
+        ],
+        "x-ms-docs-override-version": "4.1-preview.1",
+        "x-ms-vss-resource": "processes",
+        "x-ms-vss-method": "CreateProcess",
+        "x-ms-preview": true,
+        "description": "Creates a process.",
+        "operationId": "Create",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "collection",
+            "description": "The name of the Team Foundation Server collection.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CreateProcessModel"
+            }
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ProcessModel"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "Create the process": {
+            "$ref": "./httpExamples/processes/POST__create_process-onprem.json"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Processes"
+        ],
+        "x-ms-docs-override-version": "4.1-preview.1",
+        "x-ms-vss-resource": "processes",
+        "x-ms-vss-method": "GetProcesses",
+        "x-ms-preview": true,
+        "description": "Returns a list of all processes.",
+        "operationId": "List",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "collection",
+            "description": "The name of the Team Foundation Server collection.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "$expand",
+            "description": "",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "none",
+              "projects"
+            ],
+            "x-ms-enum": {
+              "name": "GetProcessExpandLevel",
+              "values": [
+                {
+                  "value": "none",
+                  "description": ""
+                },
+                {
+                  "value": "projects",
+                  "description": ""
+                }
+              ]
+            }
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/ProcessModel"
+              }
+            }
+          }
+        },
+        "x-ms-examples": {
+          "Get the list of processes": {
+            "$ref": "./httpExamples/processes/GET__processes-onprem.json"
+          }
+        }
+      }
+    },
+    "/{collection}/_apis/work/processes/{processId}/behaviors": {
+      "get": {
+        "tags": [
+          "Behaviors"
+        ],
+        "x-ms-docs-override-version": "4.1-preview.1",
+        "x-ms-vss-resource": "behaviors",
+        "x-ms-vss-method": "GetBehaviors",
+        "x-ms-preview": true,
+        "description": "Returns a list of all behaviors in the process.",
+        "operationId": "List",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "collection",
+            "description": "The name of the Team Foundation Server collection.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "processId",
+            "description": "The ID of the process",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "query",
+            "name": "$expand",
+            "description": "",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "none",
+              "fields"
+            ],
+            "x-ms-enum": {
+              "name": "GetBehaviorsExpand",
+              "values": [
+                {
+                  "value": "none",
+                  "description": ""
+                },
+                {
+                  "value": "fields",
+                  "description": ""
+                }
+              ]
+            }
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/WorkItemBehavior"
+              }
+            }
+          }
+        },
+        "x-ms-examples": {
+          "Get the list of process behaviors": {
+            "$ref": "./httpExamples/behaviors/GET__behaviors_list-onprem.json"
+          }
+        }
+      }
+    },
+    "/{collection}/_apis/work/processes/{processId}/behaviors/{behaviorRefName}": {
+      "get": {
+        "tags": [
+          "Behaviors"
+        ],
+        "x-ms-docs-override-version": "4.1-preview.1",
+        "x-ms-vss-resource": "behaviors",
+        "x-ms-vss-method": "GetBehavior",
+        "x-ms-preview": true,
+        "description": "Returns a behavior of the process.",
+        "operationId": "Get",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "collection",
+            "description": "The name of the Team Foundation Server collection.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "processId",
+            "description": "The ID of the process",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "path",
+            "name": "behaviorRefName",
+            "description": "Reference name of the behavior",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "$expand",
+            "description": "",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "none",
+              "fields"
+            ],
+            "x-ms-enum": {
+              "name": "GetBehaviorsExpand",
+              "values": [
+                {
+                  "value": "none",
+                  "description": ""
+                },
+                {
+                  "value": "fields",
+                  "description": ""
+                }
+              ]
+            }
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/WorkItemBehavior"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "Get the process behavior definition": {
+            "$ref": "./httpExamples/behaviors/GET__behavior-onprem.json"
+          }
+        }
+      }
+    },
+    "/{collection}/_apis/work/processes/{processId}/fields": {
+      "get": {
+        "tags": [
+          "Fields"
+        ],
+        "x-ms-docs-override-version": "4.1-preview.1",
+        "x-ms-vss-resource": "fields",
+        "x-ms-vss-method": "GetFields",
+        "x-ms-preview": true,
+        "description": "Returns a list of all fields in a process.",
+        "operationId": "Get Fields",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "collection",
+            "description": "The name of the Team Foundation Server collection.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "processId",
+            "description": "The ID of the process",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/FieldModel"
+              }
+            }
+          }
+        },
+        "x-ms-examples": {
+          "Get the list of process fields": {
+            "$ref": "./httpExamples/fields/GET__process_fields-onprem.json"
+          }
+        }
+      }
+    },
+    "/{collection}/_apis/work/processes/{processId}/workitemtypes": {
+      "get": {
+        "tags": [
+          "Work Item Types"
+        ],
+        "x-ms-docs-override-version": "4.1-preview.1",
+        "x-ms-vss-resource": "workItemTypes",
+        "x-ms-vss-method": "GetWorkItemTypes",
+        "x-ms-preview": true,
+        "description": "Returns a list of all work item types in a process.",
+        "operationId": "List",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "collection",
+            "description": "The name of the Team Foundation Server collection.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "processId",
+            "description": "The ID of the process",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "query",
+            "name": "$expand",
+            "description": "",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "none",
+              "states",
+              "behaviors",
+              "layout"
+            ],
+            "x-ms-enum": {
+              "name": "GetWorkItemTypeExpand",
+              "values": [
+                {
+                  "value": "none",
+                  "description": ""
+                },
+                {
+                  "value": "states",
+                  "description": ""
+                },
+                {
+                  "value": "behaviors",
+                  "description": ""
+                },
+                {
+                  "value": "layout",
+                  "description": ""
+                }
+              ]
+            }
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/WorkItemTypeModel"
+              }
+            }
+          }
+        },
+        "x-ms-examples": {
+          "Get work item types": {
+            "$ref": "./httpExamples/workItemTypes/GET__wits-onprem.json"
+          }
+        }
+      }
+    },
+    "/{collection}/_apis/work/processes/{processId}/workitemtypes/{witRefName}": {
+      "get": {
+        "tags": [
+          "Work Item Types"
+        ],
+        "x-ms-docs-override-version": "4.1-preview.1",
+        "x-ms-vss-resource": "workItemTypes",
+        "x-ms-vss-method": "GetWorkItemType",
+        "x-ms-preview": true,
+        "description": "Returns a single work item type in a process.",
+        "operationId": "Get",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "collection",
+            "description": "The name of the Team Foundation Server collection.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "processId",
+            "description": "The ID of the process",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "path",
+            "name": "witRefName",
+            "description": "The reference name of the work item type",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "$expand",
+            "description": "",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "none",
+              "states",
+              "behaviors",
+              "layout"
+            ],
+            "x-ms-enum": {
+              "name": "GetWorkItemTypeExpand",
+              "values": [
+                {
+                  "value": "none",
+                  "description": ""
+                },
+                {
+                  "value": "states",
+                  "description": ""
+                },
+                {
+                  "value": "behaviors",
+                  "description": ""
+                },
+                {
+                  "value": "layout",
+                  "description": ""
+                }
+              ]
+            }
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/WorkItemTypeModel"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "Get work item type": {
+            "$ref": "./httpExamples/workItemTypes/GET__wit-onprem.json"
+          }
+        }
+      }
+    },
+    "/{collection}/_apis/work/processes/{processId}/workItemTypes/{witRefName}/fields": {
+      "get": {
+        "tags": [
+          "Fields"
+        ],
+        "x-ms-docs-override-version": "4.1-preview.1",
+        "x-ms-vss-resource": "fields",
+        "x-ms-vss-method": "GetWorkItemTypeFields",
+        "x-ms-preview": true,
+        "description": "Returns a list of all fields in a work item type.",
+        "operationId": "Get Work Item Type Fields",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "collection",
+            "description": "The name of the Team Foundation Server collection.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "processId",
+            "description": "The ID of the process",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "path",
+            "name": "witRefName",
+            "description": "The reference name of the work item type",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/FieldModel"
+              }
+            }
+          }
+        },
+        "x-ms-examples": {
+          "Get the list of work item type fields": {
+            "$ref": "./httpExamples/fields/GET__wit_fields-onprem.json"
+          }
+        }
+      }
+    },
+    "/{collection}/_apis/work/processes/{processId}/workItemTypes/{witRefName}/rules": {
+      "post": {
+        "tags": [
+          "Rules"
+        ],
+        "x-ms-docs-override-version": "4.1-preview.1",
+        "x-ms-vss-resource": "rules",
+        "x-ms-vss-method": "AddWorkItemTypeRule",
+        "x-ms-preview": true,
+        "description": "Adds a rule to work item type in the process.",
+        "operationId": "Add",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "collection",
+            "description": "The name of the Team Foundation Server collection.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/FieldRuleModel"
+            }
+          },
+          {
+            "in": "path",
+            "name": "processId",
+            "description": "The ID of the process",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "path",
+            "name": "witRefName",
+            "description": "The reference name of the work item type",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/FieldRuleModel"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "Add the rule definition": {
+            "$ref": "./httpExamples/rules/POST__wit_rule-onprem.json"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Rules"
+        ],
+        "x-ms-docs-override-version": "4.1-preview.1",
+        "x-ms-vss-resource": "rules",
+        "x-ms-vss-method": "GetWorkItemTypeRules",
+        "x-ms-preview": true,
+        "description": "Returns a list of all rules in the work item type of the process.",
+        "operationId": "List",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "collection",
+            "description": "The name of the Team Foundation Server collection.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "processId",
+            "description": "The ID of the process",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "path",
+            "name": "witRefName",
+            "description": "The reference name of the work item type",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/FieldRuleModel"
+              }
+            }
+          }
+        },
+        "x-ms-examples": {
+          "Get the list of rules for the work item type": {
+            "$ref": "./httpExamples/rules/GET__wit_rules-onprem.json"
+          }
+        }
+      }
+    },
+    "/{collection}/_apis/work/processes/{processId}/workItemTypes/{witRefName}/rules/{ruleId}": {
+      "delete": {
+        "tags": [
+          "Rules"
+        ],
+        "x-ms-docs-override-version": "4.1-preview.1",
+        "x-ms-vss-resource": "rules",
+        "x-ms-vss-method": "DeleteWorkItemTypeRule",
+        "x-ms-preview": true,
+        "description": "Removes a rule from the work item type in the process.",
+        "operationId": "Delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "collection",
+            "description": "The name of the Team Foundation Server collection.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "processId",
+            "description": "The ID of the process",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "path",
+            "name": "witRefName",
+            "description": "The reference name of the work item type",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "ruleId",
+            "description": "The ID of the rule",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "x-ms-examples": {
+          "Delete the rule": {
+            "$ref": "./httpExamples/rules/DELETE__wit_rule-onprem.json"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Rules"
+        ],
+        "x-ms-docs-override-version": "4.1-preview.1",
+        "x-ms-vss-resource": "rules",
+        "x-ms-vss-method": "GetWorkItemTypeRule",
+        "x-ms-preview": true,
+        "description": "Returns a single rule in the work item type of the process.",
+        "operationId": "Get",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "collection",
+            "description": "The name of the Team Foundation Server collection.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "processId",
+            "description": "The ID of the process",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "path",
+            "name": "witRefName",
+            "description": "The reference name of the work item type",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "ruleId",
+            "description": "The ID of the rule",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/FieldRuleModel"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "Get the specified rule definition": {
+            "$ref": "./httpExamples/rules/GET__wit_rule-onprem.json"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Rules"
+        ],
+        "x-ms-docs-override-version": "4.1-preview.1",
+        "x-ms-vss-resource": "rules",
+        "x-ms-vss-method": "UpdateWorkItemTypeRule",
+        "x-ms-preview": true,
+        "description": "Updates a rule in the work item type of the process.",
+        "operationId": "Update",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "collection",
+            "description": "The name of the Team Foundation Server collection.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/FieldRuleModel"
+            }
+          },
+          {
+            "in": "path",
+            "name": "processId",
+            "description": "The ID of the process",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "path",
+            "name": "witRefName",
+            "description": "The reference name of the work item type",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "ruleId",
+            "description": "The ID of the rule",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/FieldRuleModel"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "Update the rule definition": {
+            "$ref": "./httpExamples/rules/PUT__wit_rule-onprem.json"
+          }
+        }
+      }
+    },
+    "/{collection}/_apis/work/processes/{processId}/workItemTypes/{witRefName}/states": {
+      "get": {
+        "tags": [
+          "States"
+        ],
+        "x-ms-docs-override-version": "4.1-preview.1",
+        "x-ms-vss-resource": "states",
+        "x-ms-vss-method": "GetStateDefinitions",
+        "x-ms-preview": true,
+        "description": "Returns a list of all state definitions in a work item type of the process.",
+        "operationId": "List",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "collection",
+            "description": "The name of the Team Foundation Server collection.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "processId",
+            "description": "The ID of the process",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "path",
+            "name": "witRefName",
+            "description": "The reference name of the work item type",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/WorkItemStateResultModel"
+              }
+            }
+          }
+        },
+        "x-ms-examples": {
+          "Get state definitions": {
+            "$ref": "./httpExamples/states/GET__wit_states-onprem.json"
+          }
+        }
+      }
+    },
+    "/{collection}/_apis/work/processes/{processId}/workItemTypes/{witRefName}/states/{stateId}": {
+      "get": {
+        "tags": [
+          "States"
+        ],
+        "x-ms-docs-override-version": "4.1-preview.1",
+        "x-ms-vss-resource": "states",
+        "x-ms-vss-method": "GetStateDefinition",
+        "x-ms-preview": true,
+        "description": "Returns a single state definition in a work item type of the process.",
+        "operationId": "Get",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "collection",
+            "description": "The name of the Team Foundation Server collection.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "processId",
+            "description": "The ID of the process",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "path",
+            "name": "witRefName",
+            "description": "The reference name of the work item type",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "stateId",
+            "description": "The ID of the state",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/WorkItemStateResultModel"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "Get state definition": {
+            "$ref": "./httpExamples/states/GET__wit_state-onprem.json"
+          }
+        }
+      }
+    },
+    "/{collection}/_apis/work/processes/{processTypeId}": {
+      "delete": {
+        "tags": [
+          "Processes"
+        ],
+        "x-ms-docs-override-version": "4.1-preview.1",
+        "x-ms-vss-resource": "processes",
+        "x-ms-vss-method": "DeleteProcess",
+        "x-ms-preview": true,
+        "description": "Removes a process of a specific ID.",
+        "operationId": "Delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "collection",
+            "description": "The name of the Team Foundation Server collection.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "processTypeId",
+            "description": "",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "x-ms-examples": {
+          "Delete the process definition": {
+            "$ref": "./httpExamples/processes/DELETE__process-onprem.json"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Processes"
+        ],
+        "x-ms-docs-override-version": "4.1-preview.1",
+        "x-ms-vss-resource": "processes",
+        "x-ms-vss-method": "GetProcessById",
+        "x-ms-preview": true,
+        "description": "Returns a single process of a specified ID.",
+        "operationId": "Get",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "collection",
+            "description": "The name of the Team Foundation Server collection.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "processTypeId",
+            "description": "",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "query",
+            "name": "$expand",
+            "description": "",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "none",
+              "projects"
+            ],
+            "x-ms-enum": {
+              "name": "GetProcessExpandLevel",
+              "values": [
+                {
+                  "value": "none",
+                  "description": ""
+                },
+                {
+                  "value": "projects",
+                  "description": ""
+                }
+              ]
+            }
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ProcessModel"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "Get the specific process definition": {
+            "$ref": "./httpExamples/processes/GET__process-onprem.json"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Processes"
+        ],
+        "x-ms-docs-override-version": "4.1-preview.1",
+        "x-ms-vss-resource": "processes",
+        "x-ms-vss-method": "UpdateProcess",
+        "x-ms-preview": true,
+        "description": "Updates a process of a specific ID.",
+        "operationId": "Update",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "collection",
+            "description": "The name of the Team Foundation Server collection.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UpdateProcessModel"
+            }
+          },
+          {
+            "in": "path",
+            "name": "processTypeId",
+            "description": "",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ProcessModel"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "Update the process definition": {
+            "$ref": "./httpExamples/processes/PATCH__update_process-onprem.json"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "Control": {
+      "description": "Represent a control in the form.",
+      "type": "object",
+      "properties": {
+        "contribution": {
+          "description": "Contribution for the control.",
+          "$ref": "#/definitions/WitContribution"
+        },
+        "controlType": {
+          "description": "Type of the control.",
+          "type": "string"
+        },
+        "height": {
+          "description": "Height of the control, for html controls.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "id": {
+          "description": "The id for the layout node.",
+          "type": "string"
+        },
+        "inherited": {
+          "description": "A value indicating whether this layout node has been inherited from a parent layout.  This is expected to only be only set by the combiner.",
+          "type": "boolean"
+        },
+        "isContribution": {
+          "description": "A value indicating if the layout node is contribution or not.",
+          "type": "boolean"
+        },
+        "label": {
+          "description": "Label for the field",
+          "type": "string"
+        },
+        "metadata": {
+          "description": "Inner text of the control.",
+          "type": "string"
+        },
+        "order": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "overridden": {
+          "description": "A value indicating whether this layout node has been overridden by a child layout.",
+          "type": "boolean"
+        },
+        "readOnly": {
+          "description": "A value indicating if the control is readonly.",
+          "type": "boolean"
+        },
+        "visible": {
+          "description": "A value indicating if the control should be hidden or not.",
+          "type": "boolean"
+        },
+        "watermark": {
+          "description": "Watermark text for the textbox.",
+          "type": "string"
+        }
+      }
+    },
+    "CreateProcessModel": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "description": {
+          "description": "Description of the process",
+          "type": "string"
+        },
+        "name": {
+          "description": "Name of the process",
+          "type": "string"
+        },
+        "parentProcessTypeId": {
+          "description": "The ID of the parent process",
+          "type": "string",
+          "format": "uuid"
+        },
+        "referenceName": {
+          "description": "Reference name of the process",
+          "type": "string"
+        }
+      }
+    },
+    "Extension": {
+      "description": "Represents the extensions part of the layout",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      }
+    },
+    "FieldModel": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "isIdentity": {
+          "type": "boolean"
+        },
+        "name": {
+          "type": "string"
+        },
+        "type": {
+          "enum": [
+            "string",
+            "integer",
+            "dateTime",
+            "plainText",
+            "html",
+            "treePath",
+            "history",
+            "double",
+            "guid",
+            "boolean",
+            "identity",
+            "picklistInteger",
+            "picklistString",
+            "picklistDouble"
+          ],
+          "x-ms-enum": {
+            "name": "FieldType",
+            "values": [
+              {
+                "value": "string",
+                "description": ""
+              },
+              {
+                "value": "integer",
+                "description": ""
+              },
+              {
+                "value": "dateTime",
+                "description": ""
+              },
+              {
+                "value": "plainText",
+                "description": ""
+              },
+              {
+                "value": "html",
+                "description": ""
+              },
+              {
+                "value": "treePath",
+                "description": ""
+              },
+              {
+                "value": "history",
+                "description": ""
+              },
+              {
+                "value": "double",
+                "description": ""
+              },
+              {
+                "value": "guid",
+                "description": ""
+              },
+              {
+                "value": "boolean",
+                "description": ""
+              },
+              {
+                "value": "identity",
+                "description": ""
+              },
+              {
+                "value": "picklistInteger",
+                "description": ""
+              },
+              {
+                "value": "picklistString",
+                "description": ""
+              },
+              {
+                "value": "picklistDouble",
+                "description": ""
+              }
+            ]
+          }
+        },
+        "url": {
+          "type": "string"
+        }
+      }
+    },
+    "FieldRuleModel": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "actions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/RuleActionModel"
+          }
+        },
+        "conditions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/RuleConditionModel"
+          }
+        },
+        "friendlyName": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "isDisabled": {
+          "type": "boolean"
+        },
+        "isSystem": {
+          "type": "boolean"
+        }
+      }
+    },
+    "FormLayout": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "extensions": {
+          "description": "Gets and sets extensions list",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Extension"
+          }
+        },
+        "pages": {
+          "description": "Top level tabs of the layout.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Page"
+          }
+        },
+        "systemControls": {
+          "description": "Headers controls of the layout.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Control"
+          }
+        }
+      }
+    },
+    "Group": {
+      "description": "Represent a group in the form that holds controls in it.",
+      "type": "object",
+      "properties": {
+        "contribution": {
+          "description": "Contribution for the group.",
+          "$ref": "#/definitions/WitContribution"
+        },
+        "controls": {
+          "description": "Controls to be put in the group.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Control"
+          }
+        },
+        "height": {
+          "description": "The height for the contribution.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "id": {
+          "description": "The id for the layout node.",
+          "type": "string"
+        },
+        "inherited": {
+          "description": "A value indicating whether this layout node has been inherited from a parent layout.  This is expected to only be only set by the combiner.",
+          "type": "boolean"
+        },
+        "isContribution": {
+          "description": "A value indicating if the layout node is contribution are not.",
+          "type": "boolean"
+        },
+        "label": {
+          "description": "Label for the group.",
+          "type": "string"
+        },
+        "order": {
+          "description": "Order in which the group should appear in the section.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "overridden": {
+          "description": "A value indicating whether this layout node has been overridden by a child layout.",
+          "type": "boolean"
+        },
+        "visible": {
+          "description": "A value indicating if the group should be hidden or not.",
+          "type": "boolean"
+        }
+      }
+    },
+    "Page": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "contribution": {
+          "description": "Contribution for the page.",
+          "$ref": "#/definitions/WitContribution"
+        },
+        "id": {
+          "description": "The id for the layout node.",
+          "type": "string"
+        },
+        "inherited": {
+          "description": "A value indicating whether this layout node has been inherited from a parent layout.  This is expected to only be only set by the combiner.",
+          "type": "boolean"
+        },
+        "isContribution": {
+          "description": "A value indicating if the layout node is contribution are not.",
+          "type": "boolean"
+        },
+        "label": {
+          "description": "The label for the page.",
+          "type": "string"
+        },
+        "locked": {
+          "description": "A value indicating whether any user operations are permitted on this page and the contents of this page",
+          "type": "boolean"
+        },
+        "order": {
+          "description": "Order in which the page should appear in the layout.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "overridden": {
+          "description": "A value indicating whether this layout node has been overridden by a child layout.",
+          "type": "boolean"
+        },
+        "pageType": {
+          "description": "The icon for the page.",
+          "enum": [
+            "custom",
+            "history",
+            "links",
+            "attachments"
+          ],
+          "x-ms-enum": {
+            "name": "PageType",
+            "values": [
+              {
+                "value": "custom",
+                "description": ""
+              },
+              {
+                "value": "history",
+                "description": ""
+              },
+              {
+                "value": "links",
+                "description": ""
+              },
+              {
+                "value": "attachments",
+                "description": ""
+              }
+            ]
+          }
+        },
+        "sections": {
+          "description": "The sections of the page.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Section"
+          }
+        },
+        "visible": {
+          "description": "A value indicating if the page should be hidden or not.",
+          "type": "boolean"
+        }
+      }
+    },
+    "ProcessModel": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "description": {
+          "description": "Description of the process",
+          "type": "string"
+        },
+        "name": {
+          "description": "Name of the process",
+          "type": "string"
+        },
+        "projects": {
+          "description": "Projects in this process",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ProjectReference"
+          }
+        },
+        "properties": {
+          "description": "Properties of the process",
+          "$ref": "#/definitions/ProcessProperties"
+        },
+        "referenceName": {
+          "description": "Reference name of the process",
+          "type": "string"
+        },
+        "typeId": {
+          "description": "The ID of the process",
+          "type": "string",
+          "format": "uuid"
+        }
+      }
+    },
+    "ProcessProperties": {
+      "description": "Properties of the process",
+      "type": "object",
+      "properties": {
+        "class": {
+          "description": "Class of the process",
+          "enum": [
+            "system",
+            "derived",
+            "custom"
+          ],
+          "x-ms-enum": {
+            "name": "ProcessClass",
+            "values": [
+              {
+                "value": "system",
+                "description": ""
+              },
+              {
+                "value": "derived",
+                "description": ""
+              },
+              {
+                "value": "custom",
+                "description": ""
+              }
+            ]
+          }
+        },
+        "isDefault": {
+          "description": "Is the process default process",
+          "type": "boolean"
+        },
+        "isEnabled": {
+          "description": "Is the process enabled",
+          "type": "boolean"
+        },
+        "parentProcessTypeId": {
+          "description": "ID of the parent process",
+          "type": "string",
+          "format": "uuid"
+        },
+        "version": {
+          "description": "Version of the process",
+          "type": "string"
+        }
+      }
+    },
+    "ProjectReference": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "description": {
+          "description": "Description of the project",
+          "type": "string"
+        },
+        "id": {
+          "description": "The ID of the project",
+          "type": "string",
+          "format": "uuid"
+        },
+        "name": {
+          "description": "Name of the project",
+          "type": "string"
+        },
+        "url": {
+          "description": "Url of the project",
+          "type": "string"
+        }
+      }
+    },
+    "RuleActionModel": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "actionType": {
+          "type": "string"
+        },
+        "targetField": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        }
+      }
+    },
+    "RuleConditionModel": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "conditionType": {
+          "type": "string"
+        },
+        "field": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        }
+      }
+    },
+    "Section": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "groups": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Group"
+          }
+        },
+        "id": {
+          "description": "The id for the layout node.",
+          "type": "string"
+        },
+        "overridden": {
+          "description": "A value indicating whether this layout node has been overridden by a child layout.",
+          "type": "boolean"
+        }
+      }
+    },
+    "UpdateProcessModel": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "isDefault": {
+          "type": "boolean"
+        },
+        "isEnabled": {
+          "type": "boolean"
+        },
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "VssJsonCollectionWrapper": {
+      "description": "This class is used to serialized collections as a single JSON object on the wire, to avoid serializing JSON arrays directly to the client, which can be a security hole",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/VssJsonCollectionWrapperBase"
+        }
+      ],
+      "properties": {
+        "value": {
+          "type": "string",
+          "format": "T"
+        }
+      }
+    },
+    "VssJsonCollectionWrapperBase": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "count": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "WitContribution": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "contributionId": {
+          "description": "The id for the contribution.",
+          "type": "string"
+        },
+        "height": {
+          "description": "The height for the contribution.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "inputs": {
+          "description": "A dictionary holding key value pairs for contribution inputs.",
+          "type": "object",
+          "additionalProperties": {
+            "type": "object"
+          }
+        },
+        "showOnDeletedWorkItem": {
+          "description": "A value indicating if the contribution should be show on deleted workItem.",
+          "type": "boolean"
+        }
+      }
+    },
+    "WorkItemBehavior": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "abstract": {
+          "type": "boolean"
+        },
+        "color": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "fields": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/WorkItemBehaviorField"
+          }
+        },
+        "id": {
+          "type": "string"
+        },
+        "inherits": {
+          "$ref": "#/definitions/WorkItemBehaviorReference"
+        },
+        "name": {
+          "type": "string"
+        },
+        "overriden": {
+          "type": "boolean"
+        },
+        "rank": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "url": {
+          "type": "string"
+        }
+      }
+    },
+    "WorkItemBehaviorField": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "behaviorFieldId": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        }
+      }
+    },
+    "WorkItemBehaviorReference": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        }
+      }
+    },
+    "WorkItemStateResultModel": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "color": {
+          "type": "string"
+        },
+        "hidden": {
+          "type": "boolean"
+        },
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "name": {
+          "type": "string"
+        },
+        "order": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "stateCategory": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        }
+      }
+    },
+    "WorkItemTypeBehavior": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "behavior": {
+          "$ref": "#/definitions/WorkItemBehaviorReference"
+        },
+        "isDefault": {
+          "type": "boolean"
+        },
+        "url": {
+          "type": "string"
+        }
+      }
+    },
+    "WorkItemTypeModel": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "behaviors": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/WorkItemTypeBehavior"
+          }
+        },
+        "class": {
+          "enum": [
+            "system",
+            "derived",
+            "custom"
+          ],
+          "x-ms-enum": {
+            "name": "WorkItemTypeClass",
+            "values": [
+              {
+                "value": "system",
+                "description": ""
+              },
+              {
+                "value": "derived",
+                "description": ""
+              },
+              {
+                "value": "custom",
+                "description": ""
+              }
+            ]
+          }
+        },
+        "color": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "icon": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "inherits": {
+          "description": "Parent WIT Id/Internal ReferenceName that it inherits from",
+          "type": "string"
+        },
+        "isDisabled": {
+          "type": "boolean"
+        },
+        "layout": {
+          "$ref": "#/definitions/FormLayout"
+        },
+        "name": {
+          "type": "string"
+        },
+        "states": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/WorkItemStateResultModel"
+          }
+        },
+        "url": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "parameters": {
+    "api-Version-preview.1": {
+      "name": "api-version",
+      "in": "query",
+      "description": "Version of the API to use.  This should be set to '4.1-preview.1' to use this version of the api.",
+      "required": true,
+      "type": "string"
+    }
+  },
+  "securityDefinitions": {
+    "accessToken": {
+      "type": "basic",
+      "description": "Personal access token. Use any value for the user name and the token as the password."
+    }
+  },
+  "security": [
+    {
+      "accessToken": []
+    }
+  ],
+  "externalDocs": {
+    "description": "Team Foundation Server REST APIs",
+    "url": "https://aka.ms/azure-devops-rest-apis"
+  }
+}
