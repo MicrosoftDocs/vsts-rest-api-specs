@@ -1,0 +1,2557 @@
+{
+  "x-ms-vss-request-method": "GET",
+  "x-ms-vss-request-url": "https://dev.azure.com/fabrikam/_apis/serviceEndpoint/Types",
+  "parameters": {
+    "body": null,
+    "accept": "application/json; api-version=4.1-preview.1",    
+    "organization": "fabrikam",
+    "project": "DefaultAgileGitProject"
+  },
+  "responses": {
+    "200": {
+      "headers": {},
+      "body": {
+        "count": 14,
+        "value": [
+          {
+            "inputDescriptors": [],
+            "authenticationSchemes": [
+              {
+                "inputDescriptors": [
+                  {
+                    "id": "apitoken",
+                    "name": "Personal Access Token",
+                    "description": "Personal access token is applicable only for endpoint targeting VSTS account or TFS 2017. Click <a href=\"https://www.visualstudio.com/en-us/docs/setup-admin/team-services/use-personal-access-tokens-to-authenticate\" target=_blank>here</a>. for information on how to create Personal Access Token.",
+                    "type": null,
+                    "properties": null,
+                    "inputMode": "passwordBox",
+                    "isConfidential": true,
+                    "useInDefaultDescription": false,
+                    "groupName": "AuthenticationParameter",
+                    "valueHint": null,
+                    "validation": {
+                      "dataType": "string",
+                      "isRequired": true
+                    }
+                  }
+                ],
+                "scheme": "Token",
+                "displayName": "Token Based Authentication",
+                "authorizationHeaders": [
+                  {
+                    "name": "Authorization",
+                    "value": "Basic {{ #base64 \"token\" \":\" endpoint.apitoken }}"
+                  }
+                ]
+              },
+              {
+                "inputDescriptors": [
+                  {
+                    "id": "username",
+                    "name": "Username",
+                    "description": "Username for connecting to the endpoint",
+                    "type": null,
+                    "properties": null,
+                    "inputMode": "textBox",
+                    "isConfidential": false,
+                    "useInDefaultDescription": false,
+                    "groupName": "AuthenticationParameter",
+                    "valueHint": null,
+                    "validation": {
+                      "dataType": "string",
+                      "isRequired": true,
+                      "maxLength": 300
+                    }
+                  },
+                  {
+                    "id": "password",
+                    "name": "Password",
+                    "description": "Password for connecting to the endpoint",
+                    "type": null,
+                    "properties": null,
+                    "inputMode": "passwordBox",
+                    "isConfidential": true,
+                    "useInDefaultDescription": false,
+                    "groupName": "AuthenticationParameter",
+                    "valueHint": null,
+                    "validation": {
+                      "dataType": "string",
+                      "isRequired": true,
+                      "maxLength": 300
+                    }
+                  }
+                ],
+                "scheme": "UsernamePassword",
+                "displayName": "Basic Authentication",
+                "authorizationHeaders": [
+                  {
+                    "name": "Authorization",
+                    "value": "Basic {{ #base64 endpoint.username \":\" endpoint.password }}"
+                  }
+                ]
+              }
+            ],
+            "dataSources": [
+              {
+                "name": "TestConnection",
+                "endpointUrl": "{{endpoint.url}}/_apis/projects",
+                "resourceUrl": "",
+                "resultSelector": "jsonpath:$.value[?(@.state=='wellFormed')]",
+                "headers": [],
+                "authenticationScheme": null
+              },
+              {
+                "name": "Projects",
+                "endpointUrl": "{{endpoint.url}}/_apis/projects",
+                "resourceUrl": "",
+                "resultSelector": "jsonpath:$.value[?(@.state=='wellFormed')]",
+                "headers": [],
+                "authenticationScheme": null
+              },
+              {
+                "name": "Definitions",
+                "endpointUrl": "{{endpoint.url}}/{{project}}/_apis/build/definitions?api-version=3.0-preview",
+                "resourceUrl": "",
+                "resultSelector": "jsonpath:$.value[?(@.quality=='definition')]",
+                "headers": [],
+                "authenticationScheme": null
+              },
+              {
+                "name": "Builds",
+                "endpointUrl": "{{endpoint.url}}/{{project}}/_apis/build/builds?definitions={{definition}}&resultFilter=succeeded,partiallySucceeded&$top=200",
+                "resourceUrl": "",
+                "resultSelector": "jsonpath:$.value[*]",
+                "headers": [],
+                "authenticationScheme": null
+              },
+              {
+                "name": "LatestBuild",
+                "endpointUrl": "{{endpoint.url}}/{{project}}/_apis/build/builds?maxBuildsPerDefinition=1&definitions={{definition}}&resultFilter=succeeded",
+                "resourceUrl": "",
+                "resultSelector": "jsonpath:$.value[0]",
+                "headers": [],
+                "authenticationScheme": null
+              },
+              {
+                "name": "Artifacts",
+                "endpointUrl": "{{endpoint.url}}/{{project}}/_apis/build/builds/{{version}}/artifacts",
+                "resourceUrl": "",
+                "resultSelector": "jsonpath:$.value[*]",
+                "headers": [],
+                "authenticationScheme": null
+              },
+              {
+                "name": "ArtifactItems",
+                "endpointUrl": "{{endpoint.url}}/_apis/resources/Containers/{{containerId}}?ItemPath={{itemPath}}&isShallow=true",
+                "resourceUrl": "",
+                "resultSelector": "jsonpath:$.value[*]",
+                "headers": [],
+                "authenticationScheme": null
+              },
+              {
+                "name": "BranchName",
+                "endpointUrl": "{{endpoint.url}}/{{project}}/_apis/build/builds/{{version}}",
+                "resourceUrl": "",
+                "resultSelector": "jsonpath:$.sourceBranch",
+                "headers": [],
+                "authenticationScheme": null
+              },
+              {
+                "name": "XamlProjects",
+                "endpointUrl": "{{endpoint.url}}/_apis/projects?api-version=1.0",
+                "resourceUrl": "",
+                "resultSelector": "jsonpath:$.value[*]",
+                "headers": [],
+                "authenticationScheme": null
+              },
+              {
+                "name": "XamlDefinitions",
+                "endpointUrl": "{{endpoint.url}}/_apis/build/definitions?api-version=1.0&projectname={{project}}",
+                "resourceUrl": "",
+                "resultSelector": "jsonpath:$.value[*]",
+                "headers": [],
+                "authenticationScheme": null
+              },
+              {
+                "name": "XamlBuilds",
+                "endpointUrl": "{{endpoint.url}}/_apis/build/builds?definition={{definition}}&status=Succeeded&api-version=1.0",
+                "resourceUrl": "",
+                "resultSelector": "jsonpath:$.value[*]",
+                "headers": [],
+                "authenticationScheme": null
+              },
+              {
+                "name": "LatestXamlBuild",
+                "endpointUrl": "{{endpoint.url}}/_apis/build/builds?definition={{definition}}&status=Succeeded&$top=1&api-version=1.0",
+                "resourceUrl": "",
+                "resultSelector": "jsonpath:$.value[0]",
+                "headers": [],
+                "authenticationScheme": null
+              },
+              {
+                "name": "XamlBuild",
+                "endpointUrl": "{{endpoint.url}}/_apis/build/builds/{{version}}?api-version=1.0",
+                "resourceUrl": "",
+                "resultSelector": "jsonpath:$",
+                "headers": [],
+                "authenticationScheme": null
+              },
+              {
+                "name": "TfvcProjects",
+                "endpointUrl": "{{endpoint.url}}/_apis/tfvc/{{project}}/projectinfo",
+                "resourceUrl": "",
+                "resultSelector": "jsonpath:$",
+                "headers": [],
+                "authenticationScheme": null
+              },
+              {
+                "name": "TfvcChangesets",
+                "endpointUrl": "{{endpoint.url}}/_apis/tfvc/changesets?api-version=1.0",
+                "resourceUrl": "",
+                "resultSelector": "jsonpath:$.value[*]",
+                "headers": [],
+                "authenticationScheme": null
+              },
+              {
+                "name": "TfvcLatestChangeset",
+                "endpointUrl": "{{endpoint.url}}/_apis/tfvc/changesets?$orderby=id dsc&api-version=1.0",
+                "resourceUrl": "",
+                "resultSelector": "jsonpath:$.value[0]",
+                "headers": [],
+                "authenticationScheme": null
+              },
+              {
+                "name": "TfvcArtifacts",
+                "endpointUrl": "{{endpoint.url}}/_apis/tfvc/items?scopepath=$/{{project}}&recursionlevel=OneLevel&api-version=1.0-preview.1",
+                "resourceUrl": "",
+                "resultSelector": "jsonpath:$.value[1:]",
+                "headers": [],
+                "authenticationScheme": null
+              },
+              {
+                "name": "TfvcArtifactItems",
+                "endpointUrl": "{{endpoint.url}}/_apis/tfvc/items?scopepath=$/{{project}}/{{itemPath}}&recursionlevel=OneLevel&api-version=1.0-preview.1",
+                "resourceUrl": "",
+                "resultSelector": "jsonpath:$.value[1:]",
+                "headers": [],
+                "authenticationScheme": null
+              },
+              {
+                "name": "Repositories",
+                "endpointUrl": "{{endpoint.url}}/_apis/git/{{project}}/repositories",
+                "resourceUrl": "",
+                "resultSelector": "jsonpath:$.value[*]",
+                "headers": [],
+                "authenticationScheme": null
+              },
+              {
+                "name": "Branches",
+                "endpointUrl": "{{endpoint.url}}/_apis/git/repositories/{{definition}}/stats/branches",
+                "resourceUrl": "",
+                "resultSelector": "jsonpath:$.value[*]",
+                "headers": [],
+                "authenticationScheme": null
+              },
+              {
+                "name": "GitCommits",
+                "endpointUrl": "{{endpoint.url}}/_apis/git/{{project}}/repositories/{{definition}}/commits?itemVersion[versionType]=Branch&itemVersion[version]={{branch}}",
+                "resourceUrl": "",
+                "resultSelector": "jsonpath:$.value[*]",
+                "headers": [],
+                "authenticationScheme": null
+              },
+              {
+                "name": "GitLatestCommit",
+                "endpointUrl": "{{endpoint.url}}/_apis/git/{{project}}/repositories/{{definition}}/commits?itemVersion[versionType]=Branch&itemVersion[version]={{branch}}",
+                "resourceUrl": "",
+                "resultSelector": "jsonpath:$.value[0]",
+                "headers": [],
+                "authenticationScheme": null
+              },
+              {
+                "name": "GitArtifacts",
+                "endpointUrl": "{{endpoint.url}}/_apis/git/repositories/{{definition}}/items?versionType=branch&version={{branch}}&scopePath=%2F&recursionLevel=1",
+                "resourceUrl": "",
+                "resultSelector": "jsonpath:$.value[1:]",
+                "headers": [],
+                "authenticationScheme": null
+              },
+              {
+                "name": "GitArtifactItems",
+                "endpointUrl": "{{endpoint.url}}/_apis/git/repositories/{{definition}}/items?versionType=branch&version={{branch}}&scopePath=%2F{{itemPath}}&recursionLevel=1",
+                "resourceUrl": "",
+                "resultSelector": "jsonpath:$.value[1:]",
+                "headers": [],
+                "authenticationScheme": null
+              },
+              {
+                "name": "DeploymentGroups",
+                "endpointUrl": "{{endpoint.url}}/{{project}}/_apis/distributedtask/deploymentgroups?actionFilter=Manage",
+                "resourceUrl": "",
+                "resultSelector": "jsonpath:$.value[*]",
+                "headers": [],
+                "authenticationScheme": null
+              }
+            ],
+            "name": "externaltfs",
+            "displayName": "Azure DevOps Server",
+            "description": "Service Endpoint type for all External Azure DevOps Server connections",
+            "endpointUrl": {
+              "displayName": "Connection Url",
+              "helpText": "Url of the Azure DevOps Server account or the Team Project Collection to connect to."
+            },
+            "helpMarkDown": "<a href=\"https://go.microsoft.com/fwlink/?linkid=875423\" target=_blank><b>Learn More</b></a>",
+            "iconUrl": "https://dev.azure.com/fabrikam/_apis/public/Extensions/ms.vss-endpoint/16.129.0.1155724572/Assets/Microsoft.VisualStudio.Services.Icons.Default"
+          },
+          {
+            "inputDescriptors": [],
+            "authenticationSchemes": [
+              {
+                "inputDescriptors": [
+                  {
+                    "id": "username",
+                    "name": "Username",
+                    "description": "Username",
+                    "type": null,
+                    "properties": null,
+                    "inputMode": "textBox",
+                    "isConfidential": false,
+                    "useInDefaultDescription": false,
+                    "groupName": "AuthenticationParameter",
+                    "valueHint": null,
+                    "validation": {
+                      "dataType": "string",
+                      "isRequired": true
+                    }
+                  },
+                  {
+                    "id": "password",
+                    "name": "Password",
+                    "description": "Password",
+                    "type": null,
+                    "properties": null,
+                    "inputMode": "passwordBox",
+                    "isConfidential": true,
+                    "useInDefaultDescription": false,
+                    "groupName": "AuthenticationParameter",
+                    "valueHint": null,
+                    "validation": {
+                      "dataType": "string",
+                      "isRequired": true
+                    }
+                  }
+                ],
+                "scheme": "UsernamePassword",
+                "displayName": "Basic Authentication",
+                "authorizationHeaders": [
+                  {
+                    "name": "Authorization",
+                    "value": "Basic {{ #base64 endpoint.username \":\" endpoint.password }}"
+                  }
+                ]
+              }
+            ],
+            "dataSources": [
+              {
+                "name": "TestConnection",
+                "endpointUrl": "{{{endpoint.url}}}/2.0/repositories?role=member",
+                "resourceUrl": "",
+                "resultSelector": "jsonpath:$.values[*]",
+                "headers": [],
+                "authenticationScheme": null
+              },
+              {
+                "name": "Repositories",
+                "endpointUrl": "{{{endpoint.url}}}/2.0/repositories?role=member",
+                "resourceUrl": "",
+                "resultSelector": "jsonpath:$.values[*]",
+                "headers": [],
+                "authenticationScheme": null
+              },
+              {
+                "name": "Branches",
+                "endpointUrl": "{{{endpoint.url}}}/2.0/repositories/{{{definition}}}/refs/branches",
+                "resourceUrl": "",
+                "resultSelector": "jsonpath:$.values[*]",
+                "headers": [],
+                "authenticationScheme": null
+              },
+              {
+                "name": "Commits",
+                "endpointUrl": "{{{endpoint.url}}}/2.0/repositories/{{{definition}}}/commits/{{{branch}}}",
+                "resourceUrl": "",
+                "resultSelector": "jsonpath:$.values[*]",
+                "headers": [],
+                "authenticationScheme": null
+              },
+              {
+                "name": "LatestCommit",
+                "endpointUrl": "{{{endpoint.url}}}/2.0/repositories/{{{definition}}}/commits/{{{branch}}}",
+                "resourceUrl": "",
+                "resultSelector": "jsonpath:$.values[0]",
+                "headers": [],
+                "authenticationScheme": null
+              }
+            ],
+            "name": "bitbucket",
+            "displayName": "Bitbucket Cloud",
+            "description": "Service Endpoint type for all Bitbucket Cloud connections",
+            "endpointUrl": {
+              "displayName": "Server Url",
+              "helpText": "",
+              "value": "https://api.bitbucket.org/"
+            },
+            "helpMarkDown": "<a href=\"https://msdn.microsoft.com/Library/vs/alm/Release/author-release-definition/understanding-tasks#serviceconnections\" target=_blank><b>Learn More</b></a>",
+            "iconUrl": "https://dev.azure.com/fabrikam/_apis/public/Extensions/ms.vss-endpoint/16.129.0.1155724572/Assets/Microsoft.VisualStudio.Services.Icons.Default"
+          },
+          {
+            "inputDescriptors": [],
+            "authenticationSchemes": [
+              {
+                "inputDescriptors": [
+                  {
+                    "id": "nugetkey",
+                    "name": "ApiKey",
+                    "description": "ApiKey (only for push).",
+                    "type": null,
+                    "properties": null,
+                    "inputMode": "passwordBox",
+                    "isConfidential": true,
+                    "useInDefaultDescription": false,
+                    "groupName": "AuthenticationParameter",
+                    "valueHint": null,
+                    "validation": {
+                      "dataType": "string",
+                      "isRequired": true
+                    }
+                  }
+                ],
+                "scheme": "None",
+                "displayName": "ApiKey",
+                "authorizationHeaders": []
+              },
+              {
+                "inputDescriptors": [
+                  {
+                    "id": "apitoken",
+                    "name": "Personal Access Token",
+                    "description": "Personal access token is applicable only for NuGet feeds hosted on other Team Services accounts or TFS 2017.",
+                    "type": null,
+                    "properties": null,
+                    "inputMode": "passwordBox",
+                    "isConfidential": true,
+                    "useInDefaultDescription": false,
+                    "groupName": "AuthenticationParameter",
+                    "valueHint": null,
+                    "validation": {
+                      "dataType": "string",
+                      "isRequired": true
+                    }
+                  }
+                ],
+                "scheme": "Token",
+                "displayName": "External Azure DevOps Server",
+                "authorizationHeaders": [
+                  {
+                    "name": "Authorization",
+                    "value": "Basic {{ #base64 \"token\" \":\" endpoint.apitoken }}"
+                  }
+                ]
+              },
+              {
+                "inputDescriptors": [
+                  {
+                    "id": "username",
+                    "name": "Username",
+                    "description": "Username for connecting to the endpoint",
+                    "type": null,
+                    "properties": null,
+                    "inputMode": "textBox",
+                    "isConfidential": false,
+                    "useInDefaultDescription": false,
+                    "groupName": "AuthenticationParameter",
+                    "valueHint": null,
+                    "validation": {
+                      "dataType": "string",
+                      "isRequired": true,
+                      "maxLength": 300
+                    }
+                  },
+                  {
+                    "id": "password",
+                    "name": "Password",
+                    "description": "Password for connecting to the endpoint",
+                    "type": null,
+                    "properties": null,
+                    "inputMode": "passwordBox",
+                    "isConfidential": true,
+                    "useInDefaultDescription": false,
+                    "groupName": "AuthenticationParameter",
+                    "valueHint": null,
+                    "validation": {
+                      "dataType": "string",
+                      "isRequired": true,
+                      "maxLength": 300
+                    }
+                  }
+                ],
+                "scheme": "UsernamePassword",
+                "displayName": "Basic Authentication",
+                "authorizationHeaders": [
+                  {
+                    "name": "Authorization",
+                    "value": "Basic {{ #base64 endpoint.username \":\" endpoint.password }}"
+                  }
+                ]
+              }
+            ],
+            "name": "externalnugetfeed",
+            "displayName": "NuGet",
+            "description": "Service Endpoint type for a NuGet feed",
+            "endpointUrl": {
+              "displayName": "Feed URL",
+              "helpText": "URL for the feed. This will generally end with 'index.json'. For nuget.org, use https://api.nuget.org/v3/index.json"
+            },
+            "helpMarkDown": "<a href=\"https://go.microsoft.com/fwlink/?linkid=849454\" target=_blank><b>Learn More</b></a>",
+            "iconUrl": "https://dev.azure.com/fabrikam/_apis/public/Extensions/ms.vss-endpoint/16.129.0.1155724572/Assets/icons/icon-nuget-endpoint.png"
+          },
+          {
+            "inputDescriptors": [],
+            "authenticationSchemes": [
+              {
+                "inputDescriptors": [
+                  {
+                    "id": "username",
+                    "name": "Username",
+                    "description": "Username for connecting to the endpoint",
+                    "type": null,
+                    "properties": null,
+                    "inputMode": "textBox",
+                    "isConfidential": false,
+                    "useInDefaultDescription": false,
+                    "groupName": "AuthenticationParameter",
+                    "valueHint": null,
+                    "validation": {
+                      "dataType": "string",
+                      "isRequired": true,
+                      "maxLength": 300
+                    }
+                  },
+                  {
+                    "id": "password",
+                    "name": "Password",
+                    "description": "Password for connecting to the endpoint",
+                    "type": null,
+                    "properties": null,
+                    "inputMode": "passwordBox",
+                    "isConfidential": true,
+                    "useInDefaultDescription": false,
+                    "groupName": "AuthenticationParameter",
+                    "valueHint": null,
+                    "validation": {
+                      "dataType": "string",
+                      "isRequired": true,
+                      "maxLength": 300
+                    }
+                  }
+                ],
+                "scheme": "UsernamePassword",
+                "displayName": "Basic Authentication",
+                "authorizationHeaders": [
+                  {
+                    "name": "Authorization",
+                    "value": "Basic {{ #base64 endpoint.username \":\" endpoint.password }}"
+                  }
+                ]
+              },
+              {
+                "inputDescriptors": [
+                  {
+                    "id": "apitoken",
+                    "name": "Personal Access Token",
+                    "description": "Personal access token is applicable for registries which support them (e.g. https://registry.npmjs.org) and for Team Services accounts or TFS 2017 Update 1 or later.",
+                    "type": null,
+                    "properties": null,
+                    "inputMode": "passwordBox",
+                    "isConfidential": true,
+                    "useInDefaultDescription": false,
+                    "groupName": "AuthenticationParameter",
+                    "valueHint": null,
+                    "validation": {
+                      "dataType": "string",
+                      "isRequired": true
+                    }
+                  }
+                ],
+                "scheme": "Token",
+                "displayName": "Authentication Token",
+                "authorizationHeaders": [
+                  {
+                    "name": "Authorization",
+                    "value": "Basic {{ #base64 \"token\" \":\" endpoint.apitoken }}"
+                  }
+                ]
+              }
+            ],
+            "name": "externalnpmregistry",
+            "displayName": "npm",
+            "description": "Service Endpoint type for an npm registry",
+            "endpointUrl": {
+              "displayName": "Registry URL",
+              "helpText": "URL for the registry. For npmjs.com, use https://registry.npmjs.org"
+            },
+            "helpMarkDown": "<a href=\"https://go.microsoft.com/fwlink/?linkid=849455\" target=_blank><b>Learn More</b></a>",
+            "iconUrl": "https://dev.azure.com/fabrikam/_apis/public/Extensions/ms.vss-endpoint/16.129.0.1155724572/Assets/icons/icon-npm-endpoint.png"
+          },
+          {
+            "inputDescriptors": [
+              {
+                "id": "environment",
+                "name": "Environment",
+                "description": "Microsoft Azure Environment for the subscription",
+                "type": null,
+                "properties": null,
+                "inputMode": "combo",
+                "isConfidential": false,
+                "useInDefaultDescription": false,
+                "groupName": null,
+                "valueHint": null,
+                "validation": {
+                  "dataType": "string",
+                  "maxLength": 300
+                },
+                "values": {
+                  "inputId": "environmentValues",
+                  "defaultValue": "AzureCloud",
+                  "possibleValues": [
+                    {
+                      "value": "AzureCloud",
+                      "displayValue": "Azure Cloud"
+                    },
+                    {
+                      "value": "AzureChinaCloud",
+                      "displayValue": "Azure China Cloud"
+                    },
+                    {
+                      "value": "AzureUSGovernment",
+                      "displayValue": "Azure US Government"
+                    },
+                    {
+                      "value": "AzureGermanCloud",
+                      "displayValue": "Azure German Cloud"
+                    }
+                  ]
+                }
+              },
+              {
+                "id": "subscriptionId",
+                "name": "Subscription Id",
+                "description": "Subscription Id from the <a href=\"https://go.microsoft.com/fwlink/?LinkID=312990\" target=_blank>publish settings file</a>",
+                "type": null,
+                "properties": null,
+                "inputMode": "textBox",
+                "isConfidential": false,
+                "useInDefaultDescription": false,
+                "groupName": null,
+                "valueHint": null,
+                "validation": {
+                  "dataType": "guid",
+                  "isRequired": true,
+                  "maxLength": 38
+                }
+              },
+              {
+                "id": "subscriptionName",
+                "name": "Subscription Name",
+                "description": "Subscription Name from the <a href=\"https://go.microsoft.com/fwlink/?LinkID=312990\" target=_blank>publish settings file</a>",
+                "type": null,
+                "properties": null,
+                "inputMode": "textBox",
+                "isConfidential": false,
+                "useInDefaultDescription": false,
+                "groupName": null,
+                "valueHint": null,
+                "validation": {
+                  "dataType": "string",
+                  "isRequired": true,
+                  "maxLength": 255
+                }
+              }
+            ],
+            "authenticationSchemes": [
+              {
+                "inputDescriptors": [
+                  {
+                    "id": "username",
+                    "name": "Username",
+                    "description": "Specify a work or school account (for example <b>@fabrikam.com</b>). Microsoft accounts (for example <b>@live</b> or <b>@hotmail</b>) are not supported. Not recommended if Multi-Factored Authentication is enabled.",
+                    "type": null,
+                    "properties": null,
+                    "inputMode": "textBox",
+                    "isConfidential": false,
+                    "useInDefaultDescription": false,
+                    "groupName": "AuthenticationParameter",
+                    "valueHint": null,
+                    "validation": {
+                      "dataType": "string",
+                      "isRequired": true,
+                      "maxLength": 300
+                    }
+                  },
+                  {
+                    "id": "password",
+                    "name": "Password",
+                    "description": "Password for connecting to the endpoint",
+                    "type": null,
+                    "properties": null,
+                    "inputMode": "passwordBox",
+                    "isConfidential": true,
+                    "useInDefaultDescription": false,
+                    "groupName": "AuthenticationParameter",
+                    "valueHint": null,
+                    "validation": {
+                      "dataType": "string",
+                      "isRequired": true,
+                      "maxLength": 300
+                    }
+                  }
+                ],
+                "scheme": "UsernamePassword",
+                "displayName": "Credentials",
+                "authorizationHeaders": [
+                  {
+                    "name": "Authorization",
+                    "value": "Basic {{ #base64 endpoint.username \":\" endpoint.password }}"
+                  }
+                ]
+              },
+              {
+                "inputDescriptors": [
+                  {
+                    "id": "certificate",
+                    "name": "Management Certificate",
+                    "description": "Management Certificate from the <a href=\"https://go.microsoft.com/fwlink/?LinkID=312990\" target=_blank>publish settings file</a>",
+                    "type": null,
+                    "properties": null,
+                    "inputMode": "textArea",
+                    "isConfidential": true,
+                    "useInDefaultDescription": false,
+                    "groupName": "AuthenticationParameter",
+                    "valueHint": null,
+                    "validation": {
+                      "dataType": "string",
+                      "isRequired": true
+                    }
+                  }
+                ],
+                "scheme": "Certificate",
+                "displayName": "Certificate Based",
+                "authorizationHeaders": []
+              }
+            ],
+            "dataSources": [
+              {
+                "name": "TestConnection",
+                "endpointUrl": "$(endpoint.url)/$(endpoint.subscriptionId)/services/WebSpaces?properties=georegions",
+                "resourceUrl": "",
+                "resultSelector": "xpath://Name",
+                "headers": [],
+                "authenticationScheme": null
+              },
+              {
+                "name": "AzureWebSiteNames",
+                "endpointUrl": "$(endpoint.url)/$(endpoint.subscriptionId)/services/webspaces/{{{ #stringReplace ' ' '' WebSiteLocation}}}Webspace/sites",
+                "resourceUrl": "",
+                "resultSelector": "xpath://Site/Name",
+                "headers": [],
+                "authenticationScheme": null
+              },
+              {
+                "name": "AzureHostedServiceNames",
+                "endpointUrl": "$(endpoint.url)/$(endpoint.subscriptionId)/services/hostedservices",
+                "resourceUrl": "",
+                "resultSelector": "xpath://ServiceName",
+                "headers": [],
+                "authenticationScheme": null
+              },
+              {
+                "name": "AzureStorageServiceNames",
+                "endpointUrl": "$(endpoint.url)/$(endpoint.subscriptionId)/services/storageservices",
+                "resourceUrl": "",
+                "resultSelector": "xpath://ServiceName",
+                "headers": [],
+                "authenticationScheme": null
+              },
+              {
+                "name": "AzureLocations",
+                "endpointUrl": "$(endpoint.url)/$(endpoint.subscriptionId)/locations",
+                "resourceUrl": "",
+                "resultSelector": "xpath://Name",
+                "headers": [],
+                "authenticationScheme": null
+              },
+              {
+                "name": "AzureWebsiteLocations",
+                "endpointUrl": "$(endpoint.url)/$(endpoint.subscriptionId)/services/WebSpaces?properties=georegions",
+                "resourceUrl": "",
+                "resultSelector": "xpath://Name",
+                "headers": [],
+                "authenticationScheme": null
+              },
+              {
+                "name": "AzureAffinityGroups",
+                "endpointUrl": "$(endpoint.url)/$(endpoint.subscriptionId)/affinitygroups",
+                "resourceUrl": "",
+                "resultSelector": "xpath://Name",
+                "headers": [],
+                "authenticationScheme": null
+              }
+            ],
+            "name": "azure",
+            "displayName": "Azure Classic",
+            "description": "Service Endpoint type for all Azure connections",
+            "endpointUrl": {
+              "displayName": "Server Url",
+              "helpText": "",
+              "value": "https://management.core.windows.net/",
+              "isVisible": "true",
+              "dependsOn": {
+                "input": "environment",
+                "map": [
+                  {
+                    "key": "AzureCloud",
+                    "value": "https://management.core.windows.net/"
+                  },
+                  {
+                    "key": "AzureChinaCloud",
+                    "value": "https://management.core.chinacloudapi.cn/"
+                  },
+                  {
+                    "key": "AzureUSGovernment",
+                    "value": "https://management.core.usgovcloudapi.net/"
+                  },
+                  {
+                    "key": "AzureGermanCloud",
+                    "value": "https://management.core.cloudapi.de/ "
+                  }
+                ]
+              }
+            },
+            "helpMarkDown": "For certificate: download <a href=\"https://go.microsoft.com/fwlink/?LinkID=312990\" target=_blank><b>publish settings file</b></a>. <a href=\"https://go.microsoft.com/fwlink/?linkid=2002800&clcid=0x409\" target=_blank><b>Learn More</b></a>",
+            "iconUrl": "https://dev.azure.com/fabrikam/_apis/public/Extensions/ms.vss-services-azure/16.129.0.2114837752/Assets/icons/azure-endpoint-icon.png"
+          },
+          {
+            "inputDescriptors": [
+              {
+                "id": "environment",
+                "name": "Environment",
+                "description": "Microsoft Azure Environment for the subscription",
+                "type": null,
+                "properties": null,
+                "inputMode": "combo",
+                "isConfidential": false,
+                "useInDefaultDescription": false,
+                "groupName": null,
+                "valueHint": null,
+                "validation": {
+                  "dataType": "string",
+                  "maxLength": 300
+                },
+                "values": {
+                  "inputId": "environmentValues",
+                  "defaultValue": "AzureCloud",
+                  "possibleValues": [
+                    {
+                      "value": "AzureCloud",
+                      "displayValue": "Azure Cloud"
+                    },
+                    {
+                      "value": "AzureChinaCloud",
+                      "displayValue": "Azure China Cloud"
+                    },
+                    {
+                      "value": "AzureUSGovernment",
+                      "displayValue": "Azure US Government"
+                    },
+                    {
+                      "value": "AzureGermanCloud",
+                      "displayValue": "Azure German Cloud"
+                    }
+                  ]
+                }
+              },
+              {
+                "id": "subscriptionId",
+                "name": "Subscription Id",
+                "description": "Subscription Id from the <a href=\"https://go.microsoft.com/fwlink/?LinkID=312990\" target=_blank>publish settings file</a>",
+                "type": null,
+                "properties": null,
+                "inputMode": "textBox",
+                "isConfidential": false,
+                "useInDefaultDescription": false,
+                "groupName": null,
+                "valueHint": null,
+                "validation": {
+                  "dataType": "guid",
+                  "isRequired": true,
+                  "maxLength": 38
+                }
+              },
+              {
+                "id": "subscriptionName",
+                "name": "Subscription Name",
+                "description": "Subscription Name from the <a href=\"https://go.microsoft.com/fwlink/?LinkID=312990\" target=_blank>publish settings file</a>",
+                "type": null,
+                "properties": null,
+                "inputMode": "textBox",
+                "isConfidential": false,
+                "useInDefaultDescription": false,
+                "groupName": null,
+                "valueHint": null,
+                "validation": {
+                  "dataType": "string",
+                  "isRequired": true,
+                  "maxLength": 255
+                }
+              },
+              {
+                "id": "oboAuthorization",
+                "name": "Execute on behalf of (OBO) users",
+                "description": "Use credentials of deployment submitter or approver for execution. Service principal stored with the endpoint is used for read only operations.",
+                "type": null,
+                "properties": null,
+                "inputMode": "checkBox",
+                "isConfidential": false,
+                "useInDefaultDescription": false,
+                "groupName": null,
+                "valueHint": null,
+                "validation": {
+                  "dataType": "boolean"
+                }
+              },
+              {
+                "id": "creationMode",
+                "name": "Creation Mode",
+                "description": "Endpoint creation can be Automatic or Manual.",
+                "type": null,
+                "properties": null,
+                "inputMode": "textBox",
+                "isConfidential": false,
+                "useInDefaultDescription": false,
+                "groupName": null,
+                "valueHint": null,
+                "validation": {
+                  "dataType": "string",
+                  "maxLength": 255
+                }
+              },
+              {
+                "id": "azureSpnRoleAssignmentId",
+                "name": "Role Assignment Id",
+                "description": "Id for contributor role in Azure subscription.",
+                "type": null,
+                "properties": null,
+                "inputMode": "textBox",
+                "isConfidential": false,
+                "useInDefaultDescription": false,
+                "groupName": null,
+                "valueHint": null,
+                "validation": {
+                  "dataType": "string",
+                  "maxLength": 255
+                }
+              },
+              {
+                "id": "azureSpnPermissions",
+                "name": "Azure permissions",
+                "description": "Serialized list of azure permissions.",
+                "type": null,
+                "properties": null,
+                "inputMode": "textBox",
+                "isConfidential": false,
+                "useInDefaultDescription": false,
+                "groupName": null,
+                "valueHint": null,
+                "validation": {
+                  "dataType": "string",
+                  "maxLength": 8192
+                }
+              },
+              {
+                "id": "spnObjectId",
+                "name": "Service Principal Object Id",
+                "description": "Id  for service principal object in Azure Active Directory.",
+                "type": null,
+                "properties": null,
+                "inputMode": "textBox",
+                "isConfidential": false,
+                "useInDefaultDescription": false,
+                "groupName": null,
+                "valueHint": null,
+                "validation": {
+                  "dataType": "string",
+                  "maxLength": 255
+                }
+              },
+              {
+                "id": "appObjectId",
+                "name": "Application Object Id",
+                "description": "Id for application object in Azure Active Directory.",
+                "type": null,
+                "properties": null,
+                "inputMode": "textBox",
+                "isConfidential": false,
+                "useInDefaultDescription": false,
+                "groupName": null,
+                "valueHint": null,
+                "validation": {
+                  "dataType": "string",
+                  "maxLength": 255
+                }
+              }
+            ],
+            "authenticationSchemes": [
+              {
+                "inputDescriptors": [
+                  {
+                    "id": "accessToken",
+                    "name": "Access Token",
+                    "description": "Access token to be used for creating the service principal",
+                    "type": null,
+                    "properties": null,
+                    "inputMode": "textBox",
+                    "isConfidential": true,
+                    "useInDefaultDescription": false,
+                    "groupName": "AuthenticationParameter",
+                    "valueHint": null,
+                    "validation": {
+                      "dataType": "string",
+                      "maxLength": 256
+                    },
+                    "values": {
+                      "inputId": "accessTokenInput",
+                      "isDisabled": true
+                    }
+                  },
+                  {
+                    "id": "role",
+                    "name": "Role",
+                    "description": "Role to be assigned to the service principal",
+                    "type": null,
+                    "properties": null,
+                    "inputMode": "textBox",
+                    "isConfidential": false,
+                    "useInDefaultDescription": false,
+                    "groupName": "AuthenticationParameter",
+                    "valueHint": null,
+                    "validation": {
+                      "dataType": "string",
+                      "maxLength": 256
+                    },
+                    "values": {
+                      "inputId": "roleInput",
+                      "isDisabled": true
+                    }
+                  },
+                  {
+                    "id": "scope",
+                    "name": "Scope",
+                    "description": "Scope on which the role should be assigned to the service principal",
+                    "type": null,
+                    "properties": null,
+                    "inputMode": "textBox",
+                    "isConfidential": false,
+                    "useInDefaultDescription": false,
+                    "groupName": "AuthenticationParameter",
+                    "valueHint": null,
+                    "validation": {
+                      "dataType": "string",
+                      "maxLength": 1024
+                    },
+                    "values": {
+                      "inputId": "scopeInput",
+                      "isDisabled": true
+                    }
+                  },
+                  {
+                    "id": "servicePrincipalId",
+                    "name": "Service Principal Id",
+                    "description": "Client Id for connecting to the endpoint.\nRefer to <a href=\"https://go.microsoft.com/fwlink/?LinkID=623000\" target=_blank>link</a> on how to create Azure Service Principal.",
+                    "type": null,
+                    "properties": null,
+                    "inputMode": "textBox",
+                    "isConfidential": false,
+                    "useInDefaultDescription": false,
+                    "groupName": "AuthenticationParameter",
+                    "valueHint": null,
+                    "validation": {
+                      "dataType": "string",
+                      "isRequired": true
+                    }
+                  },
+                  {
+                    "id": "servicePrincipalKey",
+                    "name": "Service Principal Key",
+                    "description": "Service Principal Key for connecting to the endpoint.\nRefer to <a href=\"https://go.microsoft.com/fwlink/?LinkID=623000\" target=_blank>link</a> on how to create Azure Service Principal.",
+                    "type": null,
+                    "properties": null,
+                    "inputMode": "passwordBox",
+                    "isConfidential": true,
+                    "useInDefaultDescription": false,
+                    "groupName": "AuthenticationParameter",
+                    "valueHint": null,
+                    "validation": {
+                      "dataType": "string",
+                      "isRequired": true
+                    }
+                  },
+                  {
+                    "id": "tenantId",
+                    "name": "Tenant Id",
+                    "description": "Tenant Id for connecting to the endpoint.\nRefer to <a href=\"https://go.microsoft.com/fwlink/?LinkID=623000\" target=_blank>link</a> on how to create Azure Service Principal.",
+                    "type": null,
+                    "properties": null,
+                    "inputMode": "textBox",
+                    "isConfidential": false,
+                    "useInDefaultDescription": false,
+                    "groupName": "AuthenticationParameter",
+                    "valueHint": null,
+                    "validation": {
+                      "dataType": "guid",
+                      "isRequired": true
+                    }
+                  }
+                ],
+                "scheme": "ServicePrincipal",
+                "displayName": "Service Principal Authentication",
+                "authorizationHeaders": []
+              }
+            ],
+            "dataSources": [
+              {
+                "name": "TestConnection",
+                "endpointUrl": "{{{endpoint.url}}}/subscriptions/{{{endpoint.subscriptionId}}}?api-version=2016-06-01",
+                "resourceUrl": "",
+                "resultSelector": "jsonpath:$",
+                "headers": [],
+                "authenticationScheme": null
+              },
+              {
+                "name": "AzureResourceGroups",
+                "endpointUrl": "{{{endpoint.url}}}/subscriptions/{{{endpoint.subscriptionId}}}/resourcegroups?api-version=2016-02-01",
+                "resourceUrl": "",
+                "resultSelector": "jsonpath:$.value[*].name",
+                "headers": [],
+                "authenticationScheme": null
+              },
+              {
+                "name": "AzureStorageAccountRM",
+                "endpointUrl": "{{{endpoint.url}}}/subscriptions/{{{endpoint.subscriptionId}}}/providers/Microsoft.Storage/storageAccounts?api-version=2015-06-15",
+                "resourceUrl": "",
+                "resultSelector": "jsonpath:$.value[*].name",
+                "headers": [],
+                "authenticationScheme": null
+              },
+              {
+                "name": "AzureStorageAccountRMandClassic",
+                "endpointUrl": "{{{endpoint.url}}}/subscriptions/{{{endpoint.subscriptionId}}}/resources?api-version=2014-04-01-preview&%24filter=(resourceType%20eq%20'microsoft.storage%2Fstorageaccounts'%20or%20resourceType%20eq%20'microsoft.classicstorage%2Fstorageaccounts')",
+                "resourceUrl": "",
+                "resultSelector": "jsonpath:$.value[*].name",
+                "headers": [],
+                "authenticationScheme": null
+              },
+              {
+                "name": "AzureRMStorageAccountByLocation",
+                "endpointUrl": "{{{endpoint.url}}}/subscriptions/{{{endpoint.subscriptionId}}}/providers/Microsoft.Storage/storageAccounts?api-version=2015-06-15",
+                "resourceUrl": "",
+                "resultSelector": "jsonpath:$.value[?(@.location =='{{location}}')].name",
+                "headers": [],
+                "authenticationScheme": null
+              },
+              {
+                "name": "AzureRMStorageAccountIdByName",
+                "endpointUrl": "{{{endpoint.url}}}/subscriptions/{{{endpoint.subscriptionId}}}/providers/Microsoft.Storage/storageAccounts?api-version=2015-06-15",
+                "resourceUrl": "",
+                "resultSelector": "jsonpath:$.value[?(@.name =='{{storageAccountName}}')].id",
+                "headers": [],
+                "authenticationScheme": null
+              },
+              {
+                "name": "AzureVirtualMachinesV2Id",
+                "endpointUrl": "{{{endpoint.url}}}/subscriptions/{{{endpoint.subscriptionId}}}/providers/Microsoft.Compute/virtualMachines?api-version=2015-06-15",
+                "resourceUrl": "",
+                "resultSelector": "jsonpath:$.value[*].id",
+                "headers": [],
+                "authenticationScheme": null
+              },
+              {
+                "name": "AzureRMWebAppNames",
+                "endpointUrl": "{{{endpoint.url}}}/subscriptions/{{{endpoint.subscriptionId}}}/providers/Microsoft.Web/sites?api-version=2015-08-01",
+                "resourceUrl": "",
+                "resultSelector": "jsonpath:$.value[*].name",
+                "headers": [],
+                "authenticationScheme": null
+              },
+              {
+                "name": "AzureRMWebAppNamesByType",
+                "endpointUrl": "{{{endpoint.url}}}/subscriptions/{{{endpoint.subscriptionId}}}/providers/Microsoft.Web/sites?api-version=2015-08-01",
+                "resourceUrl": "",
+                "resultSelector": "jsonpath:$.value[?(@.kind=='{{{ #stringReplace 'linux' ',linux' WebAppKind}}}')].name",
+                "headers": [],
+                "authenticationScheme": null
+              },
+              {
+                "name": "AzureRMServerfarmId",
+                "endpointUrl": "{{{endpoint.url}}}/subscriptions/{{{endpoint.subscriptionId}}}/providers/Microsoft.Web/sites?api-version=2015-08-01",
+                "resourceUrl": "",
+                "resultSelector": "jsonpath:$.value[?(@.name=='{{WebAppName}}')].properties",
+                "headers": [],
+                "authenticationScheme": null
+              },
+              {
+                "name": "AzureAppKind",
+                "endpointUrl": "{{{endpoint.url}}}/subscriptions/{{{endpoint.subscriptionId}}}/providers/Microsoft.Web/sites?api-version=2015-08-01",
+                "resourceUrl": "",
+                "resultSelector": "jsonpath:$.value[?(@.name=='{{WebAppName}}')].properties",
+                "headers": [],
+                "authenticationScheme": null
+              },
+              {
+                "name": "AzureRMWebAppKind",
+                "endpointUrl": "{{{endpoint.url}}}/{{{ServerfarmId}}}?api-version=2015-08-01",
+                "resourceUrl": "",
+                "resultSelector": "jsonpath:$",
+                "headers": [],
+                "authenticationScheme": null
+              },
+              {
+                "name": "AzureRMWebAppResourceGroup",
+                "endpointUrl": "{{{endpoint.url}}}/subscriptions/{{{endpoint.subscriptionId}}}/providers/Microsoft.Web/sites?api-version=2015-08-01",
+                "resourceUrl": "",
+                "resultSelector": "jsonpath:$.value[?(@.name=='{{WebAppName}}')].properties.resourceGroup",
+                "headers": [],
+                "authenticationScheme": null
+              },
+              {
+                "name": "AzureRMWebAppSlotsId",
+                "endpointUrl": "{{{endpoint.url}}}/subscriptions/{{{endpoint.subscriptionId}}}/resourceGroups/{{{ResourceGroupName}}}/providers/Microsoft.Web/sites/$(WebAppName)/slots?api-version=2015-08-01",
+                "resourceUrl": "",
+                "resultSelector": "jsonpath:$.value[*].id",
+                "headers": [],
+                "authenticationScheme": null
+              },
+              {
+                "name": "AzureRMLoadBalancers",
+                "endpointUrl": "{{{endpoint.url}}}/subscriptions/{{{endpoint.subscriptionId}}}/resourceGroups/{{{ResourceGroupName}}}/providers/Microsoft.Network/loadBalancers?api-version=2016-09-01",
+                "resourceUrl": "",
+                "resultSelector": "jsonpath:$.value[*].name",
+                "headers": [],
+                "authenticationScheme": null
+              },
+              {
+                "name": "AzureLocations",
+                "endpointUrl": "{{{endpoint.url}}}/subscriptions/$(endpoint.subscriptionId)/locations?api-version=2016-09-01",
+                "resourceUrl": "",
+                "resultSelector": "jsonpath:$.value[*].displayName",
+                "headers": [],
+                "authenticationScheme": null
+              },
+              {
+                "name": "AzureLocations2",
+                "endpointUrl": "{{{endpoint.url}}}/subscriptions/$(endpoint.subscriptionId)/locations?api-version=2016-09-01",
+                "resourceUrl": "",
+                "resultSelector": "jsonpath:$.value[*]",
+                "headers": [],
+                "authenticationScheme": null
+              },
+              {
+                "name": "AzureRMContainerRegistries",
+                "endpointUrl": "{{{endpoint.url}}}/subscriptions/{{{endpoint.subscriptionId}}}/providers/Microsoft.ContainerRegistry/registries?api-version=2017-03-01",
+                "resourceUrl": "",
+                "resultSelector": "jsonpath:$.value[*]",
+                "headers": [],
+                "authenticationScheme": null
+              },
+              {
+                "name": "AzureRMContainerRegistriesWithResourceGroup",
+                "endpointUrl": "{{{endpoint.url}}}/subscriptions/{{{endpoint.subscriptionId}}}/resourceGroups/{{{resourcegroup}}}/providers/Microsoft.ContainerRegistry/registries?api-version=2017-03-01",
+                "resourceUrl": "",
+                "resultSelector": "jsonpath:$.value[*]",
+                "headers": [],
+                "authenticationScheme": null
+              },
+              {
+                "name": "AzureRMContainerRegistriesByRegistryUrl",
+                "endpointUrl": "{{{endpoint.url}}}/subscriptions/{{{endpoint.subscriptionId}}}/providers/Microsoft.ContainerRegistry/registries?api-version=2017-03-01",
+                "resourceUrl": "",
+                "resultSelector": "jsonpath:$.value[?(@properties.loginServer=='{{registryurl}}')]",
+                "headers": [],
+                "authenticationScheme": null
+              },
+              {
+                "name": "AzureContainerRegistryRepositories",
+                "endpointUrl": "https://{{{registryurl}}}/v2/_catalog",
+                "resourceUrl": "",
+                "resultSelector": "jsonpath:$.repositories[*]",
+                "headers": [
+                  {
+                    "name": "Authorization",
+                    "value": "Basic {{ #base64 endpoint.serviceprincipalid \":\" endpoint.serviceprincipalkey }}"
+                  }
+                ],
+                "authenticationScheme": null
+              },
+              {
+                "name": "AzureContainerRegistryTags",
+                "endpointUrl": "https://{{{registryurl}}}/v2/{{{definition}}}/tags/list",
+                "resourceUrl": "",
+                "resultSelector": "jsonpath:$.tags[*]",
+                "headers": [
+                  {
+                    "name": "Authorization",
+                    "value": "Basic {{ #base64 endpoint.serviceprincipalid \":\" endpoint.serviceprincipalkey }}"
+                  }
+                ],
+                "authenticationScheme": null
+              },
+              {
+                "name": "AzureContainerRegistryLatestTags",
+                "endpointUrl": "https://{{{registryurl}}}/v2/{{{definition}}}/tags/list",
+                "resourceUrl": "",
+                "resultSelector": "jsonpath:$.tags[0]",
+                "headers": [
+                  {
+                    "name": "Authorization",
+                    "value": "Basic {{ #base64 endpoint.serviceprincipalid \":\" endpoint.serviceprincipalkey }}"
+                  }
+                ],
+                "authenticationScheme": null
+              },
+              {
+                "name": "AzureKeyVaults",
+                "endpointUrl": "{{{endpoint.url}}}/subscriptions/{{{endpoint.subscriptionId}}}/providers/Microsoft.KeyVault/vaults?api-version=2016-10-01",
+                "resourceUrl": "",
+                "resultSelector": "jsonpath:$.value[*].name",
+                "headers": [],
+                "authenticationScheme": null
+              },
+              {
+                "name": "AzureKeyVaultsList",
+                "endpointUrl": "{{{endpoint.url}}}/subscriptions/{{{endpoint.subscriptionId}}}/providers/Microsoft.KeyVault/vaults?api-version=2016-10-01",
+                "resourceUrl": "",
+                "resultSelector": "jsonpath:$.value[*]",
+                "headers": [],
+                "authenticationScheme": null
+              },
+              {
+                "name": "AzureKeyVaultListVaults",
+                "endpointUrl": "{{{endpoint.url}}}/subscriptions/{{{endpoint.subscriptionId}}}/providers/Microsoft.KeyVault/vaults?api-version=2016-10-01",
+                "resourceUrl": "",
+                "resultSelector": "jsonpath:$",
+                "headers": [],
+                "authenticationScheme": null
+              },
+              {
+                "name": "AzureKeyVaultListVaultsWithSkipToken",
+                "endpointUrl": "{{{endpoint.url}}}/subscriptions/{{{endpoint.subscriptionId}}}/providers/Microsoft.KeyVault/vaults?api-version=2016-10-01&$skiptoken={{{SkipToken}}}",
+                "resourceUrl": "",
+                "resultSelector": "jsonpath:$",
+                "headers": [],
+                "authenticationScheme": null
+              },
+              {
+                "name": "AzureKeyVaultListSecretsTestConnection",
+                "endpointUrl": "https://{{{KeyVaultName}}}.{{{endpoint.AzureKeyVaultDnsSuffix}}}/secrets?maxresults=1&api-version=2016-10-01",
+                "resourceUrl": "{{{endpoint.AzureKeyVaultServiceEndpointResourceId}}}",
+                "resultSelector": "jsonpath:$",
+                "headers": [],
+                "authenticationScheme": null
+              },
+              {
+                "name": "AzureKeyVaultGetSecretTestConnection",
+                "endpointUrl": "https://{{{KeyVaultName}}}.{{{endpoint.AzureKeyVaultDnsSuffix}}}/secrets/nonexistingrandomsecretname?api-version=2016-10-01",
+                "resourceUrl": "{{{endpoint.AzureKeyVaultServiceEndpointResourceId}}}",
+                "resultSelector": "jsonpath:$",
+                "headers": [],
+                "authenticationScheme": null
+              },
+              {
+                "name": "AzureKeyVaultSecrets",
+                "endpointUrl": "https://{{{KeyVaultName}}}.{{{endpoint.AzureKeyVaultDnsSuffix}}}/secrets?api-version=2016-10-01",
+                "resourceUrl": "{{{endpoint.AzureKeyVaultServiceEndpointResourceId}}}",
+                "resultSelector": "jsonpath:$",
+                "headers": [],
+                "authenticationScheme": null
+              },
+              {
+                "name": "AzureKeyVaultSecretsWithSkipToken",
+                "endpointUrl": "https://{{{KeyVaultName}}}.{{{endpoint.AzureKeyVaultDnsSuffix}}}/secrets?api-version=2016-10-01&$skiptoken={{{SkipToken}}}",
+                "resourceUrl": "{{{endpoint.AzureKeyVaultServiceEndpointResourceId}}}",
+                "resultSelector": "jsonpath:$",
+                "headers": [],
+                "authenticationScheme": null
+              },
+              {
+                "name": "AzureVirtualMachineScaleSetNames",
+                "endpointUrl": "{{{endpoint.url}}}/subscriptions/{{{endpoint.subscriptionId}}}/providers/Microsoft.Compute/virtualMachineScaleSets?api-version=2017-03-30",
+                "resourceUrl": "",
+                "resultSelector": "jsonpath:$.value[*].name",
+                "headers": [],
+                "authenticationScheme": null
+              },
+              {
+                "name": "AzureRMDependencyData",
+                "endpointUrl": "{{{endpoint.url}}}/metadata/endpoints?api-version=1.0",
+                "resourceUrl": "",
+                "resultSelector": "jsonpath:$",
+                "headers": [],
+                "authenticationScheme": null
+              },
+              {
+                "name": "AzureRMApplicationInsightsResources",
+                "endpointUrl": "{{{endpoint.url}}}/subscriptions/{{{endpoint.subscriptionId}}}/resourceGroups/{{{AppInsightsResourceGroupName}}}/providers/microsoft.insights/components?api-version=2015-05-01",
+                "resourceUrl": "",
+                "resultSelector": "jsonpath:$.value[*].name",
+                "headers": [],
+                "authenticationScheme": null
+              },
+              {
+                "name": "AzureRMResourceMetricDefinitions",
+                "endpointUrl": "{{{endpoint.url}}}/{{{ResourceUri}}}/providers/Microsoft.insights/metricDefinitions?api-version=2016-03-01",
+                "resourceUrl": "",
+                "resultSelector": "jsonpath:$.value[*]",
+                "headers": [],
+                "authenticationScheme": null
+              },
+              {
+                "name": "AzureRMResourceLegacyMetricDefinitions",
+                "endpointUrl": "{{{endpoint.url}}}/{{{ResourceUri}}}/metricDefinitions?api-version=2014-04-01",
+                "resourceUrl": "",
+                "resultSelector": "jsonpath:$.value[*]",
+                "headers": [],
+                "authenticationScheme": null
+              },
+              {
+                "name": "AzureRMResourcesInRGBasedOnType",
+                "endpointUrl": "{{{endpoint.url}}}/subscriptions/{{{endpoint.subscriptionId}}}/resourceGroups/{{{ResourceGroupName}}}/resources?$filter=resourceType EQ '{{{ResourceType}}}'&api-version=2017-05-10",
+                "resourceUrl": "",
+                "resultSelector": "jsonpath:$.value[*]",
+                "headers": [],
+                "authenticationScheme": null
+              },
+              {
+                "name": "AzureStorageContainer",
+                "endpointUrl": "https://{{storageAccount}}.blob.{{endpoint.StorageEndpointSuffix}}/?comp=list",
+                "resourceUrl": "",
+                "resultSelector": "xpath:EnumerationResults/Containers/Container/Name",
+                "headers": [],
+                "authenticationScheme": {
+                  "type": "ms.vss-endpoint.endpoint-auth-scheme-azure-storage",
+                  "inputs": {
+                    "storageAccountName": "{{ storageAccount }}",
+                    "storageAccessKey": "{{ #GetAzureStorageAccessKey storageAccount }}"
+                  }
+                }
+              },
+              {
+                "name": "AzureStorageContainerFiles",
+                "endpointUrl": "https://{{storageAccount}}.blob.{{endpoint.StorageEndpointSuffix}}/{{container}}?comp=list&restype=container&prefix={{commonVirtualPath}}",
+                "resourceUrl": "",
+                "resultSelector": "xpath:EnumerationResults/Blobs/Blob/Name",
+                "headers": [],
+                "authenticationScheme": {
+                  "type": "ms.vss-endpoint.endpoint-auth-scheme-azure-storage",
+                  "inputs": {
+                    "storageAccountName": "{{ storageAccount }}",
+                    "storageAccessKey": "{{ #GetAzureStorageAccessKey storageAccount }}"
+                  }
+                }
+              },
+              {
+                "name": "AzureStorageContainerFoldersInRoot",
+                "endpointUrl": "https://{{storageAccount}}.blob.{{endpoint.StorageEndpointSuffix}}/{{container}}?comp=list&restype=container&delimiter=/&prefix={{commonVirtualPath}}",
+                "resourceUrl": "",
+                "resultSelector": "xpath:EnumerationResults/Blobs/BlobPrefix/Name",
+                "headers": [],
+                "authenticationScheme": {
+                  "type": "ms.vss-endpoint.endpoint-auth-scheme-azure-storage",
+                  "inputs": {
+                    "storageAccountName": "{{ storageAccount }}",
+                    "storageAccessKey": "{{ #GetAzureStorageAccessKey storageAccount }}"
+                  }
+                }
+              }
+            ],
+            "dependencyData": [
+              {
+                "map": [
+                  {
+                    "key": "AzureCloud",
+                    "value": [
+                      {
+                        "key": "environmentUrl",
+                        "value": "https://management.azure.com/"
+                      },
+                      {
+                        "key": "galleryUrl",
+                        "value": "https://gallery.azure.com/"
+                      },
+                      {
+                        "key": "serviceManagementUrl",
+                        "value": "https://management.core.windows.net/"
+                      },
+                      {
+                        "key": "resourceManagerUrl",
+                        "value": "https://management.azure.com/"
+                      },
+                      {
+                        "key": "activeDirectoryAuthority",
+                        "value": "https://login.microsoftonline.com/"
+                      },
+                      {
+                        "key": "environmentAuthorityUrl",
+                        "value": "https://login.windows.net/"
+                      },
+                      {
+                        "key": "graphUrl",
+                        "value": "https://graph.windows.net/"
+                      },
+                      {
+                        "key": "managementPortalUrl",
+                        "value": "https://manage.windowsazure.com/"
+                      },
+                      {
+                        "key": "armManagementPortalUrl",
+                        "value": "https://portal.azure.com/"
+                      },
+                      {
+                        "key": "activeDirectoryServiceEndpointResourceId",
+                        "value": "https://management.core.windows.net/"
+                      },
+                      {
+                        "key": "sqlDatabaseDnsSuffix",
+                        "value": ".database.windows.net"
+                      },
+                      {
+                        "key": "AzureKeyVaultDnsSuffix",
+                        "value": "vault.azure.net"
+                      },
+                      {
+                        "key": "AzureKeyVaultServiceEndpointResourceId",
+                        "value": "https://vault.azure.net"
+                      },
+                      {
+                        "key": "StorageEndpointSuffix",
+                        "value": "core.windows.net"
+                      }
+                    ]
+                  },
+                  {
+                    "key": "AzureChinaCloud",
+                    "value": [
+                      {
+                        "key": "environmentUrl",
+                        "value": "https://management.chinacloudapi.cn/"
+                      },
+                      {
+                        "key": "galleryUrl",
+                        "value": "https://gallery.chinacloudapi.cn/"
+                      },
+                      {
+                        "key": "serviceManagementUrl",
+                        "value": "https://management.core.chinacloudapi.cn/"
+                      },
+                      {
+                        "key": "resourceManagerUrl",
+                        "value": "https://management.chinacloudapi.cn/"
+                      },
+                      {
+                        "key": "activeDirectoryAuthority",
+                        "value": "https://login.chinacloudapi.cn/"
+                      },
+                      {
+                        "key": "environmentAuthorityUrl",
+                        "value": "https://login.chinacloudapi.cn/"
+                      },
+                      {
+                        "key": "graphUrl",
+                        "value": "https://graph.chinacloudapi.cn/"
+                      },
+                      {
+                        "key": "managementPortalUrl",
+                        "value": "https://manage.windowsazure.cn/"
+                      },
+                      {
+                        "key": "armManagementPortalUrl",
+                        "value": "https://portal.azure.cn/"
+                      },
+                      {
+                        "key": "activeDirectoryServiceEndpointResourceId",
+                        "value": "https://management.core.chinacloudapi.cn/"
+                      },
+                      {
+                        "key": "sqlDatabaseDnsSuffix",
+                        "value": ".database.chinacloudapi.cn"
+                      },
+                      {
+                        "key": "AzureKeyVaultDnsSuffix",
+                        "value": "vault.azure.cn"
+                      },
+                      {
+                        "key": "AzureKeyVaultServiceEndpointResourceId",
+                        "value": "https://vault.azure.cn"
+                      },
+                      {
+                        "key": "StorageEndpointSuffix",
+                        "value": "core.chinacloudapi.cn"
+                      }
+                    ]
+                  },
+                  {
+                    "key": "AzureUSGovernment",
+                    "value": [
+                      {
+                        "key": "environmentUrl",
+                        "value": "https://management.usgovcloudapi.net/"
+                      },
+                      {
+                        "key": "galleryUrl",
+                        "value": "https://gallery.usgovcloudapi.net/"
+                      },
+                      {
+                        "key": "serviceManagementUrl",
+                        "value": "https://management.core.usgovcloudapi.net/"
+                      },
+                      {
+                        "key": "resourceManagerUrl",
+                        "value": "https://management.usgovcloudapi.net/"
+                      },
+                      {
+                        "key": "activeDirectoryAuthority",
+                        "value": "https://login-us.microsoftonline.com/"
+                      },
+                      {
+                        "key": "environmentAuthorityUrl",
+                        "value": "https://login-us.microsoftonline.com/"
+                      },
+                      {
+                        "key": "graphUrl",
+                        "value": "https://graph.windows.net/"
+                      },
+                      {
+                        "key": "managementPortalUrl",
+                        "value": "https://manage.windowsazure.us/"
+                      },
+                      {
+                        "key": "armManagementPortalUrl",
+                        "value": "https://portal.azure.us"
+                      },
+                      {
+                        "key": "activeDirectoryServiceEndpointResourceId",
+                        "value": "https://management.core.usgovcloudapi.net/"
+                      },
+                      {
+                        "key": "sqlDatabaseDnsSuffix",
+                        "value": ".database.usgovcloudapi.net"
+                      },
+                      {
+                        "key": "AzureKeyVaultDnsSuffix",
+                        "value": "vault.usgovcloudapi.net"
+                      },
+                      {
+                        "key": "AzureKeyVaultServiceEndpointResourceId",
+                        "value": "https://vault.usgovcloudapi.net"
+                      },
+                      {
+                        "key": "StorageEndpointSuffix",
+                        "value": "core.usgovcloudapi.net"
+                      }
+                    ]
+                  },
+                  {
+                    "key": "AzureGermanCloud",
+                    "value": [
+                      {
+                        "key": "environmentUrl",
+                        "value": "https://management.microsoftazure.de/"
+                      },
+                      {
+                        "key": "galleryUrl",
+                        "value": "https://gallery.cloudapi.de/"
+                      },
+                      {
+                        "key": "serviceManagementUrl",
+                        "value": "https://management.core.cloudapi.de"
+                      },
+                      {
+                        "key": "resourceManagerUrl",
+                        "value": "https://management.microsoftazure.de/"
+                      },
+                      {
+                        "key": "activeDirectoryAuthority",
+                        "value": "https://login.microsoftonline.de/"
+                      },
+                      {
+                        "key": "environmentAuthorityUrl",
+                        "value": "https://login.microsoftonline.de/"
+                      },
+                      {
+                        "key": "graphUrl",
+                        "value": "https://graph.cloudapi.de/"
+                      },
+                      {
+                        "key": "managementPortalUrl",
+                        "value": "http://portal.microsoftazure.de/"
+                      },
+                      {
+                        "key": "armManagementPortalUrl",
+                        "value": "https://portal.azure.us"
+                      },
+                      {
+                        "key": "activeDirectoryServiceEndpointResourceId",
+                        "value": "https://management.core.cloudapi.de/"
+                      },
+                      {
+                        "key": "sqlDatabaseDnsSuffix",
+                        "value": ".database.cloudapi.de"
+                      },
+                      {
+                        "key": "AzureKeyVaultDnsSuffix",
+                        "value": "vault.microsoftazure.de"
+                      },
+                      {
+                        "key": "AzureKeyVaultServiceEndpointResourceId",
+                        "value": "https://vault.microsoftazure.de"
+                      },
+                      {
+                        "key": "StorageEndpointSuffix",
+                        "value": "core.cloudapi.de"
+                      }
+                    ]
+                  }
+                ],
+                "input": "environment"
+              }
+            ],
+            "trustedHosts": [
+              "azurecr.io",
+              "vault.azure.net",
+              "vault.azure.cn",
+              "vault.usgovcloudapi.net",
+              "vault.microsoftazure.de",
+              "core.cloudapi.de",
+              "core.windows.net",
+              "core.chinacloudapi.cn",
+              "core.usgovcloudapi.net"
+            ],
+            "name": "azurerm",
+            "displayName": "Azure Resource Manager",
+            "description": "Service Endpoint type for Azure Resource Manager connections",
+            "endpointUrl": {
+              "displayName": "Server Url",
+              "helpText": "",
+              "value": "https://management.azure.com/",
+              "dependsOn": {
+                "input": "environment",
+                "map": [
+                  {
+                    "key": "AzureCloud",
+                    "value": "https://management.azure.com/"
+                  },
+                  {
+                    "key": "AzureChinaCloud",
+                    "value": "https://management.chinacloudapi.cn/"
+                  },
+                  {
+                    "key": "AzureUSGovernment",
+                    "value": "https://management.usgovcloudapi.net/"
+                  },
+                  {
+                    "key": "AzureGermanCloud",
+                    "value": "https://management.microsoftazure.de/"
+                  },
+                  {
+                    "key": "AzureStack",
+                    "value": ""
+                  }
+                ]
+              }
+            },
+            "helpMarkDown": "For Service Principal: refer to <a href=\"https://go.microsoft.com/fwlink/?LinkID=623000\" target=_blank><b>link</b></a>. <a href=\"https://msdn.microsoft.com/Library/vs/alm/Release/author-release-definition/understanding-tasks#serviceconnections\" target=_blank><b>Learn More</b></a>"
+          },
+          {
+            "inputDescriptors": [],
+            "authenticationSchemes": [
+              {
+                "inputDescriptors": [
+                  {
+                    "id": "servercertthumbprint",
+                    "name": "Server Certificate Thumbprint",
+                    "description": "The thumbprint of the cluster's certificate. This is used to verify the identity of the cluster. This value overrides the publish profile.",
+                    "type": null,
+                    "properties": null,
+                    "inputMode": "textBox",
+                    "isConfidential": false,
+                    "useInDefaultDescription": false,
+                    "groupName": "AuthenticationParameter",
+                    "valueHint": null,
+                    "validation": {
+                      "dataType": "string",
+                      "isRequired": true,
+                      "maxLength": 300
+                    }
+                  },
+                  {
+                    "id": "certificate",
+                    "name": "Client Certificate",
+                    "description": "Base64 encoding of the cluster's client certificate file.<p>You can use the following PowerShell script to obtain a Base64-encoded representation of a certificate:<br>[System.Convert]::ToBase64String([System.IO.File]::ReadAllBytes(&quot;C:\\path\\to\\certificate.pfx&quot;))",
+                    "type": null,
+                    "properties": null,
+                    "inputMode": "textArea",
+                    "isConfidential": true,
+                    "useInDefaultDescription": false,
+                    "groupName": "AuthenticationParameter",
+                    "valueHint": null,
+                    "validation": {
+                      "dataType": "string",
+                      "isRequired": true
+                    }
+                  },
+                  {
+                    "id": "certificatepassword",
+                    "name": "Password",
+                    "description": "Password for the certificate.",
+                    "type": null,
+                    "properties": null,
+                    "inputMode": "passwordBox",
+                    "isConfidential": true,
+                    "useInDefaultDescription": false,
+                    "groupName": "AuthenticationParameter",
+                    "valueHint": null,
+                    "validation": {
+                      "dataType": "string",
+                      "maxLength": 300
+                    }
+                  }
+                ],
+                "scheme": "Certificate",
+                "displayName": "Certificate Based",
+                "authorizationHeaders": []
+              },
+              {
+                "inputDescriptors": [
+                  {
+                    "id": "servercertthumbprint",
+                    "name": "Server Certificate Thumbprint",
+                    "description": "The thumbprint of the cluster's certificate. This is used to verify the identity of the cluster. This value overrides the publish profile.",
+                    "type": null,
+                    "properties": null,
+                    "inputMode": "textBox",
+                    "isConfidential": false,
+                    "useInDefaultDescription": false,
+                    "groupName": "AuthenticationParameter",
+                    "valueHint": null,
+                    "validation": {
+                      "dataType": "string",
+                      "isRequired": true,
+                      "maxLength": 300
+                    }
+                  },
+                  {
+                    "id": "username",
+                    "name": "Username",
+                    "description": "Specify an Azure Active Directory account.",
+                    "type": null,
+                    "properties": null,
+                    "inputMode": "textBox",
+                    "isConfidential": false,
+                    "useInDefaultDescription": false,
+                    "groupName": "AuthenticationParameter",
+                    "valueHint": null,
+                    "validation": {
+                      "dataType": "string",
+                      "isRequired": true,
+                      "maxLength": 300
+                    }
+                  },
+                  {
+                    "id": "password",
+                    "name": "Password",
+                    "description": "Password for the Azure Active Directory account.",
+                    "type": null,
+                    "properties": null,
+                    "inputMode": "passwordBox",
+                    "isConfidential": true,
+                    "useInDefaultDescription": false,
+                    "groupName": "AuthenticationParameter",
+                    "valueHint": null,
+                    "validation": {
+                      "dataType": "string",
+                      "isRequired": true,
+                      "maxLength": 300
+                    }
+                  }
+                ],
+                "scheme": "UsernamePassword",
+                "displayName": "Azure Active Directory credential",
+                "authorizationHeaders": [
+                  {
+                    "name": "Authorization",
+                    "value": "Basic {{ #base64 endpoint.username \":\" endpoint.password }}"
+                  }
+                ]
+              },
+              {
+                "inputDescriptors": [
+                  {
+                    "id": "UseWindowsSecurity",
+                    "name": "Use windows security",
+                    "description": "Connect to a secure cluster using windows security. <a href=\"https://go.microsoft.com/fwlink/?linkid=851141\" target=_blank>Learn more.</a>",
+                    "type": null,
+                    "properties": null,
+                    "inputMode": "checkBox",
+                    "isConfidential": false,
+                    "useInDefaultDescription": false,
+                    "groupName": "AuthenticationParameter",
+                    "valueHint": null,
+                    "validation": {
+                      "dataType": "boolean"
+                    }
+                  },
+                  {
+                    "id": "ClusterSpn",
+                    "name": "Cluster SPN",
+                    "description": "Fully qualified domain SPN for gMSA account. This is applicable only if &quot;Use windows security&quot; option is enabled. Refer <a href=\"https://go.microsoft.com/fwlink/?linkid=851142\" target=_blank>here.</a>",
+                    "type": null,
+                    "properties": null,
+                    "inputMode": "textBox",
+                    "isConfidential": false,
+                    "useInDefaultDescription": false,
+                    "groupName": "AuthenticationParameter",
+                    "valueHint": null,
+                    "validation": {
+                      "dataType": "string",
+                      "maxLength": 300
+                    }
+                  }
+                ],
+                "scheme": "None",
+                "displayName": "Others",
+                "authorizationHeaders": []
+              }
+            ],
+            "name": "servicefabric",
+            "displayName": "Service Fabric",
+            "description": "Service Endpoint type for all Service Fabric cluster connections",
+            "endpointUrl": {
+              "displayName": "Cluster Endpoint",
+              "helpText": "Client connection endpoint for the cluster. Prefix the value with &quot;tcp://&quot;. This value overrides the publish profile."
+            },
+            "helpMarkDown": "<a href=\"https://msdn.microsoft.com/Library/vs/alm/Release/author-release-definition/understanding-tasks#serviceconnections\" target=_blank><b>Learn More</b></a>",
+            "iconUrl": "https://dev.azure.com/fabrikam/_apis/public/Extensions/ms.vss-services-azure/16.129.0.2114837752/Assets/icons/azure-service-fabric-icon.png"
+          },
+          {
+            "inputDescriptors": [
+              {
+                "id": "serviceBusConnectionString",
+                "name": "Service Bus Connection string",
+                "description": "Endpoint URL from the connection string (exclude entityPath). See <a href=\"https://azure.microsoft.com/en-us/documentation/articles/service-bus-dotnet-get-started-with-queues/\" target=_blank>getting started with queues</a>",
+                "type": null,
+                "properties": null,
+                "inputMode": "passwordBox",
+                "isConfidential": true,
+                "useInDefaultDescription": false,
+                "groupName": null,
+                "valueHint": null,
+                "validation": {
+                  "dataType": "string",
+                  "isRequired": true,
+                  "maxLength": 255
+                }
+              },
+              {
+                "id": "serviceBusQueueName",
+                "name": "Service Bus Queue Name",
+                "description": "Service Bus queue (EntityPath). See for <a href=\"https://msdn.microsoft.com/en-us/library/azure/hh780781.aspx\" target=_blank>addressing and protocol</a>",
+                "type": null,
+                "properties": null,
+                "inputMode": "textBox",
+                "isConfidential": false,
+                "useInDefaultDescription": false,
+                "groupName": null,
+                "valueHint": null,
+                "validation": {
+                  "dataType": "string",
+                  "isRequired": true,
+                  "maxLength": 127
+                }
+              }
+            ],
+            "authenticationSchemes": [
+              {
+                "inputDescriptors": [],
+                "scheme": "None",
+                "displayName": "No Authentication",
+                "authorizationHeaders": []
+              }
+            ],
+            "name": "AzureServiceBus",
+            "displayName": "Azure Service Bus",
+            "description": "Service Endpoint type for Azure Service Bus connections",
+            "endpointUrl": {
+              "displayName": "Server Url",
+              "helpText": "",
+              "value": "https://management.core.windows.net/",
+              "isVisible": "false"
+            },
+            "helpMarkDown": "",
+            "iconUrl": "https://dev.azure.com/fabrikam/_apis/public/Extensions/ms.vss-services-azure/16.129.0.2114837752/Assets/Microsoft.VisualStudio.Services.Icons.Default"
+          },
+          {
+            "inputDescriptors": [],
+            "authenticationSchemes": [
+              {
+                "inputDescriptors": [
+                  {
+                    "id": "username",
+                    "name": "Node Name (Username)",
+                    "description": "Chef username",
+                    "type": null,
+                    "properties": null,
+                    "inputMode": "textBox",
+                    "isConfidential": false,
+                    "useInDefaultDescription": false,
+                    "groupName": "AuthenticationParameter",
+                    "valueHint": null,
+                    "validation": {
+                      "dataType": "string",
+                      "isRequired": true
+                    }
+                  },
+                  {
+                    "id": "password",
+                    "name": "Client Key",
+                    "description": "Client key specified in the .pem file",
+                    "type": null,
+                    "properties": null,
+                    "inputMode": "textArea",
+                    "isConfidential": false,
+                    "useInDefaultDescription": false,
+                    "groupName": "AuthenticationParameter",
+                    "valueHint": null,
+                    "validation": {
+                      "dataType": "string",
+                      "isRequired": true
+                    }
+                  }
+                ],
+                "scheme": "UsernamePassword",
+                "displayName": "Basic Authentication",
+                "authorizationHeaders": [
+                  {
+                    "name": "Authorization",
+                    "value": "Basic {{ #base64 endpoint.username \":\" endpoint.password }}"
+                  }
+                ]
+              }
+            ],
+            "name": "chef",
+            "displayName": "Chef",
+            "description": "Service Endpoint type for all Chef connections",
+            "helpMarkDown": "<a href=\"https://go.microsoft.com/fwlink/?linkid=875421\" target=_blank><b>Learn More</b></a>",
+            "iconUrl": "https://dev.azure.com/fabrikam/_apis/public/Extensions/ms.vss-services-chef/16.129.0.386598243/Assets/icons/icon-chef-endpoint.png"
+          },
+          {
+            "inputDescriptors": [
+              {
+                "id": "registrytype",
+                "name": "Docker Registry",
+                "description": "The type of Docker Registry",
+                "type": null,
+                "properties": null,
+                "inputMode": "combo",
+                "isConfidential": false,
+                "useInDefaultDescription": false,
+                "groupName": null,
+                "valueHint": null,
+                "validation": {
+                  "dataType": "string",
+                  "isRequired": true
+                },
+                "values": {
+                  "inputId": "registrytypeInput",
+                  "defaultValue": "Others",
+                  "possibleValues": [
+                    {
+                      "value": "Others",
+                      "displayValue": "Others"
+                    },
+                    {
+                      "value": "DockerHub",
+                      "displayValue": "Docker Hub"
+                    }
+                  ]
+                }
+              }
+            ],
+            "authenticationSchemes": [
+              {
+                "inputDescriptors": [
+                  {
+                    "id": "registry",
+                    "name": "Docker Registry",
+                    "description": "The URL for your Docker Registry",
+                    "type": null,
+                    "properties": null,
+                    "inputMode": "textBox",
+                    "isConfidential": false,
+                    "useInDefaultDescription": false,
+                    "groupName": "AuthenticationParameter",
+                    "valueHint": null,
+                    "validation": {
+                      "dataType": "string"
+                    },
+                    "values": {
+                      "inputId": "registryInput",
+                      "defaultValue": "https://index.docker.io/v1/"
+                    }
+                  },
+                  {
+                    "id": "username",
+                    "name": "Docker ID",
+                    "description": "The username for your Docker Registry",
+                    "type": null,
+                    "properties": null,
+                    "inputMode": "textBox",
+                    "isConfidential": false,
+                    "useInDefaultDescription": false,
+                    "groupName": "AuthenticationParameter",
+                    "valueHint": null,
+                    "validation": {
+                      "dataType": "string",
+                      "isRequired": true
+                    }
+                  },
+                  {
+                    "id": "password",
+                    "name": "Password",
+                    "description": "The password for your Docker Registry",
+                    "type": null,
+                    "properties": null,
+                    "inputMode": "passwordBox",
+                    "isConfidential": true,
+                    "useInDefaultDescription": false,
+                    "groupName": "AuthenticationParameter",
+                    "valueHint": null,
+                    "validation": {
+                      "dataType": "string",
+                      "isRequired": true
+                    }
+                  },
+                  {
+                    "id": "email",
+                    "name": "Email",
+                    "description": "The email address for your Docker Registry",
+                    "type": null,
+                    "properties": null,
+                    "inputMode": "textBox",
+                    "isConfidential": false,
+                    "useInDefaultDescription": false,
+                    "groupName": "AuthenticationParameter",
+                    "valueHint": null,
+                    "validation": {
+                      "dataType": "string"
+                    }
+                  }
+                ],
+                "scheme": "UsernamePassword",
+                "displayName": "Basic Authentication",
+                "authorizationHeaders": [
+                  {
+                    "name": "Authorization",
+                    "value": "JWT {{ #getTokenUsingBasicAuth { 'username' : 'endpoint.username', 'password' : 'endpoint.password', 'resultSelector' : 'jsonpath:$.token', 'method':'post', 'authServerUrl':'endpoint.url/v2/users/login/', 'body' : {'username' : 'endpoint.username', 'password' : 'endpoint.password'} } }}"
+                  }
+                ]
+              }
+            ],
+            "dataSources": [
+              {
+                "name": "TestConnection",
+                "endpointUrl": "{{endpoint.url}}v2/repositories/namespaces/",
+                "resourceUrl": "",
+                "resultSelector": "jsonpath:$.values[*]",
+                "headers": [],
+                "authenticationScheme": null
+              },
+              {
+                "name": "Commits",
+                "endpointUrl": "{{endpoint.url}}v2/repositories/{{definition}}/tags/?page_size=100",
+                "resourceUrl": "",
+                "resultSelector": "jsonpath:$.results[*].name",
+                "headers": [],
+                "authenticationScheme": null
+              },
+              {
+                "name": "LatestCommit",
+                "endpointUrl": "{{endpoint.url}}v2/repositories/{{definition}}/tags/?page_size=1",
+                "resourceUrl": "",
+                "resultSelector": "jsonpath:$.results[*].name",
+                "headers": [],
+                "authenticationScheme": null
+              },
+              {
+                "name": "Repositories",
+                "endpointUrl": "{{endpoint.url}}v2/repositories/{{namespaces}}/?page_size=100",
+                "resourceUrl": "",
+                "resultSelector": "jsonpath:$.results[*].name",
+                "headers": [],
+                "authenticationScheme": null
+              },
+              {
+                "name": "Namespaces",
+                "endpointUrl": "{{endpoint.url}}v2/repositories/namespaces/",
+                "resourceUrl": "",
+                "resultSelector": "jsonpath:$.namespaces[*]",
+                "headers": [],
+                "authenticationScheme": null
+              }
+            ],
+            "name": "dockerregistry",
+            "displayName": "Docker Registry",
+            "description": "Service Endpoint type for a Docker Registry",
+            "endpointUrl": {
+              "value": "https://hub.docker.com/"
+            },
+            "helpMarkDown": "",
+            "iconUrl": "https://dev.azure.com/fabrikam/_apis/public/Extensions/ms.vss-services-docker/16.129.0.1881099694/Assets/Microsoft.VisualStudio.Services.Icons.Default"
+          },
+          {
+            "inputDescriptors": [],
+            "authenticationSchemes": [
+              {
+                "inputDescriptors": [
+                  {
+                    "id": "cacert",
+                    "name": "CA Certificate",
+                    "description": "Contents of ca.pem",
+                    "type": null,
+                    "properties": null,
+                    "inputMode": "textArea",
+                    "isConfidential": true,
+                    "useInDefaultDescription": false,
+                    "groupName": "AuthenticationParameter",
+                    "valueHint": null,
+                    "validation": {
+                      "dataType": "string",
+                      "isRequired": true
+                    }
+                  },
+                  {
+                    "id": "cert",
+                    "name": "Certificate",
+                    "description": "Contents of cert.pem",
+                    "type": null,
+                    "properties": null,
+                    "inputMode": "textArea",
+                    "isConfidential": true,
+                    "useInDefaultDescription": false,
+                    "groupName": "AuthenticationParameter",
+                    "valueHint": null,
+                    "validation": {
+                      "dataType": "string",
+                      "isRequired": true
+                    }
+                  },
+                  {
+                    "id": "key",
+                    "name": "Key",
+                    "description": "Contents of key.pem",
+                    "type": null,
+                    "properties": null,
+                    "inputMode": "textArea",
+                    "isConfidential": true,
+                    "useInDefaultDescription": false,
+                    "groupName": "AuthenticationParameter",
+                    "valueHint": null,
+                    "validation": {
+                      "dataType": "string",
+                      "isRequired": true
+                    }
+                  },
+                  {
+                    "id": "certificate",
+                    "name": "Certificate",
+                    "description": "Content of the certificate",
+                    "type": null,
+                    "properties": null,
+                    "inputMode": "textArea",
+                    "isConfidential": true,
+                    "useInDefaultDescription": false,
+                    "groupName": "AuthenticationParameter",
+                    "valueHint": null,
+                    "validation": {
+                      "dataType": "string"
+                    },
+                    "values": {
+                      "inputId": "certificateInput",
+                      "defaultValue": "",
+                      "isDisabled": true
+                    }
+                  }
+                ],
+                "scheme": "Certificate",
+                "displayName": "Certificate Based",
+                "authorizationHeaders": []
+              }
+            ],
+            "name": "dockerhost",
+            "displayName": "Docker Host",
+            "description": "Service Endpoint type for a Docker Host",
+            "helpMarkDown": "Refer <a href=\"http://aka.ms/ms-vscs-rm-secure-docker-daemon\" target=_blank>link</a> to learn more",
+            "iconUrl": "https://dev.azure.com/fabrikam/_apis/public/Extensions/ms.vss-services-docker/16.129.0.1881099694/Assets/Microsoft.VisualStudio.Services.Icons.Default"
+          },
+          {
+            "inputDescriptors": [],
+            "authenticationSchemes": [
+              {
+                "inputDescriptors": [
+                  {
+                    "id": "kubeconfig",
+                    "name": "Kubeconfig",
+                    "description": "Copy and paste contents of kubectl config",
+                    "type": null,
+                    "properties": null,
+                    "inputMode": "textArea",
+                    "isConfidential": true,
+                    "useInDefaultDescription": false,
+                    "groupName": "AuthenticationParameter",
+                    "valueHint": null,
+                    "validation": {
+                      "dataType": "string",
+                      "isRequired": true
+                    }
+                  }
+                ],
+                "scheme": "None",
+                "displayName": "No Authentication",
+                "authorizationHeaders": []
+              }
+            ],
+            "name": "kubernetes",
+            "displayName": "Kubernetes",
+            "description": "Service endpoint type for Kubernetes cluster",
+            "helpMarkDown": "<a href=\"https://go.microsoft.com/fwlink/?linkid=851275\" target=_blank><b>Learn More</b></a>",
+            "iconUrl": "https://dev.azure.com/fabrikam/_apis/public/Extensions/ms.vss-services-docker/16.129.0.1881099694/Assets/icons/kubernetes_logo.png"
+          },
+          {
+            "inputDescriptors": [
+              {
+                "id": "acceptUntrustedCerts",
+                "name": "Accept untrusted SSL certificates",
+                "description": "Allows the Jenkins clients to accept self-signed SSL server certificates without installing them into the TFS service role and/or Build Agent computers.",
+                "type": null,
+                "properties": null,
+                "inputMode": "checkBox",
+                "isConfidential": false,
+                "useInDefaultDescription": false,
+                "groupName": null,
+                "valueHint": null,
+                "validation": {
+                  "dataType": "boolean"
+                }
+              }
+            ],
+            "authenticationSchemes": [
+              {
+                "inputDescriptors": [
+                  {
+                    "id": "username",
+                    "name": "Username",
+                    "description": "Username for connecting to the endpoint",
+                    "type": null,
+                    "properties": null,
+                    "inputMode": "textBox",
+                    "isConfidential": false,
+                    "useInDefaultDescription": false,
+                    "groupName": "AuthenticationParameter",
+                    "valueHint": null,
+                    "validation": {
+                      "dataType": "string",
+                      "isRequired": true,
+                      "maxLength": 300
+                    }
+                  },
+                  {
+                    "id": "password",
+                    "name": "Password",
+                    "description": "Password for connecting to the endpoint",
+                    "type": null,
+                    "properties": null,
+                    "inputMode": "passwordBox",
+                    "isConfidential": true,
+                    "useInDefaultDescription": false,
+                    "groupName": "AuthenticationParameter",
+                    "valueHint": null,
+                    "validation": {
+                      "dataType": "string",
+                      "isRequired": true,
+                      "maxLength": 300
+                    }
+                  }
+                ],
+                "scheme": "UsernamePassword",
+                "displayName": "Basic Authentication",
+                "authorizationHeaders": [
+                  {
+                    "name": "Authorization",
+                    "value": "Basic {{ #base64 endpoint.username \":\" endpoint.password }}"
+                  }
+                ]
+              }
+            ],
+            "dataSources": [
+              {
+                "name": "TestConnection",
+                "endpointUrl": "{{endpoint.url}}api/json?tree=jobs[name,displayName]",
+                "resourceUrl": "",
+                "resultSelector": "jsonpath:$.jobs[*]",
+                "headers": [],
+                "authenticationScheme": null
+              },
+              {
+                "name": "Jobs",
+                "endpointUrl": "{{endpoint.url}}api/json?{{#recursiveFormat 15 'tree=jobs[name,displayName{0}]' ',jobs[name,displayName{0}]'}}",
+                "resourceUrl": "",
+                "resultSelector": null,
+                "headers": [],
+                "authenticationScheme": null
+              },
+              {
+                "name": "JenkinsJobType",
+                "endpointUrl": "{{endpoint.url}}{{#splitAndPrefix definition '/' '/job/'}}{{/splitAndPrefix}}/api/json",
+                "resourceUrl": "",
+                "resultSelector": "jsonpath:$",
+                "headers": [],
+                "authenticationScheme": null
+              },
+              {
+                "name": "Builds",
+                "endpointUrl": "{{endpoint.url}}{{#splitAndPrefix definition '/' '/job/'}}{{/splitAndPrefix}}/api/json?tree=builds[displayName,id,result]",
+                "resourceUrl": "",
+                "resultSelector": "jsonpath:$.builds[?(@.result=='SUCCESS')]",
+                "headers": [],
+                "authenticationScheme": null
+              },
+              {
+                "name": "MultiBranchPipelineBuilds",
+                "endpointUrl": "{{endpoint.url}}{{#splitAndPrefix definition '/' '/job/'}}{{/splitAndPrefix}}/api/json?tree=jobs[name,builds[displayName,id,result]]",
+                "resourceUrl": "",
+                "resultSelector": null,
+                "headers": [],
+                "authenticationScheme": null
+              },
+              {
+                "name": "LatestBuild",
+                "endpointUrl": "{{endpoint.url}}{{#splitAndPrefix definition '/' '/job/'}}{{/splitAndPrefix}}/api/json?tree=lastSuccessfulBuild[id,displayName]",
+                "resourceUrl": "",
+                "resultSelector": "jsonpath:$.lastSuccessfulBuild",
+                "headers": [],
+                "authenticationScheme": null
+              },
+              {
+                "name": "MultiBranchPipelineLatestBuild",
+                "endpointUrl": "{{endpoint.url}}{{#splitAndPrefix definition '' '/job/'}}{{/splitAndPrefix}}/api/json?tree=jobs[name,lastSuccessfulBuild[id,displayName,timestamp]]",
+                "resourceUrl": "",
+                "resultSelector": null,
+                "headers": [],
+                "authenticationScheme": null
+              },
+              {
+                "name": "Artifacts",
+                "endpointUrl": "{{endpoint.url}}{{#splitAndPrefix definition '/' '/job/'}}{{/splitAndPrefix}}/{{#equals jenkinsJobType 'org.jenkinsci.plugins.workflow.multibranch.WorkflowMultiBranchProject' 1}}job/{{/equals}}{{version}}/api/json?tree=artifacts[*]",
+                "resourceUrl": "",
+                "resultSelector": "jsonpath:$.artifacts[*]",
+                "headers": [],
+                "authenticationScheme": null
+              },
+              {
+                "name": "BranchName",
+                "endpointUrl": "{{endpoint.url}}{{#splitAndPrefix definition '/' '/job/'}}{{/splitAndPrefix}}/{{#equals jenkinsJobType 'org.jenkinsci.plugins.workflow.multibranch.WorkflowMultiBranchProject' 1}}job/{{/equals}}{{version}}/api/json",
+                "resourceUrl": "",
+                "resultSelector": "jsonpath:$.actions[*].buildsByBranchName[?(@.buildNumber == {{version}})].revision.branch[*].name",
+                "headers": [],
+                "authenticationScheme": null
+              }
+            ],
+            "name": "jenkins",
+            "displayName": "Jenkins",
+            "description": "Service Endpoint type for all Jenkins connections",
+            "helpMarkDown": "<a href=\"https://go.microsoft.com/fwlink/?linkid=875420\" target=_blank><b>Learn More</b></a>",
+            "iconUrl": "https://dev.azure.com/fabrikam/_apis/public/Extensions/ms.vss-services-jenkins/16.129.0.2080313757/Assets/icons/icon-jenkins-logo.png"
+          },
+          {
+            "inputDescriptors": [],
+            "authenticationSchemes": [
+              {
+                "inputDescriptors": [
+                  {
+                    "id": "apitoken",
+                    "name": "API Token",
+                    "description": "Visit <a href=\"https://docs.microsoft.com/appcenter/api-docs/\" target=_blank>https://docs.microsoft.com/appcenter/api-docs/</a> to learn about how to create API tokens",
+                    "type": null,
+                    "properties": null,
+                    "inputMode": "textBox",
+                    "isConfidential": true,
+                    "useInDefaultDescription": false,
+                    "groupName": "AuthenticationParameter",
+                    "valueHint": null,
+                    "validation": {
+                      "dataType": "string",
+                      "isRequired": true,
+                      "maxLength": 300
+                    }
+                  }
+                ],
+                "scheme": "Token",
+                "displayName": "Token Based Authentication",
+                "authorizationHeaders": [
+                  {
+                    "name": "X-API-Token",
+                    "value": "{{endpoint.apitoken}}"
+                  },
+                  {
+                    "name": "Authorization",
+                    "value": "{{endpoint.apitoken}}"
+                  }
+                ]
+              }
+            ],
+            "dataSources": [
+              {
+                "name": "MobileCenterAppSlugs",
+                "endpointUrl": "$(endpoint.url)/apps",
+                "resourceUrl": "",
+                "resultSelector": "jsonpath:$.[*]",
+                "headers": [],
+                "authenticationScheme": null
+              }
+            ],
+            "name": "vsmobilecenter",
+            "displayName": "Visual Studio App Center",
+            "description": "Service Endpoint type for all Visual Studio App Center connections",
+            "endpointUrl": {
+              "value": "https://api.mobile.azure.com/v0.1"
+            },
+            "helpMarkDown": "",
+            "iconUrl": "https://dev.azure.com/fabrikam/_apis/public/Extensions/ms.vss-services-vsmobilecenter/16.129.0.467274618/Assets/icons/vsmc-endpoint-icon.png"
+          }
+        ]
+      }
+    }
+  },
+  "x-ms-vss-generated": true,
+  "x-ms-vss-generated-date": "2017-12-30T12:54:40.9309597+05:30",
+  "x-ms-vss-format": 1,
+  "x-ms-vss-area": "serviceEndpoint",
+  "x-ms-vss-resource": "Types"
+}
