@@ -564,7 +564,7 @@
             "description": "",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/PackageDownloadMetricsQuery"
+              "$ref": "#/definitions/PackageMetricsQuery"
             }
           },
           {
@@ -584,7 +584,7 @@
             "schema": {
               "type": "array",
               "items": {
-                "$ref": "#/definitions/PackageIdMetrics"
+                "$ref": "#/definitions/PackageMetrics"
               }
             }
           }
@@ -882,7 +882,7 @@
             "description": "",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/PackageVersionDownloadMetricsQuery"
+              "$ref": "#/definitions/PackageVersionMetricsQuery"
             }
           },
           {
@@ -2738,46 +2738,6 @@
         }
       }
     },
-    "Metric": {
-      "description": "A single metric name and value.",
-      "type": "object",
-      "properties": {
-        "metricType": {
-          "description": "Metric type.",
-          "enum": [
-            "downloadsDetail",
-            "totalDownloads",
-            "uniqueUsers"
-          ],
-          "x-ms-enum": {
-            "name": "MetricType",
-            "values": [
-              {
-                "value": "downloadsDetail",
-                "description": "Download detail."
-              },
-              {
-                "value": "totalDownloads",
-                "description": "Total download count."
-              },
-              {
-                "value": "uniqueUsers",
-                "description": "Total unique user count."
-              }
-            ]
-          }
-        },
-        "name": {
-          "description": "Metric name.",
-          "type": "string"
-        },
-        "value": {
-          "description": "Metric value.",
-          "type": "number",
-          "format": "double"
-        }
-      }
-    },
     "MinimalPackageVersion": {
       "description": "Core data about any package, including its id and version information and basic state.",
       "type": "object",
@@ -2944,20 +2904,6 @@
         }
       }
     },
-    "PackageDownloadMetricsQuery": {
-      "description": "Query to get package metrics",
-      "type": "object",
-      "properties": {
-        "packageIds": {
-          "description": "List of package ids",
-          "type": "array",
-          "items": {
-            "type": "string",
-            "format": "uuid"
-          }
-        }
-      }
-    },
     "PackageFile": {
       "description": "A package file for a specific package version, only relevant to package types that contain multiple files per version.",
       "type": "object",
@@ -2979,7 +2925,7 @@
         }
       }
     },
-    "PackageIdMetrics": {
+    "PackageMetrics": {
       "description": "All metrics for a certain package id",
       "type": "object",
       "properties": {
@@ -3005,26 +2951,16 @@
         }
       }
     },
-    "PackageMetrics": {
-      "description": "Metrics for a specific package version.",
+    "PackageMetricsQuery": {
+      "description": "Query to get package metrics",
       "type": "object",
       "properties": {
-        "aggregatedMetrics": {
-          "description": "Aggregated metrics, such as the total number of downloads.",
+        "packageIds": {
+          "description": "List of package ids",
           "type": "array",
           "items": {
-            "$ref": "#/definitions/Metric"
-          }
-        },
-        "packageDescriptor": {
-          "description": "Package version associated with these metrics.",
-          "$ref": "#/definitions/PackageVersionDescriptor"
-        },
-        "segmentedMetrics": {
-          "description": "Segmented metrics, such as the number of downloads per user.",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/SegmentedMetric"
+            "type": "string",
+            "format": "uuid"
           }
         }
       }
@@ -3139,36 +3075,6 @@
         }
       }
     },
-    "PackageVersionDescriptor": {
-      "description": "Query descriptor for a package version.",
-      "type": "object",
-      "properties": {
-        "packageId": {
-          "description": "Package Id.",
-          "type": "string",
-          "format": "uuid"
-        },
-        "packageVersionId": {
-          "description": "Package version Id.",
-          "type": "string",
-          "format": "uuid"
-        }
-      }
-    },
-    "PackageVersionDownloadMetricsQuery": {
-      "description": "Query to get package version metrics",
-      "type": "object",
-      "properties": {
-        "packageVersionIds": {
-          "description": "List of package version ids",
-          "type": "array",
-          "items": {
-            "type": "string",
-            "format": "uuid"
-          }
-        }
-      }
-    },
     "PackageVersionMetrics": {
       "description": "All metrics for a certain package version id",
       "type": "object",
@@ -3197,6 +3103,20 @@
           "description": "Package version id.",
           "type": "string",
           "format": "uuid"
+        }
+      }
+    },
+    "PackageVersionMetricsQuery": {
+      "description": "Query to get package version metrics",
+      "type": "object",
+      "properties": {
+        "packageVersionIds": {
+          "description": "List of package version ids",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uuid"
+          }
         }
       }
     },
@@ -3315,44 +3235,6 @@
           "items": {
             "type": "string",
             "format": "uuid"
-          }
-        }
-      }
-    },
-    "SegmentedMetric": {
-      "description": "Metrics grouped by type, such as metrics per user.",
-      "type": "object",
-      "properties": {
-        "metrics": {
-          "description": "List of metrics grouped by MetricType.",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/Metric"
-          }
-        },
-        "metricType": {
-          "description": "Group type for individual metrics.",
-          "enum": [
-            "downloadsDetail",
-            "totalDownloads",
-            "uniqueUsers"
-          ],
-          "x-ms-enum": {
-            "name": "MetricType",
-            "values": [
-              {
-                "value": "downloadsDetail",
-                "description": "Download detail."
-              },
-              {
-                "value": "totalDownloads",
-                "description": "Total download count."
-              },
-              {
-                "value": "uniqueUsers",
-                "description": "Total unique user count."
-              }
-            ]
           }
         }
       }
