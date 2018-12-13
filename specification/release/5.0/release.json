@@ -1356,6 +1356,302 @@
       }
     },
     "/{organization}/{project}/_apis/release/releases": {
+      "get": {
+        "tags": [
+          "Releases"
+        ],
+        "x-ms-docs-override-version": "5.0-preview.8",
+        "x-ms-vss-resource": "releases",
+        "x-ms-vss-method": "GetReleases",
+        "x-ms-preview": true,
+        "description": "Get a list of releases",
+        "operationId": "List",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "x-ms-required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "definitionId",
+            "description": "Releases from this release definition Id.",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "definitionEnvironmentId",
+            "description": "",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "searchText",
+            "description": "Releases with names containing searchText.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "createdBy",
+            "description": "Releases created by this user.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "statusFilter",
+            "description": "Releases that have this status.",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "undefined",
+              "draft",
+              "active",
+              "abandoned"
+            ],
+            "x-ms-enum": {
+              "name": "ReleaseStatus",
+              "values": [
+                {
+                  "value": "undefined",
+                  "description": ""
+                },
+                {
+                  "value": "draft",
+                  "description": ""
+                },
+                {
+                  "value": "active",
+                  "description": ""
+                },
+                {
+                  "value": "abandoned",
+                  "description": ""
+                }
+              ]
+            }
+          },
+          {
+            "in": "query",
+            "name": "environmentStatusFilter",
+            "description": "",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "minCreatedTime",
+            "description": "Releases that were created after this time.",
+            "required": false,
+            "type": "string",
+            "format": "date-time"
+          },
+          {
+            "in": "query",
+            "name": "maxCreatedTime",
+            "description": "Releases that were created before this time.",
+            "required": false,
+            "type": "string",
+            "format": "date-time"
+          },
+          {
+            "in": "query",
+            "name": "queryOrder",
+            "description": "Gets the results in the defined order of created date for releases. Default is descending.",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "descending",
+              "ascending"
+            ],
+            "x-ms-enum": {
+              "name": "ReleaseQueryOrder",
+              "values": [
+                {
+                  "value": "descending",
+                  "description": ""
+                },
+                {
+                  "value": "ascending",
+                  "description": ""
+                }
+              ]
+            }
+          },
+          {
+            "in": "query",
+            "name": "$top",
+            "description": "Number of releases to get. Default is 50.",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "continuationToken",
+            "description": "Gets the releases after the continuation token provided.",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "$expand",
+            "description": "The property that should be expanded in the list of releases.",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "none",
+              "environments",
+              "artifacts",
+              "approvals",
+              "manualInterventions",
+              "variables",
+              "tags"
+            ],
+            "x-ms-enum": {
+              "name": "ReleaseExpands",
+              "values": [
+                {
+                  "value": "none",
+                  "description": ""
+                },
+                {
+                  "value": "environments",
+                  "description": ""
+                },
+                {
+                  "value": "artifacts",
+                  "description": ""
+                },
+                {
+                  "value": "approvals",
+                  "description": ""
+                },
+                {
+                  "value": "manualInterventions",
+                  "description": ""
+                },
+                {
+                  "value": "variables",
+                  "description": ""
+                },
+                {
+                  "value": "tags",
+                  "description": ""
+                }
+              ]
+            }
+          },
+          {
+            "in": "query",
+            "name": "artifactTypeId",
+            "description": "Releases with given artifactTypeId will be returned. Values can be Build, Jenkins, GitHub, Nuget, Team Build (external), ExternalTFSBuild, Git, TFVC, ExternalTfsXamlBuild.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "sourceId",
+            "description": "Unique identifier of the artifact used. e.g. For build it would be {projectGuid}:{BuildDefinitionId}, for Jenkins it would be {JenkinsConnectionId}:{JenkinsDefinitionId}, for TfsOnPrem it would be {TfsOnPremConnectionId}:{ProjectName}:{TfsOnPremDefinitionId}. For third-party artifacts e.g. TeamCity, BitBucket you may refer 'uniqueSourceIdentifier' inside vss-extension.json https://github.com/Microsoft/vsts-rm-extensions/blob/master/Extensions.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "artifactVersionId",
+            "description": "Releases with given artifactVersionId will be returned. E.g. in case of Build artifactType, it is buildId.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "sourceBranchFilter",
+            "description": "Releases with given sourceBranchFilter will be returned.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "isDeleted",
+            "description": "Gets the soft deleted releases, if true.",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "tagFilter",
+            "description": "A comma-delimited list of tags. Only releases with these tags will be returned.",
+            "required": false,
+            "type": "string",
+            "format": "array (string)"
+          },
+          {
+            "in": "query",
+            "name": "propertyFilters",
+            "description": "A comma-delimited list of extended properties to be retrieved. If set, the returned Releases will contain values for the specified property Ids (if they exist). If not set, properties will not be included. Note that this will not filter out any Release from results irrespective of whether it has property set or not.",
+            "required": false,
+            "type": "string",
+            "format": "array (string)"
+          },
+          {
+            "in": "query",
+            "name": "releaseIdFilter",
+            "description": "A comma-delimited list of releases Ids. Only releases with these Ids will be returned.",
+            "required": false,
+            "type": "string",
+            "format": "array (int32)"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.8"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Release"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.release"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "": {
+            "$ref": "./httpExamples/releases/Query_ListAllReleases.json"
+          },
+          "For a release definition": {
+            "$ref": "./httpExamples/releases/GET__ListAllReleasesForAReleaseDefinition.json"
+          }
+        }
+      },
       "post": {
         "tags": [
           "Releases"
@@ -1420,85 +1716,6 @@
             "$ref": "./httpExamples/releases/POST__CreateARelease.json"
           }
         }
-      },
-      "get": {
-        "tags": [
-          "Releases"
-        ],
-        "x-ms-docs-override-version": "5.0-preview.8",
-        "x-ms-vss-resource": "releases",
-        "x-ms-vss-method": "GetReleaseDefinitionSummary",
-        "x-ms-preview": true,
-        "description": "Get release summary of a given definition Id.",
-        "operationId": "Get Release Definition Summary",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "organization",
-            "description": "The name of the Azure DevOps organization.",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "in": "path",
-            "name": "project",
-            "description": "Project ID or project name",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "in": "query",
-            "name": "definitionId",
-            "description": "Id of the definition to get release summary.",
-            "required": true,
-            "type": "integer",
-            "format": "int32"
-          },
-          {
-            "in": "query",
-            "name": "releaseCount",
-            "description": "Count of releases to be included in summary.",
-            "required": true,
-            "type": "integer",
-            "format": "int32"
-          },
-          {
-            "in": "query",
-            "name": "includeArtifact",
-            "description": "Include artifact details.Default is 'false'.",
-            "required": false,
-            "type": "boolean"
-          },
-          {
-            "in": "query",
-            "name": "definitionEnvironmentIdsFilter",
-            "description": "",
-            "required": false,
-            "type": "string",
-            "format": "array (int32)"
-          },
-          {
-            "$ref": "#/parameters/api-Version-preview.8"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "$ref": "#/definitions/ReleaseDefinitionSummary"
-            }
-          }
-        },
-        "security": [
-          {
-            "oauth2": [
-              "vso.release"
-            ]
-          }
-        ]
       }
     },
     "/{organization}/{project}/_apis/release/releases/{releaseId}": {
@@ -2572,304 +2789,6 @@
     }
   },
   "x-ms-paths": {
-    "/{organization}/{project}/_apis/release/releases?": {
-      "get": {
-        "tags": [
-          "Releases"
-        ],
-        "x-ms-docs-override-version": "5.0-preview.8",
-        "x-ms-vss-resource": "releases",
-        "x-ms-vss-method": "GetReleases",
-        "x-ms-preview": true,
-        "description": "Get a list of releases",
-        "operationId": "List",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "organization",
-            "description": "The name of the Azure DevOps organization.",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "in": "path",
-            "name": "project",
-            "description": "Project ID or project name",
-            "required": true,
-            "x-ms-required": false,
-            "type": "string"
-          },
-          {
-            "in": "query",
-            "name": "definitionId",
-            "description": "Releases from this release definition Id.",
-            "required": false,
-            "type": "integer",
-            "format": "int32"
-          },
-          {
-            "in": "query",
-            "name": "definitionEnvironmentId",
-            "description": "",
-            "required": false,
-            "type": "integer",
-            "format": "int32"
-          },
-          {
-            "in": "query",
-            "name": "searchText",
-            "description": "Releases with names containing searchText.",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "in": "query",
-            "name": "createdBy",
-            "description": "Releases created by this user.",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "in": "query",
-            "name": "statusFilter",
-            "description": "Releases that have this status.",
-            "required": false,
-            "type": "string",
-            "enum": [
-              "undefined",
-              "draft",
-              "active",
-              "abandoned"
-            ],
-            "x-ms-enum": {
-              "name": "ReleaseStatus",
-              "values": [
-                {
-                  "value": "undefined",
-                  "description": ""
-                },
-                {
-                  "value": "draft",
-                  "description": ""
-                },
-                {
-                  "value": "active",
-                  "description": ""
-                },
-                {
-                  "value": "abandoned",
-                  "description": ""
-                }
-              ]
-            }
-          },
-          {
-            "in": "query",
-            "name": "environmentStatusFilter",
-            "description": "",
-            "required": false,
-            "type": "integer",
-            "format": "int32"
-          },
-          {
-            "in": "query",
-            "name": "minCreatedTime",
-            "description": "Releases that were created after this time.",
-            "required": false,
-            "type": "string",
-            "format": "date-time"
-          },
-          {
-            "in": "query",
-            "name": "maxCreatedTime",
-            "description": "Releases that were created before this time.",
-            "required": false,
-            "type": "string",
-            "format": "date-time"
-          },
-          {
-            "in": "query",
-            "name": "queryOrder",
-            "description": "Gets the results in the defined order of created date for releases. Default is descending.",
-            "required": false,
-            "type": "string",
-            "enum": [
-              "descending",
-              "ascending"
-            ],
-            "x-ms-enum": {
-              "name": "ReleaseQueryOrder",
-              "values": [
-                {
-                  "value": "descending",
-                  "description": ""
-                },
-                {
-                  "value": "ascending",
-                  "description": ""
-                }
-              ]
-            }
-          },
-          {
-            "in": "query",
-            "name": "$top",
-            "description": "Number of releases to get. Default is 50.",
-            "required": false,
-            "type": "integer",
-            "format": "int32"
-          },
-          {
-            "in": "query",
-            "name": "continuationToken",
-            "description": "Gets the releases after the continuation token provided.",
-            "required": false,
-            "type": "integer",
-            "format": "int32"
-          },
-          {
-            "in": "query",
-            "name": "$expand",
-            "description": "The property that should be expanded in the list of releases.",
-            "required": false,
-            "type": "string",
-            "enum": [
-              "none",
-              "environments",
-              "artifacts",
-              "approvals",
-              "manualInterventions",
-              "variables",
-              "tags"
-            ],
-            "x-ms-enum": {
-              "name": "ReleaseExpands",
-              "values": [
-                {
-                  "value": "none",
-                  "description": ""
-                },
-                {
-                  "value": "environments",
-                  "description": ""
-                },
-                {
-                  "value": "artifacts",
-                  "description": ""
-                },
-                {
-                  "value": "approvals",
-                  "description": ""
-                },
-                {
-                  "value": "manualInterventions",
-                  "description": ""
-                },
-                {
-                  "value": "variables",
-                  "description": ""
-                },
-                {
-                  "value": "tags",
-                  "description": ""
-                }
-              ]
-            }
-          },
-          {
-            "in": "query",
-            "name": "artifactTypeId",
-            "description": "Releases with given artifactTypeId will be returned. Values can be Build, Jenkins, GitHub, Nuget, Team Build (external), ExternalTFSBuild, Git, TFVC, ExternalTfsXamlBuild.",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "in": "query",
-            "name": "sourceId",
-            "description": "Unique identifier of the artifact used. e.g. For build it would be {projectGuid}:{BuildDefinitionId}, for Jenkins it would be {JenkinsConnectionId}:{JenkinsDefinitionId}, for TfsOnPrem it would be {TfsOnPremConnectionId}:{ProjectName}:{TfsOnPremDefinitionId}. For third-party artifacts e.g. TeamCity, BitBucket you may refer 'uniqueSourceIdentifier' inside vss-extension.json https://github.com/Microsoft/vsts-rm-extensions/blob/master/Extensions.",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "in": "query",
-            "name": "artifactVersionId",
-            "description": "Releases with given artifactVersionId will be returned. E.g. in case of Build artifactType, it is buildId.",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "in": "query",
-            "name": "sourceBranchFilter",
-            "description": "Releases with given sourceBranchFilter will be returned.",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "in": "query",
-            "name": "isDeleted",
-            "description": "Gets the soft deleted releases, if true.",
-            "required": false,
-            "type": "boolean"
-          },
-          {
-            "in": "query",
-            "name": "tagFilter",
-            "description": "A comma-delimited list of tags. Only releases with these tags will be returned.",
-            "required": false,
-            "type": "string",
-            "format": "array (string)"
-          },
-          {
-            "in": "query",
-            "name": "propertyFilters",
-            "description": "A comma-delimited list of extended properties to be retrieved. If set, the returned Releases will contain values for the specified property Ids (if they exist). If not set, properties will not be included. Note that this will not filter out any Release from results irrespective of whether it has property set or not.",
-            "required": false,
-            "type": "string",
-            "format": "array (string)"
-          },
-          {
-            "in": "query",
-            "name": "releaseIdFilter",
-            "description": "A comma-delimited list of releases Ids. Only releases with these Ids will be returned.",
-            "required": false,
-            "type": "string",
-            "format": "array (int32)"
-          },
-          {
-            "$ref": "#/parameters/api-Version-preview.8"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/Release"
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "oauth2": [
-              "vso.release"
-            ]
-          }
-        ],
-        "x-ms-examples": {
-          "": {
-            "$ref": "./httpExamples/releases/Query_ListAllReleases.json"
-          },
-          "For a release definition": {
-            "$ref": "./httpExamples/releases/GET__ListAllReleasesForAReleaseDefinition.json"
-          }
-        }
-      }
-    },
     "/{organization}/{project}/_apis/release/releases/{releaseId}?": {
       "get": {
         "tags": [
