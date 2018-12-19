@@ -39,6 +39,14 @@
       "description": "Controller to handle WIT scoped TestCase APIs"
     },
     {
+      "name": "Test Plan Clone",
+      "description": "Work with cloning test plans programmatically using the REST APIs for Azure DevOps Services and Azure DevOps Server."
+    },
+    {
+      "name": "Test Suite Clone",
+      "description": "Work with cloning test suites programmatically using the REST APIs for Azure DevOps Services and Azure DevOps Server."
+    },
+    {
       "name": "Variables",
       "description": "Test Variable Apis"
     }
@@ -1210,6 +1218,133 @@
         }
       }
     },
+    "/{organization}/{project}/_apis/testplan/Plans/CloneOperation": {
+      "post": {
+        "tags": [
+          "Test Plan Clone"
+        ],
+        "x-ms-docs-override-version": "5.0-preview.1",
+        "x-ms-vss-resource": "testPlanClone",
+        "x-ms-vss-method": "CloneTestPlan",
+        "x-ms-preview": true,
+        "description": "Clone test plan",
+        "operationId": "Clone Test Plan",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Plan Clone Request Body detail TestPlanCloneRequest",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CloneTestPlanParams"
+            }
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "deepClone",
+            "description": "Clones all the associated test cases as well. False by default",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/CloneTestPlanOperationInformation"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.test_write"
+            ]
+          }
+        ]
+      }
+    },
+    "/{organization}/{project}/_apis/testplan/Plans/CloneOperation/{cloneOperationId}": {
+      "get": {
+        "tags": [
+          "Test Plan Clone"
+        ],
+        "x-ms-docs-override-version": "5.0-preview.1",
+        "x-ms-vss-resource": "testPlanClone",
+        "x-ms-vss-method": "GetCloneInformation",
+        "x-ms-preview": true,
+        "description": "Get plan clone information.",
+        "operationId": "Get",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "cloneOperationId",
+            "description": "Operation ID returned when we queue a clone operation",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/CloneTestPlanOperationInformation"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.test"
+            ]
+          }
+        ]
+      }
+    },
     "/{organization}/{project}/_apis/testplan/suiteentry/{suiteId}": {
       "get": {
         "tags": [
@@ -1395,6 +1530,133 @@
             "$ref": "./httpExamples/SuiteEntry/UpdateTestCaseEntryOrderWithOverflowingSequenceOrder.json"
           }
         }
+      }
+    },
+    "/{organization}/{project}/_apis/testplan/Suites/CloneOperation": {
+      "post": {
+        "tags": [
+          "Test Suite Clone"
+        ],
+        "x-ms-docs-override-version": "5.0-preview.1",
+        "x-ms-vss-resource": "testSuiteClone",
+        "x-ms-vss-method": "CloneTestSuite",
+        "x-ms-preview": true,
+        "description": "Clone test suite",
+        "operationId": "Clone Test Suite",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Suite Clone Request Parameters TestSuiteCloneRequest",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CloneTestSuiteParams"
+            }
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "deepClone",
+            "description": "Clones all the associated test cases as well. False by default.",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/CloneTestSuiteOperationInformation"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.test_write"
+            ]
+          }
+        ]
+      }
+    },
+    "/{organization}/{project}/_apis/testplan/Suites/CloneOperation/{cloneOperationId}": {
+      "get": {
+        "tags": [
+          "Test Suite Clone"
+        ],
+        "x-ms-docs-override-version": "5.0-preview.1",
+        "x-ms-vss-resource": "testSuiteClone",
+        "x-ms-vss-method": "GetSuiteCloneInformation",
+        "x-ms-preview": true,
+        "description": "Get suite clone information.",
+        "operationId": "Get",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "cloneOperationId",
+            "description": "Operation ID returned when we queue a clone operation",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/CloneTestSuiteOperationInformation"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.test"
+            ]
+          }
+        ]
       }
     },
     "/{organization}/{project}/_apis/testplan/testcases/{testCaseId}": {
@@ -1785,6 +2047,247 @@
         }
       }
     },
+    "CloneOperationCommonResponse": {
+      "description": "Clone Operation Response",
+      "type": "object",
+      "properties": {
+        "cloneStatistics": {
+          "description": "Statistics related to the clone operation",
+          "$ref": "#/definitions/CloneStatistics"
+        },
+        "completionDate": {
+          "description": "Completion data of the operation",
+          "type": "string",
+          "format": "date-time"
+        },
+        "creationDate": {
+          "description": "Creation data of the operation",
+          "type": "string",
+          "format": "date-time"
+        },
+        "links": {
+          "description": "Reference links",
+          "$ref": "#/definitions/ReferenceLinks"
+        },
+        "message": {
+          "description": "Message related to the job",
+          "type": "string"
+        },
+        "opId": {
+          "description": "Clone operation Id",
+          "type": "integer",
+          "format": "int32"
+        },
+        "state": {
+          "description": "Clone operation state",
+          "enum": [
+            "failed",
+            "inProgress",
+            "queued",
+            "succeeded"
+          ],
+          "x-ms-enum": {
+            "name": "CloneOperationState",
+            "values": [
+              {
+                "value": "failed",
+                "description": "value for Failed State"
+              },
+              {
+                "value": "inProgress",
+                "description": "value for Inprogress state"
+              },
+              {
+                "value": "queued",
+                "description": "Value for Queued State"
+              },
+              {
+                "value": "succeeded",
+                "description": "value for Success state"
+              }
+            ]
+          }
+        }
+      }
+    },
+    "CloneOptions": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "cloneRequirements": {
+          "description": "If set to true requirements will be cloned",
+          "type": "boolean"
+        },
+        "copyAllSuites": {
+          "description": "copy all suites from a source plan",
+          "type": "boolean"
+        },
+        "copyAncestorHierarchy": {
+          "description": "copy ancestor hieracrchy",
+          "type": "boolean"
+        },
+        "destinationWorkItemType": {
+          "description": "Name of the workitem type of the clone",
+          "type": "string"
+        },
+        "overrideParameters": {
+          "description": "Key value pairs where the key value is overridden by the value.",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "relatedLinkComment": {
+          "description": "Comment on the link that will link the new clone  test case to the original Set null for no comment",
+          "type": "string"
+        }
+      }
+    },
+    "CloneStatistics": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "clonedRequirementsCount": {
+          "description": "Number of Requirments cloned so far.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "clonedSharedStepsCount": {
+          "description": "Number of shared steps cloned so far.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "clonedTestCasesCount": {
+          "description": "Number of test cases cloned so far",
+          "type": "integer",
+          "format": "int32"
+        },
+        "totalRequirementsCount": {
+          "description": "Total number of requirements to be cloned",
+          "type": "integer",
+          "format": "int32"
+        },
+        "totalTestCasesCount": {
+          "description": "Total number of test cases to be cloned",
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "CloneTestPlanOperationInformation": {
+      "description": "Test Plan clone information",
+      "type": "object",
+      "properties": {
+        "cloneOperationResponse": {
+          "description": "Clone Operation Response",
+          "$ref": "#/definitions/CloneOperationCommonResponse"
+        },
+        "cloneOptions": {
+          "description": "Test Plan Clone options",
+          "$ref": "#/definitions/CloneOptions"
+        },
+        "destinationTestPlan": {
+          "description": "Destination Test Plan",
+          "$ref": "#/definitions/TestPlan"
+        },
+        "sourceTestPlan": {
+          "description": "Source Test Plan",
+          "$ref": "#/definitions/SourceTestplanResponse"
+        }
+      }
+    },
+    "CloneTestPlanParams": {
+      "description": "Test Plan clone operation parameters",
+      "type": "object",
+      "properties": {
+        "cloneOptions": {
+          "description": "Test Plan Clone options",
+          "$ref": "#/definitions/CloneOptions"
+        },
+        "destinationTestPlan": {
+          "description": "Destination Test Plan",
+          "$ref": "#/definitions/DestinationTestPlanCloneParams"
+        },
+        "sourceTestPlan": {
+          "description": "Source Test Plan Details",
+          "$ref": "#/definitions/SourceTestPlanInfo"
+        }
+      }
+    },
+    "CloneTestSuiteOperationInformation": {
+      "description": "Test Suite clone information",
+      "type": "object",
+      "properties": {
+        "clonedTestSuite": {
+          "description": "Newly cloned Test Suite",
+          "$ref": "#/definitions/TestSuiteReferenceWithProject"
+        },
+        "cloneOperationResponse": {
+          "description": "Clone Operation Response",
+          "$ref": "#/definitions/CloneOperationCommonResponse"
+        },
+        "cloneOptions": {
+          "description": "Test Suite Clone options",
+          "$ref": "#/definitions/CloneOptions"
+        },
+        "destinationTestSuite": {
+          "description": "Destination Test Suite",
+          "$ref": "#/definitions/TestSuiteReferenceWithProject"
+        },
+        "sourceTestSuite": {
+          "description": "Source Test Suite",
+          "$ref": "#/definitions/TestSuiteReferenceWithProject"
+        }
+      }
+    },
+    "CloneTestSuiteParams": {
+      "description": "Test Suite clone operation parameters",
+      "type": "object",
+      "properties": {
+        "cloneOptions": {
+          "description": "Test suite Clone options",
+          "$ref": "#/definitions/CloneOptions"
+        },
+        "destinationTestSuite": {
+          "description": "Destination Test Suite",
+          "$ref": "#/definitions/DestinationTestSuiteInfo"
+        },
+        "sourceTestSuite": {
+          "description": "Source Test Suite",
+          "$ref": "#/definitions/SourceTestSuiteInfo"
+        }
+      }
+    },
+    "DestinationTestPlanCloneParams": {
+      "description": "Destination Test Plan create parameters",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/TestPlanCreateParams"
+        }
+      ],
+      "properties": {
+        "project": {
+          "description": "Destination Project Name",
+          "type": "string"
+        }
+      }
+    },
+    "DestinationTestSuiteInfo": {
+      "description": "Destination Test Suite information for clone operation",
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "Destination Suite Id",
+          "type": "integer",
+          "format": "int32"
+        },
+        "project": {
+          "description": "Destination Project Name",
+          "type": "string"
+        }
+      }
+    },
     "GraphSubjectBase": {
       "description": "",
       "type": "object",
@@ -1883,6 +2386,59 @@
         },
         "environmentDefinitionId": {
           "description": "ID of the release environment definition.",
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "SourceTestPlanInfo": {
+      "description": "Source Test Plan information for clone operation",
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "ID of the source Test Plan",
+          "type": "integer",
+          "format": "int32"
+        },
+        "suiteIds": {
+          "description": "Id of suites to be cloned inside source Test Plan",
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      }
+    },
+    "SourceTestplanResponse": {
+      "description": "Source Test Plan",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/TestPlanReference"
+        }
+      ],
+      "properties": {
+        "project": {
+          "description": "Project reference",
+          "$ref": "#/definitions/TeamProjectReference"
+        },
+        "suiteIds": {
+          "description": "Id of suites to be cloned inside source Test Plan",
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      }
+    },
+    "SourceTestSuiteInfo": {
+      "description": "Source Test Suite information for clone operation",
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "Id of the Source Test Suite",
           "type": "integer",
           "format": "int32"
         }
@@ -2461,6 +3017,21 @@
         "name": {
           "description": "Name of the test suite.",
           "type": "string"
+        }
+      }
+    },
+    "TestSuiteReferenceWithProject": {
+      "description": "Test Suite Reference",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/TestSuiteReference"
+        }
+      ],
+      "properties": {
+        "project": {
+          "description": "Destination Project",
+          "$ref": "#/definitions/TeamProjectReference"
         }
       }
     },
