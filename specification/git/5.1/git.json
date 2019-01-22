@@ -1013,8 +1013,14 @@
           }
         ],
         "x-ms-examples": {
-          "": {
+          "Create a repository": {
             "$ref": "./httpExamples/Repositories/POST__git_repositories.json"
+          },
+          "Create a fork of a parent repository": {
+            "$ref": "./httpExamples/Repositories/POST__git_repositories_fork.json"
+          },
+          "Create a fork of a parent repository syncing only the provided refs": {
+            "$ref": "./httpExamples/Repositories/POST__git_repositories_fork_source_ref.json"
           }
         }
       },
@@ -3618,7 +3624,7 @@
         "x-ms-vss-resource": "pullRequests",
         "x-ms-vss-method": "UpdatePullRequest",
         "x-ms-preview": true,
-        "description": "Update a pull request\n\nThese are the properties that can be updated with the API:\n - Status\n - Title\n - Description\n - CompletionOptions\n - MergeOptions\n - AutoCompleteSetBy.Id\n - TargetRefName (when the PR retargeting feature is enabled)\n Attempting to update other properties outside of this list will either cause the server to throw an `InvalidArgumentValueException`,\n or to silently ignore the update.",
+        "description": "Update a pull request\n\nThese are the properties that can be updated with the API:\n - Status\n - Title\n - Description (up to 4000 characters)\n - CompletionOptions\n - MergeOptions\n - AutoCompleteSetBy.Id\n - TargetRefName (when the PR retargeting feature is enabled)\n Attempting to update other properties outside of this list will either cause the server to throw an `InvalidArgumentValueException`,\n or to silently ignore the update.",
         "operationId": "Update",
         "consumes": [
           "application/json"
@@ -6567,7 +6573,7 @@
         "x-ms-vss-resource": "pullRequestThreadComments",
         "x-ms-vss-method": "CreateComment",
         "x-ms-preview": true,
-        "description": "Create a comment on a specific thread in a pull request.",
+        "description": "Create a comment on a specific thread in a pull request (up to 500 comments can be created per thread).",
         "operationId": "Create",
         "consumes": [
           "application/json"
@@ -6586,7 +6592,7 @@
           {
             "in": "body",
             "name": "body",
-            "description": "The comment to create.",
+            "description": "The comment to create. Comments can be up to 150,000 characters.",
             "required": true,
             "schema": {
               "$ref": "#/definitions/Comment"
@@ -6911,7 +6917,7 @@
           {
             "in": "body",
             "name": "body",
-            "description": "The comment content that should be updated.",
+            "description": "The comment content that should be updated. Comments can be up to 150,000 characters.",
             "required": true,
             "schema": {
               "$ref": "#/definitions/Comment"
@@ -8592,8 +8598,8 @@
         "x-ms-vss-resource": "forkSyncRequests",
         "x-ms-vss-method": "CreateForkSyncRequest",
         "x-ms-preview": true,
-        "description": "Request that another repository's refs be fetched into this one.",
-        "operationId": "Create",
+        "description": "Request that another repository's refs be fetched into this one. It syncs two existing forks. To create a fork, please see the <a href=\"https://docs.microsoft.com/en-us/rest/api/vsts/git/repositories/create?view=azure-devops-rest-5.1\"> repositories endpoint</a>",
+        "operationId": "Create fork sync request",
         "consumes": [
           "application/json"
         ],
@@ -8743,7 +8749,7 @@
         "x-ms-vss-method": "GetForkSyncRequest",
         "x-ms-preview": true,
         "description": "Get a specific fork sync operation's details.",
-        "operationId": "Get",
+        "operationId": "Get fork sync request",
         "produces": [
           "application/json"
         ],
@@ -13036,7 +13042,7 @@
           "description": "The file change path.",
           "type": "string"
         },
-        "sHA1Hash": {
+        "shA1Hash": {
           "description": "Content hash of on-disk representation of file content. Its calculated by the client by using SHA1 hash function. Ensure that uploaded file has same encoding as in source control.",
           "type": "string"
         }
@@ -13771,9 +13777,24 @@
         }
       }
     },
+    "GitResolution": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "author": {
+          "description": "User who created the resolution.",
+          "$ref": "#/definitions/IdentityRef"
+        }
+      }
+    },
     "GitResolutionMergeContent": {
       "description": "",
       "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/GitResolution"
+        }
+      ],
       "properties": {
         "mergeType": {
           "enum": [
@@ -13824,6 +13845,11 @@
     "GitResolutionPathConflict": {
       "description": "",
       "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/GitResolution"
+        }
+      ],
       "properties": {
         "action": {
           "enum": [
@@ -13867,6 +13893,11 @@
     "GitResolutionPickOneAction": {
       "description": "",
       "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/GitResolution"
+        }
+      ],
       "properties": {
         "action": {
           "enum": [
@@ -15327,13 +15358,13 @@
             "dataGrip",
             "eclipse",
             "intelliJ",
-            "mPS",
+            "mps",
             "phpStorm",
             "pyCharm",
             "rubyMine",
             "tower",
             "visualStudio",
-            "vSCode",
+            "vsCode",
             "webStorm"
           ],
           "x-ms-enum": {
@@ -15368,7 +15399,7 @@
                 "description": ""
               },
               {
-                "value": "mPS",
+                "value": "mps",
                 "description": ""
               },
               {
@@ -15392,7 +15423,7 @@
                 "description": ""
               },
               {
-                "value": "vSCode",
+                "value": "vsCode",
                 "description": ""
               },
               {
@@ -15458,6 +15489,11 @@
           "description": "Project identifier.",
           "type": "string",
           "format": "uuid"
+        },
+        "lastUpdateTime": {
+          "description": "Project last update time.",
+          "type": "string",
+          "format": "date-time"
         },
         "name": {
           "description": "Project name.",
@@ -15528,11 +15564,11 @@
             "values": [
               {
                 "value": "private",
-                "description": ""
+                "description": "The project is only visible to users with explicit access."
               },
               {
                 "value": "public",
-                "description": ""
+                "description": "The project is visible to all."
               }
             ]
           }

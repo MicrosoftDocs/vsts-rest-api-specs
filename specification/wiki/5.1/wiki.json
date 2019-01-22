@@ -669,7 +669,7 @@
         "x-ms-vss-method": "DeletePage",
         "x-ms-preview": true,
         "description": "Deletes a wiki page.",
-        "operationId": "Delete",
+        "operationId": "Delete Page",
         "produces": [
           "application/json"
         ],
@@ -748,7 +748,7 @@
         "x-ms-vss-method": "GetPage",
         "x-ms-preview": true,
         "description": "Gets metadata or content of the wiki page for the provided path. Content negotiation is done based on the `Accept` header sent in the request.",
-        "operationId": "Get",
+        "operationId": "Get Page",
         "produces": [
           "application/zip",
           "text/plain",
@@ -927,6 +927,288 @@
             "$ref": "./httpExamples/pages/GET_wiki_page_JSON_withRecursionLevel.json"
           }
         }
+      }
+    },
+    "/{organization}/{project}/_apis/wiki/wikis/{wikiIdentifier}/pages/{id}": {
+      "delete": {
+        "tags": [
+          "Pages"
+        ],
+        "x-ms-docs-override-version": "5.1-preview.1",
+        "x-ms-vss-resource": "pages",
+        "x-ms-vss-method": "DeletePageById",
+        "x-ms-preview": true,
+        "description": "Deletes a wiki page.",
+        "operationId": "Delete Page By Id",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "wikiIdentifier",
+            "description": "Wiki Id or name.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "id",
+            "description": "Wiki page id.",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "comment",
+            "description": "Comment to be associated with this page delete.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Page deleted.",
+            "schema": {
+              "$ref": "#/definitions/WikiPage"
+            },
+            "headers": {
+              "ETag": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.wiki_write"
+            ]
+          }
+        ]
+      },
+      "get": {
+        "tags": [
+          "Pages"
+        ],
+        "x-ms-docs-override-version": "5.1-preview.1",
+        "x-ms-vss-resource": "pages",
+        "x-ms-vss-method": "GetPageById",
+        "x-ms-preview": true,
+        "description": "Gets metadata or content of the wiki page for the provided page id. Content negotiation is done based on the `Accept` header sent in the request.",
+        "operationId": "Get Page By Id",
+        "produces": [
+          "application/zip",
+          "text/plain",
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "wikiIdentifier",
+            "description": "Wiki Id or name.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "id",
+            "description": "Wiki page id.",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "recursionLevel",
+            "description": "Recursion level for subpages retrieval. Defaults to `None` (Optional).",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "none",
+              "oneLevel",
+              "oneLevelPlusNestedEmptyFolders",
+              "full"
+            ],
+            "x-ms-enum": {
+              "name": "VersionControlRecursionType",
+              "values": [
+                {
+                  "value": "none",
+                  "description": "Only return the specified item."
+                },
+                {
+                  "value": "oneLevel",
+                  "description": "Return the specified item and its direct children."
+                },
+                {
+                  "value": "oneLevelPlusNestedEmptyFolders",
+                  "description": "Return the specified item and its direct children, as well as recursive chains of nested child folders that only contain a single folder."
+                },
+                {
+                  "value": "full",
+                  "description": "Return specified item and all descendants"
+                }
+              ]
+            }
+          },
+          {
+            "in": "query",
+            "name": "includeContent",
+            "description": "True to include the content of the page in the response for Json content type. Defaults to false (Optional)",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/WikiPage"
+            },
+            "headers": {
+              "ETag": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.wiki"
+            ]
+          }
+        ]
+      },
+      "patch": {
+        "tags": [
+          "Pages"
+        ],
+        "x-ms-docs-override-version": "5.1-preview.1",
+        "x-ms-vss-resource": "pages",
+        "x-ms-vss-method": "UpdatePageById",
+        "x-ms-preview": true,
+        "description": "Edits a wiki page.",
+        "operationId": "Update",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Wiki update operation parameters.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/WikiPageCreateOrUpdateParameters"
+            }
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "wikiIdentifier",
+            "description": "Wiki Id or name.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "id",
+            "description": "Wiki page id.",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "header",
+            "name": "Version",
+            "description": "Version of the page on which the change is to be made. Mandatory for `Edit` scenario. To be populated in the If-Match header of the request.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "comment",
+            "description": "Comment to be associated with the page operation.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Page edited. Edited page's version is populated in the ETag response header.",
+            "schema": {
+              "$ref": "#/definitions/WikiPage"
+            },
+            "headers": {
+              "ETag": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.wiki_write"
+            ]
+          }
+        ]
       }
     }
   },
@@ -1243,6 +1525,11 @@
         "gitItemPath": {
           "description": "Path of the git item corresponding to the wiki page stored in the backing Git repository.",
           "type": "string"
+        },
+        "id": {
+          "description": "When present, permanent identifier for the wiki page",
+          "type": "integer",
+          "format": "int32"
         },
         "isNonConformant": {
           "description": "True if a page is non-conforming, i.e. 1) if the name doesn't match page naming standards. 2) if the page does not have a valid entry in the appropriate order file.",

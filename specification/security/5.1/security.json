@@ -19,13 +19,16 @@
   "basePath": "/",
   "tags": [
     {
-      "name": "Access Control Entries"
+      "name": "Access Control Entries",
+      "description": "Manage and query [access control entries](https://docs.microsoft.com/en-us/rest/api/azure/devops/security/access%20control%20entries/set%20access%20control%20entries?#accesscontrolentry)."
     },
     {
-      "name": "Access Control Lists"
+      "name": "Access Control Lists",
+      "description": "Manage and query [access control lists](https://docs.microsoft.com/en-us/rest/api/vsts/security/access%20control%20lists/query?#accesscontrollist)."
     },
     {
-      "name": "Permissions"
+      "name": "Permissions",
+      "description": "Manage and query permissions."
     },
     {
       "name": "Security Namespaces",
@@ -70,7 +73,7 @@
           {
             "in": "query",
             "name": "token",
-            "description": "",
+            "description": "The token whose ACL should be modified.",
             "required": false,
             "type": "string"
           },
@@ -114,7 +117,7 @@
         "x-ms-vss-resource": "accessControlEntries",
         "x-ms-vss-method": "SetAccessControlEntries",
         "x-ms-preview": true,
-        "description": "Add or update ACEs in the ACL for the provided token. In the case of a collision (by identity descriptor) with an existing ACE in the ACL, the \"merge\" parameter determines the behavior. If set, the existing ACE has its allow and deny merged with the incoming ACE's allow and deny. If unset, the existing ACE is displaced.",
+        "description": "Add or update ACEs in the ACL for the provided token. The request body contains the target token, a list of [ACEs](https://docs.microsoft.com/en-us/rest/api/azure/devops/security/access%20control%20entries/set%20access%20control%20entries?#accesscontrolentry) and a optional merge parameter. In the case of a collision (by identity descriptor) with an existing ACE in the ACL, the \"merge\" parameter determines the behavior. If set, the existing ACE has its allow and deny merged with the incoming ACE's allow and deny. If unset, the existing ACE is displaced.",
         "operationId": "Set Access Control Entries",
         "consumes": [
           "application/json"
@@ -135,7 +138,7 @@
           {
             "in": "path",
             "name": "securityNamespaceId",
-            "description": "",
+            "description": "Security namespace identifier.",
             "required": true,
             "type": "string",
             "format": "uuid"
@@ -358,7 +361,7 @@
           {
             "in": "body",
             "name": "body",
-            "description": "",
+            "description": "A list of ACLs to create or update.",
             "required": true,
             "schema": {
               "$ref": "#/definitions/VssJsonCollectionWrapper"
@@ -496,7 +499,7 @@
         "x-ms-vss-resource": "permissions",
         "x-ms-vss-method": "RemovePermission",
         "x-ms-preview": true,
-        "description": "Removes the specified permissions from the caller or specified user or group.",
+        "description": "Removes the specified permissions on a security token for a user or group.",
         "operationId": "Remove Permission",
         "produces": [
           "application/json"
@@ -630,20 +633,12 @@
         "x-ms-vss-resource": "securityNamespaces",
         "x-ms-vss-method": "QuerySecurityNamespaces",
         "x-ms-preview": true,
-        "description": "",
+        "description": "List all security namespaces or just the specified namespace.",
         "operationId": "Query",
         "produces": [
           "application/json"
         ],
         "parameters": [
-          {
-            "in": "path",
-            "name": "securityNamespaceId",
-            "description": "",
-            "required": true,
-            "type": "string",
-            "format": "uuid"
-          },
           {
             "in": "path",
             "name": "organization",
@@ -653,9 +648,18 @@
             "type": "string"
           },
           {
+            "in": "path",
+            "name": "securityNamespaceId",
+            "description": "Security namespace identifier.",
+            "required": true,
+            "x-ms-required": false,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
             "in": "query",
             "name": "localOnly",
-            "description": "",
+            "description": "If true, retrieve only local security namespaces.",
             "required": false,
             "type": "boolean"
           },
@@ -736,7 +740,7 @@
       }
     },
     "AccessControlListsCollection": {
-      "description": "",
+      "description": "A list of AccessControlList. An AccessControlList is meant to associate a set of AccessControlEntries with a security token and its inheritance settings.",
       "type": "object",
       "allOf": [
         {

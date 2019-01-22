@@ -950,6 +950,14 @@
             "type": "boolean"
           },
           {
+            "in": "query",
+            "name": "propertyFilters",
+            "description": "",
+            "required": false,
+            "type": "string",
+            "format": "array (string)"
+          },
+          {
             "$ref": "#/parameters/api-Version-preview.1"
           }
         ],
@@ -2786,6 +2794,10 @@
           "type": "integer",
           "format": "int32"
         },
+        "properties": {
+          "description": "Properties of the deployment target.",
+          "$ref": "#/definitions/PropertiesCollection"
+        },
         "tags": {
           "description": "Tags of the deployment target.",
           "type": "array",
@@ -2943,49 +2955,6 @@
         }
       }
     },
-    "DistributedTaskEnvironment": {
-      "description": "Environment.",
-      "type": "object",
-      "properties": {
-        "createdBy": {
-          "description": "Identity reference of the user who created the Environment.",
-          "$ref": "#/definitions/IdentityRef"
-        },
-        "createdOn": {
-          "description": "Creation time of the Environment",
-          "type": "string",
-          "format": "date-time"
-        },
-        "description": {
-          "description": "Description of the Environment.",
-          "type": "string"
-        },
-        "id": {
-          "description": "Id of the Environment",
-          "type": "integer",
-          "format": "int32"
-        },
-        "lastModifiedBy": {
-          "description": "Identity reference of the user who last modified the Environment.",
-          "$ref": "#/definitions/IdentityRef"
-        },
-        "lastModifiedOn": {
-          "description": "Last modified time of the Environment",
-          "type": "string",
-          "format": "date-time"
-        },
-        "name": {
-          "description": "Name of the Environment.",
-          "type": "string"
-        },
-        "serviceGroups": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/ServiceGroupReference"
-          }
-        }
-      }
-    },
     "EndpointAuthorization": {
       "description": "",
       "type": "object",
@@ -3128,6 +3097,49 @@
           "description": "Start time of the environment deployment execution",
           "type": "string",
           "format": "date-time"
+        }
+      }
+    },
+    "EnvironmentInstance": {
+      "description": "Environment.",
+      "type": "object",
+      "properties": {
+        "createdBy": {
+          "description": "Identity reference of the user who created the Environment.",
+          "$ref": "#/definitions/IdentityRef"
+        },
+        "createdOn": {
+          "description": "Creation time of the Environment",
+          "type": "string",
+          "format": "date-time"
+        },
+        "description": {
+          "description": "Description of the Environment.",
+          "type": "string"
+        },
+        "id": {
+          "description": "Id of the Environment",
+          "type": "integer",
+          "format": "int32"
+        },
+        "lastModifiedBy": {
+          "description": "Identity reference of the user who last modified the Environment.",
+          "$ref": "#/definitions/IdentityRef"
+        },
+        "lastModifiedOn": {
+          "description": "Last modified time of the Environment",
+          "type": "string",
+          "format": "date-time"
+        },
+        "name": {
+          "description": "Name of the Environment.",
+          "type": "string"
+        },
+        "serviceGroups": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ServiceGroupReference"
+          }
         }
       }
     },
@@ -4551,7 +4563,7 @@
           "enum": [
             "continue",
             "switchingProtocols",
-            "oK",
+            "ok",
             "created",
             "accepted",
             "nonAuthoritativeInformation",
@@ -4609,7 +4621,7 @@
                 "description": ""
               },
               {
-                "value": "oK",
+                "value": "ok",
                 "description": ""
               },
               {
@@ -5057,6 +5069,10 @@
           "description": "Gets or sets a AcquireAgentEndpoint using which a request can be made to acquire new agent",
           "type": "string"
         },
+        "acquisitionTimeout": {
+          "type": "integer",
+          "format": "int32"
+        },
         "agentCloudId": {
           "type": "integer",
           "format": "int32"
@@ -5335,7 +5351,7 @@
           "description": "Gets or sets the body of the message. If the <c>IV</c> property is provided the body will need to be decrypted using the <c>TaskAgentSession.EncryptionKey</c> value in addition to the <c>IV</c>.",
           "type": "string"
         },
-        "iV": {
+        "iv": {
           "description": "Gets or sets the intialization vector used to encrypt this message.",
           "type": "array",
           "items": {
@@ -5790,6 +5806,32 @@
         }
       }
     },
+    "TaskAgentPoolStatus": {
+      "description": "",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/TaskAgentPoolReference"
+        }
+      ],
+      "properties": {
+        "assignedRequestCount": {
+          "description": "Number of requests queued and assigned to an agent. Not running yet.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "queuedRequestCount": {
+          "description": "Number of queued requests which are not assigned to any agents",
+          "type": "integer",
+          "format": "int32"
+        },
+        "runningRequestCount": {
+          "description": "Number of currently running requests",
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
     "TaskAgentPoolSummary": {
       "description": "",
       "type": "object",
@@ -5890,7 +5932,7 @@
           "description": "Gets the name of the agent.",
           "type": "string"
         },
-        "oSDescription": {
+        "osDescription": {
           "description": "Gets the OS of the agent.",
           "type": "string"
         },
@@ -7857,8 +7899,6 @@
       "scopes": {
         "vso.agentpools": "Grants the ability to view tasks, pools, queues, agents, and currently running or recently completed jobs for agents",
         "vso.agentpools_manage": "Grants the ability to manage pools, queues, and agents",
-        "vso.serviceendpoint": "Grants the ability to read service endpoints.",
-        "vso.serviceendpoint_manage": "Grants the ability to read, query and manage service endpoints.",
         "vso.machinegroup_manage": "Provides ability to manage deployment group and agent pools",
         "vso.taskgroups_manage": "Grants the ability to read, create and manage taskgroups.",
         "vso.taskgroups_read": "Grants the ability to read task groups",
