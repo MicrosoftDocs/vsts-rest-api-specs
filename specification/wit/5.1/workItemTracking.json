@@ -20,6 +20,9 @@
   "basePath": "/",
   "tags": [
     {
+      "name": "Account My Work Recent Activity"
+    },
+    {
       "name": "Artifact Link Types"
     },
     {
@@ -31,10 +34,6 @@
     },
     {
       "name": "Classification Nodes"
-    },
-    {
-      "name": "Comments",
-      "description": "This controller version exists to support returning project scoped urls for work items"
     },
     {
       "name": "Fields",
@@ -431,6 +430,52 @@
             "$ref": "./httpExamples/workItemTransitions/GET_wit_workItemTransitions.json"
           }
         }
+      }
+    },
+    "/{organization}/_apis/work/accountmyworkrecentactivity": {
+      "get": {
+        "tags": [
+          "Account My Work Recent Activity"
+        ],
+        "x-ms-docs-override-version": "5.1-preview.2",
+        "x-ms-vss-resource": "accountMyWorkRecentActivity",
+        "x-ms-vss-method": "GetRecentActivityData",
+        "x-ms-preview": true,
+        "description": "Gets recent work item activities",
+        "operationId": "List",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.2"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/AccountRecentActivityWorkItemModel2"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.work"
+            ]
+          }
+        ]
       }
     },
     "/{organization}/{project}/_apis/wit/artifacturiquery": {
@@ -3407,188 +3452,6 @@
         }
       }
     },
-    "/{organization}/{project}/_apis/wit/workItems/{id}/comments": {
-      "get": {
-        "tags": [
-          "Comments"
-        ],
-        "x-ms-docs-override-version": "5.1-preview.2",
-        "x-ms-vss-resource": "comments",
-        "x-ms-vss-method": "GetComments",
-        "x-ms-preview": true,
-        "description": "Gets the specified number of comments for a work item from the specified revision.",
-        "operationId": "Get Comments",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "organization",
-            "description": "The name of the Azure DevOps organization.",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "in": "path",
-            "name": "id",
-            "description": "Work item id",
-            "required": true,
-            "type": "integer",
-            "format": "int32"
-          },
-          {
-            "in": "path",
-            "name": "project",
-            "description": "Project ID or project name",
-            "required": true,
-            "x-ms-required": false,
-            "type": "string"
-          },
-          {
-            "in": "query",
-            "name": "fromRevision",
-            "description": "Revision from which comments are to be fetched (default is 1)",
-            "required": false,
-            "type": "integer",
-            "format": "int32"
-          },
-          {
-            "in": "query",
-            "name": "$top",
-            "description": "The number of comments to return (default is 200)",
-            "required": false,
-            "type": "integer",
-            "format": "int32"
-          },
-          {
-            "in": "query",
-            "name": "order",
-            "description": "Ascending or descending by revision id (default is ascending)",
-            "required": false,
-            "type": "string",
-            "enum": [
-              "asc",
-              "desc"
-            ],
-            "x-ms-enum": {
-              "name": "CommentSortOrder",
-              "values": [
-                {
-                  "value": "asc",
-                  "description": ""
-                },
-                {
-                  "value": "desc",
-                  "description": ""
-                }
-              ]
-            }
-          },
-          {
-            "$ref": "#/parameters/api-Version-preview.2"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "$ref": "#/definitions/WorkItemComments"
-            }
-          }
-        },
-        "security": [
-          {
-            "oauth2": [
-              "vso.work"
-            ]
-          }
-        ],
-        "x-ms-examples": {
-          "Get a page of comments": {
-            "$ref": "./httpExamples/comments/GET__wit_workitems__taskId__comments_2.json"
-          },
-          "Get a page of comments (collection scoped)": {
-            "$ref": "./httpExamples/comments/GET__wit_workitems__taskId__comments_2_collectionscope.json"
-          }
-        }
-      }
-    },
-    "/{organization}/{project}/_apis/wit/workItems/{id}/comments/{revision}": {
-      "get": {
-        "tags": [
-          "Comments"
-        ],
-        "x-ms-docs-override-version": "5.1-preview.2",
-        "x-ms-vss-resource": "comments",
-        "x-ms-vss-method": "GetComment",
-        "x-ms-preview": true,
-        "description": "Gets a comment for a work item at the specified revision.",
-        "operationId": "Get Comment",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "organization",
-            "description": "The name of the Azure DevOps organization.",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "in": "path",
-            "name": "id",
-            "description": "Work item id",
-            "required": true,
-            "type": "integer",
-            "format": "int32"
-          },
-          {
-            "in": "path",
-            "name": "revision",
-            "description": "Revision for which the comment need to be fetched",
-            "required": true,
-            "type": "integer",
-            "format": "int32"
-          },
-          {
-            "in": "path",
-            "name": "project",
-            "description": "Project ID or project name",
-            "required": true,
-            "x-ms-required": false,
-            "type": "string"
-          },
-          {
-            "$ref": "#/parameters/api-Version-preview.2"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "$ref": "#/definitions/WorkItemComment"
-            }
-          }
-        },
-        "security": [
-          {
-            "oauth2": [
-              "vso.work"
-            ]
-          }
-        ],
-        "x-ms-examples": {
-          "Get a single comment": {
-            "$ref": "./httpExamples/comments/GET__wit_workitems__taskId__comments_1.json"
-          },
-          "Get a single comment(collection scoped)": {
-            "$ref": "./httpExamples/comments/GET__wit_workitems__taskId__comments_1_collectionscope.json"
-          }
-        }
-      }
-    },
     "/{organization}/{project}/_apis/wit/workItems/{id}/revisions": {
       "get": {
         "tags": [
@@ -5482,6 +5345,36 @@
     "AccountRecentActivityWorkItemModel": {
       "description": "Represents Work Item Recent Activity",
       "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/AccountRecentActivityWorkItemModelBase"
+        }
+      ],
+      "properties": {
+        "assignedTo": {
+          "description": "Assigned To",
+          "type": "string"
+        }
+      }
+    },
+    "AccountRecentActivityWorkItemModel2": {
+      "description": "Represents Work Item Recent Activity",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/AccountRecentActivityWorkItemModelBase"
+        }
+      ],
+      "properties": {
+        "assignedTo": {
+          "description": "Assigned To",
+          "$ref": "#/definitions/IdentityRef"
+        }
+      }
+    },
+    "AccountRecentActivityWorkItemModelBase": {
+      "description": "Represents Work Item Recent Activity",
+      "type": "object",
       "properties": {
         "activityDate": {
           "description": "Date of the last Activity by the user",
@@ -5517,10 +5410,6 @@
               }
             ]
           }
-        },
-        "assignedTo": {
-          "description": "Assigned To",
-          "type": "string"
         },
         "changedDate": {
           "description": "Last changed date of the work item",
@@ -5746,30 +5635,37 @@
       ],
       "properties": {
         "directoryAlias": {
+          "description": "Deprecated - Can be retrieved by querying the Graph user referenced in the \"self\" entry of the IdentityRef \"_links\" dictionary",
           "type": "string"
         },
         "id": {
           "type": "string"
         },
         "imageUrl": {
+          "description": "Deprecated - Available in the \"avatar\" entry of the IdentityRef \"_links\" dictionary",
           "type": "string"
         },
         "inactive": {
+          "description": "Deprecated - Can be retrieved by querying the Graph membership state referenced in the \"membershipState\" entry of the GraphUser \"_links\" dictionary",
           "type": "boolean"
         },
         "isAadIdentity": {
+          "description": "Deprecated - Can be inferred from the subject type of the descriptor (Descriptor.IsAadUserType/Descriptor.IsAadGroupType)",
           "type": "boolean"
         },
         "isContainer": {
+          "description": "Deprecated - Can be inferred from the subject type of the descriptor (Descriptor.IsGroupType)",
           "type": "boolean"
         },
         "isDeletedInOrigin": {
           "type": "boolean"
         },
         "profileUrl": {
+          "description": "Deprecated - not in use in most preexisting implementations of ToIdentityRef",
           "type": "string"
         },
         "uniqueName": {
+          "description": "Deprecated - use Domain+PrincipalName instead",
           "type": "string"
         }
       }
@@ -6036,7 +5932,7 @@
             "values": [
               {
                 "value": "workItems",
-                "description": ""
+                "description": "Returns flat list of work items."
               },
               {
                 "value": "linksOneHopMustContain",
@@ -6385,6 +6281,10 @@
         }
       ],
       "properties": {
+        "commentVersionRef": {
+          "description": "Reference to a specific version of the comment added/edited/deleted in this revision.",
+          "$ref": "#/definitions/WorkItemCommentVersionRef"
+        },
         "fields": {
           "description": "Map of field and values for the work item.",
           "type": "object",
@@ -6589,7 +6489,7 @@
       }
     },
     "WorkItemComments": {
-      "description": "Collection of comments",
+      "description": "Collection of comments.",
       "type": "object",
       "allOf": [
         {
@@ -6616,6 +6516,27 @@
         },
         "totalCount": {
           "description": "Total count of comments.",
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "WorkItemCommentVersionRef": {
+      "description": "Represents the reference to a specific version of a comment on a Work Item.",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/WorkItemTrackingResourceReference"
+        }
+      ],
+      "properties": {
+        "commentId": {
+          "description": "The id assigned to the comment.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "version": {
+          "description": "The version number.",
           "type": "integer",
           "format": "int32"
         }
@@ -6884,7 +6805,7 @@
       "type": "object",
       "properties": {
         "name": {
-          "description": "Name of the operation.",
+          "description": "Friendly name of the operation.",
           "type": "string"
         },
         "referenceName": {
@@ -6898,7 +6819,7 @@
       "type": "object",
       "properties": {
         "name": {
-          "description": "The name of the field.",
+          "description": "The friendly name of the field.",
           "type": "string"
         },
         "referenceName": {

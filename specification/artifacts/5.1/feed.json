@@ -2046,7 +2046,7 @@
         "x-ms-vss-resource": "globalPermissions",
         "x-ms-vss-method": "GetGlobalPermissions",
         "x-ms-preview": true,
-        "description": "Get all service-wide feed creation permissions.",
+        "description": "Get all service-wide feed creation and administration permissions.",
         "operationId": "GetGlobalPermissions",
         "produces": [
           "application/json"
@@ -2090,7 +2090,7 @@
         "x-ms-vss-resource": "globalPermissions",
         "x-ms-vss-method": "SetGlobalPermissions",
         "x-ms-preview": true,
-        "description": "Set service-wide permissions that govern feed creation.",
+        "description": "Set service-wide permissions that govern feed creation and administration.",
         "operationId": "SetGlobalPermissions",
         "consumes": [
           "application/json"
@@ -2487,12 +2487,17 @@
       "type": "object",
       "properties": {
         "ageLimitInDays": {
-          "description": "Used for legacy scenarios and may be removed in future versions.",
+          "description": "This attribute is deprecated and is not honoured by retention",
           "type": "integer",
           "format": "int32"
         },
         "countLimit": {
           "description": "Maximum versions to preserve per package and package type.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "daysToKeepRecentlyDownloadedPackages": {
+          "description": "Number of days to preserve a package version after its latest download.",
           "type": "integer",
           "format": "int32"
         }
@@ -2631,7 +2636,8 @@
           "enum": [
             "custom",
             "none",
-            "feedCreator"
+            "feedCreator",
+            "administrator"
           ],
           "x-ms-enum": {
             "name": "GlobalRole",
@@ -2647,6 +2653,10 @@
               {
                 "value": "feedCreator",
                 "description": "Ability to create new feeds."
+              },
+              {
+                "value": "administrator",
+                "description": "Read and manage any feed"
               }
             ]
           }

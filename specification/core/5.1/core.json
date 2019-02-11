@@ -20,11 +20,11 @@
   "basePath": "/",
   "tags": [
     {
-      "name": "Processes",
-      "description": "Controller for processes."
+      "name": "Avatar"
     },
     {
-      "name": "Project History"
+      "name": "Processes",
+      "description": "Controller for processes."
     },
     {
       "name": "Projects",
@@ -134,58 +134,6 @@
             ]
           }
         ]
-      }
-    },
-    "/{organization}/_apis/projecthistory": {
-      "get": {
-        "tags": [
-          "Project History"
-        ],
-        "x-ms-docs-override-version": "5.1-preview.2",
-        "x-ms-vss-resource": "projectHistory",
-        "x-ms-vss-method": "GetProjectHistoryEntries",
-        "x-ms-preview": true,
-        "description": "Gets the history of changes to the project.",
-        "operationId": "List",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "organization",
-            "description": "The name of the Azure DevOps organization.",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "in": "query",
-            "name": "minRevision",
-            "description": "The minimum revision number to return in the history.",
-            "required": false,
-            "type": "integer",
-            "format": "int64"
-          },
-          {
-            "$ref": "#/parameters/api-Version-preview.2"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/ProjectInfo"
-              }
-            }
-          }
-        },
-        "x-ms-examples": {
-          "Get project history by revision number": {
-            "$ref": "./httpExamples/projectHistory/LIST__ProjectHistory_minrevision_.json"
-          }
-        }
       }
     },
     "/{organization}/_apis/projects": {
@@ -550,6 +498,97 @@
             ]
           }
         ]
+      }
+    },
+    "/{organization}/_apis/projects/{projectId}/avatar": {
+      "delete": {
+        "tags": [
+          "Avatar"
+        ],
+        "x-ms-docs-override-version": "5.1-preview.1",
+        "x-ms-vss-resource": "avatar",
+        "x-ms-vss-method": "RemoveProjectAvatar",
+        "x-ms-preview": true,
+        "description": "Removes the avatar for the project",
+        "operationId": "Remove Project Avatar",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "projectId",
+            "description": "The id or name of the project",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.project_manage"
+            ]
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "Avatar"
+        ],
+        "x-ms-docs-override-version": "5.1-preview.1",
+        "x-ms-vss-resource": "avatar",
+        "x-ms-vss-method": "SetProjectAvatar",
+        "x-ms-preview": true,
+        "description": "Upload avatar for the project",
+        "operationId": "Set Project Avatar",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ProjectAvatar"
+            }
+          },
+          {
+            "in": "path",
+            "name": "projectId",
+            "description": "The id or name of the project",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        }
       }
     },
     "/{organization}/_apis/projects/{projectId}/properties": {
@@ -1239,30 +1278,37 @@
       ],
       "properties": {
         "directoryAlias": {
+          "description": "Deprecated - Can be retrieved by querying the Graph user referenced in the \"self\" entry of the IdentityRef \"_links\" dictionary",
           "type": "string"
         },
         "id": {
           "type": "string"
         },
         "imageUrl": {
+          "description": "Deprecated - Available in the \"avatar\" entry of the IdentityRef \"_links\" dictionary",
           "type": "string"
         },
         "inactive": {
+          "description": "Deprecated - Can be retrieved by querying the Graph membership state referenced in the \"membershipState\" entry of the GraphUser \"_links\" dictionary",
           "type": "boolean"
         },
         "isAadIdentity": {
+          "description": "Deprecated - Can be inferred from the subject type of the descriptor (Descriptor.IsAadUserType/Descriptor.IsAadGroupType)",
           "type": "boolean"
         },
         "isContainer": {
+          "description": "Deprecated - Can be inferred from the subject type of the descriptor (Descriptor.IsGroupType)",
           "type": "boolean"
         },
         "isDeletedInOrigin": {
           "type": "boolean"
         },
         "profileUrl": {
+          "description": "Deprecated - not in use in most preexisting implementations of ToIdentityRef",
           "type": "string"
         },
         "uniqueName": {
+          "description": "Deprecated - use Domain+PrincipalName instead",
           "type": "string"
         }
       }
@@ -1455,6 +1501,20 @@
         },
         "url": {
           "type": "string"
+        }
+      }
+    },
+    "ProjectAvatar": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "image": {
+          "description": "The avatar image represented as a byte array",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "byte"
+          }
         }
       }
     },

@@ -39,6 +39,9 @@
     },
     {
       "name": "Variablegroups"
+    },
+    {
+      "name": "Yamlschema"
     }
   ],
   "schemes": [
@@ -297,6 +300,43 @@
               "items": {
                 "$ref": "#/definitions/TaskAgentCloudType"
               }
+            }
+          }
+        }
+      }
+    },
+    "/{organization}/_apis/distributedtask/yamlschema": {
+      "get": {
+        "tags": [
+          "Yamlschema"
+        ],
+        "x-ms-docs-override-version": "5.1-preview.1",
+        "x-ms-vss-resource": "yamlschema",
+        "x-ms-vss-method": "GetYamlSchema",
+        "x-ms-preview": true,
+        "description": "",
+        "operationId": "Get",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "x-ms-required": false,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "object"
             }
           }
         }
@@ -3039,8 +3079,22 @@
           "description": "Owner of the environment deployment execution record",
           "$ref": "#/definitions/TaskOrchestrationOwner"
         },
+        "planId": {
+          "description": "Plan Id",
+          "type": "string",
+          "format": "uuid"
+        },
         "planType": {
           "description": "Plan type of the environment deployment execution record",
+          "type": "string"
+        },
+        "queueTime": {
+          "description": "Queue time of the environment deployment execution",
+          "type": "string",
+          "format": "date-time"
+        },
+        "requestIdentifier": {
+          "description": "Request identifier of the Environment deployment execution history record",
           "type": "string"
         },
         "result": {
@@ -3092,6 +3146,11 @@
           "description": "Service group Id",
           "type": "integer",
           "format": "int32"
+        },
+        "serviceOwner": {
+          "description": "Service owner Id",
+          "type": "string",
+          "format": "uuid"
         },
         "startTime": {
           "description": "Start time of the environment deployment execution",
@@ -3229,30 +3288,37 @@
       ],
       "properties": {
         "directoryAlias": {
+          "description": "Deprecated - Can be retrieved by querying the Graph user referenced in the \"self\" entry of the IdentityRef \"_links\" dictionary",
           "type": "string"
         },
         "id": {
           "type": "string"
         },
         "imageUrl": {
+          "description": "Deprecated - Available in the \"avatar\" entry of the IdentityRef \"_links\" dictionary",
           "type": "string"
         },
         "inactive": {
+          "description": "Deprecated - Can be retrieved by querying the Graph membership state referenced in the \"membershipState\" entry of the GraphUser \"_links\" dictionary",
           "type": "boolean"
         },
         "isAadIdentity": {
+          "description": "Deprecated - Can be inferred from the subject type of the descriptor (Descriptor.IsAadUserType/Descriptor.IsAadGroupType)",
           "type": "boolean"
         },
         "isContainer": {
+          "description": "Deprecated - Can be inferred from the subject type of the descriptor (Descriptor.IsGroupType)",
           "type": "boolean"
         },
         "isDeletedInOrigin": {
           "type": "boolean"
         },
         "profileUrl": {
+          "description": "Deprecated - not in use in most preexisting implementations of ToIdentityRef",
           "type": "string"
         },
         "uniqueName": {
+          "description": "Deprecated - use Domain+PrincipalName instead",
           "type": "string"
         }
       }
@@ -3743,13 +3809,14 @@
       }
     },
     "JObject": {
-      "description": "",
+      "description": "Represents a JSON object.",
       "type": "object",
       "properties": {
         "item": {
           "$ref": "#/definitions/JToken"
         },
         "type": {
+          "description": "Gets the node type for this JToken.",
           "type": "string",
           "format": "JTokenType"
         }
@@ -3811,38 +3878,47 @@
       "properties": {}
     },
     "JToken": {
-      "description": "",
+      "description": "Represents an abstract JSON token.",
       "type": "object",
       "properties": {
         "first": {
+          "description": "Get the first child token of this token.",
           "$ref": "#/definitions/JToken"
         },
         "hasValues": {
+          "description": "Gets a value indicating whether this token has child tokens.",
           "type": "boolean"
         },
         "item": {
           "$ref": "#/definitions/JToken"
         },
         "last": {
+          "description": "Get the last child token of this token.",
           "$ref": "#/definitions/JToken"
         },
         "next": {
+          "description": "Gets the next sibling token of this node.",
           "$ref": "#/definitions/JToken"
         },
         "parent": {
+          "description": "Gets or sets the parent.",
           "type": "string",
           "format": "JContainer"
         },
         "path": {
+          "description": "Gets the path of the JSON token.",
           "type": "string"
         },
         "previous": {
+          "description": "Gets the previous sibling token of this node.",
           "$ref": "#/definitions/JToken"
         },
         "root": {
+          "description": "Gets the root JToken of this JToken.",
           "$ref": "#/definitions/JToken"
         },
         "type": {
+          "description": "Gets the node type for this JToken.",
           "type": "string",
           "format": "JTokenType"
         }
@@ -4142,6 +4218,87 @@
         }
       }
     },
+    "ResourceFilterOptions": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "identities": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/IdentityRef"
+          }
+        },
+        "resourceTypes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "ResourceFilters": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "createdBy": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "resourceType": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "searchText": {
+          "type": "string"
+        }
+      }
+    },
+    "ResourceItem": {
+      "description": "Resources include Service Connections, Variable Groups and Secure Files.",
+      "type": "object",
+      "properties": {
+        "createdBy": {
+          "description": "Gets or sets the identity who created the resource.",
+          "$ref": "#/definitions/IdentityRef"
+        },
+        "description": {
+          "description": "Gets or sets description of the resource.",
+          "type": "string"
+        },
+        "iconUrl": {
+          "description": "Gets or sets icon url of the resource.",
+          "type": "string"
+        },
+        "id": {
+          "description": "Gets or sets Id of the resource.",
+          "type": "string"
+        },
+        "isShared": {
+          "description": "Indicates whether resource is shared with other projects or not.",
+          "type": "boolean"
+        },
+        "name": {
+          "description": "Gets or sets name of the resource.",
+          "type": "string"
+        },
+        "properties": {
+          "description": "Gets or sets internal properties of the resource.",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "resourceType": {
+          "description": "Gets or sets resource type.",
+          "type": "string"
+        }
+      }
+    },
     "ResourceLimit": {
       "description": "",
       "type": "object",
@@ -4175,6 +4332,27 @@
         "totalMinutes": {
           "type": "integer",
           "format": "int32"
+        }
+      }
+    },
+    "ResourcesHubData": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "continuationToken": {
+          "type": "string"
+        },
+        "resourceFilterOptions": {
+          "$ref": "#/definitions/ResourceFilterOptions"
+        },
+        "resourceFilters": {
+          "$ref": "#/definitions/ResourceFilters"
+        },
+        "resourceItems": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ResourceItem"
+          }
         }
       }
     },
@@ -5330,6 +5508,9 @@
         "serviceOwner": {
           "type": "string",
           "format": "uuid"
+        },
+        "statusMessage": {
+          "type": "string"
         }
       }
     },
@@ -6209,6 +6390,9 @@
         },
         "disabled": {
           "type": "boolean"
+        },
+        "ecosystem": {
+          "type": "string"
         },
         "execution": {
           "type": "object",
@@ -7833,6 +8017,49 @@
           "type": "boolean"
         },
         "value": {
+          "type": "string"
+        }
+      }
+    },
+    "VirtualMachine": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "agent": {
+          "$ref": "#/definitions/TaskAgent"
+        },
+        "id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "VirtualMachineGroup": {
+      "description": "",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/ServiceGroup"
+        }
+      ],
+      "properties": {
+        "poolId": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "VirtualMachineGroupCreateParameters": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "name": {
           "type": "string"
         }
       }
