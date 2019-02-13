@@ -19,47 +19,79 @@
   "basePath": "/",
   "tags": [
     {
-      "name": "Geo Region"
-    },
-    {
-      "name": "Regions"
+      "name": "Profiles"
     }
   ],
   "schemes": [
     "https"
   ],
   "paths": {
-    "/_apis/profile/georegion": {
+    "/_apis/profile/profiles/{id}": {
       "get": {
         "tags": [
-          "Geo Region"
+          "Profiles"
         ],
-        "x-ms-docs-override-version": "5.1-preview.1",
-        "x-ms-vss-resource": "geoRegion",
-        "x-ms-vss-method": "GetGeoRegion",
+        "x-ms-docs-override-version": "5.1-preview.3",
+        "x-ms-vss-resource": "profiles",
+        "x-ms-vss-method": "GetProfile",
         "x-ms-preview": true,
-        "description": "Lookup up country/region based on provided IPv4, null if using the remote IPv4 address.",
+        "description": "Gets a user profile.",
         "operationId": "Get",
         "produces": [
           "application/json"
         ],
         "parameters": [
           {
-            "in": "query",
-            "name": "ip",
-            "description": "",
+            "in": "path",
+            "name": "id",
+            "description": "The ID of the target user profile within the same organization, or 'me' to get the profile of the current authenticated user.",
             "required": true,
             "type": "string"
           },
           {
-            "$ref": "#/parameters/api-Version-preview.1"
+            "in": "query",
+            "name": "details",
+            "description": "Return public profile information such as display name, email address, country, etc. If false, the withAttributes parameter is ignored.",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "withAttributes",
+            "description": "If true, gets the attributes (named key-value pairs of arbitrary data) associated with the profile. The partition parameter must also have a value.",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "partition",
+            "description": "The partition (named group) of attributes to return.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "coreAttributes",
+            "description": "A comma-delimited list of core profile attributes to return. Valid values are Email, Avatar, DisplayName, and ContactWithOffers.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "forceRefresh",
+            "description": "Not used in this version of the API.",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.3"
           }
         ],
         "responses": {
           "200": {
             "description": "successful operation",
             "schema": {
-              "$ref": "#/definitions/GeoRegion"
+              "$ref": "#/definitions/Profile"
             }
           }
         },
@@ -69,53 +101,282 @@
               "vso.profile"
             ]
           }
-        ]
-      }
-    },
-    "/_apis/profile/regions": {
-      "get": {
-        "tags": [
-          "Regions"
         ],
-        "x-ms-docs-override-version": "5.1-preview.1",
-        "x-ms-vss-resource": "regions",
-        "x-ms-vss-method": "GetRegions",
-        "x-ms-preview": true,
-        "description": "",
-        "operationId": "Get",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "$ref": "#/parameters/api-Version-preview.1"
+        "x-ms-examples": {
+          "": {
+            "$ref": "./httpExamples/Profiles/GET__profile_profiles_me.json"
           }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "$ref": "#/definitions/ProfileRegions"
-            }
-          }
-        },
-        "security": [
-          {
-            "oauth2": [
-              "vso.profile"
-            ]
-          }
-        ]
+        }
       }
     }
   },
   "definitions": {
+    "AttributeDescriptor": {
+      "description": "Identifies an attribute with a name and a container.",
+      "type": "object",
+      "properties": {
+        "attributeName": {
+          "description": "The name of the attribute.",
+          "type": "string"
+        },
+        "containerName": {
+          "description": "The container the attribute resides in.",
+          "type": "string"
+        }
+      }
+    },
+    "AttributesContainer": {
+      "description": "Stores a set of named profile attributes.",
+      "type": "object",
+      "properties": {
+        "attributes": {
+          "description": "The attributes stored by the container.",
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/ProfileAttribute"
+          }
+        },
+        "containerName": {
+          "description": "The name of the container.",
+          "type": "string"
+        },
+        "revision": {
+          "description": "The maximum revision number of any attribute within the container.",
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "Avatar": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "isAutoGenerated": {
+          "type": "boolean"
+        },
+        "size": {
+          "enum": [
+            "small",
+            "medium",
+            "large"
+          ],
+          "x-ms-enum": {
+            "name": "AvatarSize",
+            "values": [
+              {
+                "value": "small",
+                "description": ""
+              },
+              {
+                "value": "medium",
+                "description": ""
+              },
+              {
+                "value": "large",
+                "description": ""
+              }
+            ]
+          }
+        },
+        "timeStamp": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "value": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "byte"
+          }
+        }
+      }
+    },
+    "CoreProfileAttribute": {
+      "description": "A profile attribute which always has a value for each profile.",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/ProfileAttributeBase"
+        }
+      ],
+      "properties": {}
+    },
+    "CreateProfileContext": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "ciData": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object"
+          }
+        },
+        "contactWithOffers": {
+          "type": "boolean"
+        },
+        "countryName": {
+          "type": "string"
+        },
+        "displayName": {
+          "type": "string"
+        },
+        "emailAddress": {
+          "type": "string"
+        },
+        "hasAccount": {
+          "type": "boolean"
+        },
+        "language": {
+          "type": "string"
+        },
+        "phoneNumber": {
+          "type": "string"
+        },
+        "profileState": {
+          "description": "The current state of the profile.",
+          "enum": [
+            "custom",
+            "customReadOnly",
+            "readOnly"
+          ],
+          "x-ms-enum": {
+            "name": "ProfileState",
+            "values": [
+              {
+                "value": "custom",
+                "description": "The profile is in use."
+              },
+              {
+                "value": "customReadOnly",
+                "description": "The profile is in use, but can only be read."
+              },
+              {
+                "value": "readOnly",
+                "description": "The profile may only be read."
+              }
+            ]
+          }
+        }
+      }
+    },
     "GeoRegion": {
       "description": "",
       "type": "object",
       "properties": {
         "regionCode": {
           "type": "string"
+        }
+      }
+    },
+    "JObject": {
+      "description": "Represents a JSON object.",
+      "type": "object",
+      "properties": {
+        "item": {
+          "type": "string",
+          "format": "JToken"
+        },
+        "type": {
+          "description": "Gets the node type for this JToken.",
+          "type": "string",
+          "format": "JTokenType"
+        }
+      }
+    },
+    "Profile": {
+      "description": "A user profile.",
+      "type": "object",
+      "properties": {
+        "applicationContainer": {
+          "description": "The attributes of this profile.",
+          "$ref": "#/definitions/AttributesContainer"
+        },
+        "coreAttributes": {
+          "description": "The core attributes of this profile.",
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/CoreProfileAttribute"
+          }
+        },
+        "coreRevision": {
+          "description": "The maximum revision number of any attribute.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "id": {
+          "description": "The unique identifier of the profile.",
+          "type": "string",
+          "format": "uuid"
+        },
+        "profileState": {
+          "description": "The current state of the profile.",
+          "enum": [
+            "custom",
+            "customReadOnly",
+            "readOnly"
+          ],
+          "x-ms-enum": {
+            "name": "ProfileState",
+            "values": [
+              {
+                "value": "custom",
+                "description": "The profile is in use."
+              },
+              {
+                "value": "customReadOnly",
+                "description": "The profile is in use, but can only be read."
+              },
+              {
+                "value": "readOnly",
+                "description": "The profile may only be read."
+              }
+            ]
+          }
+        },
+        "revision": {
+          "description": "The maximum revision number of any attribute.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "timeStamp": {
+          "description": "The time at which this profile was last changed.",
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "ProfileAttribute": {
+      "description": "A named object associated with a profile.",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/ProfileAttributeBase"
+        }
+      ],
+      "properties": {}
+    },
+    "ProfileAttributeBase": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "descriptor": {
+          "description": "The descriptor of the attribute.",
+          "$ref": "#/definitions/AttributeDescriptor"
+        },
+        "revision": {
+          "description": "The revision number of the attribute.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "timeStamp": {
+          "description": "The time the attribute was last changed.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "value": {
+          "description": "The value of the attribute.",
+          "type": "string",
+          "format": "T"
         }
       }
     },
@@ -159,6 +420,31 @@
           }
         }
       }
+    },
+    "VssJsonCollectionWrapper": {
+      "description": "This class is used to serialized collections as a single JSON object on the wire, to avoid serializing JSON arrays directly to the client, which can be a security hole",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/VssJsonCollectionWrapperBase"
+        }
+      ],
+      "properties": {
+        "value": {
+          "type": "string",
+          "format": "T"
+        }
+      }
+    },
+    "VssJsonCollectionWrapperBase": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "count": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
     }
   },
   "parameters": {
@@ -166,6 +452,20 @@
       "name": "api-version",
       "in": "query",
       "description": "Version of the API to use.  This should be set to '5.1-preview.1' to use this version of the api.",
+      "required": true,
+      "type": "string"
+    },
+    "api-Version-preview.2": {
+      "name": "api-version",
+      "in": "query",
+      "description": "Version of the API to use.  This should be set to '5.1-preview.2' to use this version of the api.",
+      "required": true,
+      "type": "string"
+    },
+    "api-Version-preview.3": {
+      "name": "api-version",
+      "in": "query",
+      "description": "Version of the API to use.  This should be set to '5.1-preview.3' to use this version of the api.",
       "required": true,
       "type": "string"
     }
@@ -181,7 +481,8 @@
       "authorizationUrl": "https://app.vssps.visualstudio.com/oauth2/authorize&response_type=Assertion",
       "tokenUrl": "https://app.vssps.visualstudio.com/oauth2/token?client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer&grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer",
       "scopes": {
-        "vso.profile": "Grants the ability to read your profile, accounts, collections, projects, teams, and other top-level organizational artifacts."
+        "vso.profile": "Grants the ability to read your profile, accounts, collections, projects, teams, and other top-level organizational artifacts.",
+        "vso.profile_write": "Grants the ability to write to your profile."
       }
     }
   },
