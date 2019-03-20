@@ -2535,9 +2535,9 @@
         "tags": [
           "Capacities"
         ],
-        "x-ms-docs-override-version": "5.1-preview.1",
+        "x-ms-docs-override-version": "5.1-preview.2",
         "x-ms-vss-resource": "capacities",
-        "x-ms-vss-method": "GetCapacities",
+        "x-ms-vss-method": "GetCapacitiesWithIdentityRef",
         "x-ms-preview": true,
         "description": "Get a team's capacity",
         "operationId": "List",
@@ -2576,7 +2576,7 @@
             "type": "string"
           },
           {
-            "$ref": "#/parameters/api-Version-preview.1"
+            "$ref": "#/parameters/api-Version-preview.2"
           }
         ],
         "responses": {
@@ -2585,7 +2585,7 @@
             "schema": {
               "type": "array",
               "items": {
-                "$ref": "#/definitions/TeamMemberCapacity"
+                "$ref": "#/definitions/TeamMemberCapacityIdentityRef"
               }
             }
           }
@@ -2607,12 +2607,12 @@
         "tags": [
           "Capacities"
         ],
-        "x-ms-docs-override-version": "5.1-preview.1",
+        "x-ms-docs-override-version": "5.1-preview.2",
         "x-ms-vss-resource": "capacities",
-        "x-ms-vss-method": "ReplaceCapacities",
+        "x-ms-vss-method": "ReplaceCapacitiesWithIdentityRef",
         "x-ms-preview": true,
         "description": "Replace a team's capacity",
-        "operationId": "Replace Capacities",
+        "operationId": "Replace Capacities With Identity Ref",
         "consumes": [
           "application/json"
         ],
@@ -2635,7 +2635,7 @@
             "schema": {
               "type": "array",
               "items": {
-                "$ref": "#/definitions/TeamMemberCapacity"
+                "$ref": "#/definitions/TeamMemberCapacityIdentityRef"
               }
             }
           },
@@ -2663,7 +2663,7 @@
             "type": "string"
           },
           {
-            "$ref": "#/parameters/api-Version-preview.1"
+            "$ref": "#/parameters/api-Version-preview.2"
           }
         ],
         "responses": {
@@ -2672,7 +2672,7 @@
             "schema": {
               "type": "array",
               "items": {
-                "$ref": "#/definitions/TeamMemberCapacity"
+                "$ref": "#/definitions/TeamMemberCapacityIdentityRef"
               }
             }
           }
@@ -2696,9 +2696,9 @@
         "tags": [
           "Capacities"
         ],
-        "x-ms-docs-override-version": "5.1-preview.1",
+        "x-ms-docs-override-version": "5.1-preview.2",
         "x-ms-vss-resource": "capacities",
-        "x-ms-vss-method": "GetCapacity",
+        "x-ms-vss-method": "GetCapacityWithIdentityRef",
         "x-ms-preview": true,
         "description": "Get a team member's capacity",
         "operationId": "Get",
@@ -2745,14 +2745,14 @@
             "type": "string"
           },
           {
-            "$ref": "#/parameters/api-Version-preview.1"
+            "$ref": "#/parameters/api-Version-preview.2"
           }
         ],
         "responses": {
           "200": {
             "description": "successful operation",
             "schema": {
-              "$ref": "#/definitions/TeamMemberCapacity"
+              "$ref": "#/definitions/TeamMemberCapacityIdentityRef"
             }
           }
         },
@@ -2773,9 +2773,9 @@
         "tags": [
           "Capacities"
         ],
-        "x-ms-docs-override-version": "5.1-preview.1",
+        "x-ms-docs-override-version": "5.1-preview.2",
         "x-ms-vss-resource": "capacities",
-        "x-ms-vss-method": "UpdateCapacity",
+        "x-ms-vss-method": "UpdateCapacityWithIdentityRef",
         "x-ms-preview": true,
         "description": "Update a team member's capacity",
         "operationId": "Update",
@@ -2834,14 +2834,14 @@
             "type": "string"
           },
           {
-            "$ref": "#/parameters/api-Version-preview.1"
+            "$ref": "#/parameters/api-Version-preview.2"
           }
         ],
         "responses": {
           "200": {
             "description": "successful operation",
             "schema": {
-              "$ref": "#/definitions/TeamMemberCapacity"
+              "$ref": "#/definitions/TeamMemberCapacityIdentityRef"
             }
           }
         },
@@ -2853,11 +2853,8 @@
           }
         ],
         "x-ms-examples": {
-          "Update a team member's capacity. Example 1": {
+          "Update a team member's capacity": {
             "$ref": "./httpExamples/capacities/PATCH__work_teamsettings_iterations__iterationId__capacities__teammemberId_.json"
-          },
-          "Update a team member's capacity. Example 2": {
-            "$ref": "./httpExamples/capacities/PATCH__work_teamsettings_iterations__iterationId__capacities__teammemberId_2.json"
           }
         }
       }
@@ -3713,6 +3710,31 @@
       "properties": {
         "autoRefreshState": {
           "type": "boolean"
+        }
+      }
+    },
+    "CapacityContractBase": {
+      "description": "",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/TeamSettingsDataContractBase"
+        }
+      ],
+      "properties": {
+        "activities": {
+          "description": "Collection of capacities associated with the team member",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Activity"
+          }
+        },
+        "daysOff": {
+          "description": "The days off associated with the team member",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/DateRange"
+          }
         }
       }
     },
@@ -4630,14 +4652,17 @@
       "type": "object",
       "properties": {
         "finishDate": {
+          "description": "Finish date of the iteration. Date-only, correct unadjusted at midnight in UTC.",
           "type": "string",
           "format": "date-time"
         },
         "startDate": {
+          "description": "Start date of the iteration. Date-only, correct unadjusted at midnight in UTC.",
           "type": "string",
           "format": "date-time"
         },
         "timeFrame": {
+          "description": "Time frame of the iteration, such as past, current or future.",
           "enum": [
             "past",
             "current",
@@ -4668,27 +4693,28 @@
       "type": "object",
       "allOf": [
         {
-          "$ref": "#/definitions/TeamSettingsDataContractBase"
+          "$ref": "#/definitions/CapacityContractBase"
         }
       ],
       "properties": {
-        "activities": {
-          "description": "Collection of capacities associated with the team member",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/Activity"
-          }
-        },
-        "daysOff": {
-          "description": "The days off associated with the team member",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/DateRange"
-          }
-        },
         "teamMember": {
           "description": "Shallow Ref to the associated team member",
           "$ref": "#/definitions/Member"
+        }
+      }
+    },
+    "TeamMemberCapacityIdentityRef": {
+      "description": "Represents capacity for a specific team member",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/CapacityContractBase"
+        }
+      ],
+      "properties": {
+        "teamMember": {
+          "description": "Identity ref of the associated team member",
+          "$ref": "#/definitions/IdentityRef"
         }
       }
     },
@@ -4839,7 +4865,7 @@
       }
     },
     "TeamSettingsIteration": {
-      "description": "Represents a shallow ref for a single iteration",
+      "description": "Represents a shallow ref for a single iteration.",
       "type": "object",
       "allOf": [
         {
@@ -4848,20 +4874,20 @@
       ],
       "properties": {
         "attributes": {
-          "description": "Attributes such as start and end date",
+          "description": "Attributes of the iteration such as start and end date.",
           "$ref": "#/definitions/TeamIterationAttributes"
         },
         "id": {
-          "description": "Id of the resource",
+          "description": "Id of the iteration.",
           "type": "string",
           "format": "uuid"
         },
         "name": {
-          "description": "Name of the resource",
+          "description": "Name of the iteration.",
           "type": "string"
         },
         "path": {
-          "description": "Relative path of the iteration",
+          "description": "Relative path of the iteration.",
           "type": "string"
         }
       }
@@ -5332,6 +5358,19 @@
           "type": "integer",
           "format": "int32"
         },
+        "createdInRevision": {
+          "description": "[Internal] The work item revision where this comment was originally added.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "isDeleted": {
+          "description": "[Internal] Specifies whether comment was deleted.",
+          "type": "boolean"
+        },
+        "text": {
+          "description": "[Internal] The text of the comment.",
+          "type": "string"
+        },
         "version": {
           "description": "The version number.",
           "type": "integer",
@@ -5462,6 +5501,13 @@
       "name": "api-version",
       "in": "query",
       "description": "Version of the API to use.  This should be set to '5.1-preview.1' to use this version of the api.",
+      "required": true,
+      "type": "string"
+    },
+    "api-Version-preview.2": {
+      "name": "api-version",
+      "in": "query",
+      "description": "Version of the API to use.  This should be set to '5.1-preview.2' to use this version of the api.",
       "required": true,
       "type": "string"
     }

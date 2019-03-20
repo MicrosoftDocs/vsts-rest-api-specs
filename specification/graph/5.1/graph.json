@@ -20,6 +20,9 @@
   "basePath": "/",
   "tags": [
     {
+      "name": "Avatars"
+    },
+    {
       "name": "Descriptors"
     },
     {
@@ -943,6 +946,177 @@
         }
       }
     },
+    "/{organization}/_apis/graph/Subjects/{subjectDescriptor}/avatars": {
+      "delete": {
+        "tags": [
+          "Avatars"
+        ],
+        "x-ms-docs-override-version": "5.1-preview.1",
+        "x-ms-vss-resource": "avatars",
+        "x-ms-vss-method": "DeleteAvatar",
+        "x-ms-preview": true,
+        "description": "",
+        "operationId": "Delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "subjectDescriptor",
+            "description": "",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "x-ms-required": false,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Avatars"
+        ],
+        "x-ms-docs-override-version": "5.1-preview.1",
+        "x-ms-vss-resource": "avatars",
+        "x-ms-vss-method": "GetAvatar",
+        "x-ms-preview": true,
+        "description": "",
+        "operationId": "Get",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "subjectDescriptor",
+            "description": "",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "x-ms-required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "size",
+            "description": "",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "small",
+              "medium",
+              "large"
+            ],
+            "x-ms-enum": {
+              "name": "AvatarSize",
+              "values": [
+                {
+                  "value": "small",
+                  "description": ""
+                },
+                {
+                  "value": "medium",
+                  "description": ""
+                },
+                {
+                  "value": "large",
+                  "description": ""
+                }
+              ]
+            }
+          },
+          {
+            "in": "query",
+            "name": "format",
+            "description": "",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/Avatar"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.graph"
+            ]
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "Avatars"
+        ],
+        "x-ms-docs-override-version": "5.1-preview.1",
+        "x-ms-vss-resource": "avatars",
+        "x-ms-vss-method": "SetAvatar",
+        "x-ms-preview": true,
+        "description": "",
+        "operationId": "Set Avatar",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Avatar"
+            }
+          },
+          {
+            "in": "path",
+            "name": "subjectDescriptor",
+            "description": "",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "x-ms-required": false,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        }
+      }
+    },
     "/{organization}/_apis/graph/users": {
       "post": {
         "tags": [
@@ -1192,6 +1366,59 @@
             "$ref": "./httpExamples/Users/GetUserAAD.json"
           }
         }
+      },
+      "patch": {
+        "tags": [
+          "Users"
+        ],
+        "x-ms-docs-override-version": "5.1-preview.1",
+        "x-ms-vss-resource": "users",
+        "x-ms-vss-method": "UpdateUser",
+        "x-ms-preview": true,
+        "description": "Map an existing user to a different identity",
+        "operationId": "Update",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "The subset of the full graph user used to uniquely find the graph subject in an external provider.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/GraphUserUpdateContext"
+            }
+          },
+          {
+            "in": "path",
+            "name": "userDescriptor",
+            "description": "the descriptor of the user to update",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/GraphUser"
+            }
+          }
+        }
       }
     },
     "/{organization}/_apis/graph/Users/{userDescriptor}/providerinfo": {
@@ -1247,6 +1474,50 @@
     }
   },
   "definitions": {
+    "Avatar": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "isAutoGenerated": {
+          "type": "boolean"
+        },
+        "size": {
+          "enum": [
+            "small",
+            "medium",
+            "large"
+          ],
+          "x-ms-enum": {
+            "name": "AvatarSize",
+            "values": [
+              {
+                "value": "small",
+                "description": ""
+              },
+              {
+                "value": "medium",
+                "description": ""
+              },
+              {
+                "value": "large",
+                "description": ""
+              }
+            ]
+          }
+        },
+        "timeStamp": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "value": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "byte"
+          }
+        }
+      }
+    },
     "GraphCachePolicies": {
       "description": "",
       "type": "object",
@@ -1772,6 +2043,21 @@
         }
       }
     },
+    "GraphUserOriginIdUpdateContext": {
+      "description": "Use this type to update an existing user using the OriginID as a reference to an existing user from an external AD or AAD backed provider. This is the subset of GraphUser fields required for creation of a GraphUser for the AD and AAD use case when looking up the user by its unique ID in the backing provider.",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/GraphUserUpdateContext"
+        }
+      ],
+      "properties": {
+        "originId": {
+          "description": "This should be the object id or sid of the user from the source AD or AAD provider. Example: d47d025a-ce2f-4a79-8618-e8862ade30dd Azure Devops will communicate with the source provider to fill all other fields on creation.",
+          "type": "string"
+        }
+      }
+    },
     "GraphUserPrincipalNameCreationContext": {
       "description": "Use this type to create a new user using the principal name as a reference to an existing user from an external AD or AAD backed provider. This is the subset of GraphUser fields required for creation of a GraphUser for the AD and AAD use case when looking up the user by its principal name in the backing provider.",
       "type": "object",
@@ -1786,6 +2072,11 @@
           "type": "string"
         }
       }
+    },
+    "GraphUserUpdateContext": {
+      "description": "Do not attempt to use this type to update user. Use one of the subclasses instead. This type does not contain sufficient fields to create a new user.",
+      "type": "object",
+      "properties": {}
     },
     "JsonPatchDocument": {
       "description": "The JSON model for JSON Patch Operations",
@@ -1849,7 +2140,7 @@
           }
         },
         "path": {
-          "description": "The path for the operation",
+          "description": "The path for the operation. In the case of an array, a zero based index can be used to specify the position in the array (e.g. /biscuits/0/name). The \"-\" character can be used instead of an index to insert at the end of the array (e.g. /biscuits/-).",
           "type": "string"
         },
         "value": {

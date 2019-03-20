@@ -4385,6 +4385,9 @@
         "sourceVersion": {
           "type": "string"
         },
+        "targetBranchName": {
+          "type": "string"
+        },
         "uri": {
           "type": "string"
         }
@@ -4774,6 +4777,36 @@
         "deltaBuild": {
           "description": "Uri of build against which difference in coverage is computed",
           "$ref": "#/definitions/ShallowReference"
+        },
+        "status": {
+          "description": "Uri of build against which difference in coverage is computed",
+          "enum": [
+            "none",
+            "pending",
+            "completed",
+            "finalized"
+          ],
+          "x-ms-enum": {
+            "name": "CoverageSummaryStatus",
+            "values": [
+              {
+                "value": "none",
+                "description": "No coverage status"
+              },
+              {
+                "value": "pending",
+                "description": "The summary evaluation is in progress"
+              },
+              {
+                "value": "completed",
+                "description": "The summary evaluation for the previous request is completed. Summary can change in future"
+              },
+              {
+                "value": "finalized",
+                "description": "The summary evaluation is finalized and won't change"
+              }
+            ]
+          }
         }
       }
     },
@@ -6156,7 +6189,7 @@
           "format": "int32"
         },
         "status": {
-          "description": "Coverage status",
+          "description": "Coverage status. Covered: 0, NotCovered: 1,  PartiallyCovered: 2",
           "type": "integer",
           "format": "int32"
         }
@@ -7586,6 +7619,13 @@
           "description": "The state of the run. Valid states - NotStarted, InProgress, Waiting",
           "type": "string"
         },
+        "tags": {
+          "description": "Tags to attach with the test run, maximum of 5 tags can be added to run.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TestTag"
+          }
+        },
         "testConfigurationsMapping": {
           "type": "string"
         },
@@ -7886,6 +7926,13 @@
                 "description": ""
               }
             ]
+          }
+        },
+        "tags": {
+          "description": "Tags to attach with the test run.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TestTag"
           }
         },
         "testEnvironmentId": {
@@ -9517,6 +9564,20 @@
         }
       }
     },
+    "TestFlakyIdentifier": {
+      "description": "Test Flaky Identifier",
+      "type": "object",
+      "properties": {
+        "branchName": {
+          "description": "Branch Name where Flakiness has to be Marked/Unmarked",
+          "type": "string"
+        },
+        "isFlaky": {
+          "description": "State for Flakiness",
+          "type": "boolean"
+        }
+      }
+    },
     "TestHistoryQuery": {
       "description": "Filter to get TestCase result history.",
       "type": "object",
@@ -9689,6 +9750,16 @@
           "description": "FileName for log file",
           "type": "string"
         },
+        "releaseEnvId": {
+          "description": "ReleaseEnvId for test log, if context is Release",
+          "type": "integer",
+          "format": "int32"
+        },
+        "releaseId": {
+          "description": "ReleaseId for test log, if context is Release",
+          "type": "integer",
+          "format": "int32"
+        },
         "resultId": {
           "description": "Resultid for test log, if context is run and log is related to result",
           "type": "integer",
@@ -9703,7 +9774,8 @@
           "description": "Test Log Reference object",
           "enum": [
             "run",
-            "build"
+            "build",
+            "release"
           ],
           "x-ms-enum": {
             "name": "TestLogScope",
@@ -9715,6 +9787,10 @@
               {
                 "value": "build",
                 "description": "Log File associated with Build"
+              },
+              {
+                "value": "release",
+                "description": "Log File associated with Release"
               }
             ]
           }
@@ -10922,6 +10998,13 @@
           "description": "AutomatedTestStorage of test result.",
           "type": "string"
         },
+        "flakyIdentifiers": {
+          "description": "List of Flaky Identifier for TestCaseReferenceId",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TestFlakyIdentifier"
+          }
+        },
         "owner": {
           "description": "Owner of test result.",
           "type": "string"
@@ -10938,6 +11021,28 @@
         },
         "testCaseTitle": {
           "description": "TestCaseTitle of test result.",
+          "type": "string"
+        }
+      }
+    },
+    "TestResultMetaDataUpdateInput": {
+      "description": "Represents a TestResultMetaData Input",
+      "type": "object",
+      "properties": {
+        "flakyIdentifiers": {
+          "description": "List of Flaky Identifiers",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TestFlakyIdentifier"
+          }
+        }
+      }
+    },
+    "TestResultMetaDataUpdateResponse": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "status": {
           "type": "string"
         }
       }
@@ -11550,6 +11655,13 @@
                 "description": ""
               }
             ]
+          }
+        },
+        "tags": {
+          "description": "Tags attached with this test run.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TestTag"
           }
         },
         "testEnvironment": {
@@ -12567,6 +12679,50 @@
         },
         "workItem": {
           "$ref": "#/definitions/WorkItemReference"
+        }
+      }
+    },
+    "TestTag": {
+      "description": "Tag attached to a run or result.",
+      "type": "object",
+      "properties": {
+        "name": {
+          "description": "Name of the tag, alphanumeric value less than 30 chars",
+          "type": "string"
+        }
+      }
+    },
+    "TestTagSummary": {
+      "description": "Test tag summary for build or release grouped by test run.",
+      "type": "object",
+      "properties": {
+        "tagsGroupByTestArtifact": {
+          "description": "Dictionary which contains tags associated with a test run.",
+          "type": "object",
+          "additionalProperties": {
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/TestTag"
+            }
+          }
+        }
+      }
+    },
+    "TestTagsUpdateModel": {
+      "description": "Tags to update to a run or result.",
+      "type": "object",
+      "properties": {
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/TestTag"
+              }
+            }
+          }
         }
       }
     },

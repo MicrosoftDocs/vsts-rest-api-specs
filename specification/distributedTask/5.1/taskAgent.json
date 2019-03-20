@@ -26,7 +26,19 @@
       "name": "Agentcloudtypes"
     },
     {
+      "name": "Agents",
+      "description": "Agents run jobs in pipelines."
+    },
+    {
       "name": "Deploymentgroups"
+    },
+    {
+      "name": "Pools",
+      "description": "Agent pools offer up agents at the organization level."
+    },
+    {
+      "name": "Queues",
+      "description": "Queues (called \"pools\" in the UI) connect projects to agent pools."
     },
     {
       "name": "Requests"
@@ -303,6 +315,787 @@
             }
           }
         }
+      }
+    },
+    "/{organization}/_apis/distributedtask/pools": {
+      "post": {
+        "tags": [
+          "Pools"
+        ],
+        "x-ms-docs-override-version": "5.1-preview.1",
+        "x-ms-vss-resource": "pools",
+        "x-ms-vss-method": "AddAgentPool",
+        "x-ms-preview": true,
+        "description": "Create an agent pool.",
+        "operationId": "Add",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Details about the new agent pool",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/TaskAgentPool"
+            }
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/TaskAgentPool"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.agentpools_manage"
+            ]
+          }
+        ]
+      },
+      "get": {
+        "tags": [
+          "Pools"
+        ],
+        "x-ms-docs-override-version": "5.1-preview.1",
+        "x-ms-vss-resource": "pools",
+        "x-ms-vss-method": "GetAgentPools",
+        "x-ms-preview": true,
+        "description": "Get a list of agent pools.",
+        "operationId": "List",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "poolName",
+            "description": "Filter by name",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "properties",
+            "description": "Filter by agent pool properties (comma-separated)",
+            "required": false,
+            "type": "string",
+            "format": "array (string)"
+          },
+          {
+            "in": "query",
+            "name": "poolType",
+            "description": "Filter by pool type",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "automation",
+              "deployment"
+            ],
+            "x-ms-enum": {
+              "name": "TaskAgentPoolType",
+              "values": [
+                {
+                  "value": "automation",
+                  "description": "A typical pool of task agents"
+                },
+                {
+                  "value": "deployment",
+                  "description": "A deployment pool"
+                }
+              ]
+            }
+          },
+          {
+            "in": "query",
+            "name": "actionFilter",
+            "description": "Filter by whether the calling user has use or manage permissions",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "none",
+              "manage",
+              "use"
+            ],
+            "x-ms-enum": {
+              "name": "TaskAgentPoolActionFilter",
+              "values": [
+                {
+                  "value": "none",
+                  "description": ""
+                },
+                {
+                  "value": "manage",
+                  "description": ""
+                },
+                {
+                  "value": "use",
+                  "description": ""
+                }
+              ]
+            }
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/TaskAgentPool"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.agentpools"
+            ]
+          }
+        ]
+      }
+    },
+    "/{organization}/_apis/distributedtask/pools/{poolId}": {
+      "delete": {
+        "tags": [
+          "Pools"
+        ],
+        "x-ms-docs-override-version": "5.1-preview.1",
+        "x-ms-vss-resource": "pools",
+        "x-ms-vss-method": "DeleteAgentPool",
+        "x-ms-preview": true,
+        "description": "Delete an agent pool.",
+        "operationId": "Delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "poolId",
+            "description": "ID of the agent pool to delete",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.agentpools_manage"
+            ]
+          }
+        ]
+      },
+      "get": {
+        "tags": [
+          "Pools"
+        ],
+        "x-ms-docs-override-version": "5.1-preview.1",
+        "x-ms-vss-resource": "pools",
+        "x-ms-vss-method": "GetAgentPool",
+        "x-ms-preview": true,
+        "description": "Get information about an agent pool.",
+        "operationId": "Get",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "poolId",
+            "description": "An agent pool ID",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "properties",
+            "description": "Agent pool properties (comma-separated)",
+            "required": false,
+            "type": "string",
+            "format": "array (string)"
+          },
+          {
+            "in": "query",
+            "name": "actionFilter",
+            "description": "Filter by whether the calling user has use or manage permissions",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "none",
+              "manage",
+              "use"
+            ],
+            "x-ms-enum": {
+              "name": "TaskAgentPoolActionFilter",
+              "values": [
+                {
+                  "value": "none",
+                  "description": ""
+                },
+                {
+                  "value": "manage",
+                  "description": ""
+                },
+                {
+                  "value": "use",
+                  "description": ""
+                }
+              ]
+            }
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/TaskAgentPool"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.agentpools"
+            ]
+          }
+        ]
+      },
+      "patch": {
+        "tags": [
+          "Pools"
+        ],
+        "x-ms-docs-override-version": "5.1-preview.1",
+        "x-ms-vss-resource": "pools",
+        "x-ms-vss-method": "UpdateAgentPool",
+        "x-ms-preview": true,
+        "description": "Update properties on an agent pool",
+        "operationId": "Update",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Updated agent pool details",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/TaskAgentPool"
+            }
+          },
+          {
+            "in": "path",
+            "name": "poolId",
+            "description": "The agent pool to update",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/TaskAgentPool"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.agentpools_manage"
+            ]
+          }
+        ]
+      }
+    },
+    "/{organization}/_apis/distributedtask/pools/{poolId}/agents": {
+      "post": {
+        "tags": [
+          "Agents"
+        ],
+        "x-ms-docs-override-version": "5.1-preview.1",
+        "x-ms-vss-resource": "agents",
+        "x-ms-vss-method": "AddAgent",
+        "x-ms-preview": true,
+        "description": "Adds an agent to a pool.  You probably don't want to call this endpoint directly. Instead, [configure an agent](https://docs.microsoft.com/azure/devops/pipelines/agents/agents) using the agent download package.",
+        "operationId": "Add",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Details about the agent being added",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/TaskAgent"
+            }
+          },
+          {
+            "in": "path",
+            "name": "poolId",
+            "description": "The agent pool in which to add the agent",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/TaskAgent"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.agentpools_manage"
+            ]
+          }
+        ]
+      },
+      "get": {
+        "tags": [
+          "Agents"
+        ],
+        "x-ms-docs-override-version": "5.1-preview.1",
+        "x-ms-vss-resource": "agents",
+        "x-ms-vss-method": "GetAgents",
+        "x-ms-preview": true,
+        "description": "Get a list of agents.",
+        "operationId": "List",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "poolId",
+            "description": "The agent pool containing the agents",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "agentName",
+            "description": "Filter on agent name",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "includeCapabilities",
+            "description": "Whether to include the agents' capabilities in the response",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "includeAssignedRequest",
+            "description": "Whether to include details about the agents' current work",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "propertyFilters",
+            "description": "Filter which custom properties will be returned",
+            "required": false,
+            "type": "string",
+            "format": "array (string)"
+          },
+          {
+            "in": "query",
+            "name": "demands",
+            "description": "Filter by demands the agents can satisfy",
+            "required": false,
+            "type": "string",
+            "format": "array (string)"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/TaskAgent"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.agentpools"
+            ]
+          }
+        ]
+      }
+    },
+    "/{organization}/_apis/distributedtask/pools/{poolId}/agents/{agentId}": {
+      "delete": {
+        "tags": [
+          "Agents"
+        ],
+        "x-ms-docs-override-version": "5.1-preview.1",
+        "x-ms-vss-resource": "agents",
+        "x-ms-vss-method": "DeleteAgent",
+        "x-ms-preview": true,
+        "description": "Delete an agent.  You probably don't want to call this endpoint directly. Instead, [use the agent configuration script](https://docs.microsoft.com/azure/devops/pipelines/agents/agents) to remove an agent from your organization.",
+        "operationId": "Delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "poolId",
+            "description": "The pool ID to remove the agent from",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "path",
+            "name": "agentId",
+            "description": "The agent ID to remove",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.agentpools_manage"
+            ]
+          }
+        ]
+      },
+      "get": {
+        "tags": [
+          "Agents"
+        ],
+        "x-ms-docs-override-version": "5.1-preview.1",
+        "x-ms-vss-resource": "agents",
+        "x-ms-vss-method": "GetAgent",
+        "x-ms-preview": true,
+        "description": "Get information about an agent.",
+        "operationId": "Get",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "poolId",
+            "description": "The agent pool containing the agent",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "path",
+            "name": "agentId",
+            "description": "The agent ID to get information about",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "includeCapabilities",
+            "description": "Whether to include the agent's capabilities in the response",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "includeAssignedRequest",
+            "description": "Whether to include details about the agent's current work",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "propertyFilters",
+            "description": "Filter which custom properties will be returned",
+            "required": false,
+            "type": "string",
+            "format": "array (string)"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/TaskAgent"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.agentpools"
+            ]
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "Agents"
+        ],
+        "x-ms-docs-override-version": "5.1-preview.1",
+        "x-ms-vss-resource": "agents",
+        "x-ms-vss-method": "ReplaceAgent",
+        "x-ms-preview": true,
+        "description": "Replace an agent.  You probably don't want to call this endpoint directly. Instead, [use the agent configuration script](https://docs.microsoft.com/azure/devops/pipelines/agents/agents) to remove and reconfigure an agent from your organization.",
+        "operationId": "Replace Agent",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Updated details about the replacing agent",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/TaskAgent"
+            }
+          },
+          {
+            "in": "path",
+            "name": "poolId",
+            "description": "The agent pool to use",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "path",
+            "name": "agentId",
+            "description": "The agent to replace",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/TaskAgent"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.agentpools_manage"
+            ]
+          }
+        ]
+      },
+      "patch": {
+        "tags": [
+          "Agents"
+        ],
+        "x-ms-docs-override-version": "5.1-preview.1",
+        "x-ms-vss-resource": "agents",
+        "x-ms-vss-method": "UpdateAgent",
+        "x-ms-preview": true,
+        "description": "Update agent details.",
+        "operationId": "Update",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Updated details about the agent",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/TaskAgent"
+            }
+          },
+          {
+            "in": "path",
+            "name": "poolId",
+            "description": "The agent pool to use",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "path",
+            "name": "agentId",
+            "description": "The agent to update",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/TaskAgent"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.agentpools_manage"
+            ]
+          }
+        ]
       }
     },
     "/{organization}/_apis/distributedtask/yamlschema": {
@@ -1288,6 +2081,304 @@
         }
       }
     },
+    "/{organization}/{project}/_apis/distributedtask/queues": {
+      "post": {
+        "tags": [
+          "Queues"
+        ],
+        "x-ms-docs-override-version": "5.1-preview.1",
+        "x-ms-vss-resource": "queues",
+        "x-ms-vss-method": "AddAgentQueue",
+        "x-ms-preview": true,
+        "description": "Create a new agent queue to connect a project to an agent pool.",
+        "operationId": "Add",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Details about the queue to create",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/TaskAgentQueue"
+            }
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "x-ms-required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "authorizePipelines",
+            "description": "Automatically authorize this queue when using YAML",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/TaskAgentQueue"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.agentpools_manage"
+            ]
+          }
+        ]
+      },
+      "get": {
+        "tags": [
+          "Queues"
+        ],
+        "x-ms-docs-override-version": "5.1-preview.1",
+        "x-ms-vss-resource": "queues",
+        "x-ms-vss-method": "GetAgentQueuesByNames",
+        "x-ms-preview": true,
+        "description": "Get a list of agent queues by their names",
+        "operationId": "Get Agent Queues By Names",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "queueNames",
+            "description": "A comma-separated list of agent names to retrieve",
+            "required": true,
+            "type": "string",
+            "format": "array (string)"
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "x-ms-required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "actionFilter",
+            "description": "Filter by whether the calling user has use or manage permissions",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "none",
+              "manage",
+              "use"
+            ],
+            "x-ms-enum": {
+              "name": "TaskAgentQueueActionFilter",
+              "values": [
+                {
+                  "value": "none",
+                  "description": ""
+                },
+                {
+                  "value": "manage",
+                  "description": ""
+                },
+                {
+                  "value": "use",
+                  "description": ""
+                }
+              ]
+            }
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/TaskAgentQueue"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.agentpools"
+            ]
+          }
+        ]
+      }
+    },
+    "/{organization}/{project}/_apis/distributedtask/queues/{queueId}": {
+      "delete": {
+        "tags": [
+          "Queues"
+        ],
+        "x-ms-docs-override-version": "5.1-preview.1",
+        "x-ms-vss-resource": "queues",
+        "x-ms-vss-method": "DeleteAgentQueue",
+        "x-ms-preview": true,
+        "description": "Removes an agent queue from a project.",
+        "operationId": "Delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "queueId",
+            "description": "The agent queue to remove",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "x-ms-required": false,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.agentpools_manage"
+            ]
+          }
+        ]
+      },
+      "get": {
+        "tags": [
+          "Queues"
+        ],
+        "x-ms-docs-override-version": "5.1-preview.1",
+        "x-ms-vss-resource": "queues",
+        "x-ms-vss-method": "GetAgentQueue",
+        "x-ms-preview": true,
+        "description": "Get information about an agent queue.",
+        "operationId": "Get",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "queueId",
+            "description": "The agent queue to get information about",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "x-ms-required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "actionFilter",
+            "description": "Filter by whether the calling user has use or manage permissions",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "none",
+              "manage",
+              "use"
+            ],
+            "x-ms-enum": {
+              "name": "TaskAgentQueueActionFilter",
+              "values": [
+                {
+                  "value": "none",
+                  "description": ""
+                },
+                {
+                  "value": "manage",
+                  "description": ""
+                },
+                {
+                  "value": "use",
+                  "description": ""
+                }
+              ]
+            }
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/TaskAgentQueue"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.agentpools"
+            ]
+          }
+        ]
+      }
+    },
     "/{organization}/{project}/_apis/distributedtask/taskgroups": {
       "post": {
         "tags": [
@@ -1947,6 +3038,187 @@
     }
   },
   "x-ms-paths": {
+    "/{organization}/{project}/_apis/distributedtask/queues?queueIds={queueIds}": {
+      "get": {
+        "tags": [
+          "Queues"
+        ],
+        "x-ms-docs-override-version": "5.1-preview.1",
+        "x-ms-vss-resource": "queues",
+        "x-ms-vss-method": "GetAgentQueuesByIds",
+        "x-ms-preview": true,
+        "description": "Get a list of agent queues by their IDs",
+        "operationId": "Get Agent Queues By Ids",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "queueIds",
+            "description": "A comma-separated list of agent queue IDs to retrieve",
+            "required": true,
+            "type": "string",
+            "format": "array (int32)"
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "x-ms-required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "actionFilter",
+            "description": "Filter by whether the calling user has use or manage permissions",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "none",
+              "manage",
+              "use"
+            ],
+            "x-ms-enum": {
+              "name": "TaskAgentQueueActionFilter",
+              "values": [
+                {
+                  "value": "none",
+                  "description": ""
+                },
+                {
+                  "value": "manage",
+                  "description": ""
+                },
+                {
+                  "value": "use",
+                  "description": ""
+                }
+              ]
+            }
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/TaskAgentQueue"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.agentpools"
+            ]
+          }
+        ]
+      }
+    },
+    "/{organization}/{project}/_apis/distributedtask/queues?": {
+      "get": {
+        "tags": [
+          "Queues"
+        ],
+        "x-ms-docs-override-version": "5.1-preview.1",
+        "x-ms-vss-resource": "queues",
+        "x-ms-vss-method": "GetAgentQueues",
+        "x-ms-preview": true,
+        "description": "Get a list of agent queues.",
+        "operationId": "Get Agent Queues",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "x-ms-required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "queueName",
+            "description": "Filter on the agent queue name",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "actionFilter",
+            "description": "Filter by whether the calling user has use or manage permissions",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "none",
+              "manage",
+              "use"
+            ],
+            "x-ms-enum": {
+              "name": "TaskAgentQueueActionFilter",
+              "values": [
+                {
+                  "value": "none",
+                  "description": ""
+                },
+                {
+                  "value": "manage",
+                  "description": ""
+                },
+                {
+                  "value": "use",
+                  "description": ""
+                }
+              ]
+            }
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/TaskAgentQueue"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.agentpools"
+            ]
+          }
+        ]
+      }
+    },
     "/{organization}/{project}/_apis/distributedtask/variablegroups?": {
       "get": {
         "tags": [
@@ -2949,6 +4221,10 @@
         "pool": {
           "description": "Deployment pool.",
           "$ref": "#/definitions/TaskAgentPoolReference"
+        },
+        "resource": {
+          "description": "Virtual machine Resource referring in pool.",
+          "$ref": "#/definitions/EnvironmentResourceReference"
         }
       }
     },
@@ -3097,6 +4373,11 @@
           "description": "Request identifier of the Environment deployment execution history record",
           "type": "string"
         },
+        "resourceId": {
+          "description": "Resource Id",
+          "type": "integer",
+          "format": "int32"
+        },
         "result": {
           "description": "Result of the environment deployment execution",
           "enum": [
@@ -3141,11 +4422,6 @@
           "description": "Project Id",
           "type": "string",
           "format": "uuid"
-        },
-        "serviceGroupId": {
-          "description": "Service group Id",
-          "type": "integer",
-          "format": "int32"
         },
         "serviceOwner": {
           "description": "Service owner Id",
@@ -3194,10 +4470,10 @@
           "description": "Name of the Environment.",
           "type": "string"
         },
-        "serviceGroups": {
+        "resources": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/ServiceGroupReference"
+            "$ref": "#/definitions/EnvironmentResourceReference"
           }
         }
       }
@@ -3212,6 +4488,111 @@
         },
         "name": {
           "type": "string"
+        }
+      }
+    },
+    "EnvironmentResource": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "createdBy": {
+          "$ref": "#/definitions/IdentityRef"
+        },
+        "createdOn": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "environmentReference": {
+          "$ref": "#/definitions/EnvironmentReference"
+        },
+        "id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "lastModifiedBy": {
+          "$ref": "#/definitions/IdentityRef"
+        },
+        "lastModifiedOn": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "name": {
+          "type": "string"
+        },
+        "type": {
+          "description": "Environment resource type",
+          "enum": [
+            "undefined",
+            "generic",
+            "virtualMachine",
+            "kubernetes"
+          ],
+          "x-ms-enum": {
+            "name": "EnvironmentResourceType",
+            "values": [
+              {
+                "value": "undefined",
+                "description": ""
+              },
+              {
+                "value": "generic",
+                "description": "Unknown resource type"
+              },
+              {
+                "value": "virtualMachine",
+                "description": "Virtual machine resource type"
+              },
+              {
+                "value": "kubernetes",
+                "description": "Kubernetes resource type"
+              }
+            ]
+          }
+        }
+      }
+    },
+    "EnvironmentResourceReference": {
+      "description": "EnvironmentResourceReference.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "Id of the resource.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "name": {
+          "description": "Name of the resource.",
+          "type": "string"
+        },
+        "type": {
+          "description": "Type of the resource.",
+          "enum": [
+            "undefined",
+            "generic",
+            "virtualMachine",
+            "kubernetes"
+          ],
+          "x-ms-enum": {
+            "name": "EnvironmentResourceType",
+            "values": [
+              {
+                "value": "undefined",
+                "description": ""
+              },
+              {
+                "value": "generic",
+                "description": "Unknown resource type"
+              },
+              {
+                "value": "virtualMachine",
+                "description": "Virtual machine resource type"
+              },
+              {
+                "value": "kubernetes",
+                "description": "Kubernetes resource type"
+              }
+            ]
+          }
         }
       }
     },
@@ -3447,6 +4828,7 @@
       "type": "object",
       "properties": {
         "dataType": {
+          "description": "Gets or sets the data data type to validate.",
           "enum": [
             "none",
             "string",
@@ -3486,28 +4868,35 @@
           }
         },
         "isRequired": {
+          "description": "Gets or sets if this is a required field.",
           "type": "boolean"
         },
         "maxLength": {
+          "description": "Gets or sets the maximum length of this descriptor.",
           "type": "integer",
           "format": "int32"
         },
         "maxValue": {
+          "description": "Gets or sets the minimum value for this descriptor.",
           "type": "string",
           "format": "decimal"
         },
         "minLength": {
+          "description": "Gets or sets the minimum length of this descriptor.",
           "type": "integer",
           "format": "int32"
         },
         "minValue": {
+          "description": "Gets or sets the minimum value for this descriptor.",
           "type": "string",
           "format": "decimal"
         },
         "pattern": {
+          "description": "Gets or sets the pattern to validate.",
           "type": "string"
         },
         "patternMismatchErrorMessage": {
+          "description": "Gets or sets the error on pattern mismatch.",
           "type": "string"
         }
       }
@@ -3924,12 +5313,12 @@
         }
       }
     },
-    "KubernetesServiceGroup": {
+    "KubernetesResource": {
       "description": "",
       "type": "object",
       "allOf": [
         {
-          "$ref": "#/definitions/ServiceGroup"
+          "$ref": "#/definitions/EnvironmentResource"
         }
       ],
       "properties": {
@@ -3942,7 +5331,7 @@
         }
       }
     },
-    "KubernetesServiceGroupCreateParameters": {
+    "KubernetesResourceCreateParameters": {
       "description": "",
       "type": "object",
       "properties": {
@@ -4538,6 +5927,10 @@
           "description": "Error message during creation/deletion of endpoint",
           "$ref": "#/definitions/JObject"
         },
+        "owner": {
+          "description": "Gets or sets the owner of the endpoint.",
+          "type": "string"
+        },
         "readersGroup": {
           "description": "Gets or sets the identity reference for the readers group of the service endpoint.",
           "$ref": "#/definitions/IdentityRef"
@@ -5055,112 +6448,8 @@
         }
       }
     },
-    "ServiceGroup": {
-      "description": "",
-      "type": "object",
-      "properties": {
-        "createdBy": {
-          "$ref": "#/definitions/IdentityRef"
-        },
-        "createdOn": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "environmentReference": {
-          "$ref": "#/definitions/EnvironmentReference"
-        },
-        "id": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "lastModifiedBy": {
-          "$ref": "#/definitions/IdentityRef"
-        },
-        "lastModifiedOn": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "name": {
-          "type": "string"
-        },
-        "type": {
-          "enum": [
-            "undefined",
-            "generic",
-            "virtualMachine",
-            "kubernetes"
-          ],
-          "x-ms-enum": {
-            "name": "ServiceGroupType",
-            "values": [
-              {
-                "value": "undefined",
-                "description": ""
-              },
-              {
-                "value": "generic",
-                "description": "Unknown service group type"
-              },
-              {
-                "value": "virtualMachine",
-                "description": "Virtual machine service group type"
-              },
-              {
-                "value": "kubernetes",
-                "description": "Kubernetes service group type"
-              }
-            ]
-          }
-        }
-      }
-    },
-    "ServiceGroupReference": {
-      "description": "ServiceGroupReference.",
-      "type": "object",
-      "properties": {
-        "id": {
-          "description": "Id of the Service Group.",
-          "type": "integer",
-          "format": "int32"
-        },
-        "name": {
-          "description": "Name of the service group.",
-          "type": "string"
-        },
-        "type": {
-          "description": "Type of the service group.",
-          "enum": [
-            "undefined",
-            "generic",
-            "virtualMachine",
-            "kubernetes"
-          ],
-          "x-ms-enum": {
-            "name": "ServiceGroupType",
-            "values": [
-              {
-                "value": "undefined",
-                "description": ""
-              },
-              {
-                "value": "generic",
-                "description": "Unknown service group type"
-              },
-              {
-                "value": "virtualMachine",
-                "description": "Virtual machine service group type"
-              },
-              {
-                "value": "kubernetes",
-                "description": "Kubernetes service group type"
-              }
-            ]
-          }
-        }
-      }
-    },
     "TaskAgent": {
-      "description": "",
+      "description": "A task agent.",
       "type": "object",
       "allOf": [
         {
@@ -5169,40 +6458,40 @@
       ],
       "properties": {
         "assignedAgentCloudRequest": {
-          "description": "Gets the Agent Cloud Request that's currently associated with this agent",
+          "description": "The agent cloud request that's currently associated with this agent.",
           "$ref": "#/definitions/TaskAgentCloudRequest"
         },
         "assignedRequest": {
-          "description": "Gets the request which is currently assigned to this agent.",
+          "description": "The request which is currently assigned to this agent.",
           "$ref": "#/definitions/TaskAgentJobRequest"
         },
         "authorization": {
-          "description": "Gets or sets the authorization information for this agent.",
+          "description": "Authorization information for this agent.",
           "$ref": "#/definitions/TaskAgentAuthorization"
         },
         "createdOn": {
-          "description": "Gets the date on which this agent was created.",
+          "description": "Date on which this agent was created.",
           "type": "string",
           "format": "date-time"
         },
         "lastCompletedRequest": {
-          "description": "Gets the last request which was completed by this agent.",
+          "description": "The last request which was completed by this agent.",
           "$ref": "#/definitions/TaskAgentJobRequest"
         },
         "maxParallelism": {
-          "description": "Gets or sets the maximum job parallelism allowed on this host.",
+          "description": "Maximum job parallelism allowed for this agent.",
           "type": "integer",
           "format": "int32"
         },
         "pendingUpdate": {
-          "description": "Gets the pending update for this agent.",
+          "description": "Pending update for this agent.",
           "$ref": "#/definitions/TaskAgentUpdate"
         },
         "properties": {
           "$ref": "#/definitions/PropertiesCollection"
         },
         "statusChangedOn": {
-          "description": "Gets the date on which the last connectivity status change occurred.",
+          "description": "Date on which the last connectivity status change occurred.",
           "type": "string",
           "format": "date-time"
         },
@@ -5225,16 +6514,16 @@
       "type": "object",
       "properties": {
         "authorizationUrl": {
-          "description": "Gets or sets the endpoint used to obtain access tokens from the configured token service.",
+          "description": "Endpoint used to obtain access tokens from the configured token service.",
           "type": "string"
         },
         "clientId": {
-          "description": "Gets or sets the client identifier for this agent.",
+          "description": "Client identifier for this agent.",
           "type": "string",
           "format": "uuid"
         },
         "publicKey": {
-          "description": "Gets or sets the public key used to verify the identity of this agent.",
+          "description": "Public key used to verify the identity of this agent.",
           "$ref": "#/definitions/TaskAgentPublicKey"
         }
       }
@@ -5255,15 +6544,26 @@
           "type": "integer",
           "format": "int32"
         },
+        "getAccountParallelismEndpoint": {
+          "type": "string"
+        },
         "getAgentDefinitionEndpoint": {
           "type": "string"
         },
         "getAgentRequestStatusEndpoint": {
           "type": "string"
         },
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
         "internal": {
           "description": "Signifies that this Agent Cloud is internal and should not be user-manageable",
           "type": "boolean"
+        },
+        "maxParallelism": {
+          "type": "integer",
+          "format": "int32"
         },
         "name": {
           "type": "string"
@@ -5360,7 +6660,7 @@
       }
     },
     "TaskAgentJobRequest": {
-      "description": "",
+      "description": "A job request for an agent.",
       "type": "object",
       "properties": {
         "agentDelays": {
@@ -5373,19 +6673,23 @@
           "$ref": "#/definitions/JObject"
         },
         "assignTime": {
+          "description": "The date/time this request was assigned.",
           "type": "string",
           "format": "date-time"
         },
         "data": {
+          "description": "Additional data about the request.",
           "type": "object",
           "additionalProperties": {
             "type": "string"
           }
         },
         "definition": {
+          "description": "The pipeline definition associated with this request",
           "$ref": "#/definitions/TaskOrchestrationOwner"
         },
         "demands": {
+          "description": "A list of demands required to fulfill this request.",
           "type": "array",
           "items": {
             "$ref": "#/definitions/Demand"
@@ -5396,21 +6700,26 @@
           "format": "TimeSpan"
         },
         "finishTime": {
+          "description": "The date/time this request was finished.",
           "type": "string",
           "format": "date-time"
         },
         "hostId": {
+          "description": "The host which triggered this request.",
           "type": "string",
           "format": "uuid"
         },
         "jobId": {
+          "description": "ID of the job resulting from this request.",
           "type": "string",
           "format": "uuid"
         },
         "jobName": {
+          "description": "Name of the job resulting from this request.",
           "type": "string"
         },
         "lockedUntil": {
+          "description": "The deadline for the agent to renew the lock.",
           "type": "string",
           "format": "date-time"
         },
@@ -5427,42 +6736,52 @@
           "type": "string"
         },
         "owner": {
+          "description": "The pipeline associated with this request",
           "$ref": "#/definitions/TaskOrchestrationOwner"
         },
         "planGroup": {
           "type": "string"
         },
         "planId": {
+          "description": "Internal ID for the orchestration plan connected with this request.",
           "type": "string",
           "format": "uuid"
         },
         "planType": {
+          "description": "Internal detail representing the type of orchestration plan.",
           "type": "string"
         },
         "poolId": {
+          "description": "The ID of the pool this request targets",
           "type": "integer",
           "format": "int32"
         },
         "queueId": {
+          "description": "The ID of the queue this request targets",
           "type": "integer",
           "format": "int32"
         },
         "queueTime": {
+          "description": "The date/time this request was queued.",
           "type": "string",
           "format": "date-time"
         },
         "receiveTime": {
+          "description": "The date/time this request was receieved by an agent.",
           "type": "string",
           "format": "date-time"
         },
         "requestId": {
+          "description": "ID of the request.",
           "type": "integer",
           "format": "int64"
         },
         "reservedAgent": {
+          "description": "The agent allocated for this request.",
           "$ref": "#/definitions/TaskAgentReference"
         },
         "result": {
+          "description": "The result of this request.",
           "enum": [
             "succeeded",
             "succeededWithIssues",
@@ -5502,10 +6821,12 @@
           }
         },
         "scopeId": {
+          "description": "Scope of the pipeline; matches the project ID.",
           "type": "string",
           "format": "uuid"
         },
         "serviceOwner": {
+          "description": "The service which owns this request.",
           "type": "string",
           "format": "uuid"
         },
@@ -5572,7 +6893,7 @@
       }
     },
     "TaskAgentPool": {
-      "description": "",
+      "description": "An organization-level grouping of agents.",
       "type": "object",
       "allOf": [
         {
@@ -5581,36 +6902,36 @@
       ],
       "properties": {
         "agentCloudId": {
-          "description": "Gets or sets an agentCloudId",
+          "description": "The ID of the associated agent cloud.",
           "type": "integer",
           "format": "int32"
         },
         "autoProvision": {
-          "description": "Gets or sets a value indicating whether or not a queue should be automatically provisioned for each project collection or not.",
+          "description": "Whether or not a queue should be automatically provisioned for each project collection.",
           "type": "boolean"
         },
         "autoSize": {
-          "description": "Gets or sets a value indicating whether or not the pool should autosize itself based on the Agent Cloud Provider settings",
+          "description": "Whether or not the pool should autosize itself based on the Agent Cloud Provider settings.",
           "type": "boolean"
         },
         "createdBy": {
-          "description": "Gets the identity who created this pool. The creator of the pool is automatically added into the administrators group for the pool on creation.",
+          "description": "Creator of the pool. The creator of the pool is automatically added into the administrators group for the pool on creation.",
           "$ref": "#/definitions/IdentityRef"
         },
         "createdOn": {
-          "description": "Gets the date/time of the pool creation.",
+          "description": "The date/time of the pool creation.",
           "type": "string",
           "format": "date-time"
         },
         "owner": {
-          "description": "Gets the identity who owns or administrates this pool.",
+          "description": "Owner or administrator of the pool.",
           "$ref": "#/definitions/IdentityRef"
         },
         "properties": {
           "$ref": "#/definitions/PropertiesCollection"
         },
         "targetSize": {
-          "description": "Gets or sets a value indicating target parallelism",
+          "description": "Target parallelism.",
           "type": "integer",
           "format": "int32"
         }
@@ -5967,11 +7288,11 @@
             "values": [
               {
                 "value": "automation",
-                "description": ""
+                "description": "A typical pool of task agents"
               },
               {
                 "value": "deployment",
-                "description": ""
+                "description": "A deployment pool"
               }
             ]
           }
@@ -6066,11 +7387,11 @@
       }
     },
     "TaskAgentQueue": {
-      "description": "",
+      "description": "An agent queue.",
       "type": "object",
       "properties": {
         "id": {
-          "description": "Id of the queue",
+          "description": "ID of the queue",
           "type": "integer",
           "format": "int32"
         },
@@ -6083,46 +7404,46 @@
           "$ref": "#/definitions/TaskAgentPoolReference"
         },
         "projectId": {
-          "description": "Project Id",
+          "description": "Project ID",
           "type": "string",
           "format": "uuid"
         }
       }
     },
     "TaskAgentReference": {
-      "description": "",
+      "description": "A reference to an agent.",
       "type": "object",
       "properties": {
         "_links": {
           "$ref": "#/definitions/ReferenceLinks"
         },
         "accessPoint": {
-          "description": "Gets the access point of the agent.",
+          "description": "This agent's access point.",
           "type": "string"
         },
         "enabled": {
-          "description": "Gets or sets a value indicating whether or not this agent should be enabled for job execution.",
+          "description": "Whether or not this agent should run jobs.",
           "type": "boolean"
         },
         "id": {
-          "description": "Gets the identifier of the agent.",
+          "description": "Identifier of the agent.",
           "type": "integer",
           "format": "int32"
         },
         "name": {
-          "description": "Gets the name of the agent.",
+          "description": "Name of the agent.",
           "type": "string"
         },
         "osDescription": {
-          "description": "Gets the OS of the agent.",
+          "description": "Agent OS.",
           "type": "string"
         },
         "provisioningState": {
-          "description": "Gets or sets the current provisioning state of this agent",
+          "description": "Provisioning state of this agent.",
           "type": "string"
         },
         "status": {
-          "description": "Gets the current connectivity status of the agent.",
+          "description": "Whether or not the agent is online.",
           "enum": [
             "offline",
             "online"
@@ -6142,7 +7463,7 @@
           }
         },
         "version": {
-          "description": "Gets the version of the agent.",
+          "description": "Agent version.",
           "type": "string"
         }
       }
@@ -6195,32 +7516,32 @@
       }
     },
     "TaskAgentUpdate": {
-      "description": "",
+      "description": "Details about an agent update.",
       "type": "object",
       "properties": {
         "currentState": {
-          "description": "The current state of this agent update",
+          "description": "Current state of this agent update.",
           "type": "string"
         },
         "reason": {
-          "description": "The reason of this agent update",
+          "description": "Reason for this update.",
           "$ref": "#/definitions/TaskAgentUpdateReason"
         },
         "requestedBy": {
-          "description": "The identity that request the agent update",
+          "description": "Identity which requested this update.",
           "$ref": "#/definitions/IdentityRef"
         },
         "requestTime": {
-          "description": "Gets the date on which this agent update was requested.",
+          "description": "Date on which this update was requested.",
           "type": "string",
           "format": "date-time"
         },
         "sourceVersion": {
-          "description": "Gets or sets the source agent version of the agent update",
+          "description": "Source agent version of the update.",
           "$ref": "#/definitions/PackageVersion"
         },
         "targetVersion": {
-          "description": "Gets or sets the target agent version of the agent update",
+          "description": "Target agent version of the update.",
           "$ref": "#/definitions/PackageVersion"
         }
       }
@@ -7352,7 +8673,8 @@
           "enum": [
             "inProgress",
             "queued",
-            "completed"
+            "completed",
+            "throttled"
           ],
           "x-ms-enum": {
             "name": "TaskOrchestrationPlanState",
@@ -7367,6 +8689,10 @@
               },
               {
                 "value": "completed",
+                "description": ""
+              },
+              {
+                "value": "throttled",
                 "description": ""
               }
             ]
@@ -8045,7 +9371,7 @@
       "type": "object",
       "allOf": [
         {
-          "$ref": "#/definitions/ServiceGroup"
+          "$ref": "#/definitions/EnvironmentResource"
         }
       ],
       "properties": {

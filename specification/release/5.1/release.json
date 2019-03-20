@@ -1971,6 +1971,70 @@
       }
     },
     "/{organization}/{project}/_apis/Release/releases/{releaseId}/environments/{environmentId}": {
+      "get": {
+        "tags": [
+          "Releases"
+        ],
+        "x-ms-docs-override-version": "5.1-preview.6",
+        "x-ms-vss-resource": "environments",
+        "x-ms-vss-method": "GetReleaseEnvironment",
+        "x-ms-preview": true,
+        "description": "Get a release environment.",
+        "operationId": "Get Release Environment",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "releaseId",
+            "description": "Id of the release.",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "path",
+            "name": "environmentId",
+            "description": "Id of the release environment.",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.6"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ReleaseEnvironment"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.release"
+            ]
+          }
+        ]
+      },
       "patch": {
         "tags": [
           "Releases"
@@ -3265,6 +3329,12 @@
             "$ref": "#/definitions/InputDescriptor"
           }
         },
+        "isCommitsTraceabilitySupported": {
+          "type": "boolean"
+        },
+        "isWorkitemsTraceabilitySupported": {
+          "type": "boolean"
+        },
         "name": {
           "type": "string"
         },
@@ -3290,6 +3360,13 @@
         "artifactDownloadMode": {
           "description": "Gets or sets the name of artifact definition. Valid values are 'Skip', 'Selective', 'All'.",
           "type": "string"
+        },
+        "artifactItems": {
+          "description": "Gets or sets the artifact items of the input.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
         },
         "artifactType": {
           "description": "Gets or sets the type of artifact.",
@@ -3744,15 +3821,7 @@
           "$ref": "#/definitions/ArtifactDownloadInputBase"
         }
       ],
-      "properties": {
-        "artifactItems": {
-          "description": "Gets or sets the list of files to be downloaded for build artifact.",
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        }
-      }
+      "properties": {}
     },
     "BuildVersion": {
       "description": "",
@@ -3878,6 +3947,16 @@
               }
             ]
           }
+        }
+      }
+    },
+    "ComplianceSettings": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "blockReleaseDefinitionSaveIfSecretPresent": {
+          "description": "Block Release Definition save if any secrets is saved in Release Definition.",
+          "type": "boolean"
         }
       }
     },
@@ -5759,6 +5838,7 @@
       "type": "object",
       "properties": {
         "dataType": {
+          "description": "Gets or sets the data data type to validate.",
           "enum": [
             "none",
             "string",
@@ -5798,28 +5878,35 @@
           }
         },
         "isRequired": {
+          "description": "Gets or sets if this is a required field.",
           "type": "boolean"
         },
         "maxLength": {
+          "description": "Gets or sets the maximum length of this descriptor.",
           "type": "integer",
           "format": "int32"
         },
         "maxValue": {
+          "description": "Gets or sets the minimum value for this descriptor.",
           "type": "string",
           "format": "decimal"
         },
         "minLength": {
+          "description": "Gets or sets the minimum length of this descriptor.",
           "type": "integer",
           "format": "int32"
         },
         "minValue": {
+          "description": "Gets or sets the minimum value for this descriptor.",
           "type": "string",
           "format": "decimal"
         },
         "pattern": {
+          "description": "Gets or sets the pattern to validate.",
           "type": "string"
         },
         "patternMismatchErrorMessage": {
+          "description": "Gets or sets the error on pattern mismatch.",
           "type": "string"
         }
       }
@@ -5944,15 +6031,7 @@
           "$ref": "#/definitions/ArtifactDownloadInputBase"
         }
       ],
-      "properties": {
-        "artifactItems": {
-          "description": "Gets or sets the artifact items.",
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        }
-      }
+      "properties": {}
     },
     "MachineGroupBasedDeployPhase": {
       "description": "",
@@ -8821,6 +8900,10 @@
       "description": "",
       "type": "object",
       "properties": {
+        "complianceSettings": {
+          "description": "Release Compliance settings.",
+          "$ref": "#/definitions/ComplianceSettings"
+        },
         "retentionSettings": {
           "description": "Release retention settings.",
           "$ref": "#/definitions/RetentionSettings"
@@ -9449,6 +9532,10 @@
           "description": "Date and time of the pull request merge creation. It is required to keep timeline record of Releases created by pull request.",
           "type": "string",
           "format": "date-time"
+        },
+        "sourceBranch": {
+          "description": "Source branch of the Pull Request.",
+          "type": "string"
         },
         "sourceBranchCommitId": {
           "description": "Source branch commit Id of the Pull Request for which the release will publish status.",

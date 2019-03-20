@@ -158,315 +158,6 @@
         ]
       }
     },
-    "/{organization}/_apis/packaging/feeds": {
-      "post": {
-        "tags": [
-          "Feed  Management"
-        ],
-        "x-ms-docs-override-version": "5.1-preview.1",
-        "x-ms-vss-resource": "feeds",
-        "x-ms-vss-method": "CreateFeed",
-        "x-ms-preview": true,
-        "description": "Create a feed, a container for various package types.",
-        "operationId": "Create Feed",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "organization",
-            "description": "The name of the Azure DevOps organization.",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "in": "body",
-            "name": "body",
-            "description": "A JSON object containing both required and optional attributes for the feed. Name is the only required value.",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/Feed"
-            }
-          },
-          {
-            "$ref": "#/parameters/api-Version-preview.1"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "$ref": "#/definitions/Feed"
-            }
-          }
-        },
-        "security": [
-          {
-            "oauth2": [
-              "vso.packaging_write"
-            ]
-          }
-        ]
-      },
-      "get": {
-        "tags": [
-          "Feed  Management"
-        ],
-        "x-ms-docs-override-version": "5.1-preview.1",
-        "x-ms-vss-resource": "feeds",
-        "x-ms-vss-method": "GetFeeds",
-        "x-ms-preview": true,
-        "description": "Get all feeds in an account where you have the provided role access.",
-        "operationId": "Get Feeds",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "organization",
-            "description": "The name of the Azure DevOps organization.",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "in": "query",
-            "name": "feedRole",
-            "description": "Filter by this role, either Administrator(4), Contributor(3), or Reader(2) level permissions.",
-            "required": false,
-            "type": "string",
-            "enum": [
-              "custom",
-              "none",
-              "reader",
-              "contributor",
-              "administrator",
-              "collaborator"
-            ],
-            "x-ms-enum": {
-              "name": "FeedRole",
-              "values": [
-                {
-                  "value": "custom",
-                  "description": "Unsupported."
-                },
-                {
-                  "value": "none",
-                  "description": "Unsupported."
-                },
-                {
-                  "value": "reader",
-                  "description": "Readers can only read packages and view settings."
-                },
-                {
-                  "value": "contributor",
-                  "description": "Contributors can do anything to packages in the feed including adding new packages, but they may not modify feed settings."
-                },
-                {
-                  "value": "administrator",
-                  "description": "Administrators have total control over the feed."
-                },
-                {
-                  "value": "collaborator",
-                  "description": "Collaborators have the same permissions as readers, but can also ingest packages from configured upstream sources."
-                }
-              ]
-            }
-          },
-          {
-            "in": "query",
-            "name": "includeDeletedUpstreams",
-            "description": "Include upstreams that have been deleted in the response.",
-            "required": false,
-            "type": "boolean"
-          },
-          {
-            "$ref": "#/parameters/api-Version-preview.1"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/Feed"
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "oauth2": [
-              "vso.packaging"
-            ]
-          }
-        ]
-      }
-    },
-    "/{organization}/_apis/packaging/feeds/{feedId}": {
-      "delete": {
-        "tags": [
-          "Feed  Management"
-        ],
-        "x-ms-docs-override-version": "5.1-preview.1",
-        "x-ms-vss-resource": "feeds",
-        "x-ms-vss-method": "DeleteFeed",
-        "x-ms-preview": true,
-        "description": "Remove a feed and all its packages.  The action does not result in packages moving to the RecycleBin and is not reversible.",
-        "operationId": "Delete Feed",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "organization",
-            "description": "The name of the Azure DevOps organization.",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "in": "path",
-            "name": "feedId",
-            "description": "Name or Id of the feed.",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "$ref": "#/parameters/api-Version-preview.1"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation"
-          }
-        },
-        "security": [
-          {
-            "oauth2": [
-              "vso.packaging_manage"
-            ]
-          }
-        ]
-      },
-      "get": {
-        "tags": [
-          "Feed  Management"
-        ],
-        "x-ms-docs-override-version": "5.1-preview.1",
-        "x-ms-vss-resource": "feeds",
-        "x-ms-vss-method": "GetFeed",
-        "x-ms-preview": true,
-        "description": "Get the settings for a specific feed.",
-        "operationId": "Get Feed",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "organization",
-            "description": "The name of the Azure DevOps organization.",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "in": "path",
-            "name": "feedId",
-            "description": "Name or Id of the feed.",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "in": "query",
-            "name": "includeDeletedUpstreams",
-            "description": "Include upstreams that have been deleted in the response.",
-            "required": false,
-            "type": "boolean"
-          },
-          {
-            "$ref": "#/parameters/api-Version-preview.1"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "$ref": "#/definitions/Feed"
-            }
-          }
-        },
-        "security": [
-          {
-            "oauth2": [
-              "vso.packaging"
-            ]
-          }
-        ]
-      },
-      "patch": {
-        "tags": [
-          "Feed  Management"
-        ],
-        "x-ms-docs-override-version": "5.1-preview.1",
-        "x-ms-vss-resource": "feeds",
-        "x-ms-vss-method": "UpdateFeed",
-        "x-ms-preview": true,
-        "description": "Change the attributes of a feed.",
-        "operationId": "Update Feed",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "organization",
-            "description": "The name of the Azure DevOps organization.",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "in": "body",
-            "name": "body",
-            "description": "A JSON object containing the feed settings to be updated.",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/FeedUpdate"
-            }
-          },
-          {
-            "in": "path",
-            "name": "feedId",
-            "description": "Name or Id of the feed.",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "$ref": "#/parameters/api-Version-preview.1"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "$ref": "#/definitions/Feed"
-            }
-          }
-        },
-        "security": [
-          {
-            "oauth2": [
-              "vso.packaging_manage"
-            ]
-          }
-        ]
-      }
-    },
     "/{organization}/_apis/packaging/Feeds/{feedId}/packagechanges": {
       "get": {
         "tags": [
@@ -2192,6 +1883,355 @@
           }
         }
       }
+    },
+    "/{organization}/{project}/_apis/packaging/feeds": {
+      "post": {
+        "tags": [
+          "Feed  Management"
+        ],
+        "x-ms-docs-override-version": "5.1-preview.1",
+        "x-ms-vss-resource": "feeds",
+        "x-ms-vss-method": "CreateFeed",
+        "x-ms-preview": true,
+        "description": "Create a feed, a container for various package types.\n\nFeeds can be created in a project if the project parameter is included in the request url.\nIf the project parameter is omitted, the feed will not be associated with a project and will be created at the organization level.\nCreating project-scoped feeds is in prerelease, and may not yet be available in your organization.",
+        "operationId": "Create Feed",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "A JSON object containing both required and optional attributes for the feed. Name is the only required value.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Feed"
+            }
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "x-ms-required": false,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/Feed"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.packaging_write"
+            ]
+          }
+        ]
+      },
+      "get": {
+        "tags": [
+          "Feed  Management"
+        ],
+        "x-ms-docs-override-version": "5.1-preview.1",
+        "x-ms-vss-resource": "feeds",
+        "x-ms-vss-method": "GetFeeds",
+        "x-ms-preview": true,
+        "description": "Get all feeds in an account where you have the provided role access.\n\nIf the project parameter is present, gets all feeds in the given project.\nIf omitted, gets all feeds in the organization.",
+        "operationId": "Get Feeds",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "x-ms-required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "feedRole",
+            "description": "Filter by this role, either Administrator(4), Contributor(3), or Reader(2) level permissions.",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "custom",
+              "none",
+              "reader",
+              "contributor",
+              "administrator",
+              "collaborator"
+            ],
+            "x-ms-enum": {
+              "name": "FeedRole",
+              "values": [
+                {
+                  "value": "custom",
+                  "description": "Unsupported."
+                },
+                {
+                  "value": "none",
+                  "description": "Unsupported."
+                },
+                {
+                  "value": "reader",
+                  "description": "Readers can only read packages and view settings."
+                },
+                {
+                  "value": "contributor",
+                  "description": "Contributors can do anything to packages in the feed including adding new packages, but they may not modify feed settings."
+                },
+                {
+                  "value": "administrator",
+                  "description": "Administrators have total control over the feed."
+                },
+                {
+                  "value": "collaborator",
+                  "description": "Collaborators have the same permissions as readers, but can also ingest packages from configured upstream sources."
+                }
+              ]
+            }
+          },
+          {
+            "in": "query",
+            "name": "includeDeletedUpstreams",
+            "description": "Include upstreams that have been deleted in the response.",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Feed"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.packaging"
+            ]
+          }
+        ]
+      }
+    },
+    "/{organization}/{project}/_apis/packaging/feeds/{feedId}": {
+      "delete": {
+        "tags": [
+          "Feed  Management"
+        ],
+        "x-ms-docs-override-version": "5.1-preview.1",
+        "x-ms-vss-resource": "feeds",
+        "x-ms-vss-method": "DeleteFeed",
+        "x-ms-preview": true,
+        "description": "Remove a feed and all its packages.  The action does not result in packages moving to the RecycleBin and is not reversible.\n\nThe project parameter must be supplied if the feed was created in a project.\nIf the feed is not associated with any project, omit the project parameter from the request.",
+        "operationId": "Delete Feed",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "feedId",
+            "description": "Name or Id of the feed.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "x-ms-required": false,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.packaging_manage"
+            ]
+          }
+        ]
+      },
+      "get": {
+        "tags": [
+          "Feed  Management"
+        ],
+        "x-ms-docs-override-version": "5.1-preview.1",
+        "x-ms-vss-resource": "feeds",
+        "x-ms-vss-method": "GetFeed",
+        "x-ms-preview": true,
+        "description": "Get the settings for a specific feed.\n\nThe project parameter must be supplied if the feed was created in a project.\nIf the feed is not associated with any project, omit the project parameter from the request.",
+        "operationId": "Get Feed",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "feedId",
+            "description": "Name or Id of the feed.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "x-ms-required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "includeDeletedUpstreams",
+            "description": "Include upstreams that have been deleted in the response.",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/Feed"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.packaging"
+            ]
+          }
+        ]
+      },
+      "patch": {
+        "tags": [
+          "Feed  Management"
+        ],
+        "x-ms-docs-override-version": "5.1-preview.1",
+        "x-ms-vss-resource": "feeds",
+        "x-ms-vss-method": "UpdateFeed",
+        "x-ms-preview": true,
+        "description": "Change the attributes of a feed.\n\nThe project parameter must be supplied if the feed was created in a project.\nIf the feed is not associated with any project, omit the project parameter from the request.",
+        "operationId": "Update Feed",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "A JSON object containing the feed settings to be updated.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/FeedUpdate"
+            }
+          },
+          {
+            "in": "path",
+            "name": "feedId",
+            "description": "Name or Id of the feed.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "x-ms-required": false,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/Feed"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.packaging_manage"
+            ]
+          }
+        ]
+      }
     }
   },
   "definitions": {
@@ -2396,6 +2436,10 @@
         "name": {
           "description": "A name for the feed. feed names must follow these rules: <list type=\"bullet\"><item><description> Must not exceed 64 characters </description></item><item><description> Must not contain whitespaces </description></item><item><description> Must not start with an underscore or a period </description></item><item><description> Must not end with a period </description></item><item><description> Must not contain any of the following illegal characters: <![CDATA[ @, ~, ;, {, }, \\, +, =, <, >, |, /, \\\\, ?, :, &, $, *, \\\", #, [, ] ]]></description></item></list>",
           "type": "string"
+        },
+        "project": {
+          "description": "The project that this feed is associated with.",
+          "$ref": "#/definitions/ProjectReference"
         },
         "upstreamEnabled": {
           "description": "OBSOLETE: This should always be true.  Setting to false will override all sources in UpstreamSources.",
@@ -2739,7 +2783,7 @@
           }
         },
         "path": {
-          "description": "The path for the operation",
+          "description": "The path for the operation. In the case of an array, a zero based index can be used to specify the position in the array (e.g. /biscuits/0/name). The \"-\" character can be used instead of an index to insert at the end of the array (e.g. /biscuits/-).",
           "type": "string"
         },
         "value": {
@@ -3152,6 +3196,17 @@
         "provenance": {
           "description": "Provenance information for this package version.",
           "$ref": "#/definitions/Provenance"
+        }
+      }
+    },
+    "ProjectReference": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "Gets or sets id of the project.",
+          "type": "string",
+          "format": "uuid"
         }
       }
     },

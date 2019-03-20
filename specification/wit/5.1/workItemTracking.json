@@ -36,6 +36,18 @@
       "name": "Classification Nodes"
     },
     {
+      "name": "Comments"
+    },
+    {
+      "name": "Comments Reactions"
+    },
+    {
+      "name": "Comments Reporting"
+    },
+    {
+      "name": "Comments Versions"
+    },
+    {
       "name": "Fields",
       "description": "This controller version exists to support returning project scoped urls for fields"
     },
@@ -75,6 +87,9 @@
     },
     {
       "name": "Work Item Relation Types"
+    },
+    {
+      "name": "Work Item Revisions Discussions"
     },
     {
       "name": "Work Items",
@@ -1335,7 +1350,12 @@
               "vso.work_write"
             ]
           }
-        ]
+        ],
+        "x-ms-examples": {
+          "Create a new field": {
+            "$ref": "./httpExamples/fields/POST_wit_field.json"
+          }
+        }
       },
       "get": {
         "tags": [
@@ -1413,7 +1433,7 @@
           }
         ],
         "x-ms-examples": {
-          "": {
+          "Returns information for all fields": {
             "$ref": "./httpExamples/fields/GET__wit_fields.json"
           }
         }
@@ -1519,7 +1539,7 @@
           }
         ],
         "x-ms-examples": {
-          "": {
+          "Gets information on a specific field": {
             "$ref": "./httpExamples/fields/GET__wit_fields__fieldName_.json"
           }
         }
@@ -2326,6 +2346,102 @@
         }
       }
     },
+    "/{organization}/{project}/_apis/wit/reporting/workitemcomments": {
+      "get": {
+        "tags": [
+          "Comments Reporting"
+        ],
+        "x-ms-docs-override-version": "5.1-preview.1",
+        "x-ms-vss-resource": "commentsReporting",
+        "x-ms-vss-method": "ReadReportingComments",
+        "x-ms-preview": true,
+        "description": "",
+        "operationId": "Read Reporting Comments",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "continuationToken",
+            "description": "",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "top",
+            "description": "",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "includeDeleted",
+            "description": "",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "$expand",
+            "description": "",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "none",
+              "reactions"
+            ],
+            "x-ms-enum": {
+              "name": "CommentExpandOptions",
+              "values": [
+                {
+                  "value": "none",
+                  "description": "No additional options. Default."
+                },
+                {
+                  "value": "reactions",
+                  "description": "Include reactions on the comment"
+                }
+              ]
+            }
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/CommentReportingList"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.work"
+            ]
+          }
+        ]
+      }
+    },
     "/{organization}/{project}/_apis/wit/reporting/workitemlinks": {
       "get": {
         "tags": [
@@ -2517,11 +2633,11 @@
               "values": [
                 {
                   "value": "none",
-                  "description": ""
+                  "description": "Default behavior."
                 },
                 {
                   "value": "fields",
-                  "description": ""
+                  "description": "Add fields to the response."
                 }
               ]
             }
@@ -2640,11 +2756,11 @@
               "values": [
                 {
                   "value": "none",
-                  "description": ""
+                  "description": "Default behavior."
                 },
                 {
                   "value": "fields",
-                  "description": ""
+                  "description": "Add fields to the response."
                 }
               ]
             }
@@ -2673,6 +2789,72 @@
             "$ref": "./httpExamples/workItemRevisions/POST__wit_reporting_workItemRevisions_watermark-794.json"
           }
         }
+      }
+    },
+    "/{organization}/{project}/_apis/wit/reporting/workItemRevisions/discussions": {
+      "get": {
+        "tags": [
+          "Work Item Revisions Discussions"
+        ],
+        "x-ms-docs-override-version": "5.1-preview.1",
+        "x-ms-vss-resource": "workItemRevisionsDiscussions",
+        "x-ms-vss-method": "ReadReportingDiscussions",
+        "x-ms-preview": true,
+        "description": "",
+        "operationId": "Read Reporting Discussions",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "x-ms-required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "continuationToken",
+            "description": "",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "$maxPageSize",
+            "description": "",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ReportingWorkItemRevisionsBatch"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.work"
+            ]
+          }
+        ]
       }
     },
     "/{organization}/{project}/_apis/wit/workitems": {
@@ -2747,23 +2929,23 @@
               "values": [
                 {
                   "value": "none",
-                  "description": ""
+                  "description": "Default behavior."
                 },
                 {
                   "value": "relations",
-                  "description": ""
+                  "description": "Relations work item expand."
                 },
                 {
                   "value": "fields",
-                  "description": ""
+                  "description": "Fields work item expand."
                 },
                 {
                   "value": "links",
-                  "description": ""
+                  "description": "Links work item expand."
                 },
                 {
                   "value": "all",
-                  "description": ""
+                  "description": "Expands all."
                 }
               ]
             }
@@ -2783,11 +2965,11 @@
               "values": [
                 {
                   "value": "fail",
-                  "description": ""
+                  "description": "Fail work error policy."
                 },
                 {
                   "value": "omit",
-                  "description": ""
+                  "description": "Omit work error policy."
                 }
               ]
             }
@@ -2926,23 +3108,23 @@
               "values": [
                 {
                   "value": "none",
-                  "description": ""
+                  "description": "Default behavior."
                 },
                 {
                   "value": "relations",
-                  "description": ""
+                  "description": "Relations work item expand."
                 },
                 {
                   "value": "fields",
-                  "description": ""
+                  "description": "Fields work item expand."
                 },
                 {
                   "value": "links",
-                  "description": ""
+                  "description": "Links work item expand."
                 },
                 {
                   "value": "all",
-                  "description": ""
+                  "description": "Expands all."
                 }
               ]
             }
@@ -3040,23 +3222,23 @@
               "values": [
                 {
                   "value": "none",
-                  "description": ""
+                  "description": "Default behavior."
                 },
                 {
                   "value": "relations",
-                  "description": ""
+                  "description": "Relations work item expand."
                 },
                 {
                   "value": "fields",
-                  "description": ""
+                  "description": "Fields work item expand."
                 },
                 {
                   "value": "links",
-                  "description": ""
+                  "description": "Links work item expand."
                 },
                 {
                   "value": "all",
-                  "description": ""
+                  "description": "Expands all."
                 }
               ]
             }
@@ -3079,7 +3261,12 @@
               "vso.work"
             ]
           }
-        ]
+        ],
+        "x-ms-examples": {
+          "Returns a single work item from a template": {
+            "$ref": "./httpExamples/workItems/GET_work_item_template.json"
+          }
+        }
       }
     },
     "/{organization}/{project}/_apis/wit/workitems/{id}": {
@@ -3091,7 +3278,7 @@
         "x-ms-vss-resource": "workItems",
         "x-ms-vss-method": "DeleteWorkItem",
         "x-ms-preview": true,
-        "description": "Deletes the specified work item and sends it to the Recycle Bin, so that it can be restored back, if required. Optionally, if the destroy parameter has been set to true, it destroys the work item permanently.",
+        "description": "Deletes the specified work item and sends it to the Recycle Bin, so that it can be restored back, if required. Optionally, if the destroy parameter has been set to true, it destroys the work item permanently. WARNING: If the destroy parameter is set to true, work items deleted by this command will NOT go to recycle-bin and there is no way to restore/recover them after deletion. It is recommended NOT to use this parameter. If you do, please use this parameter with extreme caution.",
         "operationId": "Delete",
         "produces": [
           "application/json"
@@ -3123,7 +3310,7 @@
           {
             "in": "query",
             "name": "destroy",
-            "description": "Optional parameter, if set to true, the work item is deleted permanently",
+            "description": "Optional parameter, if set to true, the work item is deleted permanently. Please note: the destroy action is PERMANENT and cannot be undone.",
             "required": false,
             "type": "boolean"
           },
@@ -3223,23 +3410,23 @@
               "values": [
                 {
                   "value": "none",
-                  "description": ""
+                  "description": "Default behavior."
                 },
                 {
                   "value": "relations",
-                  "description": ""
+                  "description": "Relations work item expand."
                 },
                 {
                   "value": "fields",
-                  "description": ""
+                  "description": "Fields work item expand."
                 },
                 {
                   "value": "links",
-                  "description": ""
+                  "description": "Links work item expand."
                 },
                 {
                   "value": "all",
-                  "description": ""
+                  "description": "Expands all."
                 }
               ]
             }
@@ -3360,23 +3547,23 @@
               "values": [
                 {
                   "value": "none",
-                  "description": ""
+                  "description": "Default behavior."
                 },
                 {
                   "value": "relations",
-                  "description": ""
+                  "description": "Relations work item expand."
                 },
                 {
                   "value": "fields",
-                  "description": ""
+                  "description": "Fields work item expand."
                 },
                 {
                   "value": "links",
-                  "description": ""
+                  "description": "Links work item expand."
                 },
                 {
                   "value": "all",
-                  "description": ""
+                  "description": "Expands all."
                 }
               ]
             }
@@ -3524,23 +3711,23 @@
               "values": [
                 {
                   "value": "none",
-                  "description": ""
+                  "description": "Default behavior."
                 },
                 {
                   "value": "relations",
-                  "description": ""
+                  "description": "Relations work item expand."
                 },
                 {
                   "value": "fields",
-                  "description": ""
+                  "description": "Fields work item expand."
                 },
                 {
                   "value": "links",
-                  "description": ""
+                  "description": "Links work item expand."
                 },
                 {
                   "value": "all",
-                  "description": ""
+                  "description": "Expands all."
                 }
               ]
             }
@@ -3644,23 +3831,23 @@
               "values": [
                 {
                   "value": "none",
-                  "description": ""
+                  "description": "Default behavior."
                 },
                 {
                   "value": "relations",
-                  "description": ""
+                  "description": "Relations work item expand."
                 },
                 {
                   "value": "fields",
-                  "description": ""
+                  "description": "Fields work item expand."
                 },
                 {
                   "value": "links",
-                  "description": ""
+                  "description": "Links work item expand."
                 },
                 {
                   "value": "all",
-                  "description": ""
+                  "description": "Expands all."
                 }
               ]
             }
@@ -3856,6 +4043,850 @@
             "$ref": "./httpExamples/updates/GET__work_item_update_project_scope.json"
           }
         }
+      }
+    },
+    "/{organization}/{project}/_apis/wit/workItems/{workItemId}/comments": {
+      "post": {
+        "tags": [
+          "Comments"
+        ],
+        "x-ms-docs-override-version": "5.1-preview.3",
+        "x-ms-vss-resource": "comments",
+        "x-ms-vss-method": "AddComment",
+        "x-ms-preview": true,
+        "description": "Add a comment on a work item.",
+        "operationId": "Add",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Comment create request.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CommentCreate"
+            }
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "workItemId",
+            "description": "Id of a work item.",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.3"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/Comment"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.work_write"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "Add a comment": {
+            "$ref": "./httpExamples/comments/POST__wit_workitems__taskId__comments_create.json"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Comments"
+        ],
+        "x-ms-docs-override-version": "5.1-preview.3",
+        "x-ms-vss-resource": "comments",
+        "x-ms-vss-method": "GetCommentsBatch",
+        "x-ms-preview": true,
+        "description": "Returns a list of work item comments by ids.",
+        "operationId": "Get Comments Batch",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "workItemId",
+            "description": "Id of a work item to get comments for.",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "ids",
+            "description": "Comma-separated list of comment ids to return.",
+            "required": true,
+            "type": "string",
+            "format": "array (int32)"
+          },
+          {
+            "in": "query",
+            "name": "includeDeleted",
+            "description": "Specify if the deleted comments should be retrieved.",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "$expand",
+            "description": "Specifies the additional data retrieval options for work item comments.",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "none",
+              "reactions"
+            ],
+            "x-ms-enum": {
+              "name": "CommentExpandOptions",
+              "values": [
+                {
+                  "value": "none",
+                  "description": "No additional options. Default."
+                },
+                {
+                  "value": "reactions",
+                  "description": "Include reactions on the comment"
+                }
+              ]
+            }
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.3"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/CommentList"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.work"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "Get a list of comments by ids": {
+            "$ref": "./httpExamples/comments/GET__wit_workitems__issueId__comments_3.json"
+          }
+        }
+      }
+    },
+    "/{organization}/{project}/_apis/wit/workItems/{workItemId}/comments/{commentId}": {
+      "delete": {
+        "tags": [
+          "Comments"
+        ],
+        "x-ms-docs-override-version": "5.1-preview.3",
+        "x-ms-vss-resource": "comments",
+        "x-ms-vss-method": "DeleteComment",
+        "x-ms-preview": true,
+        "description": "Delete a comment on a work item.",
+        "operationId": "Delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "workItemId",
+            "description": "Id of a work item.",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "path",
+            "name": "commentId",
+            "description": "",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.3"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.work_write"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "Delete a comment": {
+            "$ref": "./httpExamples/comments/DELETE__wit_workitems__taskId__comments_1.json"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Comments"
+        ],
+        "x-ms-docs-override-version": "5.1-preview.3",
+        "x-ms-vss-resource": "comments",
+        "x-ms-vss-method": "GetComment",
+        "x-ms-preview": true,
+        "description": "Returns a work item comment.",
+        "operationId": "Get Comment",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "workItemId",
+            "description": "Id of a work item to get the comment.",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "path",
+            "name": "commentId",
+            "description": "Id of the comment to return.",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "includeDeleted",
+            "description": "Specify if the deleted comment should be retrieved.",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "$expand",
+            "description": "Specifies the additional data retrieval options for work item comments.",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "none",
+              "reactions"
+            ],
+            "x-ms-enum": {
+              "name": "CommentExpandOptions",
+              "values": [
+                {
+                  "value": "none",
+                  "description": "No additional options. Default."
+                },
+                {
+                  "value": "reactions",
+                  "description": "Include reactions on the comment"
+                }
+              ]
+            }
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.3"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/Comment"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.work"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "Get a comment": {
+            "$ref": "./httpExamples/comments/GET__wit_workitems__issueId__comments__commentId_1.json"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Comments"
+        ],
+        "x-ms-docs-override-version": "5.1-preview.3",
+        "x-ms-vss-resource": "comments",
+        "x-ms-vss-method": "UpdateComment",
+        "x-ms-preview": true,
+        "description": "Update a comment on a work item.",
+        "operationId": "Update",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Comment update request.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CommentUpdate"
+            }
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "workItemId",
+            "description": "Id of a work item.",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "path",
+            "name": "commentId",
+            "description": "",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.3"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/Comment"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.work_write"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "Update a comment": {
+            "$ref": "./httpExamples/comments/PATCH__wit_workitems__taskId__comments_1.json"
+          }
+        }
+      }
+    },
+    "/{organization}/{project}/_apis/wit/workItems/{workItemId}/comments/{commentId}/reactions": {
+      "get": {
+        "tags": [
+          "Comments Reactions"
+        ],
+        "x-ms-docs-override-version": "5.1-preview.1",
+        "x-ms-vss-resource": "commentsReactions",
+        "x-ms-vss-method": "GetCommentReactions",
+        "x-ms-preview": true,
+        "description": "Gets reactions of a comment.",
+        "operationId": "List",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "workItemId",
+            "description": "WorkItem ID",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "path",
+            "name": "commentId",
+            "description": "Comment ID",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/CommentReaction"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.work"
+            ]
+          }
+        ]
+      }
+    },
+    "/{organization}/{project}/_apis/wit/workItems/{workItemId}/comments/{commentId}/reactions/{reactionType}": {
+      "put": {
+        "tags": [
+          "Comments Reactions"
+        ],
+        "x-ms-docs-override-version": "5.1-preview.1",
+        "x-ms-vss-resource": "commentsReactions",
+        "x-ms-vss-method": "CreateCommentReaction",
+        "x-ms-preview": true,
+        "description": "Adds a new reaction to a comment.",
+        "operationId": "Create",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "workItemId",
+            "description": "WorkItem ID",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "path",
+            "name": "commentId",
+            "description": "Comment ID",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "path",
+            "name": "reactionType",
+            "description": "Type of the reaction",
+            "required": true,
+            "type": "string",
+            "enum": [
+              "like",
+              "dislike",
+              "heart",
+              "hooray",
+              "smile",
+              "confused"
+            ],
+            "x-ms-enum": {
+              "name": "CommentReactionType",
+              "values": [
+                {
+                  "value": "like",
+                  "description": ""
+                },
+                {
+                  "value": "dislike",
+                  "description": ""
+                },
+                {
+                  "value": "heart",
+                  "description": ""
+                },
+                {
+                  "value": "hooray",
+                  "description": ""
+                },
+                {
+                  "value": "smile",
+                  "description": ""
+                },
+                {
+                  "value": "confused",
+                  "description": ""
+                }
+              ]
+            }
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/CommentReaction"
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Comments Reactions"
+        ],
+        "x-ms-docs-override-version": "5.1-preview.1",
+        "x-ms-vss-resource": "commentsReactions",
+        "x-ms-vss-method": "DeleteCommentReaction",
+        "x-ms-preview": true,
+        "description": "Deletes an existing reaction on a comment.",
+        "operationId": "Delete",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "workItemId",
+            "description": "WorkItem ID",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "path",
+            "name": "commentId",
+            "description": "Comment ID",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "path",
+            "name": "reactionType",
+            "description": "Type of the reaction",
+            "required": true,
+            "type": "string",
+            "enum": [
+              "like",
+              "dislike",
+              "heart",
+              "hooray",
+              "smile",
+              "confused"
+            ],
+            "x-ms-enum": {
+              "name": "CommentReactionType",
+              "values": [
+                {
+                  "value": "like",
+                  "description": ""
+                },
+                {
+                  "value": "dislike",
+                  "description": ""
+                },
+                {
+                  "value": "heart",
+                  "description": ""
+                },
+                {
+                  "value": "hooray",
+                  "description": ""
+                },
+                {
+                  "value": "smile",
+                  "description": ""
+                },
+                {
+                  "value": "confused",
+                  "description": ""
+                }
+              ]
+            }
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/CommentReaction"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.work_write"
+            ]
+          }
+        ]
+      }
+    },
+    "/{organization}/{project}/_apis/wit/workItems/{workItemId}/comments/{commentId}/versions": {
+      "get": {
+        "tags": [
+          "Comments Versions"
+        ],
+        "x-ms-docs-override-version": "5.1-preview.1",
+        "x-ms-vss-resource": "commentsVersions",
+        "x-ms-vss-method": "GetCommentVersions",
+        "x-ms-preview": true,
+        "description": "",
+        "operationId": "List",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "workItemId",
+            "description": "",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "path",
+            "name": "commentId",
+            "description": "",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/CommentVersion"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.work"
+            ]
+          }
+        ]
+      }
+    },
+    "/{organization}/{project}/_apis/wit/workItems/{workItemId}/comments/{commentId}/versions/{version}": {
+      "get": {
+        "tags": [
+          "Comments Versions"
+        ],
+        "x-ms-docs-override-version": "5.1-preview.1",
+        "x-ms-vss-resource": "commentsVersions",
+        "x-ms-vss-method": "GetCommentVersion",
+        "x-ms-preview": true,
+        "description": "",
+        "operationId": "Get",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "workItemId",
+            "description": "",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "path",
+            "name": "commentId",
+            "description": "",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "path",
+            "name": "version",
+            "description": "",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/CommentVersion"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.work"
+            ]
+          }
+        ]
       }
     },
     "/{organization}/{project}/_apis/wit/workitemsbatch": {
@@ -4508,7 +5539,12 @@
               "vso.work_write"
             ]
           }
-        ]
+        ],
+        "x-ms-examples": {
+          "Creates a template": {
+            "$ref": "./httpExamples/templates/Create_template.json"
+          }
+        }
       },
       "get": {
         "tags": [
@@ -4573,7 +5609,12 @@
               "vso.work"
             ]
           }
-        ]
+        ],
+        "x-ms-examples": {
+          "Gets templates": {
+            "$ref": "./httpExamples/templates/GET_templates.json"
+          }
+        }
       }
     },
     "/{organization}/{project}/{team}/_apis/wit/templates/{templateId}": {
@@ -4695,7 +5736,12 @@
               "vso.work"
             ]
           }
-        ]
+        ],
+        "x-ms-examples": {
+          "Gets the template with specified id": {
+            "$ref": "./httpExamples/templates/GET_template.json"
+          }
+        }
       },
       "put": {
         "tags": [
@@ -4770,7 +5816,12 @@
               "vso.work_write"
             ]
           }
-        ]
+        ],
+        "x-ms-examples": {
+          "Replace template contents": {
+            "$ref": "./httpExamples/templates/PUT_template.json"
+          }
+        }
       }
     },
     "/{organization}/{project}/{team}/_apis/wit/wiql": {
@@ -5322,6 +6373,118 @@
           }
         }
       }
+    },
+    "/{organization}/{project}/_apis/wit/workItems/{workItemId}/comments?": {
+      "get": {
+        "tags": [
+          "Comments"
+        ],
+        "x-ms-docs-override-version": "5.1-preview.3",
+        "x-ms-vss-resource": "comments",
+        "x-ms-vss-method": "GetComments",
+        "x-ms-preview": true,
+        "description": "Returns a list of work item comments, pageable.",
+        "operationId": "Get Comments",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "workItemId",
+            "description": "Id of a work item to get comments for.",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "$top",
+            "description": "Max number of comments to return.",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "continuationToken",
+            "description": "Used to query for the next page of comments.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "includeDeleted",
+            "description": "Specify if the deleted comments should be retrieved.",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "$expand",
+            "description": "Specifies the additional data retrieval options for work item comments.",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "none",
+              "reactions"
+            ],
+            "x-ms-enum": {
+              "name": "CommentExpandOptions",
+              "values": [
+                {
+                  "value": "none",
+                  "description": "No additional options. Default."
+                },
+                {
+                  "value": "reactions",
+                  "description": "Include reactions on the comment"
+                }
+              ]
+            }
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.3"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/CommentList"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.work"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "Get the first page of comments": {
+            "$ref": "./httpExamples/comments/GET__wit_workitems__issueId__comments_1.json"
+          },
+          "Get the next page of comments": {
+            "$ref": "./httpExamples/comments/GET__wit_workitems__issueId__comments_2.json"
+          }
+        }
+      }
     }
   },
   "definitions": {
@@ -5551,6 +6714,270 @@
         }
       }
     },
+    "Comment": {
+      "description": "Comment on a Work Item.",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/WorkItemTrackingResource"
+        }
+      ],
+      "properties": {
+        "createdBy": {
+          "description": "IdentityRef of the creator of the comment.",
+          "$ref": "#/definitions/IdentityRef"
+        },
+        "createdDate": {
+          "description": "The creation date of the comment.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "createdOnBehalfDate": {
+          "description": "Effective Date/time value for adding the comment. Can be optionally different from CreatedDate.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "createdOnBehalfOf": {
+          "description": "Identity on whose behalf this comment has been added. Can be optionally different from CreatedBy.",
+          "$ref": "#/definitions/IdentityRef"
+        },
+        "id": {
+          "description": "The id assigned to the comment.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "isDeleted": {
+          "description": "Indicates if the comment has been deleted.",
+          "type": "boolean"
+        },
+        "modifiedBy": {
+          "description": "IdentityRef of the user who last modified the comment.",
+          "$ref": "#/definitions/IdentityRef"
+        },
+        "modifiedDate": {
+          "description": "The last modification date of the comment.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "reactions": {
+          "description": "The reactions of the comment.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CommentReaction"
+          }
+        },
+        "text": {
+          "description": "The text of the comment.",
+          "type": "string"
+        },
+        "version": {
+          "description": "The current version of the comment.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "workItemId": {
+          "description": "The id of the work item this comment belongs to.",
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "CommentCreate": {
+      "description": "Represents a request to create a work item comment.",
+      "type": "object",
+      "properties": {
+        "text": {
+          "description": "The text of the comment.",
+          "type": "string"
+        }
+      }
+    },
+    "CommentList": {
+      "description": "Represents a list of work item comments.",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/WorkItemTrackingResource"
+        }
+      ],
+      "properties": {
+        "comments": {
+          "description": "List of comments in the current batch.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Comment"
+          }
+        },
+        "continuationToken": {
+          "description": "A string token that can be used to retrieving next page of comments if available. Otherwise null.",
+          "type": "string"
+        },
+        "count": {
+          "description": "The count of comments in the current batch.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "nextPage": {
+          "description": "Uri to the next page of comments if it is available. Otherwise null.",
+          "type": "string"
+        },
+        "totalCount": {
+          "description": "Total count of comments on a work item.",
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "CommentReaction": {
+      "description": "Contains information about work item comment reaction for a particular reaction type.",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/WorkItemTrackingResource"
+        }
+      ],
+      "properties": {
+        "commentId": {
+          "description": "The id of the comment this reaction belongs to.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "count": {
+          "description": "Total number of reactions for the CommentReactionType.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "isCurrentUserEngaged": {
+          "description": "Flag to indicate if the current user has engaged on this particular EngagementType (e.g. if they liked the associated comment).",
+          "type": "boolean"
+        },
+        "type": {
+          "description": "Type of the reaction.",
+          "enum": [
+            "like",
+            "dislike",
+            "heart",
+            "hooray",
+            "smile",
+            "confused"
+          ],
+          "x-ms-enum": {
+            "name": "CommentReactionType",
+            "values": [
+              {
+                "value": "like",
+                "description": ""
+              },
+              {
+                "value": "dislike",
+                "description": ""
+              },
+              {
+                "value": "heart",
+                "description": ""
+              },
+              {
+                "value": "hooray",
+                "description": ""
+              },
+              {
+                "value": "smile",
+                "description": ""
+              },
+              {
+                "value": "confused",
+                "description": ""
+              }
+            ]
+          }
+        }
+      }
+    },
+    "CommentReportingList": {
+      "description": "Represents a response of work item comments reporting operations.",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/CommentList"
+        }
+      ],
+      "properties": {
+        "isLastBatch": {
+          "description": "Indicates if this is the last batch.",
+          "type": "boolean"
+        }
+      }
+    },
+    "CommentUpdate": {
+      "description": "Represents a request to update a work item comment.",
+      "type": "object",
+      "properties": {
+        "text": {
+          "description": "The updated text of the comment.",
+          "type": "string"
+        }
+      }
+    },
+    "CommentVersion": {
+      "description": "Represents a specific version of a comment on a work item.",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/WorkItemTrackingResource"
+        }
+      ],
+      "properties": {
+        "createdBy": {
+          "description": "IdentityRef of the creator of the comment.",
+          "$ref": "#/definitions/IdentityRef"
+        },
+        "createdDate": {
+          "description": "The creation date of the comment.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "createdOnBehalfDate": {
+          "description": "Effective Date/time value for adding the comment. Can be optionally different from CreatedDate.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "createdOnBehalfOf": {
+          "description": "Identity on whose behalf this comment has been added. Can be optionally different from CreatedBy.",
+          "$ref": "#/definitions/IdentityRef"
+        },
+        "id": {
+          "description": "The id assigned to the comment.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "isDeleted": {
+          "description": "Indicates if the comment has been deleted at this version.",
+          "type": "boolean"
+        },
+        "modifiedBy": {
+          "description": "IdentityRef of the user who modified the comment at this version.",
+          "$ref": "#/definitions/IdentityRef"
+        },
+        "modifiedDate": {
+          "description": "The modification date of the comment for this version.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "renderedText": {
+          "description": "The rendered content of the comment at this version.",
+          "type": "string"
+        },
+        "text": {
+          "description": "The text of the comment at this version.",
+          "type": "string"
+        },
+        "version": {
+          "description": "The version number.",
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
     "FieldDependentRule": {
       "description": "Describes a list of dependent fields for a rule.",
       "type": "object",
@@ -5712,46 +7139,10 @@
         },
         "op": {
           "description": "The patch operation",
-          "enum": [
-            "add",
-            "remove",
-            "replace",
-            "move",
-            "copy",
-            "test"
-          ],
-          "x-ms-enum": {
-            "name": "Operation",
-            "values": [
-              {
-                "value": "add",
-                "description": ""
-              },
-              {
-                "value": "remove",
-                "description": ""
-              },
-              {
-                "value": "replace",
-                "description": ""
-              },
-              {
-                "value": "move",
-                "description": ""
-              },
-              {
-                "value": "copy",
-                "description": ""
-              },
-              {
-                "value": "test",
-                "description": ""
-              }
-            ]
-          }
+          "$ref": "#/definitions/Operation"
         },
         "path": {
-          "description": "The path for the operation",
+          "description": "The path for the operation. In the case of an array, a zero based index can be used to specify the position in the array (e.g. /biscuits/0/name). The \"-\" character can be used instead of an index to insert at the end of the array (e.g. /biscuits/-).",
           "type": "string"
         },
         "value": {
@@ -5777,6 +7168,103 @@
         },
         "url": {
           "description": "Link url.",
+          "type": "string"
+        }
+      }
+    },
+    "Operation": {
+      "description": "Contains information about the progress or result of an async operation.",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/OperationReference"
+        }
+      ],
+      "properties": {
+        "_links": {
+          "description": "Links to other related objects.",
+          "$ref": "#/definitions/ReferenceLinks"
+        },
+        "detailedMessage": {
+          "description": "Detailed messaged about the status of an operation.",
+          "type": "string"
+        },
+        "resultMessage": {
+          "description": "Result message for an operation.",
+          "type": "string"
+        },
+        "resultUrl": {
+          "description": "URL to the operation result.",
+          "$ref": "#/definitions/OperationResultReference"
+        }
+      }
+    },
+    "OperationReference": {
+      "description": "Reference for an async operation.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "Unique identifier for the operation.",
+          "type": "string",
+          "format": "uuid"
+        },
+        "pluginId": {
+          "description": "Unique identifier for the plugin.",
+          "type": "string",
+          "format": "uuid"
+        },
+        "status": {
+          "description": "The current status of the operation.",
+          "enum": [
+            "notSet",
+            "queued",
+            "inProgress",
+            "cancelled",
+            "succeeded",
+            "failed"
+          ],
+          "x-ms-enum": {
+            "name": "OperationStatus",
+            "values": [
+              {
+                "value": "notSet",
+                "description": "The operation does not have a status set."
+              },
+              {
+                "value": "queued",
+                "description": "The operation has been queued."
+              },
+              {
+                "value": "inProgress",
+                "description": "The operation is in progress."
+              },
+              {
+                "value": "cancelled",
+                "description": "The operation was cancelled by the user."
+              },
+              {
+                "value": "succeeded",
+                "description": "The operation completed successfully."
+              },
+              {
+                "value": "failed",
+                "description": "The operation completed with a failure."
+              }
+            ]
+          }
+        },
+        "url": {
+          "description": "URL to get the full operation object.",
+          "type": "string"
+        }
+      }
+    },
+    "OperationResultReference": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "resultUrl": {
+          "description": "URL to the operation result.",
           "type": "string"
         }
       }
@@ -6138,7 +7626,7 @@
       "properties": {}
     },
     "ReportingWorkItemRevisionsFilter": {
-      "description": "",
+      "description": "The class reprensents the reporting work item revision filer.",
       "type": "object",
       "properties": {
         "fields": {
@@ -6174,19 +7662,23 @@
       }
     },
     "StreamedBatch": {
-      "description": "",
+      "description": "The class describes reporting work item revision batch.",
       "type": "object",
       "properties": {
         "continuationToken": {
+          "description": "ContinuationToken acts as a waterMark. Used while quering large results.",
           "type": "string"
         },
         "isLastBatch": {
+          "description": "Returns 'true' if it's last batch, 'false' otherwise.",
           "type": "boolean"
         },
         "nextLink": {
+          "description": "The next link for the work item.",
           "type": "string"
         },
         "values": {
+          "description": "Values such as rel, sourceId, TargetId, ChangedDate, isActive.",
           "type": "array",
           "items": {
             "type": "string",
@@ -6329,23 +7821,23 @@
             "values": [
               {
                 "value": "none",
-                "description": ""
+                "description": "Default behavior."
               },
               {
                 "value": "relations",
-                "description": ""
+                "description": "Relations work item expand."
               },
               {
                 "value": "fields",
-                "description": ""
+                "description": "Fields work item expand."
               },
               {
                 "value": "links",
-                "description": ""
+                "description": "Links work item expand."
               },
               {
                 "value": "all",
-                "description": ""
+                "description": "Expands all."
               }
             ]
           }
@@ -6366,11 +7858,11 @@
             "values": [
               {
                 "value": "fail",
-                "description": ""
+                "description": "Fail work error policy."
               },
               {
                 "value": "omit",
-                "description": ""
+                "description": "Omit work error policy."
               }
             ]
           }
@@ -6534,6 +8026,19 @@
           "description": "The id assigned to the comment.",
           "type": "integer",
           "format": "int32"
+        },
+        "createdInRevision": {
+          "description": "[Internal] The work item revision where this comment was originally added.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "isDeleted": {
+          "description": "[Internal] Specifies whether comment was deleted.",
+          "type": "boolean"
+        },
+        "text": {
+          "description": "[Internal] The text of the comment.",
+          "type": "string"
         },
         "version": {
           "description": "The version number.",
