@@ -32,7 +32,7 @@
     },
     {
       "name": "Teams",
-      "description": "Manage teams in Azure DevOps Services. A DevOps account has one or more team projects. Each team project has one or more teams that contribute to that project."
+      "description": "Manage teams in Azure DevOps Services.\nA DevOps account has one or more team projects.\nEach team project has one or more teams that contribute to that project."
     }
   ],
   "schemes": [
@@ -730,7 +730,7 @@
         "tags": [
           "Teams"
         ],
-        "x-ms-docs-override-version": "5.1-preview.2",
+        "x-ms-docs-override-version": "5.1-preview.3",
         "x-ms-vss-resource": "teams",
         "x-ms-vss-method": "CreateTeam",
         "x-ms-preview": true,
@@ -767,7 +767,7 @@
             "type": "string"
           },
           {
-            "$ref": "#/parameters/api-Version-preview.2"
+            "$ref": "#/parameters/api-Version-preview.3"
           }
         ],
         "responses": {
@@ -795,7 +795,7 @@
         "tags": [
           "Teams"
         ],
-        "x-ms-docs-override-version": "5.1-preview.2",
+        "x-ms-docs-override-version": "5.1-preview.3",
         "x-ms-vss-resource": "teams",
         "x-ms-vss-method": "GetTeams",
         "x-ms-preview": true,
@@ -822,7 +822,7 @@
           {
             "in": "query",
             "name": "$mine",
-            "description": "If true return all the teams requesting user is member, otherwise return all the teams user has read access",
+            "description": "If true return all the teams requesting user is member, otherwise return all the teams user has read access.",
             "required": false,
             "type": "boolean"
           },
@@ -843,7 +843,14 @@
             "format": "int32"
           },
           {
-            "$ref": "#/parameters/api-Version-preview.2"
+            "in": "query",
+            "name": "$expandIdentity",
+            "description": "A value indicating whether or not to expand Identity information in the result WebApiTeam object.",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.3"
           }
         ],
         "responses": {
@@ -877,7 +884,7 @@
         "tags": [
           "Teams"
         ],
-        "x-ms-docs-override-version": "5.1-preview.2",
+        "x-ms-docs-override-version": "5.1-preview.3",
         "x-ms-vss-resource": "teams",
         "x-ms-vss-method": "DeleteTeam",
         "x-ms-preview": true,
@@ -906,7 +913,7 @@
             "type": "string"
           },
           {
-            "$ref": "#/parameters/api-Version-preview.2"
+            "$ref": "#/parameters/api-Version-preview.3"
           }
         ],
         "responses": {
@@ -931,7 +938,7 @@
         "tags": [
           "Teams"
         ],
-        "x-ms-docs-override-version": "5.1-preview.2",
+        "x-ms-docs-override-version": "5.1-preview.3",
         "x-ms-vss-resource": "teams",
         "x-ms-vss-method": "GetTeam",
         "x-ms-preview": true,
@@ -963,7 +970,14 @@
             "type": "string"
           },
           {
-            "$ref": "#/parameters/api-Version-preview.2"
+            "in": "query",
+            "name": "$expandIdentity",
+            "description": "A value indicating whether or not to expand Identity information in the result WebApiTeam object.",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.3"
           }
         ],
         "responses": {
@@ -992,7 +1006,7 @@
         "tags": [
           "Teams"
         ],
-        "x-ms-docs-override-version": "5.1-preview.2",
+        "x-ms-docs-override-version": "5.1-preview.3",
         "x-ms-vss-resource": "teams",
         "x-ms-vss-method": "UpdateTeam",
         "x-ms-preview": true,
@@ -1036,7 +1050,7 @@
             "type": "string"
           },
           {
-            "$ref": "#/parameters/api-Version-preview.2"
+            "$ref": "#/parameters/api-Version-preview.3"
           }
         ],
         "responses": {
@@ -1148,7 +1162,7 @@
         "tags": [
           "Teams"
         ],
-        "x-ms-docs-override-version": "5.1-preview.2",
+        "x-ms-docs-override-version": "5.1-preview.3",
         "x-ms-vss-resource": "teams",
         "x-ms-vss-method": "GetAllTeams",
         "x-ms-preview": true,
@@ -1168,7 +1182,7 @@
           {
             "in": "query",
             "name": "$mine",
-            "description": "If true return all the teams requesting user is member, otherwise return all the teams user has read access",
+            "description": "If true, then return all teams requesting user is member. Otherwise return all teams user has read access.",
             "required": false,
             "type": "boolean"
           },
@@ -1189,7 +1203,14 @@
             "format": "int32"
           },
           {
-            "$ref": "#/parameters/api-Version-preview.2"
+            "in": "query",
+            "name": "$expandIdentity",
+            "description": "A value indicating whether or not to expand Identity information in the result WebApiTeam object.",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.3"
           }
         ],
         "responses": {
@@ -1238,6 +1259,87 @@
         "url": {
           "description": "This url is the full route to the source resource of this graph subject.",
           "type": "string"
+        }
+      }
+    },
+    "Identity": {
+      "description": "",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/IdentityBase"
+        }
+      ],
+      "properties": {}
+    },
+    "IdentityBase": {
+      "description": "Base Identity class to allow \"trimmed\" identity class in the GetConnectionData API Makes sure that on-the-wire representations of the derived classes are compatible with each other (e.g. Server responds with PublicIdentity object while client deserializes it as Identity object) Derived classes should not have additional [DataMember] properties",
+      "type": "object",
+      "properties": {
+        "customDisplayName": {
+          "description": "The custom display name for the identity (if any). Setting this property to an empty string will clear the existing custom display name. Setting this property to null will not affect the existing persisted value (since null values do not get sent over the wire or to the database)",
+          "type": "string"
+        },
+        "descriptor": {
+          "$ref": "#/definitions/IdentityDescriptor"
+        },
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "isActive": {
+          "type": "boolean"
+        },
+        "isContainer": {
+          "type": "boolean"
+        },
+        "masterId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "memberIds": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "memberOf": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/IdentityDescriptor"
+          }
+        },
+        "members": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/IdentityDescriptor"
+          }
+        },
+        "metaTypeId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "properties": {
+          "$ref": "#/definitions/PropertiesCollection"
+        },
+        "providerDisplayName": {
+          "description": "The display name for the identity as specified by the source identity provider.",
+          "type": "string"
+        },
+        "resourceVersion": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "socialDescriptor": {
+          "type": "string"
+        },
+        "subjectDescriptor": {
+          "type": "string"
+        },
+        "uniqueUserId": {
+          "type": "integer",
+          "format": "int32"
         }
       }
     },
@@ -1682,6 +1784,34 @@
         }
       }
     },
+    "PropertiesCollection": {
+      "description": "The class represents a property bag as a collection of key-value pairs. Values of all primitive types (any type with a `TypeCode != TypeCode.Object`) except for `DBNull` are accepted. Values of type Byte[], Int32, Double, DateType and String preserve their type, other primitives are retuned as a String. Byte[] expected as base64 encoded string.",
+      "type": "object",
+      "properties": {
+        "count": {
+          "description": "The count of properties in the collection.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "item": {
+          "type": "object"
+        },
+        "keys": {
+          "description": "The set of keys in the collection.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "values": {
+          "description": "The set of values in the collection.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
     "Proxy": {
       "description": "",
       "type": "object",
@@ -2042,6 +2172,20 @@
         }
       }
     },
+    "UpdateTeam": {
+      "description": "Updateable properties for a WebApiTeam.",
+      "type": "object",
+      "properties": {
+        "description": {
+          "description": "New description for the team.",
+          "type": "string"
+        },
+        "name": {
+          "description": "New name for the team.",
+          "type": "string"
+        }
+      }
+    },
     "VssJsonCollectionWrapper": {
       "description": "This class is used to serialized collections as a single JSON object on the wire, to avoid serializing JSON arrays directly to the client, which can be a security hole",
       "type": "object",
@@ -2258,6 +2402,10 @@
           "description": "Team description",
           "type": "string"
         },
+        "identity": {
+          "description": "Team identity.",
+          "$ref": "#/definitions/Identity"
+        },
         "identityUrl": {
           "description": "Identity REST API Url to this team",
           "type": "string"
@@ -2303,6 +2451,13 @@
       "name": "api-version",
       "in": "query",
       "description": "Version of the API to use.  This should be set to '5.1-preview.2' to use this version of the api.",
+      "required": true,
+      "type": "string"
+    },
+    "api-Version-preview.3": {
+      "name": "api-version",
+      "in": "query",
+      "description": "Version of the API to use.  This should be set to '5.1-preview.3' to use this version of the api.",
       "required": true,
       "type": "string"
     },

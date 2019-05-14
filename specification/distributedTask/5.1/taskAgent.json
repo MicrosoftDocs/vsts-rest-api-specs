@@ -377,10 +377,10 @@
         ],
         "x-ms-docs-override-version": "5.1-preview.1",
         "x-ms-vss-resource": "pools",
-        "x-ms-vss-method": "GetAgentPools",
+        "x-ms-vss-method": "GetAgentPoolsByIds",
         "x-ms-preview": true,
         "description": "Get a list of agent pools.",
-        "operationId": "List",
+        "operationId": "Get Agent Pools By Ids",
         "produces": [
           "application/json"
         ],
@@ -394,42 +394,11 @@
           },
           {
             "in": "query",
-            "name": "poolName",
-            "description": "Filter by name",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "in": "query",
-            "name": "properties",
-            "description": "Filter by agent pool properties (comma-separated)",
-            "required": false,
+            "name": "poolIds",
+            "description": "pool Ids to fetch",
+            "required": true,
             "type": "string",
-            "format": "array (string)"
-          },
-          {
-            "in": "query",
-            "name": "poolType",
-            "description": "Filter by pool type",
-            "required": false,
-            "type": "string",
-            "enum": [
-              "automation",
-              "deployment"
-            ],
-            "x-ms-enum": {
-              "name": "TaskAgentPoolType",
-              "values": [
-                {
-                  "value": "automation",
-                  "description": "A typical pool of task agents"
-                },
-                {
-                  "value": "deployment",
-                  "description": "A deployment pool"
-                }
-              ]
-            }
+            "format": "array (int32)"
           },
           {
             "in": "query",
@@ -3052,6 +3021,120 @@
     }
   },
   "x-ms-paths": {
+    "/{organization}/_apis/distributedtask/pools?": {
+      "get": {
+        "tags": [
+          "Pools"
+        ],
+        "x-ms-docs-override-version": "5.1-preview.1",
+        "x-ms-vss-resource": "pools",
+        "x-ms-vss-method": "GetAgentPools",
+        "x-ms-preview": true,
+        "description": "Get a list of agent pools.",
+        "operationId": "Get Agent Pools",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "poolName",
+            "description": "Filter by name",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "properties",
+            "description": "Filter by agent pool properties (comma-separated)",
+            "required": false,
+            "type": "string",
+            "format": "array (string)"
+          },
+          {
+            "in": "query",
+            "name": "poolType",
+            "description": "Filter by pool type",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "automation",
+              "deployment"
+            ],
+            "x-ms-enum": {
+              "name": "TaskAgentPoolType",
+              "values": [
+                {
+                  "value": "automation",
+                  "description": "A typical pool of task agents"
+                },
+                {
+                  "value": "deployment",
+                  "description": "A deployment pool"
+                }
+              ]
+            }
+          },
+          {
+            "in": "query",
+            "name": "actionFilter",
+            "description": "Filter by whether the calling user has use or manage permissions",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "none",
+              "manage",
+              "use"
+            ],
+            "x-ms-enum": {
+              "name": "TaskAgentPoolActionFilter",
+              "values": [
+                {
+                  "value": "none",
+                  "description": ""
+                },
+                {
+                  "value": "manage",
+                  "description": ""
+                },
+                {
+                  "value": "use",
+                  "description": ""
+                }
+              ]
+            }
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/TaskAgentPool"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.agentpools"
+            ]
+          }
+        ]
+      }
+    },
     "/{organization}/{project}/_apis/distributedtask/queues?queueIds={queueIds}": {
       "get": {
         "tags": [

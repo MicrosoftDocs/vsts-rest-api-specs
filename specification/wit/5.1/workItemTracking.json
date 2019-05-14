@@ -42,9 +42,6 @@
       "name": "Comments Reactions"
     },
     {
-      "name": "Comments Reporting"
-    },
-    {
       "name": "Comments Versions"
     },
     {
@@ -2353,102 +2350,6 @@
         }
       }
     },
-    "/{organization}/{project}/_apis/wit/reporting/workitemcomments": {
-      "get": {
-        "tags": [
-          "Comments Reporting"
-        ],
-        "x-ms-docs-override-version": "5.1-preview.1",
-        "x-ms-vss-resource": "commentsReporting",
-        "x-ms-vss-method": "ReadReportingComments",
-        "x-ms-preview": true,
-        "description": "",
-        "operationId": "Read Reporting Comments",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "organization",
-            "description": "The name of the Azure DevOps organization.",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "in": "path",
-            "name": "project",
-            "description": "Project ID or project name",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "in": "query",
-            "name": "continuationToken",
-            "description": "",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "in": "query",
-            "name": "top",
-            "description": "",
-            "required": false,
-            "type": "integer",
-            "format": "int32"
-          },
-          {
-            "in": "query",
-            "name": "includeDeleted",
-            "description": "",
-            "required": false,
-            "type": "boolean"
-          },
-          {
-            "in": "query",
-            "name": "$expand",
-            "description": "",
-            "required": false,
-            "type": "string",
-            "enum": [
-              "none",
-              "reactions"
-            ],
-            "x-ms-enum": {
-              "name": "CommentExpandOptions",
-              "values": [
-                {
-                  "value": "none",
-                  "description": "No additional options. Default."
-                },
-                {
-                  "value": "reactions",
-                  "description": "Include reactions on the comment"
-                }
-              ]
-            }
-          },
-          {
-            "$ref": "#/parameters/api-Version-preview.1"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "$ref": "#/definitions/CommentReportingList"
-            }
-          }
-        },
-        "security": [
-          {
-            "oauth2": [
-              "vso.work"
-            ]
-          }
-        ]
-      }
-    },
     "/{organization}/{project}/_apis/wit/reporting/workitemlinks": {
       "get": {
         "tags": [
@@ -4185,18 +4086,38 @@
             "type": "string",
             "enum": [
               "none",
-              "reactions"
+              "reactions",
+              "mentions",
+              "renderedText",
+              "renderedTextOnly",
+              "all"
             ],
             "x-ms-enum": {
               "name": "CommentExpandOptions",
               "values": [
                 {
                   "value": "none",
-                  "description": "No additional options. Default."
+                  "description": ""
                 },
                 {
                   "value": "reactions",
-                  "description": "Include reactions on the comment"
+                  "description": "Include comment reactions."
+                },
+                {
+                  "value": "mentions",
+                  "description": "Include comment mentions."
+                },
+                {
+                  "value": "renderedText",
+                  "description": "Include the rendered text (html) in addition to MD text."
+                },
+                {
+                  "value": "renderedTextOnly",
+                  "description": "If specified, then ONLY rendered text (html) will be returned, w/o markdown. Supposed to be used internally from data provides for optimization purposes."
+                },
+                {
+                  "value": "all",
+                  "description": ""
                 }
               ]
             }
@@ -4350,18 +4271,38 @@
             "type": "string",
             "enum": [
               "none",
-              "reactions"
+              "reactions",
+              "mentions",
+              "renderedText",
+              "renderedTextOnly",
+              "all"
             ],
             "x-ms-enum": {
               "name": "CommentExpandOptions",
               "values": [
                 {
                   "value": "none",
-                  "description": "No additional options. Default."
+                  "description": ""
                 },
                 {
                   "value": "reactions",
-                  "description": "Include reactions on the comment"
+                  "description": "Include comment reactions."
+                },
+                {
+                  "value": "mentions",
+                  "description": "Include comment mentions."
+                },
+                {
+                  "value": "renderedText",
+                  "description": "Include the rendered text (html) in addition to MD text."
+                },
+                {
+                  "value": "renderedTextOnly",
+                  "description": "If specified, then ONLY rendered text (html) will be returned, w/o markdown. Supposed to be used internally from data provides for optimization purposes."
+                },
+                {
+                  "value": "all",
+                  "description": ""
                 }
               ]
             }
@@ -6448,18 +6389,38 @@
             "type": "string",
             "enum": [
               "none",
-              "reactions"
+              "reactions",
+              "mentions",
+              "renderedText",
+              "renderedTextOnly",
+              "all"
             ],
             "x-ms-enum": {
               "name": "CommentExpandOptions",
               "values": [
                 {
                   "value": "none",
-                  "description": "No additional options. Default."
+                  "description": ""
                 },
                 {
                   "value": "reactions",
-                  "description": "Include reactions on the comment"
+                  "description": "Include comment reactions."
+                },
+                {
+                  "value": "mentions",
+                  "description": "Include comment mentions."
+                },
+                {
+                  "value": "renderedText",
+                  "description": "Include the rendered text (html) in addition to MD text."
+                },
+                {
+                  "value": "renderedTextOnly",
+                  "description": "If specified, then ONLY rendered text (html) will be returned, w/o markdown. Supposed to be used internally from data provides for optimization purposes."
+                },
+                {
+                  "value": "all",
+                  "description": ""
                 }
               ]
             }
@@ -6781,6 +6742,13 @@
           "description": "Indicates if the comment has been deleted.",
           "type": "boolean"
         },
+        "mentions": {
+          "description": "The mentions of the comment.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CommentMention"
+          }
+        },
         "modifiedBy": {
           "description": "IdentityRef of the user who last modified the comment.",
           "$ref": "#/definitions/IdentityRef"
@@ -6859,6 +6827,34 @@
         }
       }
     },
+    "CommentMention": {
+      "description": "",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/WorkItemTrackingResource"
+        }
+      ],
+      "properties": {
+        "artifactId": {
+          "description": "The artifact portion of the parsed text. (i.e. the work item's id)",
+          "type": "string"
+        },
+        "artifactType": {
+          "description": "The type the parser assigned to the mention. (i.e. person, work item, etc)",
+          "type": "string"
+        },
+        "commentId": {
+          "description": "The comment id of the mention.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "targetId": {
+          "description": "The resolved target of the mention. An example of this could be a user's tfid",
+          "type": "string"
+        }
+      }
+    },
     "CommentReaction": {
       "description": "Contains information about work item comment reaction for a particular reaction type.",
       "type": "object",
@@ -6921,21 +6917,6 @@
               }
             ]
           }
-        }
-      }
-    },
-    "CommentReportingList": {
-      "description": "Represents a response of work item comments reporting operations.",
-      "type": "object",
-      "allOf": [
-        {
-          "$ref": "#/definitions/CommentList"
-        }
-      ],
-      "properties": {
-        "isLastBatch": {
-          "description": "Indicates if this is the last batch.",
-          "type": "boolean"
         }
       }
     },

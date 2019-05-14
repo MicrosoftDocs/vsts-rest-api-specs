@@ -2808,7 +2808,7 @@
         "x-ms-vss-resource": "runs",
         "x-ms-vss-method": "GetTestRunStatistics",
         "x-ms-preview": true,
-        "description": "Get test run statistics",
+        "description": "Get test run statistics , used when we want to get summary of a run by outcome.",
         "operationId": "Get Test Run Statistics",
         "produces": [
           "application/json"
@@ -3879,8 +3879,7 @@
             "notApplicable",
             "paused",
             "inProgress",
-            "notImpacted",
-            "maxValue"
+            "notImpacted"
           ],
           "x-ms-enum": {
             "name": "TestOutcome",
@@ -3944,10 +3943,6 @@
               {
                 "value": "notImpacted",
                 "description": "Test is not impacted. Added fot TIA."
-              },
-              {
-                "value": "maxValue",
-                "description": ""
               }
             ]
           }
@@ -4343,52 +4338,66 @@
       }
     },
     "BuildConfiguration": {
-      "description": "",
+      "description": "BuildConfiguration Details.",
       "type": "object",
       "properties": {
         "branchName": {
+          "description": "Branch name for which build is generated.",
           "type": "string"
         },
         "buildDefinitionId": {
+          "description": "BuildDefnitionId for build.",
           "type": "integer",
           "format": "int32"
         },
         "buildSystem": {
+          "description": "Build system.",
           "type": "string"
         },
         "creationDate": {
+          "description": "Build Creation Date.",
           "type": "string",
           "format": "date-time"
         },
         "flavor": {
+          "description": "Build flavor (eg Build/Release).",
           "type": "string"
         },
         "id": {
+          "description": "BuildConfiguration Id.",
           "type": "integer",
           "format": "int32"
         },
         "number": {
+          "description": "Build Number.",
           "type": "string"
         },
         "platform": {
+          "description": "BuildConfiguration Platform.",
           "type": "string"
         },
         "project": {
+          "description": "Project associated with this BuildConfiguration.",
           "$ref": "#/definitions/ShallowReference"
         },
         "repositoryGuid": {
+          "description": "ResposotoryGuid for the Build.",
           "type": "string"
         },
         "repositoryType": {
+          "description": "Repository Type (eg. TFSGit).",
           "type": "string"
         },
         "sourceVersion": {
+          "description": "Source Version(/first commit) for the build was triggered.",
           "type": "string"
         },
         "targetBranchName": {
+          "description": "Target BranchName.",
           "type": "string"
         },
         "uri": {
+          "description": "Build Uri.",
           "type": "string"
         }
       }
@@ -4641,7 +4650,7 @@
       }
     },
     "CloneOptions": {
-      "description": "",
+      "description": "Clone options for cloning the test suite.",
       "type": "object",
       "properties": {
         "cloneRequirements": {
@@ -4674,7 +4683,7 @@
       }
     },
     "CloneStatistics": {
-      "description": "",
+      "description": "Clone Statistics Details.",
       "type": "object",
       "properties": {
         "clonedRequirementsCount": {
@@ -4951,7 +4960,7 @@
       }
     },
     "CustomTestField": {
-      "description": "A custom field information.",
+      "description": "A custom field information. Allowed Key : Value pairs - ( AttemptId: IntVaue , IsTestResultFlaky: bool)",
       "type": "object",
       "properties": {
         "fieldName": {
@@ -5451,19 +5460,37 @@
         }
       }
     },
+    "JobReference": {
+      "description": "Job in pipeline. This is related to matrixing in YAML.",
+      "type": "object",
+      "properties": {
+        "attempt": {
+          "description": "Attempt number of the job",
+          "type": "integer",
+          "format": "int32"
+        },
+        "jobName": {
+          "description": "Matrixing in YAML generates copies of a job with different inputs in matrix. JobName is the name of those input.",
+          "type": "string"
+        }
+      }
+    },
     "LastResultDetails": {
-      "description": "",
+      "description": "Last result details of test point.",
       "type": "object",
       "properties": {
         "dateCompleted": {
+          "description": "CompletedDate of LastResult.",
           "type": "string",
           "format": "date-time"
         },
         "duration": {
+          "description": "Duration of LastResult.",
           "type": "integer",
           "format": "int64"
         },
         "runBy": {
+          "description": "RunBy.",
           "$ref": "#/definitions/IdentityRef"
         }
       }
@@ -6389,6 +6416,44 @@
         }
       }
     },
+    "PhaseReference": {
+      "description": "Phase in pipeline",
+      "type": "object",
+      "properties": {
+        "attempt": {
+          "description": "Attempt number of the pahse",
+          "type": "integer",
+          "format": "int32"
+        },
+        "phaseName": {
+          "description": "Name of the phase",
+          "type": "string"
+        }
+      }
+    },
+    "PipelineReference": {
+      "description": "Pipeline reference",
+      "type": "object",
+      "properties": {
+        "jobReference": {
+          "description": "Reference of the job",
+          "$ref": "#/definitions/JobReference"
+        },
+        "phaseReference": {
+          "description": "Reference of the phase.",
+          "$ref": "#/definitions/PhaseReference"
+        },
+        "pipelineId": {
+          "description": "Reference of the pipeline with which this pipeline intance is related.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "stageReference": {
+          "description": "Reference of the stage.",
+          "$ref": "#/definitions/StageReference"
+        }
+      }
+    },
     "PlanUpdateModel": {
       "description": "A model class used for creating and updating test plans.",
       "type": "object",
@@ -6557,6 +6622,10 @@
           "type": "string",
           "format": "date-time"
         },
+        "lastUpdatedBy": {
+          "type": "string",
+          "format": "uuid"
+        },
         "planId": {
           "type": "integer",
           "format": "int32"
@@ -6599,7 +6668,7 @@
       }
     },
     "PropertyBag": {
-      "description": "",
+      "description": "The class to represent a Generic store for test session data.",
       "type": "object",
       "properties": {
         "bag": {
@@ -6813,10 +6882,12 @@
       "type": "object",
       "properties": {
         "attempt": {
+          "description": "Number of Release Attempt.",
           "type": "integer",
           "format": "int32"
         },
         "creationDate": {
+          "description": "Release Creation Date.",
           "type": "string",
           "format": "date-time"
         },
@@ -6826,6 +6897,7 @@
           "format": "int32"
         },
         "environmentCreationDate": {
+          "description": "Environment creation Date.",
           "type": "string",
           "format": "date-time"
         },
@@ -7490,6 +7562,10 @@
           "type": "integer",
           "format": "int32"
         },
+        "testPlanId": {
+          "type": "integer",
+          "format": "int32"
+        },
         "testResultId": {
           "type": "integer",
           "format": "int32"
@@ -7531,6 +7607,7 @@
           "type": "string"
         },
         "buildReference": {
+          "description": "BuildReference of the test run.",
           "$ref": "#/definitions/BuildConfiguration"
         },
         "comment": {
@@ -7554,6 +7631,7 @@
           "type": "string"
         },
         "customTestFields": {
+          "description": "Additional properties of test Run.",
           "type": "array",
           "items": {
             "$ref": "#/definitions/CustomTestField"
@@ -7579,6 +7657,7 @@
           "type": "string"
         },
         "filter": {
+          "description": "Filter used for discovering the Run.",
           "$ref": "#/definitions/RunFilter"
         },
         "iteration": {
@@ -7592,6 +7671,10 @@
         "owner": {
           "description": "Display name of the owner of the run.",
           "$ref": "#/definitions/IdentityRef"
+        },
+        "pipelineReference": {
+          "description": "Reference of the pipeline to which this test run belongs. PipelineReference.PipelineId should be equal to RunCreateModel.Build.Id",
+          "$ref": "#/definitions/PipelineReference"
         },
         "plan": {
           "description": "An abstracted reference to the plan that it belongs.",
@@ -7610,6 +7693,7 @@
           "type": "string"
         },
         "releaseReference": {
+          "description": "Reference to release associated with test run.",
           "$ref": "#/definitions/ReleaseReference"
         },
         "releaseUri": {
@@ -7624,10 +7708,12 @@
           }
         },
         "runTimeout": {
+          "description": "Timespan till the Run RunTimesout.",
           "type": "string",
           "format": "TimeSpan"
         },
         "sourceWorkflow": {
+          "description": "SourceWorkFlow(CI/CD) of the test run.",
           "type": "string"
         },
         "startDate": {
@@ -7635,7 +7721,7 @@
           "type": "string"
         },
         "state": {
-          "description": "The state of the run. Valid states - NotStarted, InProgress, Waiting",
+          "description": "The state of the run. Type TestRunState Valid states - Unspecified ,NotStarted, InProgress, Completed, Waiting, Aborted, NeedsInvestigation",
           "type": "string"
         },
         "tags": {
@@ -7646,6 +7732,7 @@
           }
         },
         "testConfigurationsMapping": {
+          "description": "TestConfgurationMapping of the test run.",
           "type": "string"
         },
         "testEnvironmentId": {
@@ -7657,7 +7744,7 @@
           "$ref": "#/definitions/ShallowReference"
         },
         "type": {
-          "description": "Type of the run(RunType)",
+          "description": "Type of the run(RunType) Valid Values : (Unspecified, Normal, Blocking, Web, MtrRunInitiatedFromWeb, RunWithDtlEnv, NoConfigRun)",
           "type": "string"
         }
       }
@@ -7677,18 +7764,20 @@
       }
     },
     "RunStatistic": {
-      "description": "Test run statistics.",
+      "description": "Test run statistics per outcome.",
       "type": "object",
       "properties": {
         "count": {
+          "description": "Test result count fo the given outcome.",
           "type": "integer",
           "format": "int32"
         },
         "outcome": {
-          "description": "Test run outcome",
+          "description": "Test result outcome",
           "type": "string"
         },
         "resolutionState": {
+          "description": "Test run Resolution State.",
           "$ref": "#/definitions/TestResolutionState"
         },
         "state": {
@@ -7728,8 +7817,7 @@
             "notApplicable",
             "paused",
             "inProgress",
-            "notImpacted",
-            "maxValue"
+            "notImpacted"
           ],
           "x-ms-enum": {
             "name": "TestOutcome",
@@ -7793,10 +7881,6 @@
               {
                 "value": "notImpacted",
                 "description": "Test is not impacted. Added fot TIA."
-              },
-              {
-                "value": "maxValue",
-                "description": ""
               }
             ]
           }
@@ -7812,12 +7896,15 @@
           "$ref": "#/definitions/ShallowReference"
         },
         "buildDropLocation": {
+          "description": "Drop location of the build used for test run.",
           "type": "string"
         },
         "buildFlavor": {
+          "description": "Flavor of the build used for test run. (E.g: Release, Debug)",
           "type": "string"
         },
         "buildPlatform": {
+          "description": "Platform of the build used for test run. (E.g.: x86, amd64)",
           "type": "string"
         },
         "comment": {
@@ -7833,6 +7920,7 @@
           "type": "string"
         },
         "deleteInProgressResults": {
+          "description": "true to delete inProgess Results , false otherwise.",
           "type": "boolean"
         },
         "dtlAutEnvironment": {
@@ -7870,9 +7958,11 @@
           "type": "string"
         },
         "releaseEnvironmentUri": {
+          "description": "URI of release environment associated with the run.",
           "type": "string"
         },
         "releaseUri": {
+          "description": "URI of release associated with the run.",
           "type": "string"
         },
         "runSummary": {
@@ -7883,6 +7973,7 @@
           }
         },
         "sourceWorkflow": {
+          "description": "SourceWorkFlow(CI/CD) of the test run.",
           "type": "string"
         },
         "startedDate": {
@@ -7894,6 +7985,7 @@
           "type": "string"
         },
         "substate": {
+          "description": "The types of sub states for test run.",
           "enum": [
             "none",
             "creatingEnvironment",
@@ -7910,39 +8002,39 @@
             "values": [
               {
                 "value": "none",
-                "description": ""
+                "description": "Run with noState."
               },
               {
                 "value": "creatingEnvironment",
-                "description": ""
+                "description": "Run state while Creating Environment."
               },
               {
                 "value": "runningTests",
-                "description": ""
+                "description": "Run state while Running Tests."
               },
               {
                 "value": "canceledByUser",
-                "description": ""
+                "description": "Run state while Creating Environment."
               },
               {
                 "value": "abortedBySystem",
-                "description": ""
+                "description": "Run state when it is Aborted By the System."
               },
               {
                 "value": "timedOut",
-                "description": ""
+                "description": "Run state when run has timedOut."
               },
               {
                 "value": "pendingAnalysis",
-                "description": ""
+                "description": "Run state while Pending Analysis."
               },
               {
                 "value": "analyzed",
-                "description": ""
+                "description": "Run state after being Analysed."
               },
               {
                 "value": "cancellationInProgress",
-                "description": ""
+                "description": "Run state when cancellation is in Progress."
               }
             ]
           }
@@ -7955,6 +8047,7 @@
           }
         },
         "testEnvironmentId": {
+          "description": "ID of the test environment associated with the run.",
           "type": "string"
         },
         "testSettings": {
@@ -8044,6 +8137,21 @@
           "description": "Shared step workitem revision.",
           "type": "integer",
           "format": "int32"
+        }
+      }
+    },
+    "StageReference": {
+      "description": "Stage in pipeline",
+      "type": "object",
+      "properties": {
+        "attempt": {
+          "description": "Attempt number of stage",
+          "type": "integer",
+          "format": "int32"
+        },
+        "stageName": {
+          "description": "Name of the stage.",
+          "type": "string"
         }
       }
     },
@@ -8493,16 +8601,7 @@
           "description": "Attachment type.",
           "enum": [
             "generalAttachment",
-            "afnStrip",
-            "bugFilingData",
             "codeCoverage",
-            "intermediateCollectorData",
-            "runConfig",
-            "testImpactDetails",
-            "tmiTestRunDeploymentFiles",
-            "tmiTestRunReverseDeploymentFiles",
-            "tmiTestResultDetail",
-            "tmiTestRunSummary",
             "consoleLog"
           ],
           "x-ms-enum": {
@@ -8510,51 +8609,15 @@
             "values": [
               {
                 "value": "generalAttachment",
-                "description": ""
-              },
-              {
-                "value": "afnStrip",
-                "description": ""
-              },
-              {
-                "value": "bugFilingData",
-                "description": ""
+                "description": "Attachment type GeneralAttachment , use this as default type unless you have other type."
               },
               {
                 "value": "codeCoverage",
-                "description": ""
-              },
-              {
-                "value": "intermediateCollectorData",
-                "description": ""
-              },
-              {
-                "value": "runConfig",
-                "description": ""
-              },
-              {
-                "value": "testImpactDetails",
-                "description": ""
-              },
-              {
-                "value": "tmiTestRunDeploymentFiles",
-                "description": ""
-              },
-              {
-                "value": "tmiTestRunReverseDeploymentFiles",
-                "description": ""
-              },
-              {
-                "value": "tmiTestResultDetail",
-                "description": ""
-              },
-              {
-                "value": "tmiTestRunSummary",
-                "description": ""
+                "description": "Attachment type CodeCoverage."
               },
               {
                 "value": "consoleLog",
-                "description": ""
+                "description": "Attachment type ConsoleLog."
               }
             ]
           }
@@ -8840,6 +8903,7 @@
           "type": "string"
         },
         "automatedTestTypeId": {
+          "description": "TypeId of automated test.",
           "type": "string"
         },
         "build": {
@@ -8851,11 +8915,11 @@
           "$ref": "#/definitions/BuildReference"
         },
         "comment": {
-          "description": "Comment in a test result.",
+          "description": "Comment in a test result with maxSize= 1000 chars.",
           "type": "string"
         },
         "completedDate": {
-          "description": "Time when test execution completed.",
+          "description": "Time when test execution completed. Completed date should be greater than StartedDate.",
           "type": "string",
           "format": "date-time"
         },
@@ -8864,7 +8928,7 @@
           "type": "string"
         },
         "configuration": {
-          "description": "Test configuration of a test result.",
+          "description": "Reference to test configuration. Type ShallowReference.",
           "$ref": "#/definitions/ShallowReference"
         },
         "createdDate": {
@@ -8880,7 +8944,7 @@
           }
         },
         "durationInMs": {
-          "description": "Duration of test execution in milliseconds.",
+          "description": "Duration of test execution in milliseconds. If not provided value will be set as CompletedDate - StartedDate",
           "type": "number",
           "format": "double"
         },
@@ -8893,7 +8957,7 @@
           "$ref": "#/definitions/FailingSince"
         },
         "failureType": {
-          "description": "Failure type of test result.",
+          "description": "Failure type of test result. Valid Value= (Known Issue, New Issue, Regression, Unknown, None)",
           "type": "string"
         },
         "id": {
@@ -8902,7 +8966,7 @@
           "format": "int32"
         },
         "iterationDetails": {
-          "description": "Test result details of test iterations.",
+          "description": "Test result details of test iterations used only for Manual Testing.",
           "type": "array",
           "items": {
             "$ref": "#/definitions/TestIterationDetailsModel"
@@ -8918,7 +8982,7 @@
           "format": "date-time"
         },
         "outcome": {
-          "description": "Test outcome of test result.",
+          "description": "Test outcome of test result. Valid values = (Unspecified, None, Passed, Failed, Inconclusive, Timeout, Aborted, Blocked, NotExecuted, Warning, Error, NotApplicable, Paused, InProgress, NotImpacted)",
           "type": "string"
         },
         "owner": {
@@ -8943,6 +9007,7 @@
           "$ref": "#/definitions/ReleaseReference"
         },
         "resetCount": {
+          "description": "ResetCount.",
           "type": "integer",
           "format": "int32"
         },
@@ -9000,7 +9065,7 @@
           "$ref": "#/definitions/IdentityRef"
         },
         "stackTrace": {
-          "description": "Stacktrace.",
+          "description": "Stacktrace with maxSize= 1000 chars.",
           "type": "string"
         },
         "startedDate": {
@@ -9009,7 +9074,7 @@
           "format": "date-time"
         },
         "state": {
-          "description": "State of test result.",
+          "description": "State of test result. Type TestRunState.",
           "type": "string"
         },
         "subResults": {
@@ -9024,12 +9089,12 @@
           "$ref": "#/definitions/ShallowReference"
         },
         "testCaseReferenceId": {
-          "description": "Reference ID of test used by test result.",
+          "description": "Reference ID of test used by test result. Type TestResultMetaData",
           "type": "integer",
           "format": "int32"
         },
         "testCaseRevision": {
-          "description": "Name of test.",
+          "description": "TestCaseRevision Number.",
           "type": "integer",
           "format": "int32"
         },
@@ -9265,14 +9330,16 @@
       }
     },
     "TestEnvironment": {
-      "description": "",
+      "description": "Test environment Detail.",
       "type": "object",
       "properties": {
         "environmentId": {
+          "description": "Test Environment Id.",
           "type": "string",
           "format": "uuid"
         },
         "environmentName": {
+          "description": "Test Environment Name.",
           "type": "string"
         }
       }
@@ -9875,7 +9942,9 @@
             "containerNotCreated",
             "apiNotSupported",
             "fileSizeExceeds",
-            "containerNotFound"
+            "containerNotFound",
+            "fileNotFound",
+            "directoryNotFound"
           ],
           "x-ms-enum": {
             "name": "TestLogStatusCode",
@@ -9934,6 +10003,14 @@
               },
               {
                 "value": "containerNotFound",
+                "description": ""
+              },
+              {
+                "value": "fileNotFound",
+                "description": ""
+              },
+              {
+                "value": "directoryNotFound",
                 "description": ""
               }
             ]
@@ -9989,7 +10066,9 @@
             "containerNotCreated",
             "apiNotSupported",
             "fileSizeExceeds",
-            "containerNotFound"
+            "containerNotFound",
+            "fileNotFound",
+            "directoryNotFound"
           ],
           "x-ms-enum": {
             "name": "TestLogStatusCode",
@@ -10048,6 +10127,14 @@
               },
               {
                 "value": "containerNotFound",
+                "description": ""
+              },
+              {
+                "value": "fileNotFound",
+                "description": ""
+              },
+              {
+                "value": "directoryNotFound",
                 "description": ""
               }
             ]
@@ -10598,14 +10685,16 @@
       "properties": {}
     },
     "TestResolutionState": {
-      "description": "",
+      "description": "Test Resolution State Details.",
       "type": "object",
       "properties": {
         "id": {
+          "description": "Test Resolution state Id.",
           "type": "integer",
           "format": "int32"
         },
         "name": {
+          "description": "Test Resolution State Name.",
           "type": "string"
         },
         "project": {
@@ -10720,16 +10809,7 @@
         "attachmentType": {
           "enum": [
             "generalAttachment",
-            "afnStrip",
-            "bugFilingData",
             "codeCoverage",
-            "intermediateCollectorData",
-            "runConfig",
-            "testImpactDetails",
-            "tmiTestRunDeploymentFiles",
-            "tmiTestRunReverseDeploymentFiles",
-            "tmiTestResultDetail",
-            "tmiTestRunSummary",
             "consoleLog"
           ],
           "x-ms-enum": {
@@ -10737,51 +10817,15 @@
             "values": [
               {
                 "value": "generalAttachment",
-                "description": ""
-              },
-              {
-                "value": "afnStrip",
-                "description": ""
-              },
-              {
-                "value": "bugFilingData",
-                "description": ""
+                "description": "Attachment type GeneralAttachment , use this as default type unless you have other type."
               },
               {
                 "value": "codeCoverage",
-                "description": ""
-              },
-              {
-                "value": "intermediateCollectorData",
-                "description": ""
-              },
-              {
-                "value": "runConfig",
-                "description": ""
-              },
-              {
-                "value": "testImpactDetails",
-                "description": ""
-              },
-              {
-                "value": "tmiTestRunDeploymentFiles",
-                "description": ""
-              },
-              {
-                "value": "tmiTestRunReverseDeploymentFiles",
-                "description": ""
-              },
-              {
-                "value": "tmiTestResultDetail",
-                "description": ""
-              },
-              {
-                "value": "tmiTestRunSummary",
-                "description": ""
+                "description": "Attachment type CodeCoverage."
               },
               {
                 "value": "consoleLog",
-                "description": ""
+                "description": "Attachment type ConsoleLog."
               }
             ]
           }
@@ -11432,6 +11476,30 @@
         }
       }
     },
+    "TestResultsWithWatermark": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "changedDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "pointsResults": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PointsResults2"
+          }
+        },
+        "resultId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "runId": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
     "TestResultTrendFilter": {
       "description": "",
       "type": "object",
@@ -11501,19 +11569,23 @@
           "format": "date-time"
         },
         "controller": {
+          "description": "Test Run Controller.",
           "type": "string"
         },
         "createdDate": {
+          "description": "Test Run CreatedDate.",
           "type": "string",
           "format": "date-time"
         },
         "customFields": {
+          "description": "List of Custom Fields for TestRun.",
           "type": "array",
           "items": {
             "$ref": "#/definitions/CustomTestField"
           }
         },
         "dropLocation": {
+          "description": "Drop Location for the test Run.",
           "type": "string"
         },
         "dtlAutEnvironment": {
@@ -11543,6 +11615,7 @@
           "format": "int32"
         },
         "incompleteTests": {
+          "description": "Number of Incomplete Tests.",
           "type": "integer",
           "format": "int32"
         },
@@ -11568,6 +11641,7 @@
           "type": "string"
         },
         "notApplicableTests": {
+          "description": "Number of Not Applicable Tests.",
           "type": "integer",
           "format": "int32"
         },
@@ -11581,6 +11655,7 @@
           "format": "int32"
         },
         "phase": {
+          "description": "Phase/State for the testRun.",
           "type": "string"
         },
         "plan": {
@@ -11588,6 +11663,7 @@
           "$ref": "#/definitions/ShallowReference"
         },
         "postProcessState": {
+          "description": "Post Process State.",
           "type": "string"
         },
         "project": {
@@ -11595,12 +11671,15 @@
           "$ref": "#/definitions/ShallowReference"
         },
         "release": {
+          "description": "Release Reference for the Test Run.",
           "$ref": "#/definitions/ReleaseReference"
         },
         "releaseEnvironmentUri": {
+          "description": "Release Environment Uri for TestRun.",
           "type": "string"
         },
         "releaseUri": {
+          "description": "Release Uri for TestRun.",
           "type": "string"
         },
         "revision": {
@@ -11608,6 +11687,7 @@
           "format": "int32"
         },
         "runStatistics": {
+          "description": "RunSummary by outcome.",
           "type": "array",
           "items": {
             "$ref": "#/definitions/RunStatistic"
@@ -11619,10 +11699,11 @@
           "format": "date-time"
         },
         "state": {
-          "description": "The state of the run. { NotStarted, InProgress, Waiting }",
+          "description": "The state of the run. Type TestRunState Valid states - Unspecified ,NotStarted, InProgress, Completed, Waiting, Aborted, NeedsInvestigation",
           "type": "string"
         },
         "substate": {
+          "description": "TestRun Substate.",
           "enum": [
             "none",
             "creatingEnvironment",
@@ -11639,39 +11720,39 @@
             "values": [
               {
                 "value": "none",
-                "description": ""
+                "description": "Run with noState."
               },
               {
                 "value": "creatingEnvironment",
-                "description": ""
+                "description": "Run state while Creating Environment."
               },
               {
                 "value": "runningTests",
-                "description": ""
+                "description": "Run state while Running Tests."
               },
               {
                 "value": "canceledByUser",
-                "description": ""
+                "description": "Run state while Creating Environment."
               },
               {
                 "value": "abortedBySystem",
-                "description": ""
+                "description": "Run state when it is Aborted By the System."
               },
               {
                 "value": "timedOut",
-                "description": ""
+                "description": "Run state when run has timedOut."
               },
               {
                 "value": "pendingAnalysis",
-                "description": ""
+                "description": "Run state while Pending Analysis."
               },
               {
                 "value": "analyzed",
-                "description": ""
+                "description": "Run state after being Analysed."
               },
               {
                 "value": "cancellationInProgress",
-                "description": ""
+                "description": "Run state when cancellation is in Progress."
               }
             ]
           }
@@ -11700,6 +11781,7 @@
           "format": "int32"
         },
         "unanalyzedTests": {
+          "description": "Number of failed tests in the run.",
           "type": "integer",
           "format": "int32"
         },
@@ -11708,6 +11790,7 @@
           "type": "string"
         },
         "webAccessUrl": {
+          "description": "Web Access Url for TestRun.",
           "type": "string"
         }
       }
@@ -12911,22 +12994,27 @@
       }
     },
     "WorkItemReference": {
-      "description": "",
+      "description": "WorkItem reference Details.",
       "type": "object",
       "properties": {
         "id": {
+          "description": "WorkItem Id.",
           "type": "string"
         },
         "name": {
+          "description": "WorkItem Name.",
           "type": "string"
         },
         "type": {
+          "description": "WorkItem Type.",
           "type": "string"
         },
         "url": {
+          "description": "WorkItem Url. Valid Values : (Bug, Task, User Story, Test Case)",
           "type": "string"
         },
         "webUrl": {
+          "description": "WorkItem WebUrl.",
           "type": "string"
         }
       }
