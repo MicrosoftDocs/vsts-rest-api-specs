@@ -82,6 +82,9 @@
     },
     {
       "name": "Teamsettings"
+    },
+    {
+      "name": "Workitemsorder"
     }
   ],
   "schemes": [
@@ -781,6 +784,85 @@
             "$ref": "./httpExamples/backlogs/GET__work_backlogs_backlogItems_byBacklogId.json"
           }
         }
+      }
+    },
+    "/{organization}/{project}/{team}/_apis/work/backlogs/{backlogId}/workitemsorder": {
+      "patch": {
+        "tags": [
+          "Workitemsorder"
+        ],
+        "x-ms-docs-override-version": "5.1-preview.1",
+        "x-ms-vss-resource": "workitemsorder",
+        "x-ms-vss-method": "ReorderBacklogWorkItems",
+        "x-ms-preview": true,
+        "description": "Reorder Product Backlog/Boards Work Items",
+        "operationId": "Reorder Backlog Work Items",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ReorderOperation"
+            }
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "team",
+            "description": "Team ID or team name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "backlogId",
+            "description": "The id of the backlog level",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/ReorderResult"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.work_write"
+            ]
+          }
+        ]
       }
     },
     "/{organization}/{project}/{team}/_apis/work/backlogs/{id}": {
@@ -2314,6 +2396,86 @@
           {
             "oauth2": [
               "vso.work"
+            ]
+          }
+        ]
+      }
+    },
+    "/{organization}/{project}/{team}/_apis/work/iterations/{iterationId}/workitemsorder": {
+      "patch": {
+        "tags": [
+          "Workitemsorder"
+        ],
+        "x-ms-docs-override-version": "5.1-preview.1",
+        "x-ms-vss-resource": "workitemsorder",
+        "x-ms-vss-method": "ReorderIterationWorkItems",
+        "x-ms-preview": true,
+        "description": "Reorder Sprint Backlog/Taskboard Work Items",
+        "operationId": "Reorder Iteration Work Items",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ReorderOperation"
+            }
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "team",
+            "description": "Team ID or team name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "iterationId",
+            "description": "The id of the iteration",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/ReorderResult"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.work_write"
             ]
           }
         ]
@@ -4971,6 +5133,55 @@
         }
       }
     },
+    "ReorderOperation": {
+      "description": "Represents a reorder request for one or more work items.",
+      "type": "object",
+      "properties": {
+        "ids": {
+          "description": "IDs of the work items to be reordered.  Must be valid WorkItem Ids.",
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "iterationPath": {
+          "description": "IterationPath for reorder operation. This is only used when we reorder from the Iteration Backlog",
+          "type": "string"
+        },
+        "nextId": {
+          "description": "ID of the work item that should be after the reordered items. Can use 0 to specify the end of the list.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "parentId": {
+          "description": "Parent ID for all of the work items involved in this operation. Can use 0 to indicate the items don't have a parent.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "previousId": {
+          "description": "ID of the work item that should be before the reordered items. Can use 0 to specify the beginning of the list.",
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "ReorderResult": {
+      "description": "Represents a reorder result for a work item.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "The ID of the work item that was reordered.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "order": {
+          "description": "The updated order value of the work item that was reordered.",
+          "type": "number",
+          "format": "double"
+        }
+      }
+    },
     "Rule": {
       "description": "",
       "type": "object",
@@ -5568,6 +5779,10 @@
       "description": "",
       "type": "object",
       "properties": {
+        "cssNodeId": {
+          "description": "The iteration CSS Node Id",
+          "type": "string"
+        },
         "finishDate": {
           "description": "The end date of the iteration",
           "type": "string",

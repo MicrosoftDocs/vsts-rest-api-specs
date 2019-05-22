@@ -23,6 +23,10 @@
       "description": "Rest api for code search."
     },
     {
+      "name": "Package Search Results",
+      "description": "REST API for package search."
+    },
+    {
       "name": "Wiki Search Results",
       "description": "REST API controller for wiki search."
     },
@@ -35,6 +39,71 @@
     "https"
   ],
   "paths": {
+    "/{organization}/_apis/search/packagesearchresults": {
+      "post": {
+        "tags": [
+          "Package Search Results"
+        ],
+        "x-ms-docs-override-version": "5.1-preview.1",
+        "x-ms-vss-resource": "packageSearchResults",
+        "x-ms-vss-method": "FetchPackageSearchResults",
+        "x-ms-preview": true,
+        "description": "Provides a set of results for the search text.",
+        "operationId": "Fetch Package Search Results",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "The Package Search Request.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/PackageSearchRequest"
+            }
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/PackageSearchResponseContent"
+            },
+            "headers": {
+              "ActivityId": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.packaging"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "": {
+            "$ref": "./httpExamples/packageSearchResults/POST__PackageSearchResults.json"
+          }
+        }
+      }
+    },
     "/{organization}/{project}/_apis/search/codesearchresults": {
       "post": {
         "tags": [
@@ -405,23 +474,23 @@
       }
     },
     "FeedInfo": {
-      "description": "",
+      "description": "Defines the details of a feed.",
       "type": "object",
       "properties": {
         "collectionId": {
-          "description": "Collection Id.",
+          "description": "Id of the collection.",
           "type": "string"
         },
         "collectionName": {
-          "description": "Collection Name.",
+          "description": "Name of the collection.",
           "type": "string"
         },
         "feedId": {
-          "description": "Feed Id.",
+          "description": "Id of the feed.",
           "type": "string"
         },
         "feedName": {
-          "description": "Feed Name.",
+          "description": "Name of the feed.",
           "type": "string"
         },
         "latestMatchedVersion": {
@@ -437,7 +506,7 @@
           "type": "string"
         },
         "views": {
-          "description": "Views that match the search query.",
+          "description": "List of views which contain the matched package.",
           "type": "array",
           "items": {
             "type": "string"
@@ -498,7 +567,7 @@
       }
     },
     "PackageResult": {
-      "description": "Package search result matching a package search query.",
+      "description": "Defines the package result that matched a package search request.",
       "type": "object",
       "properties": {
         "description": {
@@ -506,7 +575,7 @@
           "type": "string"
         },
         "feeds": {
-          "description": "Feeds that match the search query.",
+          "description": "List of feeds which contain the matching package.",
           "type": "array",
           "items": {
             "$ref": "#/definitions/FeedInfo"
@@ -520,7 +589,7 @@
           }
         },
         "id": {
-          "description": "ID of the package.",
+          "description": "Id of the package.",
           "type": "string"
         },
         "name": {
@@ -528,7 +597,7 @@
           "type": "string"
         },
         "protocolType": {
-          "description": "Protocol type of the package.",
+          "description": "Type of the package.",
           "type": "string"
         }
       }
@@ -573,7 +642,7 @@
           "format": "int32"
         },
         "results": {
-          "description": "List of top matched packages.",
+          "description": "List of matched packages.",
           "type": "array",
           "items": {
             "$ref": "#/definitions/PackageResult"
@@ -912,7 +981,8 @@
       "scopes": {
         "vso.code": "Grants the ability to read source code and metadata about commits, changesets, branches, and other version control artifacts. Also grants the ability to search code and get notified about version control events via service hooks.",
         "vso.work": "Grants the ability to read work items, queries, boards, area and iterations paths, and other work item tracking related metadata. Also grants the ability to execute queries, search work items and to receive notifications about work item events via service hooks.",
-        "vso.wiki": "Grants the ability to read wikis, wiki pages and wiki attachments. Also grants the ability to search wiki pages."
+        "vso.wiki": "Grants the ability to read wikis, wiki pages and wiki attachments. Also grants the ability to search wiki pages.",
+        "vso.packaging": "Grants the ability to read feeds and packages. Also grants the ability to search packages."
       }
     }
   },
