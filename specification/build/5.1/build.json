@@ -3931,7 +3931,7 @@
         ]
       }
     },
-    "/{organization}/{project}/_apis/build/folders/{path}": {
+    "/{organization}/{project}/_apis/build/folders": {
       "put": {
         "tags": [
           "Folders"
@@ -3973,7 +3973,7 @@
             "type": "string"
           },
           {
-            "in": "path",
+            "in": "query",
             "name": "path",
             "description": "The full path of the folder.",
             "required": true,
@@ -4025,7 +4025,7 @@
             "type": "string"
           },
           {
-            "in": "path",
+            "in": "query",
             "name": "path",
             "description": "The full path to the folder.",
             "required": true,
@@ -4048,6 +4048,75 @@
           }
         ]
       },
+      "post": {
+        "tags": [
+          "Folders"
+        ],
+        "x-ms-docs-override-version": "5.1-preview.2",
+        "x-ms-vss-resource": "folders",
+        "x-ms-vss-method": "UpdateFolder",
+        "x-ms-preview": true,
+        "description": "Updates an existing folder at given  existing path",
+        "operationId": "Update",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "The new version of the folder.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Folder"
+            }
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "path",
+            "description": "The full path to the folder.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.2"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/Folder"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.build_execute"
+            ]
+          }
+        ]
+      }
+    },
+    "/{organization}/{project}/_apis/build/folders/{path}": {
       "get": {
         "tags": [
           "Folders"
@@ -4132,73 +4201,6 @@
           {
             "oauth2": [
               "vso.build"
-            ]
-          }
-        ]
-      },
-      "post": {
-        "tags": [
-          "Folders"
-        ],
-        "x-ms-docs-override-version": "5.1-preview.2",
-        "x-ms-vss-resource": "folders",
-        "x-ms-vss-method": "UpdateFolder",
-        "x-ms-preview": true,
-        "description": "Updates an existing folder at given  existing path",
-        "operationId": "Update",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "organization",
-            "description": "The name of the Azure DevOps organization.",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "in": "body",
-            "name": "body",
-            "description": "The new version of the folder.",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/Folder"
-            }
-          },
-          {
-            "in": "path",
-            "name": "project",
-            "description": "Project ID or project name",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "in": "path",
-            "name": "path",
-            "description": "The full path to the folder.",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "$ref": "#/parameters/api-Version-preview.2"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "$ref": "#/definitions/Folder"
-            }
-          }
-        },
-        "security": [
-          {
-            "oauth2": [
-              "vso.build_execute"
             ]
           }
         ]
@@ -6464,6 +6466,10 @@
         "resource": {
           "description": "The actual resource.",
           "$ref": "#/definitions/ArtifactResource"
+        },
+        "source": {
+          "description": "The artifact source, which will be the ID of the job that produced this artifact.",
+          "type": "string"
         }
       }
     },
