@@ -1,0 +1,3176 @@
+﻿{
+  "swagger": "2.0",
+  "info": {
+    "title": "Feed",
+    "description": "",
+    "termsOfService": "https://go.microsoft.com/fwlink/?LinkId=329770",
+    "contact": {
+      "name": "nugetvss",
+      "email": "nugetvss@microsoft.com"
+    },
+    "license": {
+      "name": "MICROSOFT SOFTWARE LICENSE TERMS",
+      "url": "https://go.microsoft.com/fwlink/?LinkId=329770"
+    },
+    "version": "5.0-preview"
+  },
+  "host": "https://fabrikam-fiber-inc:8080/DefaultCollection",
+  "x-ms-parameterized-host" : {
+    "hostTemplate": "{instance}",
+    "parameters": [
+      {
+        "name": "instance",
+        "description": "Azure DevOps server name ({server:port})",
+        "required": true,
+        "type": "string",
+        "in": "path"
+      }
+    ]
+  },
+  "x-ms-vss-area": "Packaging",
+  "x-ms-vss-resource-area-id": "7ab4e64e-c4d8-4f50-ae73-5ef2e21642a5",
+  "basePath": "/",
+  "tags": [
+    {
+      "name": "Artifact  Details"
+    },
+    {
+      "name": "Change  Tracking"
+    },
+    {
+      "name": "Feed  Management"
+    },
+    {
+      "name": "Recycle  Bin"
+    },
+    {
+      "name": "Retention  Policies"
+    },
+    {
+      "name": "Service  Settings"
+    }
+  ],
+  "schemes": [
+    "https"
+  ],
+  "paths": {
+    "/{collection}/_apis/packaging/feeds": {
+      "post": {
+        "tags": [
+          "Feed  Management"
+        ],
+        "x-ms-docs-override-version": "5.0-preview.1",
+        "x-ms-vss-resource": "feeds",
+        "x-ms-vss-method": "CreateFeed",
+        "x-ms-preview": true,
+        "description": "Create a feed, a container for various package types.",
+        "operationId": "Create Feed",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "collection",
+            "description": "The name of the Azure DevOps collection.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "A JSON object containing both required and optional attributes for the feed. Name is the only required value.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Feed"
+            }
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/Feed"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.packaging_write"
+            ]
+          }
+        ]
+      },
+      "get": {
+        "tags": [
+          "Feed  Management"
+        ],
+        "x-ms-docs-override-version": "5.0-preview.1",
+        "x-ms-vss-resource": "feeds",
+        "x-ms-vss-method": "GetFeeds",
+        "x-ms-preview": true,
+        "description": "Get all feeds in an account where you have the provided role access.",
+        "operationId": "Get Feeds",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "collection",
+            "description": "The name of the Azure DevOps collection.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "feedRole",
+            "description": "Filter by this role, either Administrator(4), Contributor(3), or Reader(2) level permissions.",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "custom",
+              "none",
+              "reader",
+              "contributor",
+              "administrator",
+              "collaborator"
+            ],
+            "x-ms-enum": {
+              "name": "FeedRole",
+              "values": [
+                {
+                  "value": "custom",
+                  "description": "Unsupported."
+                },
+                {
+                  "value": "none",
+                  "description": "Unsupported."
+                },
+                {
+                  "value": "reader",
+                  "description": "Readers can only read packages and view settings."
+                },
+                {
+                  "value": "contributor",
+                  "description": "Contributors can do anything to packages in the feed including adding new packages, but they may not modify feed settings."
+                },
+                {
+                  "value": "administrator",
+                  "description": "Administrators have total control over the feed."
+                },
+                {
+                  "value": "collaborator",
+                  "description": "Collaborators have the same permissions as readers, but can also ingest packages from configured upstream sources."
+                }
+              ]
+            }
+          },
+          {
+            "in": "query",
+            "name": "includeDeletedUpstreams",
+            "description": "Include upstreams that have been deleted in the response.",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Feed"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.packaging"
+            ]
+          }
+        ]
+      }
+    },
+    "/{collection}/_apis/packaging/feeds/{feedId}": {
+      "delete": {
+        "tags": [
+          "Feed  Management"
+        ],
+        "x-ms-docs-override-version": "5.0-preview.1",
+        "x-ms-vss-resource": "feeds",
+        "x-ms-vss-method": "DeleteFeed",
+        "x-ms-preview": true,
+        "description": "Remove a feed and all its packages.  The action does not result in packages moving to the RecycleBin and is not reversible.",
+        "operationId": "Delete Feed",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "collection",
+            "description": "The name of the Azure DevOps collection.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "feedId",
+            "description": "Name or Id of the feed.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.packaging_manage"
+            ]
+          }
+        ]
+      },
+      "get": {
+        "tags": [
+          "Feed  Management"
+        ],
+        "x-ms-docs-override-version": "5.0-preview.1",
+        "x-ms-vss-resource": "feeds",
+        "x-ms-vss-method": "GetFeed",
+        "x-ms-preview": true,
+        "description": "Get the settings for a specific feed.",
+        "operationId": "Get Feed",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "collection",
+            "description": "The name of the Azure DevOps collection.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "feedId",
+            "description": "Name or Id of the feed.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "includeDeletedUpstreams",
+            "description": "Include upstreams that have been deleted in the response.",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/Feed"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.packaging"
+            ]
+          }
+        ]
+      },
+      "patch": {
+        "tags": [
+          "Feed  Management"
+        ],
+        "x-ms-docs-override-version": "5.0-preview.1",
+        "x-ms-vss-resource": "feeds",
+        "x-ms-vss-method": "UpdateFeed",
+        "x-ms-preview": true,
+        "description": "Change the attributes of a feed.",
+        "operationId": "Update Feed",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "collection",
+            "description": "The name of the Azure DevOps collection.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "A JSON object containing the feed settings to be updated.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/FeedUpdate"
+            }
+          },
+          {
+            "in": "path",
+            "name": "feedId",
+            "description": "Name or Id of the feed.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/Feed"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.packaging_manage"
+            ]
+          }
+        ]
+      }
+    },
+    "/{collection}/_apis/packaging/Feeds/{feedId}/packages": {
+      "get": {
+        "tags": [
+          "Artifact  Details"
+        ],
+        "x-ms-docs-override-version": "5.0-preview.1",
+        "x-ms-vss-resource": "packages",
+        "x-ms-vss-method": "GetPackages",
+        "x-ms-preview": true,
+        "description": "Get details about all of the packages in the feed.  Use the various filters to include or exclude information from the result set.",
+        "operationId": "Get Packages",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "collection",
+            "description": "The name of the Azure DevOps collection.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "feedId",
+            "description": "Name or Id of the feed.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "protocolType",
+            "description": "One of the supported artifact package types.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "packageNameQuery",
+            "description": "Filter to packages that contain the provided string.  Characters in the string must conform to the package name constraints.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "normalizedPackageName",
+            "description": "[Obsolete] Used for legacy scenarios and may be removed in future versions.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "includeUrls",
+            "description": "True to return REST Urls with the response.  Default is True.",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "includeAllVersions",
+            "description": "True to return all versions of the package in the response.  Default is false (latest version only).",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "isListed",
+            "description": "Only applicable for NuGet packages, setting it for other package types will result in a 404.  If false, delisted package versions will be returned. Use this to filter the response when includeAllVersions is set to true.  Default is unset (do not return delisted packages).",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "getTopPackageVersions",
+            "description": "Changes the behavior of $top and $skip to return all versions of each package up to $top. Must be used in conjunction with includeAllVersions=true",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "isRelease",
+            "description": "Only applicable for Nuget packages.  Use this to filter the response when includeAllVersions is set to true.  Default is True (only return packages without prerelease versioning).",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "includeDescription",
+            "description": "Return the description for every version of each package in the response.  Default is False.",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "$top",
+            "description": "Get the top N packages (or package versions where getTopPackageVersions=true)",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "$skip",
+            "description": "Skip the first N packages (or package versions where getTopPackageVersions=true)",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "includeDeleted",
+            "description": "Return deleted or unpublished versions of packages in the response. Default is False.",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "isCached",
+            "description": "[Obsolete]  Used for legacy scenarios and may be removed in future versions.",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "directUpstreamId",
+            "description": "Filter results to return packages from a specific upstream.",
+            "required": false,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Package"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.packaging"
+            ]
+          }
+        ]
+      }
+    },
+    "/{collection}/_apis/packaging/Feeds/{feedId}/packages/{packageId}": {
+      "get": {
+        "tags": [
+          "Artifact  Details"
+        ],
+        "x-ms-docs-override-version": "5.0-preview.1",
+        "x-ms-vss-resource": "packages",
+        "x-ms-vss-method": "GetPackage",
+        "x-ms-preview": true,
+        "description": "Get details about a specific package.",
+        "operationId": "Get Package",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "collection",
+            "description": "The name of the Azure DevOps collection.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "feedId",
+            "description": "Name or Id of the feed.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "packageId",
+            "description": "The package Id (GUID Id, not the package name).",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "includeAllVersions",
+            "description": "True to return all versions of the package in the response.  Default is false (latest version only).",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "includeUrls",
+            "description": "True to return REST Urls with the response.  Default is True.",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "isListed",
+            "description": "Only applicable for NuGet packages, setting it for other package types will result in a 404.  If false, delisted package versions will be returned. Use this to filter the response when includeAllVersions is set to true.  Default is unset (do not return delisted packages).",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "isRelease",
+            "description": "Only applicable for Nuget packages.  Use this to filter the response when includeAllVersions is set to true.  Default is True (only return packages without prerelease versioning).",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "includeDeleted",
+            "description": "Return deleted or unpublished versions of packages in the response. Default is False.",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "includeDescription",
+            "description": "Return the description for every version of each package in the response.  Default is False.",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/Package"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.packaging"
+            ]
+          }
+        ]
+      }
+    },
+    "/{collection}/_apis/packaging/Feeds/{feedId}/Packages/{packageId}/versions": {
+      "get": {
+        "tags": [
+          "Artifact  Details"
+        ],
+        "x-ms-docs-override-version": "5.0-preview.1",
+        "x-ms-vss-resource": "versions",
+        "x-ms-vss-method": "GetPackageVersions",
+        "x-ms-preview": true,
+        "description": "Get a list of package versions, optionally filtering by state.",
+        "operationId": "Get Package Versions",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "collection",
+            "description": "The name of the Azure DevOps collection.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "feedId",
+            "description": "Name or Id of the feed.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "packageId",
+            "description": "Id of the package (GUID Id, not name).",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "includeUrls",
+            "description": "True to include urls for each version.  Default is true.",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "isListed",
+            "description": "Only applicable for NuGet packages.  If false, delisted package versions will be returned.",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "isDeleted",
+            "description": "Return deleted or unpublished versions of packages in the response. Default is unset (do not return deleted versions).",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/PackageVersion"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.packaging"
+            ]
+          }
+        ]
+      }
+    },
+    "/{collection}/_apis/packaging/Feeds/{feedId}/Packages/{packageId}/versions/{packageVersionId}": {
+      "get": {
+        "tags": [
+          "Artifact  Details"
+        ],
+        "x-ms-docs-override-version": "5.0-preview.1",
+        "x-ms-vss-resource": "versions",
+        "x-ms-vss-method": "GetPackageVersion",
+        "x-ms-preview": true,
+        "description": "Get details about a specific package version.",
+        "operationId": "Get Package Version",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "collection",
+            "description": "The name of the Azure DevOps collection.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "feedId",
+            "description": "Name or Id of the feed.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "packageId",
+            "description": "Id of the package (GUID Id, not name).",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "packageVersionId",
+            "description": "Id of the package version (GUID Id, not name).",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "includeUrls",
+            "description": "True to include urls for each version.  Default is true.",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "isListed",
+            "description": "Only applicable for NuGet packages.  If false, delisted package versions will be returned.",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "isDeleted",
+            "description": "Return deleted or unpublished versions of packages in the response. Default is unset (do not return deleted versions).",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/PackageVersion"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.packaging"
+            ]
+          }
+        ]
+      }
+    },
+    "/{collection}/_apis/packaging/Feeds/{feedId}/Packages/{packageId}/Versions/{packageVersionId}/provenance": {
+      "get": {
+        "tags": [
+          "Artifact  Details"
+        ],
+        "x-ms-docs-override-version": "5.0-preview.1",
+        "x-ms-vss-resource": "provenance",
+        "x-ms-vss-method": "GetPackageVersionProvenance",
+        "x-ms-preview": true,
+        "description": "Gets provenance for a package version.",
+        "operationId": "GetPackageVersionProvenance",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "collection",
+            "description": "The name of the Azure DevOps collection.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "feedId",
+            "description": "Name or Id of the feed.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "packageId",
+            "description": "Id of the package (GUID Id, not name).",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "path",
+            "name": "packageVersionId",
+            "description": "Id of the package version (GUID Id, not name).",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/PackageVersionProvenance"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.packaging"
+            ]
+          }
+        ]
+      }
+    },
+    "/{collection}/_apis/packaging/Feeds/{feedId}/permissions": {
+      "get": {
+        "tags": [
+          "Feed  Management"
+        ],
+        "x-ms-docs-override-version": "5.0-preview.1",
+        "x-ms-vss-resource": "permissions",
+        "x-ms-vss-method": "GetFeedPermissions",
+        "x-ms-preview": true,
+        "description": "Get the permissions for a feed.",
+        "operationId": "Get Feed Permissions",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "collection",
+            "description": "The name of the Azure DevOps collection.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "feedId",
+            "description": "Name or Id of the feed.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "includeIds",
+            "description": "True to include user Ids in the response.  Default is false.",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "excludeInheritedPermissions",
+            "description": "True to only return explicitly set permissions on the feed.  Default is false.",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "identityDescriptor",
+            "description": "Filter permissions to the provided identity.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/FeedPermission"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.packaging"
+            ]
+          }
+        ]
+      },
+      "patch": {
+        "tags": [
+          "Feed  Management"
+        ],
+        "x-ms-docs-override-version": "5.0-preview.1",
+        "x-ms-vss-resource": "permissions",
+        "x-ms-vss-method": "SetFeedPermissions",
+        "x-ms-preview": true,
+        "description": "Update the permissions on a feed.",
+        "operationId": "Set Feed Permissions",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "collection",
+            "description": "The name of the Azure DevOps collection.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Permissions to set.",
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/FeedPermission"
+              }
+            }
+          },
+          {
+            "in": "path",
+            "name": "feedId",
+            "description": "Name or Id of the feed.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/FeedPermission"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.packaging_manage"
+            ]
+          }
+        ]
+      }
+    },
+    "/{collection}/_apis/packaging/Feeds/{feedId}/RecycleBin/Packages": {
+      "get": {
+        "tags": [
+          "Recycle  Bin"
+        ],
+        "x-ms-docs-override-version": "5.0-preview.1",
+        "x-ms-vss-resource": "recycleBinPackages",
+        "x-ms-vss-method": "GetRecycleBinPackages",
+        "x-ms-preview": true,
+        "description": "Query for packages within the recycle bin.",
+        "operationId": "Get Recycle Bin Packages",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "collection",
+            "description": "The name of the Azure DevOps collection.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "feedId",
+            "description": "Name or Id of the feed.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "protocolType",
+            "description": "Type of package (e.g. NuGet, npm, ...).",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "packageNameQuery",
+            "description": "Filter to packages matching this name.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "includeUrls",
+            "description": "True to return REST Urls with the response.  Default is True.",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "$top",
+            "description": "Get the top N packages.",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "$skip",
+            "description": "Skip the first N packages.",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "includeAllVersions",
+            "description": "True to return all versions of the package in the response.  Default is false (latest version only).",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Package"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.packaging"
+            ]
+          }
+        ]
+      }
+    },
+    "/{collection}/_apis/packaging/Feeds/{feedId}/RecycleBin/Packages/{packageId}": {
+      "get": {
+        "tags": [
+          "Recycle  Bin"
+        ],
+        "x-ms-docs-override-version": "5.0-preview.1",
+        "x-ms-vss-resource": "recycleBinPackages",
+        "x-ms-vss-method": "GetRecycleBinPackage",
+        "x-ms-preview": true,
+        "description": "Get information about a package and all its versions within the recycle bin.",
+        "operationId": "Get Recycle Bin Package",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "collection",
+            "description": "The name of the Azure DevOps collection.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "feedId",
+            "description": "Name or Id of the feed.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "packageId",
+            "description": "The package Id (GUID Id, not the package name).",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "query",
+            "name": "includeUrls",
+            "description": "True to return REST Urls with the response.  Default is True.",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/Package"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.packaging"
+            ]
+          }
+        ]
+      }
+    },
+    "/{collection}/_apis/packaging/Feeds/{feedId}/RecycleBin/Packages/{packageId}/Versions": {
+      "get": {
+        "tags": [
+          "Recycle  Bin"
+        ],
+        "x-ms-docs-override-version": "5.0-preview.1",
+        "x-ms-vss-resource": "recycleBinVersions",
+        "x-ms-vss-method": "GetRecycleBinPackageVersions",
+        "x-ms-preview": true,
+        "description": "Get a list of package versions within the recycle bin.",
+        "operationId": "Get Recycle Bin Package Versions",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "collection",
+            "description": "The name of the Azure DevOps collection.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "feedId",
+            "description": "Name or Id of the feed.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "packageId",
+            "description": "The package Id (GUID Id, not the package name).",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "query",
+            "name": "includeUrls",
+            "description": "True to return REST Urls with the response.  Default is True.",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/RecycleBinPackageVersion"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.packaging"
+            ]
+          }
+        ]
+      }
+    },
+    "/{collection}/_apis/packaging/Feeds/{feedId}/RecycleBin/Packages/{packageId}/Versions/{packageVersionId}": {
+      "get": {
+        "tags": [
+          "Recycle  Bin"
+        ],
+        "x-ms-docs-override-version": "5.0-preview.1",
+        "x-ms-vss-resource": "recycleBinVersions",
+        "x-ms-vss-method": "GetRecycleBinPackageVersion",
+        "x-ms-preview": true,
+        "description": "Get information about a package version within the recycle bin.",
+        "operationId": "Get Recycle Bin Package Version",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "collection",
+            "description": "The name of the Azure DevOps collection.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "feedId",
+            "description": "Name or Id of the feed.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "packageId",
+            "description": "The package Id (GUID Id, not the package name).",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "path",
+            "name": "packageVersionId",
+            "description": "The package version Id 9guid Id, not the version string).",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "query",
+            "name": "includeUrls",
+            "description": "True to return REST Urls with the response.  Default is True.",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/RecycleBinPackageVersion"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.packaging"
+            ]
+          }
+        ]
+      }
+    },
+    "/{collection}/_apis/packaging/Feeds/{feedId}/retentionpolicies": {
+      "delete": {
+        "tags": [
+          "Retention  Policies"
+        ],
+        "x-ms-docs-override-version": "5.0-preview.1",
+        "x-ms-vss-resource": "retentionPolicies",
+        "x-ms-vss-method": "DeleteFeedRetentionPolicies",
+        "x-ms-preview": true,
+        "description": "Delete the retention policy for a feed.",
+        "operationId": "Delete Retention Policy",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "collection",
+            "description": "The name of the Azure DevOps collection.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "feedId",
+            "description": "Name or ID of the feed.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.packaging_manage"
+            ]
+          }
+        ]
+      },
+      "get": {
+        "tags": [
+          "Retention  Policies"
+        ],
+        "x-ms-docs-override-version": "5.0-preview.1",
+        "x-ms-vss-resource": "retentionPolicies",
+        "x-ms-vss-method": "GetFeedRetentionPolicies",
+        "x-ms-preview": true,
+        "description": "Get the retention policy for a feed.",
+        "operationId": "Get Retention Policy",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "collection",
+            "description": "The name of the Azure DevOps collection.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "feedId",
+            "description": "Name or ID of the feed.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/FeedRetentionPolicy"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.packaging"
+            ]
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "Retention  Policies"
+        ],
+        "x-ms-docs-override-version": "5.0-preview.1",
+        "x-ms-vss-resource": "retentionPolicies",
+        "x-ms-vss-method": "SetFeedRetentionPolicies",
+        "x-ms-preview": true,
+        "description": "Set the retention policy for a feed.",
+        "operationId": "Set Retention Policy",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "collection",
+            "description": "The name of the Azure DevOps collection.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Feed retention policy.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/FeedRetentionPolicy"
+            }
+          },
+          {
+            "in": "path",
+            "name": "feedId",
+            "description": "Name or ID of the feed.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/FeedRetentionPolicy"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.packaging_write"
+            ]
+          }
+        ]
+      }
+    },
+    "/{collection}/_apis/packaging/Feeds/{feedId}/views": {
+      "post": {
+        "tags": [
+          "Feed  Management"
+        ],
+        "x-ms-docs-override-version": "5.0-preview.1",
+        "x-ms-vss-resource": "views",
+        "x-ms-vss-method": "CreateFeedView",
+        "x-ms-preview": true,
+        "description": "Create a new view on the referenced feed.",
+        "operationId": "Create Feed View",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "collection",
+            "description": "The name of the Azure DevOps collection.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "View to be created.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/FeedView"
+            }
+          },
+          {
+            "in": "path",
+            "name": "feedId",
+            "description": "Name or Id of the feed.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/FeedView"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.packaging_write"
+            ]
+          }
+        ]
+      },
+      "get": {
+        "tags": [
+          "Feed  Management"
+        ],
+        "x-ms-docs-override-version": "5.0-preview.1",
+        "x-ms-vss-resource": "views",
+        "x-ms-vss-method": "GetFeedViews",
+        "x-ms-preview": true,
+        "description": "Get all views for a feed.",
+        "operationId": "Get Feed Views",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "collection",
+            "description": "The name of the Azure DevOps collection.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "feedId",
+            "description": "Name or Id of the feed.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/FeedView"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.packaging"
+            ]
+          }
+        ]
+      }
+    },
+    "/{collection}/_apis/packaging/Feeds/{feedId}/views/{viewId}": {
+      "delete": {
+        "tags": [
+          "Feed  Management"
+        ],
+        "x-ms-docs-override-version": "5.0-preview.1",
+        "x-ms-vss-resource": "views",
+        "x-ms-vss-method": "DeleteFeedView",
+        "x-ms-preview": true,
+        "description": "Delete a feed view.",
+        "operationId": "Delete Feed View",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "collection",
+            "description": "The name of the Azure DevOps collection.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "feedId",
+            "description": "Name or Id of the feed.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "viewId",
+            "description": "Name or Id of the view.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.packaging_manage"
+            ]
+          }
+        ]
+      },
+      "get": {
+        "tags": [
+          "Feed  Management"
+        ],
+        "x-ms-docs-override-version": "5.0-preview.1",
+        "x-ms-vss-resource": "views",
+        "x-ms-vss-method": "GetFeedView",
+        "x-ms-preview": true,
+        "description": "Get a view by Id.",
+        "operationId": "Get Feed View",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "collection",
+            "description": "The name of the Azure DevOps collection.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "feedId",
+            "description": "Name or Id of the feed.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "viewId",
+            "description": "Name or Id of the view.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/FeedView"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.packaging"
+            ]
+          }
+        ]
+      },
+      "patch": {
+        "tags": [
+          "Feed  Management"
+        ],
+        "x-ms-docs-override-version": "5.0-preview.1",
+        "x-ms-vss-resource": "views",
+        "x-ms-vss-method": "UpdateFeedView",
+        "x-ms-preview": true,
+        "description": "Update a view.",
+        "operationId": "Update Feed View",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "collection",
+            "description": "The name of the Azure DevOps collection.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "New settings to apply to the specified view.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/FeedView"
+            }
+          },
+          {
+            "in": "path",
+            "name": "feedId",
+            "description": "Name or Id of the feed.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "viewId",
+            "description": "Name or Id of the view.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/FeedView"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.packaging_manage"
+            ]
+          }
+        ]
+      }
+    },
+    "/{collection}/_apis/packaging/globalpermissions": {
+      "get": {
+        "tags": [
+          "Service  Settings"
+        ],
+        "x-ms-docs-override-version": "5.0-preview.1",
+        "x-ms-vss-resource": "globalPermissions",
+        "x-ms-vss-method": "GetGlobalPermissions",
+        "x-ms-preview": true,
+        "description": "Get all service-wide feed creation permissions.",
+        "operationId": "GetGlobalPermissions",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "collection",
+            "description": "The name of the Azure DevOps collection.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/GlobalPermission"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.packaging"
+            ]
+          }
+        ]
+      },
+      "patch": {
+        "tags": [
+          "Service  Settings"
+        ],
+        "x-ms-docs-override-version": "5.0-preview.1",
+        "x-ms-vss-resource": "globalPermissions",
+        "x-ms-vss-method": "SetGlobalPermissions",
+        "x-ms-preview": true,
+        "description": "Set service-wide permissions that govern feed creation.",
+        "operationId": "SetGlobalPermissions",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "collection",
+            "description": "The name of the Azure DevOps collection.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "New permissions for the collection.",
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/GlobalPermission"
+              }
+            }
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/GlobalPermission"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.packaging_manage"
+            ]
+          }
+        ]
+      }
+    },
+    "/{collection}/_apis/public/packaging/Feeds/{feedId}/Packages/{packageId}/badge": {
+      "get": {
+        "tags": [
+          "Artifact  Details"
+        ],
+        "x-ms-docs-override-version": "5.0-preview.1",
+        "x-ms-vss-resource": "badge",
+        "x-ms-vss-method": "GetBadge",
+        "x-ms-preview": true,
+        "description": "Generate a SVG badge for the latest version of a package.  The generated SVG is typically used as the image in an HTML link which takes users to the feed containing the package to accelerate discovery and consumption.",
+        "operationId": "Get Badge",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "collection",
+            "description": "The name of the Azure DevOps collection.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "feedId",
+            "description": "Name or Id of the feed.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "packageId",
+            "description": "Id of the package (GUID Id, not name).",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "Feed": {
+      "description": "A container for artifacts.",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/FeedCore"
+        }
+      ],
+      "properties": {
+        "_links": {
+          "description": "Related REST links.",
+          "$ref": "#/definitions/ReferenceLinks"
+        },
+        "badgesEnabled": {
+          "description": "If set, this feed supports generation of package badges.",
+          "type": "boolean"
+        },
+        "defaultViewId": {
+          "description": "The view that the feed administrator has indicated is the default experience for readers.",
+          "type": "string",
+          "format": "uuid"
+        },
+        "deletedDate": {
+          "description": "The date that this feed was deleted.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "description": {
+          "description": "A description for the feed.  Descriptions must not exceed 255 characters.",
+          "type": "string"
+        },
+        "hideDeletedPackageVersions": {
+          "description": "If set, the feed will hide all deleted/unpublished versions",
+          "type": "boolean"
+        },
+        "permissions": {
+          "description": "Explicit permissions for the feed.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/FeedPermission"
+          }
+        },
+        "upstreamEnabledChangedDate": {
+          "description": "If set, time that the UpstreamEnabled property was changed. Will be null if UpstreamEnabled was never changed after Feed creation.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "url": {
+          "description": "The URL of the base feed in GUID form.",
+          "type": "string"
+        }
+      }
+    },
+    "FeedBatchData": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "data": {
+          "$ref": "#/definitions/FeedBatchOperationData"
+        },
+        "operation": {
+          "enum": [
+            "saveCachedPackages"
+          ],
+          "x-ms-enum": {
+            "name": "FeedBatchOperation",
+            "values": [
+              {
+                "value": "saveCachedPackages",
+                "description": ""
+              }
+            ]
+          }
+        }
+      }
+    },
+    "FeedBatchOperationData": {
+      "description": "",
+      "type": "object",
+      "properties": {}
+    },
+    "FeedChange": {
+      "description": "A container that encapsulates the state of the feed after a create, update, or delete.",
+      "type": "object",
+      "properties": {
+        "changeType": {
+          "description": "The type of operation.",
+          "enum": [
+            "addOrUpdate",
+            "delete"
+          ],
+          "x-ms-enum": {
+            "name": "ChangeType",
+            "values": [
+              {
+                "value": "addOrUpdate",
+                "description": "A package version was added or updated."
+              },
+              {
+                "value": "delete",
+                "description": "A package version was deleted."
+              }
+            ]
+          }
+        },
+        "feed": {
+          "description": "The state of the feed after a after a create, update, or delete operation completed.",
+          "$ref": "#/definitions/Feed"
+        },
+        "feedContinuationToken": {
+          "description": "A token that identifies the next change in the log of changes.",
+          "type": "integer",
+          "format": "int64"
+        },
+        "latestPackageContinuationToken": {
+          "description": "A token that identifies the latest package change for this feed.  This can be used to quickly determine if there have been any changes to packages in a specific feed.",
+          "type": "integer",
+          "format": "int64"
+        }
+      }
+    },
+    "FeedChangesResponse": {
+      "description": "A result set containing the feed changes for the range that was requested.",
+      "type": "object",
+      "properties": {
+        "_links": {
+          "$ref": "#/definitions/ReferenceLinks"
+        },
+        "count": {
+          "description": "The number of changes in this set.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "feedChanges": {
+          "description": "A container that encapsulates the state of the feed after a create, update, or delete.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/FeedChange"
+          }
+        },
+        "nextFeedContinuationToken": {
+          "description": "When iterating through the log of changes this value indicates the value that should be used for the next continuation token.",
+          "type": "integer",
+          "format": "int64"
+        }
+      }
+    },
+    "FeedCore": {
+      "description": "An object that contains all of the settings for a specific feed.",
+      "type": "object",
+      "properties": {
+        "capabilities": {
+          "description": "Supported capabilities of a feed.",
+          "enum": [
+            "none",
+            "upstreamV2",
+            "underMaintenance",
+            "defaultCapabilities"
+          ],
+          "x-ms-enum": {
+            "name": "FeedCapabilities",
+            "values": [
+              {
+                "value": "none",
+                "description": "No flags exist for this feed"
+              },
+              {
+                "value": "upstreamV2",
+                "description": "This feed can serve packages from upstream sources Upstream packages must be manually promoted to views"
+              },
+              {
+                "value": "underMaintenance",
+                "description": "This feed is currently under maintenance and may have reduced functionality"
+              },
+              {
+                "value": "defaultCapabilities",
+                "description": "The capabilities given to a newly created feed"
+              }
+            ]
+          }
+        },
+        "fullyQualifiedId": {
+          "description": "This will either be the feed GUID or the feed GUID and view GUID depending on how the feed was accessed.",
+          "type": "string"
+        },
+        "fullyQualifiedName": {
+          "description": "Full name of the view, in feed@view format.",
+          "type": "string"
+        },
+        "id": {
+          "description": "A GUID that uniquely identifies this feed.",
+          "type": "string",
+          "format": "uuid"
+        },
+        "isReadOnly": {
+          "description": "If set, all packages in the feed are immutable.  It is important to note that feed views are immutable; therefore, this flag will always be set for views.",
+          "type": "boolean"
+        },
+        "name": {
+          "description": "A name for the feed. feed names must follow these rules: <list type=\"bullet\"><item><description> Must not exceed 64 characters </description></item><item><description> Must not contain whitespaces </description></item><item><description> Must not start with an underscore or a period </description></item><item><description> Must not end with a period </description></item><item><description> Must not contain any of the following illegal characters: <![CDATA[ @, ~, ;, {, }, \\, +, =, <, >, |, /, \\\\, ?, :, &, $, *, \\\", #, [, ] ]]></description></item></list>",
+          "type": "string"
+        },
+        "upstreamEnabled": {
+          "description": "OBSOLETE: This should always be true.  Setting to false will override all sources in UpstreamSources.",
+          "type": "boolean"
+        },
+        "upstreamSources": {
+          "description": "A list of sources that this feed will fetch packages from.  An empty list indicates that this feed will not search any additional sources for packages.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/UpstreamSource"
+          }
+        },
+        "view": {
+          "description": "Definition of the view.",
+          "$ref": "#/definitions/FeedView"
+        },
+        "viewId": {
+          "description": "View Id.",
+          "type": "string",
+          "format": "uuid"
+        },
+        "viewName": {
+          "description": "View name.",
+          "type": "string"
+        }
+      }
+    },
+    "FeedPermission": {
+      "description": "Permissions for a feed.",
+      "type": "object",
+      "properties": {
+        "displayName": {
+          "description": "Display name for the identity.",
+          "type": "string"
+        },
+        "identityDescriptor": {
+          "description": "Identity associated with this role.",
+          "$ref": "#/definitions/IdentityDescriptor"
+        },
+        "identityId": {
+          "description": "Id of the identity associated with this role.",
+          "type": "string",
+          "format": "uuid"
+        },
+        "role": {
+          "description": "The role for this identity on a feed.",
+          "enum": [
+            "custom",
+            "none",
+            "reader",
+            "contributor",
+            "administrator",
+            "collaborator"
+          ],
+          "x-ms-enum": {
+            "name": "FeedRole",
+            "values": [
+              {
+                "value": "custom",
+                "description": "Unsupported."
+              },
+              {
+                "value": "none",
+                "description": "Unsupported."
+              },
+              {
+                "value": "reader",
+                "description": "Readers can only read packages and view settings."
+              },
+              {
+                "value": "contributor",
+                "description": "Contributors can do anything to packages in the feed including adding new packages, but they may not modify feed settings."
+              },
+              {
+                "value": "administrator",
+                "description": "Administrators have total control over the feed."
+              },
+              {
+                "value": "collaborator",
+                "description": "Collaborators have the same permissions as readers, but can also ingest packages from configured upstream sources."
+              }
+            ]
+          }
+        }
+      }
+    },
+    "FeedRetentionPolicy": {
+      "description": "Retention policy settings.",
+      "type": "object",
+      "properties": {
+        "ageLimitInDays": {
+          "description": "Used for legacy scenarios and may be removed in future versions.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "countLimit": {
+          "description": "Maximum versions to preserve per package and package type.",
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "FeedUpdate": {
+      "description": "Update a feed definition with these new values.",
+      "type": "object",
+      "properties": {
+        "allowUpstreamNameConflict": {
+          "description": "If set, the feed will allow upload of packages that exist on the upstream",
+          "type": "boolean"
+        },
+        "badgesEnabled": {
+          "description": "If set, this feed supports generation of package badges.",
+          "type": "boolean"
+        },
+        "defaultViewId": {
+          "description": "The view that the feed administrator has indicated is the default experience for readers.",
+          "type": "string",
+          "format": "uuid"
+        },
+        "description": {
+          "description": "A description for the feed.  Descriptions must not exceed 255 characters.",
+          "type": "string"
+        },
+        "hideDeletedPackageVersions": {
+          "description": "If set, feed will hide all deleted/unpublished versions",
+          "type": "boolean"
+        },
+        "id": {
+          "description": "A GUID that uniquely identifies this feed.",
+          "type": "string",
+          "format": "uuid"
+        },
+        "name": {
+          "description": "A name for the feed. feed names must follow these rules: <list type=\"bullet\"><item><description> Must not exceed 64 characters </description></item><item><description> Must not contain whitespaces </description></item><item><description> Must not start with an underscore or a period </description></item><item><description> Must not end with a period </description></item><item><description> Must not contain any of the following illegal characters: <![CDATA[ @, ~, ;, {, }, \\, +, =, <, >, |, /, \\\\, ?, :, &, $, *, \\\", #, [, ] ]]></description></item></list>",
+          "type": "string"
+        },
+        "upstreamEnabled": {
+          "description": "OBSOLETE: If set, the feed can proxy packages from an upstream feed",
+          "type": "boolean"
+        },
+        "upstreamSources": {
+          "description": "A list of sources that this feed will fetch packages from.  An empty list indicates that this feed will not search any additional sources for packages.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/UpstreamSource"
+          }
+        }
+      }
+    },
+    "FeedView": {
+      "description": "A view on top of a feed.",
+      "type": "object",
+      "properties": {
+        "_links": {
+          "description": "Related REST links.",
+          "$ref": "#/definitions/ReferenceLinks"
+        },
+        "id": {
+          "description": "Id of the view.",
+          "type": "string",
+          "format": "uuid"
+        },
+        "name": {
+          "description": "Name of the view.",
+          "type": "string"
+        },
+        "type": {
+          "description": "Type of view.",
+          "enum": [
+            "none",
+            "release",
+            "implicit"
+          ],
+          "x-ms-enum": {
+            "name": "FeedViewType",
+            "values": [
+              {
+                "value": "none",
+                "description": "Default, unspecified view type."
+              },
+              {
+                "value": "release",
+                "description": "View used as a promotion destination to classify released artifacts."
+              },
+              {
+                "value": "implicit",
+                "description": "Internal view type that is automatically created and managed by the system."
+              }
+            ]
+          }
+        },
+        "url": {
+          "description": "Url of the view.",
+          "type": "string"
+        },
+        "visibility": {
+          "description": "Visibility status of the view.",
+          "enum": [
+            "private",
+            "collection",
+            "collection"
+          ],
+          "x-ms-enum": {
+            "name": "FeedVisibility",
+            "values": [
+              {
+                "value": "private",
+                "description": "Only accessible by the permissions explicitly set by the feed administrator."
+              },
+              {
+                "value": "collection",
+                "description": "Feed is accessible by all the valid users present in the collection where the feed resides (for example across collection 'myorg' at 'fabrikam:8080/tfs/')"
+              },
+              {
+                "value": "collection",
+                "description": "Feed is accessible by all the valid users present in the enterprise where the feed resides.  Note that legacy naming and back compat leaves the name of this value out of sync with its new meaning."
+              }
+            ]
+          }
+        }
+      }
+    },
+    "GlobalPermission": {
+      "description": "Permissions for feed service-wide operations such as the creation of new feeds.",
+      "type": "object",
+      "properties": {
+        "identityDescriptor": {
+          "description": "Identity of the user with the provided Role.",
+          "$ref": "#/definitions/IdentityDescriptor"
+        },
+        "role": {
+          "description": "Role associated with the Identity.",
+          "enum": [
+            "custom",
+            "none",
+            "feedCreator"
+          ],
+          "x-ms-enum": {
+            "name": "GlobalRole",
+            "values": [
+              {
+                "value": "custom",
+                "description": "Invalid default value."
+              },
+              {
+                "value": "none",
+                "description": "Explicit no permissions."
+              },
+              {
+                "value": "feedCreator",
+                "description": "Ability to create new feeds."
+              }
+            ]
+          }
+        }
+      }
+    },
+    "IdentityDescriptor": {
+      "description": "An Identity descriptor is a wrapper for the identity type (Windows SID, Passport) along with a unique identifier such as the SID or PUID.",
+      "type": "object",
+      "properties": {
+        "identifier": {
+          "description": "The unique identifier for this identity, not exceeding 256 chars, which will be persisted.",
+          "type": "string"
+        },
+        "identityType": {
+          "description": "Type of descriptor (for example, Windows, Passport, etc.).",
+          "type": "string"
+        }
+      }
+    },
+    "JsonPatchDocument": {
+      "description": "The JSON model for JSON Patch Operations",
+      "type": "object",
+      "allOf": [
+        {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/JsonPatchOperation"
+          }
+        }
+      ],
+      "properties": {}
+    },
+    "JsonPatchOperation": {
+      "description": "The JSON model for a JSON Patch operation",
+      "type": "object",
+      "properties": {
+        "from": {
+          "description": "The path to copy from for the Move/Copy operation.",
+          "type": "string"
+        },
+        "op": {
+          "description": "The patch operation",
+          "enum": [
+            "add",
+            "remove",
+            "replace",
+            "move",
+            "copy",
+            "test"
+          ],
+          "x-ms-enum": {
+            "name": "Operation",
+            "values": [
+              {
+                "value": "add",
+                "description": ""
+              },
+              {
+                "value": "remove",
+                "description": ""
+              },
+              {
+                "value": "replace",
+                "description": ""
+              },
+              {
+                "value": "move",
+                "description": ""
+              },
+              {
+                "value": "copy",
+                "description": ""
+              },
+              {
+                "value": "test",
+                "description": ""
+              }
+            ]
+          }
+        },
+        "path": {
+          "description": "The path for the operation",
+          "type": "string"
+        },
+        "value": {
+          "description": "The value for the operation. This is either a primitive or a JToken.",
+          "type": "object"
+        }
+      }
+    },
+    "Metric": {
+      "description": "A single metric name and value.",
+      "type": "object",
+      "properties": {
+        "metricType": {
+          "description": "Metric type.",
+          "enum": [
+            "downloadsDetail",
+            "totalDownloads",
+            "uniqueUsers"
+          ],
+          "x-ms-enum": {
+            "name": "MetricType",
+            "values": [
+              {
+                "value": "downloadsDetail",
+                "description": "Download detail."
+              },
+              {
+                "value": "totalDownloads",
+                "description": "Total download count."
+              },
+              {
+                "value": "uniqueUsers",
+                "description": "Total unique user count."
+              }
+            ]
+          }
+        },
+        "name": {
+          "description": "Metric name.",
+          "type": "string"
+        },
+        "value": {
+          "description": "Metric value.",
+          "type": "number",
+          "format": "double"
+        }
+      }
+    },
+    "MinimalPackageVersion": {
+      "description": "Core data about any package, including its id and version information and basic state.",
+      "type": "object",
+      "properties": {
+        "directUpstreamSourceId": {
+          "description": "Upstream source this package was ingested from.",
+          "type": "string",
+          "format": "uuid"
+        },
+        "id": {
+          "description": "Id for the package.",
+          "type": "string",
+          "format": "uuid"
+        },
+        "isCachedVersion": {
+          "description": "[Obsolete] Used for legacy scenarios and may be removed in future versions.",
+          "type": "boolean"
+        },
+        "isDeleted": {
+          "description": "True if this package has been deleted.",
+          "type": "boolean"
+        },
+        "isLatest": {
+          "description": "True if this is the latest version of the package by package type sort order.",
+          "type": "boolean"
+        },
+        "isListed": {
+          "description": "(NuGet Only) True if this package is listed.",
+          "type": "boolean"
+        },
+        "normalizedVersion": {
+          "description": "Normalized version using normalization rules specific to a package type.",
+          "type": "string"
+        },
+        "packageDescription": {
+          "description": "Package description.",
+          "type": "string"
+        },
+        "publishDate": {
+          "description": "UTC Date the package was published to the service.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "storageId": {
+          "description": "Internal storage id.",
+          "type": "string"
+        },
+        "version": {
+          "description": "Display version.",
+          "type": "string"
+        },
+        "views": {
+          "description": "List of views containing this package version.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/FeedView"
+          }
+        }
+      }
+    },
+    "Package": {
+      "description": "A package, which is a container for one or more package versions.",
+      "type": "object",
+      "properties": {
+        "_links": {
+          "description": "Related REST links.",
+          "$ref": "#/definitions/ReferenceLinks"
+        },
+        "id": {
+          "description": "Id of the package.",
+          "type": "string",
+          "format": "uuid"
+        },
+        "isCached": {
+          "description": "Used for legacy scenarios and may be removed in future versions.",
+          "type": "boolean"
+        },
+        "name": {
+          "description": "The display name of the package.",
+          "type": "string"
+        },
+        "normalizedName": {
+          "description": "The normalized name representing the identity of this package within its package type.",
+          "type": "string"
+        },
+        "protocolType": {
+          "description": "Type of the package.",
+          "type": "string"
+        },
+        "starCount": {
+          "description": "[Obsolete] - this field is unused and will be removed in a future release.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "url": {
+          "description": "Url for this package.",
+          "type": "string"
+        },
+        "versions": {
+          "description": "All versions for this package within its feed.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/MinimalPackageVersion"
+          }
+        }
+      }
+    },
+    "PackageChange": {
+      "description": "A single change to a feed's packages.",
+      "type": "object",
+      "properties": {
+        "package": {
+          "description": "Package that was changed.",
+          "$ref": "#/definitions/Package"
+        },
+        "packageVersionChange": {
+          "description": "Change that was performed on a package version.",
+          "$ref": "#/definitions/PackageVersionChange"
+        }
+      }
+    },
+    "PackageChangesResponse": {
+      "description": "A set of change operations to a feed's packages.",
+      "type": "object",
+      "properties": {
+        "_links": {
+          "description": "Related REST links.",
+          "$ref": "#/definitions/ReferenceLinks"
+        },
+        "count": {
+          "description": "Number of changes in this batch.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "nextPackageContinuationToken": {
+          "description": "Token that should be used in future calls for this feed to retrieve new changes.",
+          "type": "integer",
+          "format": "int64"
+        },
+        "packageChanges": {
+          "description": "List of changes.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PackageChange"
+          }
+        }
+      }
+    },
+    "PackageDependency": {
+      "description": "A dependency on another package version.",
+      "type": "object",
+      "properties": {
+        "group": {
+          "description": "Dependency package group (an optional classification within some package types).",
+          "type": "string"
+        },
+        "packageName": {
+          "description": "Dependency package name.",
+          "type": "string"
+        },
+        "versionRange": {
+          "description": "Dependency package version range.",
+          "type": "string"
+        }
+      }
+    },
+    "PackageDownloadMetricsQuery": {
+      "description": "Query to get package metrics",
+      "type": "object",
+      "properties": {
+        "packageIds": {
+          "description": "List of package ids",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      }
+    },
+    "PackageFile": {
+      "description": "A package file for a specific package version, only relevant to package types that contain multiple files per version.",
+      "type": "object",
+      "properties": {
+        "children": {
+          "description": "Hierarchical representation of files.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PackageFile"
+          }
+        },
+        "name": {
+          "description": "File name.",
+          "type": "string"
+        },
+        "protocolMetadata": {
+          "description": "Extended data unique to a specific package type.",
+          "$ref": "#/definitions/ProtocolMetadata"
+        }
+      }
+    },
+    "PackageIdMetrics": {
+      "description": "All metrics for a certain package id",
+      "type": "object",
+      "properties": {
+        "downloadCount": {
+          "description": "Total count of downloads per package id.",
+          "type": "number",
+          "format": "double"
+        },
+        "downloadUniqueUsers": {
+          "description": "Number of downloads per unique user per package id.",
+          "type": "number",
+          "format": "double"
+        },
+        "lastDownloaded": {
+          "description": "UTC date and time when package was last downloaded.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "packageId": {
+          "description": "Package id.",
+          "type": "string",
+          "format": "uuid"
+        }
+      }
+    },
+    "PackageMetrics": {
+      "description": "Metrics for a specific package version.",
+      "type": "object",
+      "properties": {
+        "aggregatedMetrics": {
+          "description": "Aggregated metrics, such as the total number of downloads.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Metric"
+          }
+        },
+        "packageDescriptor": {
+          "description": "Package version associated with these metrics.",
+          "$ref": "#/definitions/PackageVersionDescriptor"
+        },
+        "segmentedMetrics": {
+          "description": "Segmented metrics, such as the number of downloads per user.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SegmentedMetric"
+          }
+        }
+      }
+    },
+    "PackageVersion": {
+      "description": "A specific version of a package.",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/MinimalPackageVersion"
+        }
+      ],
+      "properties": {
+        "_links": {
+          "description": "Related links",
+          "$ref": "#/definitions/ReferenceLinks"
+        },
+        "author": {
+          "description": "Package version author.",
+          "type": "string"
+        },
+        "deletedDate": {
+          "description": "UTC date that this package version was deleted.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "dependencies": {
+          "description": "List of dependencies for this package version.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PackageDependency"
+          }
+        },
+        "description": {
+          "description": "Package version description.",
+          "type": "string"
+        },
+        "files": {
+          "description": "Files associated with this package version, only relevant for multi-file package types.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PackageFile"
+          }
+        },
+        "otherVersions": {
+          "description": "Other versions of this package.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/MinimalPackageVersion"
+          }
+        },
+        "protocolMetadata": {
+          "description": "Extended data specific to a package type.",
+          "$ref": "#/definitions/ProtocolMetadata"
+        },
+        "sourceChain": {
+          "description": "List of upstream sources through which a package version moved to land in this feed.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/UpstreamSource"
+          }
+        },
+        "summary": {
+          "description": "Package version summary.",
+          "type": "string"
+        },
+        "tags": {
+          "description": "Package version tags.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "url": {
+          "description": "Package version url.",
+          "type": "string"
+        }
+      }
+    },
+    "PackageVersionChange": {
+      "description": "A change to a single package version.",
+      "type": "object",
+      "properties": {
+        "changeType": {
+          "description": "The type of change that was performed.",
+          "enum": [
+            "addOrUpdate",
+            "delete"
+          ],
+          "x-ms-enum": {
+            "name": "ChangeType",
+            "values": [
+              {
+                "value": "addOrUpdate",
+                "description": "A package version was added or updated."
+              },
+              {
+                "value": "delete",
+                "description": "A package version was deleted."
+              }
+            ]
+          }
+        },
+        "continuationToken": {
+          "description": "Token marker for this change, allowing the caller to send this value back to the service and receive changes beyond this one.",
+          "type": "integer",
+          "format": "int64"
+        },
+        "packageVersion": {
+          "description": "Package version that was changed.",
+          "$ref": "#/definitions/PackageVersion"
+        }
+      }
+    },
+    "PackageVersionDescriptor": {
+      "description": "Query descriptor for a package version.",
+      "type": "object",
+      "properties": {
+        "packageId": {
+          "description": "Package Id.",
+          "type": "string",
+          "format": "uuid"
+        },
+        "packageVersionId": {
+          "description": "Package version Id.",
+          "type": "string",
+          "format": "uuid"
+        }
+      }
+    },
+    "PackageVersionDownloadMetricsQuery": {
+      "description": "Query to get package version metrics",
+      "type": "object",
+      "properties": {
+        "packageVersionIds": {
+          "description": "List of package version ids",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      }
+    },
+    "PackageVersionMetrics": {
+      "description": "All metrics for a certain package version id",
+      "type": "object",
+      "properties": {
+        "downloadCount": {
+          "description": "Total count of downloads per package version id.",
+          "type": "number",
+          "format": "double"
+        },
+        "downloadUniqueUsers": {
+          "description": "Number of downloads per unique user per package version id.",
+          "type": "number",
+          "format": "double"
+        },
+        "lastDownloaded": {
+          "description": "UTC date and time when package version was last downloaded.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "packageId": {
+          "description": "Package id.",
+          "type": "string",
+          "format": "uuid"
+        },
+        "packageVersionId": {
+          "description": "Package version id.",
+          "type": "string",
+          "format": "uuid"
+        }
+      }
+    },
+    "PackageVersionProvenance": {
+      "description": "Provenance for a published package version",
+      "type": "object",
+      "properties": {
+        "feedId": {
+          "description": "Name or Id of the feed.",
+          "type": "string",
+          "format": "uuid"
+        },
+        "packageId": {
+          "description": "Id of the package (GUID Id, not name).",
+          "type": "string",
+          "format": "uuid"
+        },
+        "packageVersionId": {
+          "description": "Id of the package version (GUID Id, not name).",
+          "type": "string",
+          "format": "uuid"
+        },
+        "provenance": {
+          "description": "Provenance information for this package version.",
+          "$ref": "#/definitions/Provenance"
+        }
+      }
+    },
+    "ProtocolMetadata": {
+      "description": "Extended metadata for a specific package type.",
+      "type": "object",
+      "properties": {
+        "data": {
+          "description": "Extended metadata for a specific package type, formatted to the associated schema version definition.",
+          "type": "object"
+        },
+        "schemaVersion": {
+          "description": "Schema version.",
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "Provenance": {
+      "description": "Data about the origin of a published package",
+      "type": "object",
+      "properties": {
+        "data": {
+          "description": "Other provenance data.",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "provenanceSource": {
+          "description": "Type of provenance source, for example \"InternalBuild\", \"InternalRelease\"",
+          "type": "string"
+        },
+        "publisherUserIdentity": {
+          "description": "Identity of user that published the package",
+          "type": "string",
+          "format": "uuid"
+        },
+        "userAgent": {
+          "description": "HTTP User-Agent used when pushing the package.",
+          "type": "string"
+        }
+      }
+    },
+    "RecycleBinPackageVersion": {
+      "description": "A single package version within the recycle bin.",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/PackageVersion"
+        }
+      ],
+      "properties": {
+        "scheduledPermanentDeleteDate": {
+          "description": "UTC date on which the package will automatically be removed from the recycle bin and permanently deleted.",
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "ReferenceLinks": {
+      "description": "The class to represent a collection of REST reference links.",
+      "type": "object",
+      "properties": {
+        "links": {
+          "description": "The readonly view of the links.  Because Reference links are readonly, we only want to expose them as read only.",
+          "type": "object",
+          "additionalProperties": {
+            "type": "object"
+          }
+        }
+      }
+    },
+    "SaveCachedPackagesData": {
+      "description": "",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/FeedBatchOperationData"
+        }
+      ],
+      "properties": {
+        "normalizedPackageNames": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "viewsForPromotion": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      }
+    },
+    "SegmentedMetric": {
+      "description": "Metrics grouped by type, such as metrics per user.",
+      "type": "object",
+      "properties": {
+        "metrics": {
+          "description": "List of metrics grouped by MetricType.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Metric"
+          }
+        },
+        "metricType": {
+          "description": "Group type for individual metrics.",
+          "enum": [
+            "downloadsDetail",
+            "totalDownloads",
+            "uniqueUsers"
+          ],
+          "x-ms-enum": {
+            "name": "MetricType",
+            "values": [
+              {
+                "value": "downloadsDetail",
+                "description": "Download detail."
+              },
+              {
+                "value": "totalDownloads",
+                "description": "Total download count."
+              },
+              {
+                "value": "uniqueUsers",
+                "description": "Total unique user count."
+              }
+            ]
+          }
+        }
+      }
+    },
+    "UpstreamSource": {
+      "description": "Upstream source definition, including its Identity, package type, and other associated information.",
+      "type": "object",
+      "properties": {
+        "deletedDate": {
+          "description": "UTC date that this upstream was deleted.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "id": {
+          "description": "Identity of the upstream source.",
+          "type": "string",
+          "format": "uuid"
+        },
+        "internalUpstreamCollectionId": {
+          "description": "For an internal upstream type, track the Azure DevOps collection that contains it.",
+          "type": "string",
+          "format": "uuid"
+        },
+        "internalUpstreamFeedId": {
+          "description": "For an internal upstream type, track the feed id being referenced.",
+          "type": "string",
+          "format": "uuid"
+        },
+        "internalUpstreamViewId": {
+          "description": "For an internal upstream type, track the view of the feed being referenced.",
+          "type": "string",
+          "format": "uuid"
+        },
+        "location": {
+          "description": "Locator for connecting to the upstream source.",
+          "type": "string"
+        },
+        "name": {
+          "description": "Display name.",
+          "type": "string"
+        },
+        "protocol": {
+          "description": "Package type associated with the upstream source.",
+          "type": "string"
+        },
+        "upstreamSourceType": {
+          "description": "Source type, such as Public or Internal.",
+          "enum": [
+            "public",
+            "internal"
+          ],
+          "x-ms-enum": {
+            "name": "UpstreamSourceType",
+            "values": [
+              {
+                "value": "public",
+                "description": "Publicly available source."
+              },
+              {
+                "value": "internal",
+                "description": "Azure DevOps upstream source."
+              }
+            ]
+          }
+        }
+      }
+    },
+    "VssJsonCollectionWrapper": {
+      "description": "This class is used to serialized collections as a single JSON object on the wire, to avoid serializing JSON arrays directly to the client, which can be a security hole",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/VssJsonCollectionWrapperBase"
+        }
+      ],
+      "properties": {
+        "value": {
+          "type": "string",
+          "format": "T"
+        }
+      }
+    },
+    "VssJsonCollectionWrapperBase": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "count": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    }
+  },
+  "parameters": {
+    "api-Version-preview.1": {
+      "name": "api-version",
+      "in": "query",
+      "description": "Version of the API to use.  This should be set to '5.0-preview.1' to use this version of the api.",
+      "required": true,
+      "type": "string"
+    }
+  },
+  "securityDefinitions": {
+    "accessToken": {
+      "type": "basic",
+      "description": "Personal access token. Use any value for the user name and the token as the password."
+    },
+    "oauth2": {
+      "type": "oauth2",
+      "flow": "accessCode",
+      "authorizationUrl": "https://app.vssps.visualstudio.com/oauth2/authorize&response_type=Assertion",
+      "tokenUrl": "https://app.vssps.visualstudio.com/oauth2/token?client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer&grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer",
+      "scopes": {
+        "vso.packaging_write": "Grants the ability to create and read feeds and packages.",
+        "vso.packaging": "Grants the ability to read feeds and packages.",
+        "vso.packaging_manage": "Grants the ability to create, read, update, and delete feeds and packages."
+      }
+    }
+  },
+  "security": [
+    {
+      "accessToken": []
+    }
+  ],
+  "externalDocs": {
+    "description": "Azure DevOps REST APIs",
+    "url": "https://aka.ms/azure-devops-rest-apis"
+  }
+}
