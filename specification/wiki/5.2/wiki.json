@@ -1,0 +1,2595 @@
+﻿{
+  "swagger": "2.0",
+  "info": {
+    "title": "Wiki",
+    "description": "",
+    "termsOfService": "https://go.microsoft.com/fwlink/?LinkId=329770",
+    "contact": {
+      "name": "nugetvss",
+      "email": "nugetvss@microsoft.com"
+    },
+    "license": {
+      "name": "MICROSOFT SOFTWARE LICENSE TERMS",
+      "url": "https://go.microsoft.com/fwlink/?LinkId=329770"
+    },
+    "version": "5.2-preview"
+  },
+  "host": "dev.azure.com",
+  "x-ms-vss-area": "Wiki",
+  "x-ms-vss-resource-area-id": "bf7d82a0-8aa5-4613-94ef-6172a5ea01f3",
+  "basePath": "/",
+  "tags": [
+    {
+      "name": "Attachments",
+      "description": "Wiki attachments are files that can be attached to wiki pages using MD links."
+    },
+    {
+      "name": "Page Moves",
+      "description": "Wiki page moves are operations to move wiki pages to new path or new order in the pages hierarchy."
+    },
+    {
+      "name": "Pages",
+      "description": "Wiki pages are the MD files that are stored in a Git repository in the backend."
+    },
+    {
+      "name": "Wikis",
+      "description": "Wiki is a collection of pages maintained in a particular hierarchy. Every wiki is backed up by a Git repository."
+    }
+  ],
+  "schemes": [
+    "https"
+  ],
+  "paths": {
+    "/{organization}/{project}/_apis/wiki/wikis": {
+      "post": {
+        "tags": [
+          "Wikis"
+        ],
+        "x-ms-docs-override-version": "5.2-preview.2",
+        "x-ms-vss-resource": "wikis",
+        "x-ms-vss-method": "CreateWiki",
+        "x-ms-preview": true,
+        "description": "Creates the wiki resource.",
+        "operationId": "Create",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Parameters for the wiki creation.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/WikiCreateParametersV2"
+            }
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "x-ms-required": false,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.2"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Wiki created",
+            "schema": {
+              "$ref": "#/definitions/WikiV2"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.wiki_write"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "Create project wiki": {
+            "$ref": "./httpExamples/wikis/POST_wiki_type_project.json"
+          },
+          "Create code wiki": {
+            "$ref": "./httpExamples/wikis/POST_wiki_type_code.json"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Wikis"
+        ],
+        "x-ms-docs-override-version": "5.2-preview.2",
+        "x-ms-vss-resource": "wikis",
+        "x-ms-vss-method": "GetAllWikis",
+        "x-ms-preview": true,
+        "description": "Gets all wikis in a project or collection.",
+        "operationId": "List",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "x-ms-required": false,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.2"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/WikiV2"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.wiki"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "Query in collection": {
+            "$ref": "./httpExamples/wikis/GET_wikis_queryInCollection.json"
+          },
+          "Query in project": {
+            "$ref": "./httpExamples/wikis/GET_wikis_queryInProject.json"
+          }
+        }
+      }
+    },
+    "/{organization}/{project}/_apis/wiki/wikis/{wikiIdentifier}": {
+      "delete": {
+        "tags": [
+          "Wikis"
+        ],
+        "x-ms-docs-override-version": "5.2-preview.2",
+        "x-ms-vss-resource": "wikis",
+        "x-ms-vss-method": "DeleteWiki",
+        "x-ms-preview": true,
+        "description": "Deletes the wiki corresponding to the wiki ID or wiki name provided.",
+        "operationId": "Delete",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "wikiIdentifier",
+            "description": "Wiki ID or wiki name.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "x-ms-required": false,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.2"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Wiki deleted",
+            "schema": {
+              "$ref": "#/definitions/WikiV2"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.wiki_write"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "Delete code wiki": {
+            "$ref": "./httpExamples/wikis/DELETE_wiki_type_code.json"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Wikis"
+        ],
+        "x-ms-docs-override-version": "5.2-preview.2",
+        "x-ms-vss-resource": "wikis",
+        "x-ms-vss-method": "GetWiki",
+        "x-ms-preview": true,
+        "description": "Gets the wiki corresponding to the wiki ID or wiki name provided.",
+        "operationId": "Get",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "wikiIdentifier",
+            "description": "Wiki ID or wiki name.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "x-ms-required": false,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.2"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/WikiV2"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.wiki"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "Query by name": {
+            "$ref": "./httpExamples/wikis/GET_wiki_queryByName.json"
+          },
+          "Query by Id": {
+            "$ref": "./httpExamples/wikis/GET_wiki_queryById.json"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Wikis"
+        ],
+        "x-ms-docs-override-version": "5.2-preview.2",
+        "x-ms-vss-resource": "wikis",
+        "x-ms-vss-method": "UpdateWiki",
+        "x-ms-preview": true,
+        "description": "Updates the wiki corresponding to the wiki ID or wiki name provided using the update parameters.",
+        "operationId": "Update",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Update parameters.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/WikiUpdateParameters"
+            }
+          },
+          {
+            "in": "path",
+            "name": "wikiIdentifier",
+            "description": "Wiki ID or wiki name.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "x-ms-required": false,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.2"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/WikiV2"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.wiki_write"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "Update wiki versions": {
+            "$ref": "./httpExamples/wikis/PATCH_wiki_versions.json"
+          }
+        }
+      }
+    },
+    "/{organization}/{project}/_apis/wiki/wikis/{wikiIdentifier}/attachments": {
+      "put": {
+        "tags": [
+          "Attachments"
+        ],
+        "x-ms-docs-override-version": "5.2-preview.1",
+        "x-ms-vss-resource": "attachments",
+        "x-ms-vss-method": "CreateAttachment",
+        "x-ms-preview": true,
+        "description": "Creates an attachment in the wiki.",
+        "operationId": "Create",
+        "consumes": [
+          "application/octet-stream"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Stream to upload",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "Stream"
+            }
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "wikiIdentifier",
+            "description": "Wiki ID or wiki name.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "name",
+            "description": "Wiki attachment name.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "versionDescriptor.version",
+            "description": "Version string identifier (name of tag/branch, SHA1 of commit)",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "versionDescriptor.versionOptions",
+            "description": "Version options - Specify additional modifiers to version (e.g Previous)",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "none",
+              "previousChange",
+              "firstParent"
+            ],
+            "x-ms-enum": {
+              "name": "GitVersionOptions",
+              "values": [
+                {
+                  "value": "none",
+                  "description": "Not specified"
+                },
+                {
+                  "value": "previousChange",
+                  "description": "Commit that changed item prior to the current version"
+                },
+                {
+                  "value": "firstParent",
+                  "description": "First parent of commit (HEAD^)"
+                }
+              ]
+            }
+          },
+          {
+            "in": "query",
+            "name": "versionDescriptor.versionType",
+            "description": "Version type (branch, tag, or commit). Determines how Id is interpreted",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "branch",
+              "tag",
+              "commit"
+            ],
+            "x-ms-enum": {
+              "name": "GitVersionType",
+              "values": [
+                {
+                  "value": "branch",
+                  "description": "Interpret the version as a branch name"
+                },
+                {
+                  "value": "tag",
+                  "description": "Interpret the version as a tag name"
+                },
+                {
+                  "value": "commit",
+                  "description": "Interpret the version as a commit ID (SHA1)"
+                }
+              ]
+            }
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Attachment created. Attachment's version is populated in the ETag response header.",
+            "schema": {
+              "$ref": "#/definitions/WikiAttachment"
+            },
+            "headers": {
+              "ETag": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.wiki_write"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "": {
+            "$ref": "./httpExamples/attachments/PUT_attachments.json"
+          }
+        }
+      }
+    },
+    "/{organization}/{project}/_apis/wiki/wikis/{wikiIdentifier}/pagemoves": {
+      "post": {
+        "tags": [
+          "Page Moves"
+        ],
+        "x-ms-docs-override-version": "5.2-preview.1",
+        "x-ms-vss-resource": "pageMoves",
+        "x-ms-vss-method": "CreatePageMove",
+        "x-ms-preview": true,
+        "description": "Creates a page move operation that updates the path and order of the page as provided in the parameters.",
+        "operationId": "Create",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Page more operation parameters.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/WikiPageMoveParameters"
+            }
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "wikiIdentifier",
+            "description": "Wiki ID or wiki name.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "comment",
+            "description": "Comment that is to be associated with this page move.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "versionDescriptor.version",
+            "description": "Version string identifier (name of tag/branch, SHA1 of commit)",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "versionDescriptor.versionOptions",
+            "description": "Version options - Specify additional modifiers to version (e.g Previous)",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "none",
+              "previousChange",
+              "firstParent"
+            ],
+            "x-ms-enum": {
+              "name": "GitVersionOptions",
+              "values": [
+                {
+                  "value": "none",
+                  "description": "Not specified"
+                },
+                {
+                  "value": "previousChange",
+                  "description": "Commit that changed item prior to the current version"
+                },
+                {
+                  "value": "firstParent",
+                  "description": "First parent of commit (HEAD^)"
+                }
+              ]
+            }
+          },
+          {
+            "in": "query",
+            "name": "versionDescriptor.versionType",
+            "description": "Version type (branch, tag, or commit). Determines how Id is interpreted",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "branch",
+              "tag",
+              "commit"
+            ],
+            "x-ms-enum": {
+              "name": "GitVersionType",
+              "values": [
+                {
+                  "value": "branch",
+                  "description": "Interpret the version as a branch name"
+                },
+                {
+                  "value": "tag",
+                  "description": "Interpret the version as a tag name"
+                },
+                {
+                  "value": "commit",
+                  "description": "Interpret the version as a commit ID (SHA1)"
+                }
+              ]
+            }
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Page move created. Moved page's version is populated in the ETag response header.",
+            "schema": {
+              "$ref": "#/definitions/WikiPageMove"
+            },
+            "headers": {
+              "ETag": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.wiki_write"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "Reorder page": {
+            "$ref": "./httpExamples/pageMoves/POST_pageMoves_reorder.json"
+          },
+          "Reparent page": {
+            "$ref": "./httpExamples/pageMoves/POST_pageMoves_reparent.json"
+          }
+        }
+      }
+    },
+    "/{organization}/{project}/_apis/wiki/wikis/{wikiIdentifier}/pages": {
+      "put": {
+        "tags": [
+          "Pages"
+        ],
+        "x-ms-docs-override-version": "5.2-preview.1",
+        "x-ms-vss-resource": "pages",
+        "x-ms-vss-method": "CreateOrUpdatePage",
+        "x-ms-preview": true,
+        "description": "Creates or edits a wiki page.",
+        "operationId": "Create Or Update",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Wiki create or update operation parameters.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/WikiPageCreateOrUpdateParameters"
+            }
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "wikiIdentifier",
+            "description": "Wiki ID or wiki name.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "path",
+            "description": "Wiki page path.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "header",
+            "name": "Version",
+            "description": "Version of the page on which the change is to be made. Mandatory for `Edit` scenario. To be populated in the If-Match header of the request.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "comment",
+            "description": "Comment to be associated with the page operation.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "versionDescriptor.version",
+            "description": "Version string identifier (name of tag/branch, SHA1 of commit)",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "versionDescriptor.versionOptions",
+            "description": "Version options - Specify additional modifiers to version (e.g Previous)",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "none",
+              "previousChange",
+              "firstParent"
+            ],
+            "x-ms-enum": {
+              "name": "GitVersionOptions",
+              "values": [
+                {
+                  "value": "none",
+                  "description": "Not specified"
+                },
+                {
+                  "value": "previousChange",
+                  "description": "Commit that changed item prior to the current version"
+                },
+                {
+                  "value": "firstParent",
+                  "description": "First parent of commit (HEAD^)"
+                }
+              ]
+            }
+          },
+          {
+            "in": "query",
+            "name": "versionDescriptor.versionType",
+            "description": "Version type (branch, tag, or commit). Determines how Id is interpreted",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "branch",
+              "tag",
+              "commit"
+            ],
+            "x-ms-enum": {
+              "name": "GitVersionType",
+              "values": [
+                {
+                  "value": "branch",
+                  "description": "Interpret the version as a branch name"
+                },
+                {
+                  "value": "tag",
+                  "description": "Interpret the version as a tag name"
+                },
+                {
+                  "value": "commit",
+                  "description": "Interpret the version as a commit ID (SHA1)"
+                }
+              ]
+            }
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Page created. Created page's version is populated in the ETag response header.",
+            "schema": {
+              "$ref": "#/definitions/WikiPage"
+            },
+            "headers": {
+              "ETag": {
+                "type": "string"
+              }
+            }
+          },
+          "200": {
+            "description": "Page edited. Edited page's version is populated in the ETag response header.",
+            "schema": {
+              "$ref": "#/definitions/WikiPage"
+            },
+            "headers": {
+              "ETag": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.wiki_write"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "Add a page": {
+            "$ref": "./httpExamples/pages/PUT_wiki_page_add.json"
+          },
+          "Edit a page": {
+            "$ref": "./httpExamples/pages/PUT_wiki_page_edit.json"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Pages"
+        ],
+        "x-ms-docs-override-version": "5.2-preview.1",
+        "x-ms-vss-resource": "pages",
+        "x-ms-vss-method": "DeletePage",
+        "x-ms-preview": true,
+        "description": "Deletes a wiki page.",
+        "operationId": "Delete Page",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "wikiIdentifier",
+            "description": "Wiki ID or wiki name.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "path",
+            "description": "Wiki page path.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "comment",
+            "description": "Comment to be associated with this page delete.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "versionDescriptor.version",
+            "description": "Version string identifier (name of tag/branch, SHA1 of commit)",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "versionDescriptor.versionOptions",
+            "description": "Version options - Specify additional modifiers to version (e.g Previous)",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "none",
+              "previousChange",
+              "firstParent"
+            ],
+            "x-ms-enum": {
+              "name": "GitVersionOptions",
+              "values": [
+                {
+                  "value": "none",
+                  "description": "Not specified"
+                },
+                {
+                  "value": "previousChange",
+                  "description": "Commit that changed item prior to the current version"
+                },
+                {
+                  "value": "firstParent",
+                  "description": "First parent of commit (HEAD^)"
+                }
+              ]
+            }
+          },
+          {
+            "in": "query",
+            "name": "versionDescriptor.versionType",
+            "description": "Version type (branch, tag, or commit). Determines how Id is interpreted",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "branch",
+              "tag",
+              "commit"
+            ],
+            "x-ms-enum": {
+              "name": "GitVersionType",
+              "values": [
+                {
+                  "value": "branch",
+                  "description": "Interpret the version as a branch name"
+                },
+                {
+                  "value": "tag",
+                  "description": "Interpret the version as a tag name"
+                },
+                {
+                  "value": "commit",
+                  "description": "Interpret the version as a commit ID (SHA1)"
+                }
+              ]
+            }
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Page deleted.",
+            "schema": {
+              "$ref": "#/definitions/WikiPage"
+            },
+            "headers": {
+              "ETag": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.wiki_write"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "": {
+            "$ref": "./httpExamples/pages/DELETE_wiki_page.json"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Pages"
+        ],
+        "x-ms-docs-override-version": "5.2-preview.1",
+        "x-ms-vss-resource": "pages",
+        "x-ms-vss-method": "GetPage",
+        "x-ms-preview": true,
+        "description": "Gets metadata or content of the wiki page for the provided path. Content negotiation is done based on the `Accept` header sent in the request.",
+        "operationId": "Get Page",
+        "produces": [
+          "application/zip",
+          "text/plain",
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "wikiIdentifier",
+            "description": "Wiki ID or wiki name.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "path",
+            "description": "Wiki page path.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "recursionLevel",
+            "description": "Recursion level for subpages retrieval. Defaults to `None` (Optional).",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "none",
+              "oneLevel",
+              "oneLevelPlusNestedEmptyFolders",
+              "full"
+            ],
+            "x-ms-enum": {
+              "name": "VersionControlRecursionType",
+              "values": [
+                {
+                  "value": "none",
+                  "description": "Only return the specified item."
+                },
+                {
+                  "value": "oneLevel",
+                  "description": "Return the specified item and its direct children."
+                },
+                {
+                  "value": "oneLevelPlusNestedEmptyFolders",
+                  "description": "Return the specified item and its direct children, as well as recursive chains of nested child folders that only contain a single folder."
+                },
+                {
+                  "value": "full",
+                  "description": "Return specified item and all descendants"
+                }
+              ]
+            }
+          },
+          {
+            "in": "query",
+            "name": "versionDescriptor.version",
+            "description": "Version string identifier (name of tag/branch, SHA1 of commit)",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "versionDescriptor.versionOptions",
+            "description": "Version options - Specify additional modifiers to version (e.g Previous)",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "none",
+              "previousChange",
+              "firstParent"
+            ],
+            "x-ms-enum": {
+              "name": "GitVersionOptions",
+              "values": [
+                {
+                  "value": "none",
+                  "description": "Not specified"
+                },
+                {
+                  "value": "previousChange",
+                  "description": "Commit that changed item prior to the current version"
+                },
+                {
+                  "value": "firstParent",
+                  "description": "First parent of commit (HEAD^)"
+                }
+              ]
+            }
+          },
+          {
+            "in": "query",
+            "name": "versionDescriptor.versionType",
+            "description": "Version type (branch, tag, or commit). Determines how Id is interpreted",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "branch",
+              "tag",
+              "commit"
+            ],
+            "x-ms-enum": {
+              "name": "GitVersionType",
+              "values": [
+                {
+                  "value": "branch",
+                  "description": "Interpret the version as a branch name"
+                },
+                {
+                  "value": "tag",
+                  "description": "Interpret the version as a tag name"
+                },
+                {
+                  "value": "commit",
+                  "description": "Interpret the version as a commit ID (SHA1)"
+                }
+              ]
+            }
+          },
+          {
+            "in": "query",
+            "name": "includeContent",
+            "description": "True to include the content of the page in the response for Json content type. Defaults to false (Optional)",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/WikiPage"
+            },
+            "headers": {
+              "ETag": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.wiki"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "Get page as JSON": {
+            "$ref": "./httpExamples/pages/GET_wiki_page_JSON.json"
+          },
+          "Get page as JSON with content": {
+            "$ref": "./httpExamples/pages/GET_wiki_page_JSON_withContent.json"
+          },
+          "Get page as text": {
+            "$ref": "./httpExamples/pages/GET_wiki_page_text.json"
+          },
+          "Get page as JSON with recursion level": {
+            "$ref": "./httpExamples/pages/GET_wiki_page_JSON_withRecursionLevel.json"
+          }
+        }
+      }
+    },
+    "/{organization}/{project}/_apis/wiki/wikis/{wikiIdentifier}/pages/{id}": {
+      "delete": {
+        "tags": [
+          "Pages"
+        ],
+        "x-ms-docs-override-version": "5.2-preview.1",
+        "x-ms-vss-resource": "pages",
+        "x-ms-vss-method": "DeletePageById",
+        "x-ms-preview": true,
+        "description": "Deletes a wiki page.",
+        "operationId": "Delete Page By Id",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "wikiIdentifier",
+            "description": "Wiki ID or wiki name.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "id",
+            "description": "Wiki page ID.",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "comment",
+            "description": "Comment to be associated with this page delete.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Page deleted.",
+            "schema": {
+              "$ref": "#/definitions/WikiPage"
+            },
+            "headers": {
+              "ETag": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.wiki_write"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "": {
+            "$ref": "./httpExamples/pages/DELETE_wiki_pageById.json"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Pages"
+        ],
+        "x-ms-docs-override-version": "5.2-preview.1",
+        "x-ms-vss-resource": "pages",
+        "x-ms-vss-method": "GetPageById",
+        "x-ms-preview": true,
+        "description": "Gets metadata or content of the wiki page for the provided page id. Content negotiation is done based on the `Accept` header sent in the request.",
+        "operationId": "Get Page By Id",
+        "produces": [
+          "application/zip",
+          "text/plain",
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "wikiIdentifier",
+            "description": "Wiki ID or wiki name..",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "id",
+            "description": "Wiki page ID.",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "recursionLevel",
+            "description": "Recursion level for subpages retrieval. Defaults to `None` (Optional).",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "none",
+              "oneLevel",
+              "oneLevelPlusNestedEmptyFolders",
+              "full"
+            ],
+            "x-ms-enum": {
+              "name": "VersionControlRecursionType",
+              "values": [
+                {
+                  "value": "none",
+                  "description": "Only return the specified item."
+                },
+                {
+                  "value": "oneLevel",
+                  "description": "Return the specified item and its direct children."
+                },
+                {
+                  "value": "oneLevelPlusNestedEmptyFolders",
+                  "description": "Return the specified item and its direct children, as well as recursive chains of nested child folders that only contain a single folder."
+                },
+                {
+                  "value": "full",
+                  "description": "Return specified item and all descendants"
+                }
+              ]
+            }
+          },
+          {
+            "in": "query",
+            "name": "includeContent",
+            "description": "True to include the content of the page in the response for Json content type. Defaults to false (Optional)",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/WikiPage"
+            },
+            "headers": {
+              "ETag": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.wiki"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "Get page by id as JSON": {
+            "$ref": "./httpExamples/pages/GET_wiki_pageById_JSON.json"
+          },
+          "Get page by id as JSON with content": {
+            "$ref": "./httpExamples/pages/GET_wiki_pageById_JSON_withContent.json"
+          },
+          "Get page as text": {
+            "$ref": "./httpExamples/pages/GET_wiki_pageById_text.json"
+          },
+          "Get page by id as JSON with recursion level": {
+            "$ref": "./httpExamples/pages/GET_wiki_pageById_JSON_withRecursionLevel.json"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Pages"
+        ],
+        "x-ms-docs-override-version": "5.2-preview.1",
+        "x-ms-vss-resource": "pages",
+        "x-ms-vss-method": "UpdatePageById",
+        "x-ms-preview": true,
+        "description": "Edits a wiki page.",
+        "operationId": "Update",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Wiki update operation parameters.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/WikiPageCreateOrUpdateParameters"
+            }
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "wikiIdentifier",
+            "description": "Wiki ID or wiki name.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "id",
+            "description": "Wiki page ID.",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "header",
+            "name": "Version",
+            "description": "Version of the page on which the change is to be made. Mandatory for `Edit` scenario. To be populated in the If-Match header of the request.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "comment",
+            "description": "Comment to be associated with the page operation.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Page edited. Edited page's version is populated in the ETag response header.",
+            "schema": {
+              "$ref": "#/definitions/WikiPage"
+            },
+            "headers": {
+              "ETag": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.wiki_write"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "Edit a page by Id": {
+            "$ref": "./httpExamples/pages/PATCH_wiki_pageById_edit.json"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "Comment": {
+      "description": "Comment on an artifact like Work Item or Wiki, etc.",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/CommentResourceReference"
+        }
+      ],
+      "properties": {
+        "artifactId": {
+          "description": "The id of the artifact this comment belongs to",
+          "type": "string"
+        },
+        "createdBy": {
+          "description": "IdentityRef of the creator of the comment.",
+          "$ref": "#/definitions/IdentityRef"
+        },
+        "createdDate": {
+          "description": "The creation date of the comment.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "id": {
+          "description": "The id assigned to the comment.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "isDeleted": {
+          "description": "Indicates if the comment has been deleted.",
+          "type": "boolean"
+        },
+        "mentions": {
+          "description": "The mentions of the comment.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CommentMention"
+          }
+        },
+        "modifiedBy": {
+          "description": "IdentityRef of the user who last modified the comment.",
+          "$ref": "#/definitions/IdentityRef"
+        },
+        "modifiedDate": {
+          "description": "The last modification date of the comment.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "parentId": {
+          "description": "The comment id of the parent comment, if any",
+          "type": "integer",
+          "format": "int32"
+        },
+        "reactions": {
+          "description": "The reactions on the comment.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CommentReaction"
+          }
+        },
+        "renderedText": {
+          "description": "The rendered text of the comment",
+          "type": "string"
+        },
+        "replies": {
+          "description": "Replies for this comment",
+          "$ref": "#/definitions/CommentList"
+        },
+        "state": {
+          "description": "Indicates the current state of the comment",
+          "enum": [
+            "active",
+            "resolved",
+            "closed"
+          ],
+          "x-ms-enum": {
+            "name": "CommentState",
+            "values": [
+              {
+                "value": "active",
+                "description": ""
+              },
+              {
+                "value": "resolved",
+                "description": ""
+              },
+              {
+                "value": "closed",
+                "description": ""
+              }
+            ]
+          }
+        },
+        "text": {
+          "description": "The plaintext/markdown version of the comment",
+          "type": "string"
+        },
+        "version": {
+          "description": "The current version of the comment",
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "CommentAttachment": {
+      "description": "Represents an attachment to a comment.",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/CommentResourceReference"
+        }
+      ],
+      "properties": {
+        "createdBy": {
+          "description": "IdentityRef of the creator of the attachment.",
+          "$ref": "#/definitions/IdentityRef"
+        },
+        "createdDate": {
+          "description": "The creation date of the attachment.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "id": {
+          "description": "Unique Id of the attachment.",
+          "type": "string",
+          "format": "uuid"
+        }
+      }
+    },
+    "CommentCreateParameters": {
+      "description": "Represents a request to create a work item comment.",
+      "type": "object",
+      "properties": {
+        "parentId": {
+          "description": "Optional CommentId of the parent in order to add a reply for an existing comment",
+          "type": "integer",
+          "format": "int32"
+        },
+        "text": {
+          "type": "string"
+        }
+      }
+    },
+    "CommentList": {
+      "description": "Represents a list of comments.",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/CommentResourceReference"
+        }
+      ],
+      "properties": {
+        "comments": {
+          "description": "List of comments in the current batch.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Comment"
+          }
+        },
+        "continuationToken": {
+          "description": "A string token that can be used to retrieving next page of comments if available. Otherwise null.",
+          "type": "string"
+        },
+        "count": {
+          "description": "The count of comments in the current batch.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "nextPage": {
+          "description": "Uri to the next page of comments if it is available. Otherwise null.",
+          "type": "string"
+        },
+        "totalCount": {
+          "description": "Total count of comments on a work item.",
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "CommentMention": {
+      "description": "Contains information about various artifacts mentioned in the comment",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/CommentResourceReference"
+        }
+      ],
+      "properties": {
+        "artifactId": {
+          "description": "Id of the artifact this mention belongs to",
+          "type": "string"
+        },
+        "commentId": {
+          "description": "Id of the comment associated with this mention. Nullable to support legacy mentions which can potentially have null commentId",
+          "type": "integer",
+          "format": "int32"
+        },
+        "mentionedArtifact": {
+          "description": "Value of the mentioned artifact. Expected Value varies by CommentMentionType: Person:         VSID associated with the identity Work Item:      ID of the work item Pull Request:   ID of the Pull Request",
+          "type": "string"
+        },
+        "type": {
+          "description": "The context which represent where this mentioned was parsed from",
+          "enum": [
+            "person",
+            "workItem",
+            "pullRequest"
+          ],
+          "x-ms-enum": {
+            "name": "CommentMentionType",
+            "values": [
+              {
+                "value": "person",
+                "description": "An identity was mentioned by using the format @{VSID}"
+              },
+              {
+                "value": "workItem",
+                "description": "A work item was mentioned by using the format #{Work Item ID}"
+              },
+              {
+                "value": "pullRequest",
+                "description": "A Pull Request was mentioned by using the format !{PR Number}"
+              }
+            ]
+          }
+        }
+      }
+    },
+    "CommentReaction": {
+      "description": "Contains information about comment reaction for a particular reaction type.",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/CommentResourceReference"
+        }
+      ],
+      "properties": {
+        "commentId": {
+          "description": "The id of the comment this reaction belongs to.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "count": {
+          "description": "Total number of reactions for the CommentReactionType.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "isCurrentUserEngaged": {
+          "description": "Flag to indicate if the current user has engaged on this particular EngagementType (e.g. if they liked the associated comment).",
+          "type": "boolean"
+        },
+        "type": {
+          "description": "Type of the reaction.",
+          "enum": [
+            "like",
+            "dislike",
+            "heart",
+            "hooray",
+            "smile",
+            "confused"
+          ],
+          "x-ms-enum": {
+            "name": "CommentReactionType",
+            "values": [
+              {
+                "value": "like",
+                "description": ""
+              },
+              {
+                "value": "dislike",
+                "description": ""
+              },
+              {
+                "value": "heart",
+                "description": ""
+              },
+              {
+                "value": "hooray",
+                "description": ""
+              },
+              {
+                "value": "smile",
+                "description": ""
+              },
+              {
+                "value": "confused",
+                "description": ""
+              }
+            ]
+          }
+        }
+      }
+    },
+    "CommentResourceReference": {
+      "description": "Base class for comment resource references",
+      "type": "object",
+      "properties": {
+        "url": {
+          "type": "string"
+        }
+      }
+    },
+    "CommentUpdateParameters": {
+      "description": "Represents a request to update a comment.",
+      "type": "object",
+      "properties": {
+        "state": {
+          "description": "Set the current state of the comment",
+          "enum": [
+            "active",
+            "resolved",
+            "closed"
+          ],
+          "x-ms-enum": {
+            "name": "CommentState",
+            "values": [
+              {
+                "value": "active",
+                "description": ""
+              },
+              {
+                "value": "resolved",
+                "description": ""
+              },
+              {
+                "value": "closed",
+                "description": ""
+              }
+            ]
+          }
+        },
+        "text": {
+          "description": "The updated text of the comment",
+          "type": "string"
+        }
+      }
+    },
+    "GitRepository": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "_links": {
+          "$ref": "#/definitions/ReferenceLinks"
+        },
+        "defaultBranch": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "isFork": {
+          "description": "True if the repository was created as a fork",
+          "type": "boolean"
+        },
+        "name": {
+          "type": "string"
+        },
+        "parentRepository": {
+          "$ref": "#/definitions/GitRepositoryRef"
+        },
+        "project": {
+          "$ref": "#/definitions/TeamProjectReference"
+        },
+        "remoteUrl": {
+          "type": "string"
+        },
+        "size": {
+          "description": "Compressed size (bytes) of the repository.",
+          "type": "integer",
+          "format": "int64"
+        },
+        "sshUrl": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        },
+        "validRemoteUrls": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "webUrl": {
+          "type": "string"
+        }
+      }
+    },
+    "GitRepositoryRef": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "collection": {
+          "description": "Team Project Collection where this Fork resides",
+          "$ref": "#/definitions/TeamProjectCollectionReference"
+        },
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "isFork": {
+          "description": "True if the repository was created as a fork",
+          "type": "boolean"
+        },
+        "name": {
+          "type": "string"
+        },
+        "project": {
+          "$ref": "#/definitions/TeamProjectReference"
+        },
+        "remoteUrl": {
+          "type": "string"
+        },
+        "sshUrl": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        }
+      }
+    },
+    "GitVersionDescriptor": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "version": {
+          "description": "Version string identifier (name of tag/branch, SHA1 of commit)",
+          "type": "string"
+        },
+        "versionOptions": {
+          "description": "Version options - Specify additional modifiers to version (e.g Previous)",
+          "enum": [
+            "none",
+            "previousChange",
+            "firstParent"
+          ],
+          "x-ms-enum": {
+            "name": "GitVersionOptions",
+            "values": [
+              {
+                "value": "none",
+                "description": "Not specified"
+              },
+              {
+                "value": "previousChange",
+                "description": "Commit that changed item prior to the current version"
+              },
+              {
+                "value": "firstParent",
+                "description": "First parent of commit (HEAD^)"
+              }
+            ]
+          }
+        },
+        "versionType": {
+          "description": "Version type (branch, tag, or commit). Determines how Id is interpreted",
+          "enum": [
+            "branch",
+            "tag",
+            "commit"
+          ],
+          "x-ms-enum": {
+            "name": "GitVersionType",
+            "values": [
+              {
+                "value": "branch",
+                "description": "Interpret the version as a branch name"
+              },
+              {
+                "value": "tag",
+                "description": "Interpret the version as a tag name"
+              },
+              {
+                "value": "commit",
+                "description": "Interpret the version as a commit ID (SHA1)"
+              }
+            ]
+          }
+        }
+      }
+    },
+    "GraphSubjectBase": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "_links": {
+          "description": "This field contains zero or more interesting links about the graph subject. These links may be invoked to obtain additional relationships or more detailed information about this graph subject.",
+          "$ref": "#/definitions/ReferenceLinks"
+        },
+        "descriptor": {
+          "description": "The descriptor is the primary way to reference the graph subject while the system is running. This field will uniquely identify the same graph subject across both Accounts and Organizations.",
+          "type": "string"
+        },
+        "displayName": {
+          "description": "This is the non-unique display name of the graph subject. To change this field, you must alter its value in the source provider.",
+          "type": "string"
+        },
+        "url": {
+          "description": "This url is the full route to the source resource of this graph subject.",
+          "type": "string"
+        }
+      }
+    },
+    "IdentityRef": {
+      "description": "",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/GraphSubjectBase"
+        }
+      ],
+      "properties": {
+        "directoryAlias": {
+          "description": "Deprecated - Can be retrieved by querying the Graph user referenced in the \"self\" entry of the IdentityRef \"_links\" dictionary",
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "imageUrl": {
+          "description": "Deprecated - Available in the \"avatar\" entry of the IdentityRef \"_links\" dictionary",
+          "type": "string"
+        },
+        "inactive": {
+          "description": "Deprecated - Can be retrieved by querying the Graph membership state referenced in the \"membershipState\" entry of the GraphUser \"_links\" dictionary",
+          "type": "boolean"
+        },
+        "isAadIdentity": {
+          "description": "Deprecated - Can be inferred from the subject type of the descriptor (Descriptor.IsAadUserType/Descriptor.IsAadGroupType)",
+          "type": "boolean"
+        },
+        "isContainer": {
+          "description": "Deprecated - Can be inferred from the subject type of the descriptor (Descriptor.IsGroupType)",
+          "type": "boolean"
+        },
+        "isDeletedInOrigin": {
+          "type": "boolean"
+        },
+        "profileUrl": {
+          "description": "Deprecated - not in use in most preexisting implementations of ToIdentityRef",
+          "type": "string"
+        },
+        "uniqueName": {
+          "description": "Deprecated - use Domain+PrincipalName instead",
+          "type": "string"
+        }
+      }
+    },
+    "ReferenceLinks": {
+      "description": "The class to represent a collection of REST reference links.",
+      "type": "object",
+      "properties": {
+        "links": {
+          "description": "The readonly view of the links.  Because Reference links are readonly, we only want to expose them as read only.",
+          "type": "object",
+          "additionalProperties": {
+            "type": "object"
+          }
+        }
+      }
+    },
+    "TeamProjectCollectionReference": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "name": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        }
+      }
+    },
+    "TeamProjectReference": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "abbreviation": {
+          "type": "string"
+        },
+        "defaultTeamImageUrl": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "lastUpdateTime": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "name": {
+          "type": "string"
+        },
+        "revision": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "state": {
+          "enum": [
+            "deleting",
+            "new",
+            "wellFormed",
+            "createPending",
+            "all",
+            "unchanged",
+            "deleted"
+          ],
+          "x-ms-enum": {
+            "name": "ProjectState",
+            "values": [
+              {
+                "value": "deleting",
+                "description": ""
+              },
+              {
+                "value": "new",
+                "description": ""
+              },
+              {
+                "value": "wellFormed",
+                "description": ""
+              },
+              {
+                "value": "createPending",
+                "description": ""
+              },
+              {
+                "value": "all",
+                "description": ""
+              },
+              {
+                "value": "unchanged",
+                "description": ""
+              },
+              {
+                "value": "deleted",
+                "description": ""
+              }
+            ]
+          }
+        },
+        "url": {
+          "type": "string"
+        },
+        "visibility": {
+          "enum": [
+            "private",
+            "public"
+          ],
+          "x-ms-enum": {
+            "name": "ProjectVisibility",
+            "values": [
+              {
+                "value": "private",
+                "description": ""
+              },
+              {
+                "value": "public",
+                "description": ""
+              }
+            ]
+          }
+        }
+      }
+    },
+    "VssJsonCollectionWrapper": {
+      "description": "This class is used to serialized collections as a single JSON object on the wire, to avoid serializing JSON arrays directly to the client, which can be a security hole",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/VssJsonCollectionWrapperBase"
+        }
+      ],
+      "properties": {
+        "value": {
+          "type": "string",
+          "format": "T"
+        }
+      }
+    },
+    "VssJsonCollectionWrapperBase": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "count": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "Wiki": {
+      "description": "Defines a wiki repository which encapsulates the git repository backing the wiki.",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/WikiCreateParameters"
+        }
+      ],
+      "properties": {
+        "headCommit": {
+          "description": "The head commit associated with the git repository backing up the wiki.",
+          "type": "string"
+        },
+        "id": {
+          "description": "The ID of the wiki which is same as the ID of the Git repository that it is backed by.",
+          "type": "string",
+          "format": "uuid"
+        },
+        "repository": {
+          "description": "The git repository that backs up the wiki.",
+          "$ref": "#/definitions/GitRepository"
+        }
+      }
+    },
+    "WikiAttachment": {
+      "description": "Defines properties for wiki attachment file.",
+      "type": "object",
+      "properties": {
+        "name": {
+          "description": "Name of the wiki attachment file.",
+          "type": "string"
+        },
+        "path": {
+          "description": "Path of the wiki attachment file.",
+          "type": "string"
+        }
+      }
+    },
+    "WikiAttachmentResponse": {
+      "description": "Response contract for the Wiki Attachments API",
+      "type": "object",
+      "properties": {
+        "attachment": {
+          "description": "Defines properties for wiki attachment file.",
+          "$ref": "#/definitions/WikiAttachment"
+        },
+        "eTag": {
+          "description": "Contains the list of ETag values from the response header of the attachments API call. The first item in the list contains the version of the wiki attachment.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "WikiCreateBaseParameters": {
+      "description": "Base wiki creation parameters.",
+      "type": "object",
+      "properties": {
+        "mappedPath": {
+          "description": "Folder path inside repository which is shown as Wiki. Not required for ProjectWiki type.",
+          "type": "string"
+        },
+        "name": {
+          "description": "Wiki name.",
+          "type": "string"
+        },
+        "projectId": {
+          "description": "ID of the project in which the wiki is to be created.",
+          "type": "string",
+          "format": "uuid"
+        },
+        "repositoryId": {
+          "description": "ID of the git repository that backs up the wiki. Not required for ProjectWiki type.",
+          "type": "string",
+          "format": "uuid"
+        },
+        "type": {
+          "description": "Type of the wiki.",
+          "enum": [
+            "projectWiki",
+            "codeWiki"
+          ],
+          "x-ms-enum": {
+            "name": "WikiType",
+            "values": [
+              {
+                "value": "projectWiki",
+                "description": "Indicates that the wiki is provisioned for the team project"
+              },
+              {
+                "value": "codeWiki",
+                "description": "Indicates that the wiki is published from a git repository"
+              }
+            ]
+          }
+        }
+      }
+    },
+    "WikiCreateParameters": {
+      "description": "Wiki creations parameters.",
+      "type": "object",
+      "properties": {
+        "name": {
+          "description": "Wiki name.",
+          "type": "string"
+        },
+        "projectId": {
+          "description": "ID of the project in which the wiki is to be created.",
+          "type": "string",
+          "format": "uuid"
+        }
+      }
+    },
+    "WikiCreateParametersV2": {
+      "description": "Wiki creation parameters.",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/WikiCreateBaseParameters"
+        }
+      ],
+      "properties": {
+        "version": {
+          "description": "Version of the wiki. Not required for ProjectWiki type.",
+          "$ref": "#/definitions/GitVersionDescriptor"
+        }
+      }
+    },
+    "WikiPage": {
+      "description": "Defines a page in a wiki.",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/WikiPageCreateOrUpdateParameters"
+        }
+      ],
+      "properties": {
+        "gitItemPath": {
+          "description": "Path of the git item corresponding to the wiki page stored in the backing Git repository.",
+          "type": "string"
+        },
+        "id": {
+          "description": "When present, permanent identifier for the wiki page",
+          "type": "integer",
+          "format": "int32"
+        },
+        "isNonConformant": {
+          "description": "True if a page is non-conforming, i.e. 1) if the name doesn't match page naming standards. 2) if the page does not have a valid entry in the appropriate order file.",
+          "type": "boolean"
+        },
+        "isParentPage": {
+          "description": "True if this page has subpages under its path.",
+          "type": "boolean"
+        },
+        "order": {
+          "description": "Order of the wiki page, relative to other pages in the same hierarchy level.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "path": {
+          "description": "Path of the wiki page.",
+          "type": "string"
+        },
+        "remoteUrl": {
+          "description": "Remote web url to the wiki page.",
+          "type": "string"
+        },
+        "subPages": {
+          "description": "List of subpages of the current page.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/WikiPage"
+          }
+        },
+        "url": {
+          "description": "REST url for this wiki page.",
+          "type": "string"
+        }
+      }
+    },
+    "WikiPageCreateOrUpdateParameters": {
+      "description": "Contract encapsulating parameters for the page create or update operations.",
+      "type": "object",
+      "properties": {
+        "content": {
+          "description": "Content of the wiki page.",
+          "type": "string"
+        }
+      }
+    },
+    "WikiPageMove": {
+      "description": "Request contract for Wiki Page Move.",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/WikiPageMoveParameters"
+        }
+      ],
+      "properties": {
+        "page": {
+          "description": "Resultant page of this page move operation.",
+          "$ref": "#/definitions/WikiPage"
+        }
+      }
+    },
+    "WikiPageMoveParameters": {
+      "description": "Contract encapsulating parameters for the page move operation.",
+      "type": "object",
+      "properties": {
+        "newOrder": {
+          "description": "New order of the wiki page.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "newPath": {
+          "description": "New path of the wiki page.",
+          "type": "string"
+        },
+        "path": {
+          "description": "Current path of the wiki page.",
+          "type": "string"
+        }
+      }
+    },
+    "WikiPageMoveResponse": {
+      "description": "Response contract for the Wiki Page Move API.",
+      "type": "object",
+      "properties": {
+        "eTag": {
+          "description": "Contains the list of ETag values from the response header of the page move API call. The first item in the list contains the version of the wiki page subject to page move.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "pageMove": {
+          "description": "Defines properties for wiki page move.",
+          "$ref": "#/definitions/WikiPageMove"
+        }
+      }
+    },
+    "WikiPageResponse": {
+      "description": "Response contract for the Wiki Pages PUT, PATCH and DELETE APIs.",
+      "type": "object",
+      "properties": {
+        "eTag": {
+          "description": "Contains the list of ETag values from the response header of the pages API call. The first item in the list contains the version of the wiki page.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "page": {
+          "description": "Defines properties for wiki page.",
+          "$ref": "#/definitions/WikiPage"
+        }
+      }
+    },
+    "WikiPageViewStats": {
+      "description": "Defines properties for wiki page view stats.",
+      "type": "object",
+      "properties": {
+        "count": {
+          "description": "Wiki page view count.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "lastViewedTime": {
+          "description": "Wiki page last viewed time.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "path": {
+          "description": "Wiki page path.",
+          "type": "string"
+        }
+      }
+    },
+    "WikiUpdatedNotificationMessage": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "collectionId": {
+          "description": "Collection host Id for which the wikis are updated.",
+          "type": "string",
+          "format": "uuid"
+        },
+        "projectId": {
+          "description": "Project Id for which the wikis are updated.",
+          "type": "string",
+          "format": "uuid"
+        },
+        "repositoryId": {
+          "description": "Repository Id associated with the particular wiki which is added, updated or deleted.",
+          "type": "string",
+          "format": "uuid"
+        }
+      }
+    },
+    "WikiUpdateParameters": {
+      "description": "Wiki update parameters.",
+      "type": "object",
+      "properties": {
+        "name": {
+          "description": "Name for wiki.",
+          "type": "string"
+        },
+        "versions": {
+          "description": "Versions of the wiki.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/GitVersionDescriptor"
+          }
+        }
+      }
+    },
+    "WikiV2": {
+      "description": "Defines a wiki resource.",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/WikiCreateBaseParameters"
+        }
+      ],
+      "properties": {
+        "id": {
+          "description": "ID of the wiki.",
+          "type": "string",
+          "format": "uuid"
+        },
+        "properties": {
+          "description": "Properties of the wiki.",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "remoteUrl": {
+          "description": "Remote web url to the wiki.",
+          "type": "string"
+        },
+        "url": {
+          "description": "REST url for this wiki.",
+          "type": "string"
+        },
+        "versions": {
+          "description": "Versions of the wiki.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/GitVersionDescriptor"
+          }
+        }
+      }
+    }
+  },
+  "parameters": {
+    "api-Version-preview.1": {
+      "name": "api-version",
+      "in": "query",
+      "description": "Version of the API to use.  This should be set to '5.2-preview.1' to use this version of the api.",
+      "required": true,
+      "type": "string"
+    },
+    "api-Version-preview.2": {
+      "name": "api-version",
+      "in": "query",
+      "description": "Version of the API to use.  This should be set to '5.2-preview.2' to use this version of the api.",
+      "required": true,
+      "type": "string"
+    }
+  },
+  "securityDefinitions": {
+    "accessToken": {
+      "type": "basic",
+      "description": "Personal access token. Use any value for the user name and the token as the password."
+    },
+    "oauth2": {
+      "type": "oauth2",
+      "flow": "accessCode",
+      "authorizationUrl": "https://app.vssps.visualstudio.com/oauth2/authorize&response_type=Assertion",
+      "tokenUrl": "https://app.vssps.visualstudio.com/oauth2/token?client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer&grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer",
+      "scopes": {
+        "vso.wiki": "Grants the ability to read wikis, wiki pages and wiki attachments. Also grants the ability to search wiki pages.",
+        "vso.wiki_write": "Grants the ability to read, create and updates wikis, wiki pages and wiki attachments."
+      }
+    }
+  },
+  "security": [
+    {
+      "accessToken": []
+    }
+  ],
+  "externalDocs": {
+    "description": "Azure DevOps REST APIs",
+    "url": "https://aka.ms/azure-devops-rest-apis"
+  }
+}

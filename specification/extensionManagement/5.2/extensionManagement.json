@@ -1,0 +1,2658 @@
+﻿{
+  "swagger": "2.0",
+  "info": {
+    "title": "ExtensionManagement",
+    "description": "",
+    "termsOfService": "https://go.microsoft.com/fwlink/?LinkId=329770",
+    "contact": {
+      "name": "nugetvss",
+      "email": "nugetvss@microsoft.com"
+    },
+    "license": {
+      "name": "MICROSOFT SOFTWARE LICENSE TERMS",
+      "url": "https://go.microsoft.com/fwlink/?LinkId=329770"
+    },
+    "version": "5.2-preview"
+  },
+  "host": "extmgmt.dev.azure.com",
+  "x-ms-vss-area": "ExtensionManagement",
+  "x-ms-vss-resource-area-id": "6c2b0933-3600-42ae-bf8b-93d4f7e83594",
+  "basePath": "/",
+  "tags": [
+    {
+      "name": "Installed Extensions"
+    }
+  ],
+  "schemes": [
+    "https"
+  ],
+  "paths": {
+    "/{organization}/_apis/extensionmanagement/installedextensions": {
+      "get": {
+        "tags": [
+          "Installed Extensions"
+        ],
+        "x-ms-docs-override-version": "5.2-preview.1",
+        "x-ms-vss-resource": "installedExtensions",
+        "x-ms-vss-method": "GetInstalledExtensions",
+        "x-ms-preview": true,
+        "description": "List the installed extensions in the account / project collection.",
+        "operationId": "List",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "includeDisabledExtensions",
+            "description": "If true (the default), include disabled extensions in the results.",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "includeErrors",
+            "description": "If true, include installed extensions with errors.",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "assetTypes",
+            "description": "",
+            "required": false,
+            "type": "string",
+            "format": "array (string)"
+          },
+          {
+            "in": "query",
+            "name": "includeInstallationIssues",
+            "description": "",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/InstalledExtension"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.extension"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "": {
+            "$ref": "./httpExamples/InstalledExtensions/ListInstalledExtensions.json"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Installed Extensions"
+        ],
+        "x-ms-docs-override-version": "5.2-preview.1",
+        "x-ms-vss-resource": "installedExtensions",
+        "x-ms-vss-method": "UpdateInstalledExtension",
+        "x-ms-preview": true,
+        "description": "Update an installed extension. Typically this API is used to enable or disable an extension.",
+        "operationId": "Update",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/InstalledExtension"
+            }
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/InstalledExtension"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.extension_manage"
+            ]
+          }
+        ]
+      }
+    },
+    "/{organization}/_apis/extensionmanagement/installedextensionsbyname/{publisherName}/{extensionName}": {
+      "get": {
+        "tags": [
+          "Installed Extensions"
+        ],
+        "x-ms-docs-override-version": "5.2-preview.1",
+        "x-ms-vss-resource": "installedExtensionsByName",
+        "x-ms-vss-method": "GetInstalledExtensionByName",
+        "x-ms-preview": true,
+        "description": "Get an installed extension by its publisher and extension name.",
+        "operationId": "Get",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "publisherName",
+            "description": "Name of the publisher. Example: \"fabrikam\".",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "extensionName",
+            "description": "Name of the extension. Example: \"ops-tools\".",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "assetTypes",
+            "description": "",
+            "required": false,
+            "type": "string",
+            "format": "array (string)"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/InstalledExtension"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.extension_manage"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "": {
+            "$ref": "./httpExamples/InstalledExtensionsByName/GetInstalledSampleExtension.json"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Installed Extensions"
+        ],
+        "x-ms-docs-override-version": "5.2-preview.1",
+        "x-ms-vss-resource": "installedExtensionsByName",
+        "x-ms-vss-method": "UninstallExtensionByName",
+        "x-ms-preview": true,
+        "description": "Uninstall the specified extension from the account / project collection.",
+        "operationId": "Uninstall Extension By Name",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "publisherName",
+            "description": "Name of the publisher. Example: \"fabrikam\".",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "extensionName",
+            "description": "Name of the extension. Example: \"ops-tools\".",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "reason",
+            "description": "",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "reasonCode",
+            "description": "",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.extension_manage"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "": {
+            "$ref": "./httpExamples/InstalledExtensionsByName/UninstallSampleExtension.json"
+          }
+        }
+      }
+    },
+    "/{organization}/_apis/extensionmanagement/installedextensionsbyname/{publisherName}/{extensionName}/{version}": {
+      "post": {
+        "tags": [
+          "Installed Extensions"
+        ],
+        "x-ms-docs-override-version": "5.2-preview.1",
+        "x-ms-vss-resource": "installedExtensionsByName",
+        "x-ms-vss-method": "InstallExtensionByName",
+        "x-ms-preview": true,
+        "description": "Install the specified extension into the account / project collection.",
+        "operationId": "Install Extension By Name",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "publisherName",
+            "description": "Name of the publisher. Example: \"fabrikam\".",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "extensionName",
+            "description": "Name of the extension. Example: \"ops-tools\".",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "version",
+            "description": "",
+            "required": true,
+            "x-ms-required": false,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/InstalledExtension"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.extension_manage"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "": {
+            "$ref": "./httpExamples/InstalledExtensionsByName/InstallSampleExtension.json"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "AcquisitionOperation": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "operationState": {
+          "description": "State of the the AcquisitionOperation for the current user",
+          "enum": [
+            "disallow",
+            "allow",
+            "completed"
+          ],
+          "x-ms-enum": {
+            "name": "AcquisitionOperationState",
+            "values": [
+              {
+                "value": "disallow",
+                "description": "Not allowed to use this AcquisitionOperation"
+              },
+              {
+                "value": "allow",
+                "description": "Allowed to use this AcquisitionOperation"
+              },
+              {
+                "value": "completed",
+                "description": "Operation has already been completed and is no longer available"
+              }
+            ]
+          }
+        },
+        "operationType": {
+          "description": "AcquisitionOperationType: install, request, buy, etc...",
+          "enum": [
+            "get",
+            "install",
+            "buy",
+            "try",
+            "request",
+            "none",
+            "purchaseRequest"
+          ],
+          "x-ms-enum": {
+            "name": "AcquisitionOperationType",
+            "values": [
+              {
+                "value": "get",
+                "description": "Not yet used"
+              },
+              {
+                "value": "install",
+                "description": "Install this extension into the host provided"
+              },
+              {
+                "value": "buy",
+                "description": "Buy licenses for this extension and install into the host provided"
+              },
+              {
+                "value": "try",
+                "description": "Try this extension"
+              },
+              {
+                "value": "request",
+                "description": "Request this extension for installation"
+              },
+              {
+                "value": "none",
+                "description": "No action found"
+              },
+              {
+                "value": "purchaseRequest",
+                "description": "Request admins for purchasing extension"
+              }
+            ]
+          }
+        },
+        "reason": {
+          "description": "Optional reason to justify current state. Typically used with Disallow state.",
+          "type": "string"
+        },
+        "reasons": {
+          "description": "List of reasons indicating why the operation is not allowed.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AcquisitionOperationDisallowReason"
+          }
+        }
+      }
+    },
+    "AcquisitionOperationDisallowReason": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "message": {
+          "description": "User-friendly message clarifying the reason for disallowance",
+          "type": "string"
+        },
+        "type": {
+          "description": "Type of reason for disallowance - AlreadyInstalled, UnresolvedDemand, etc.",
+          "type": "string"
+        }
+      }
+    },
+    "AcquisitionOptions": {
+      "description": "Market item acquisition options (install, buy, etc) for an installation target.",
+      "type": "object",
+      "properties": {
+        "defaultOperation": {
+          "description": "Default Operation for the ItemId in this target",
+          "$ref": "#/definitions/AcquisitionOperation"
+        },
+        "itemId": {
+          "description": "The item id that this options refer to",
+          "type": "string"
+        },
+        "operations": {
+          "description": "Operations allowed for the ItemId in this target",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AcquisitionOperation"
+          }
+        },
+        "properties": {
+          "description": "Additional properties which can be added to the request.",
+          "$ref": "#/definitions/JObject"
+        },
+        "target": {
+          "description": "The target that this options refer to",
+          "type": "string"
+        }
+      }
+    },
+    "ClientContribution": {
+      "description": "Representation of a ContributionNode that can be used for serialized to clients.",
+      "type": "object",
+      "properties": {
+        "description": {
+          "description": "Description of the contribution/type",
+          "type": "string"
+        },
+        "id": {
+          "description": "Fully qualified identifier of the contribution/type",
+          "type": "string"
+        },
+        "includes": {
+          "description": "Includes is a set of contributions that should have this contribution included in their targets list.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "properties": {
+          "description": "Properties/attributes of this contribution",
+          "$ref": "#/definitions/JObject"
+        },
+        "targets": {
+          "description": "The ids of the contribution(s) that this contribution targets. (parent contributions)",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "type": {
+          "description": "Id of the Contribution Type",
+          "type": "string"
+        }
+      }
+    },
+    "ClientContributionNode": {
+      "description": "Representation of a ContributionNode that can be used for serialized to clients.",
+      "type": "object",
+      "properties": {
+        "children": {
+          "description": "List of ids for contributions which are children to the current contribution.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "contribution": {
+          "description": "Contribution associated with this node.",
+          "$ref": "#/definitions/ClientContribution"
+        },
+        "parents": {
+          "description": "List of ids for contributions which are parents to the current contribution.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "ClientContributionProviderDetails": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "displayName": {
+          "description": "Friendly name for the provider.",
+          "type": "string"
+        },
+        "name": {
+          "description": "Unique identifier for this provider. The provider name can be used to cache the contribution data and refer back to it when looking for changes",
+          "type": "string"
+        },
+        "properties": {
+          "description": "Properties associated with the provider",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "version": {
+          "description": "Version of contributions associated with this contribution provider.",
+          "type": "string"
+        }
+      }
+    },
+    "ClientDataProviderQuery": {
+      "description": "A client data provider are the details needed to make the data provider request from the client.",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/DataProviderQuery"
+        }
+      ],
+      "properties": {
+        "queryServiceInstanceType": {
+          "description": "The Id of the service instance type that should be communicated with in order to resolve the data providers from the client given the query values.",
+          "type": "string",
+          "format": "uuid"
+        }
+      }
+    },
+    "Contribution": {
+      "description": "An individual contribution made by an extension",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/ContributionBase"
+        }
+      ],
+      "properties": {
+        "constraints": {
+          "description": "List of constraints (filters) that should be applied to the availability of this contribution",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ContributionConstraint"
+          }
+        },
+        "includes": {
+          "description": "Includes is a set of contributions that should have this contribution included in their targets list.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "properties": {
+          "description": "Properties/attributes of this contribution",
+          "$ref": "#/definitions/JObject"
+        },
+        "restrictedTo": {
+          "description": "List of demanded claims in order for the user to see this contribution (like anonymous, public, member...).",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "targets": {
+          "description": "The ids of the contribution(s) that this contribution targets. (parent contributions)",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "type": {
+          "description": "Id of the Contribution Type",
+          "type": "string"
+        }
+      }
+    },
+    "ContributionBase": {
+      "description": "Base class shared by contributions and contribution types",
+      "type": "object",
+      "properties": {
+        "description": {
+          "description": "Description of the contribution/type",
+          "type": "string"
+        },
+        "id": {
+          "description": "Fully qualified identifier of the contribution/type",
+          "type": "string"
+        },
+        "visibleTo": {
+          "description": "VisibleTo can be used to restrict whom can reference a given contribution/type. This value should be a list of publishers or extensions access is restricted too.  Examples: \"ms\" - Means only the \"ms\" publisher can reference this. \"ms.vss-web\" - Means only the \"vss-web\" extension from the \"ms\" publisher can reference this.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "ContributionConstraint": {
+      "description": "Specifies a constraint that can be used to dynamically include/exclude a given contribution",
+      "type": "object",
+      "properties": {
+        "group": {
+          "description": "An optional property that can be specified to group constraints together. All constraints within a group are AND'd together (all must be evaluate to True in order for the contribution to be included). Different groups of constraints are OR'd (only one group needs to evaluate to True for the contribution to be included).",
+          "type": "integer",
+          "format": "int32"
+        },
+        "id": {
+          "description": "Fully qualified identifier of a shared constraint",
+          "type": "string"
+        },
+        "inverse": {
+          "description": "If true, negate the result of the filter (include the contribution if the applied filter returns false instead of true)",
+          "type": "boolean"
+        },
+        "name": {
+          "description": "Name of the IContributionFilter plugin",
+          "type": "string"
+        },
+        "properties": {
+          "description": "Properties that are fed to the contribution filter class",
+          "$ref": "#/definitions/JObject"
+        },
+        "relationships": {
+          "description": "Constraints can be optionally be applied to one or more of the relationships defined in the contribution. If no relationships are defined then all relationships are associated with the constraint. This means the default behaviour will elimiate the contribution from the tree completely if the constraint is applied.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "ContributionNodeQuery": {
+      "description": "A query that can be issued for contribution nodes",
+      "type": "object",
+      "properties": {
+        "contributionIds": {
+          "description": "The contribution ids of the nodes to find.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "dataProviderContext": {
+          "description": "Contextual information that can be leveraged by contribution constraints",
+          "$ref": "#/definitions/DataProviderContext"
+        },
+        "includeProviderDetails": {
+          "description": "Indicator if contribution provider details should be included in the result.",
+          "type": "boolean"
+        },
+        "queryOptions": {
+          "description": "Query options tpo be used when fetching ContributionNodes",
+          "enum": [
+            "none",
+            "includeSelf",
+            "includeChildren",
+            "includeSubTree",
+            "includeAll",
+            "ignoreConstraints"
+          ],
+          "x-ms-enum": {
+            "name": "ContributionQueryOptions",
+            "values": [
+              {
+                "value": "none",
+                "description": ""
+              },
+              {
+                "value": "includeSelf",
+                "description": "Include the direct contributions that have the ids queried."
+              },
+              {
+                "value": "includeChildren",
+                "description": "Include the contributions that directly target the contributions queried."
+              },
+              {
+                "value": "includeSubTree",
+                "description": "Include the contributions from the entire sub-tree targeting the contributions queried."
+              },
+              {
+                "value": "includeAll",
+                "description": "Include the contribution being queried as well as all contributions that target them recursively."
+              },
+              {
+                "value": "ignoreConstraints",
+                "description": "Some callers may want the entire tree back without constraint evaluation being performed."
+              }
+            ]
+          }
+        }
+      }
+    },
+    "ContributionNodeQueryResult": {
+      "description": "Result of a contribution node query.  Wraps the resulting contribution nodes and provider details.",
+      "type": "object",
+      "properties": {
+        "nodes": {
+          "description": "Map of contribution ids to corresponding node.",
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/ClientContributionNode"
+          }
+        },
+        "providerDetails": {
+          "description": "Map of provider ids to the corresponding provider details object.",
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/ClientContributionProviderDetails"
+          }
+        }
+      }
+    },
+    "ContributionPropertyDescription": {
+      "description": "Description about a property of a contribution type",
+      "type": "object",
+      "properties": {
+        "description": {
+          "description": "Description of the property",
+          "type": "string"
+        },
+        "name": {
+          "description": "Name of the property",
+          "type": "string"
+        },
+        "required": {
+          "description": "True if this property is required",
+          "type": "boolean"
+        },
+        "type": {
+          "description": "The type of value used for this property",
+          "enum": [
+            "unknown",
+            "string",
+            "uri",
+            "guid",
+            "boolean",
+            "integer",
+            "double",
+            "dateTime",
+            "dictionary",
+            "array",
+            "object"
+          ],
+          "x-ms-enum": {
+            "name": "ContributionPropertyType",
+            "values": [
+              {
+                "value": "unknown",
+                "description": "Contribution type is unknown (value may be anything)"
+              },
+              {
+                "value": "string",
+                "description": "Value is a string"
+              },
+              {
+                "value": "uri",
+                "description": "Value is a Uri"
+              },
+              {
+                "value": "guid",
+                "description": "Value is a GUID"
+              },
+              {
+                "value": "boolean",
+                "description": "Value is True or False"
+              },
+              {
+                "value": "integer",
+                "description": "Value is an integer"
+              },
+              {
+                "value": "double",
+                "description": "Value is a double"
+              },
+              {
+                "value": "dateTime",
+                "description": "Value is a DateTime object"
+              },
+              {
+                "value": "dictionary",
+                "description": "Value is a generic Dictionary/JObject/property bag"
+              },
+              {
+                "value": "array",
+                "description": "Value is an array"
+              },
+              {
+                "value": "object",
+                "description": "Value is an arbitrary/custom object"
+              }
+            ]
+          }
+        }
+      }
+    },
+    "ContributionProviderDetails": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "displayName": {
+          "description": "Friendly name for the provider.",
+          "type": "string"
+        },
+        "name": {
+          "description": "Unique identifier for this provider. The provider name can be used to cache the contribution data and refer back to it when looking for changes",
+          "type": "string"
+        },
+        "properties": {
+          "description": "Properties associated with the provider",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "version": {
+          "description": "Version of contributions associated with this contribution provider.",
+          "type": "string"
+        }
+      }
+    },
+    "ContributionType": {
+      "description": "A contribution type, given by a json schema",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/ContributionBase"
+        }
+      ],
+      "properties": {
+        "indexed": {
+          "description": "Controls whether or not contributions of this type have the type indexed for queries. This allows clients to find all extensions that have a contribution of this type.  NOTE: Only TrustedPartners are allowed to specify indexed contribution types.",
+          "type": "boolean"
+        },
+        "name": {
+          "description": "Friendly name of the contribution/type",
+          "type": "string"
+        },
+        "properties": {
+          "description": "Describes the allowed properties for this contribution type",
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/ContributionPropertyDescription"
+          }
+        }
+      }
+    },
+    "DataProviderContext": {
+      "description": "Contextual information that data providers can examine when populating their data",
+      "type": "object",
+      "properties": {
+        "properties": {
+          "description": "Generic property bag that contains context-specific properties that data providers can use when populating their data dictionary",
+          "type": "object",
+          "additionalProperties": {
+            "type": "object"
+          }
+        }
+      }
+    },
+    "DataProviderExceptionDetails": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "exceptionType": {
+          "description": "The type of the exception that was thrown.",
+          "type": "string"
+        },
+        "message": {
+          "description": "Message that is associated with the exception.",
+          "type": "string"
+        },
+        "stackTrace": {
+          "description": "The StackTrace from the exception turned into a string.",
+          "type": "string"
+        }
+      }
+    },
+    "DataProviderQuery": {
+      "description": "A query that can be issued for data provider data",
+      "type": "object",
+      "properties": {
+        "context": {
+          "description": "Contextual information to pass to the data providers",
+          "$ref": "#/definitions/DataProviderContext"
+        },
+        "contributionIds": {
+          "description": "The contribution ids of the data providers to resolve",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "DataProviderResult": {
+      "description": "Result structure from calls to GetDataProviderData",
+      "type": "object",
+      "properties": {
+        "clientProviders": {
+          "description": "This is the set of data providers that were requested, but either they were defined as client providers, or as remote providers that failed and may be retried by the client.",
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/ClientDataProviderQuery"
+          }
+        },
+        "data": {
+          "description": "Property bag of data keyed off of the data provider contribution id",
+          "type": "object",
+          "additionalProperties": {
+            "type": "object"
+          }
+        },
+        "exceptions": {
+          "description": "Set of exceptions that occurred resolving the data providers.",
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/DataProviderExceptionDetails"
+          }
+        },
+        "resolvedProviders": {
+          "description": "List of data providers resolved in the data-provider query",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ResolvedDataProvider"
+          }
+        },
+        "scopeName": {
+          "description": "Scope name applied to this data provider result.",
+          "type": "string"
+        },
+        "scopeValue": {
+          "description": "Scope value applied to this data provider result.",
+          "type": "string"
+        },
+        "sharedData": {
+          "description": "Property bag of shared data that was contributed to by any of the individual data providers",
+          "type": "object",
+          "additionalProperties": {
+            "type": "object"
+          }
+        }
+      }
+    },
+    "DataProviderSharedData": {
+      "description": "Data bag that any data provider can contribute to. This shared dictionary is returned in the data provider result.",
+      "type": "object",
+      "allOf": [
+        {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object"
+          }
+        }
+      ],
+      "properties": {}
+    },
+    "ExtensionAcquisitionRequest": {
+      "description": "Contract for handling the extension acquisition process",
+      "type": "object",
+      "properties": {
+        "assignmentType": {
+          "description": "How the item is being assigned",
+          "enum": [
+            "none",
+            "me",
+            "all"
+          ],
+          "x-ms-enum": {
+            "name": "AcquisitionAssignmentType",
+            "values": [
+              {
+                "value": "none",
+                "description": ""
+              },
+              {
+                "value": "me",
+                "description": "Just assign for me"
+              },
+              {
+                "value": "all",
+                "description": "Assign for all users in the account"
+              }
+            ]
+          }
+        },
+        "billingId": {
+          "description": "The id of the subscription used for purchase",
+          "type": "string"
+        },
+        "itemId": {
+          "description": "The marketplace id (publisherName.extensionName) for the item",
+          "type": "string"
+        },
+        "operationType": {
+          "description": "The type of operation, such as install, request, purchase",
+          "enum": [
+            "get",
+            "install",
+            "buy",
+            "try",
+            "request",
+            "none",
+            "purchaseRequest"
+          ],
+          "x-ms-enum": {
+            "name": "AcquisitionOperationType",
+            "values": [
+              {
+                "value": "get",
+                "description": "Not yet used"
+              },
+              {
+                "value": "install",
+                "description": "Install this extension into the host provided"
+              },
+              {
+                "value": "buy",
+                "description": "Buy licenses for this extension and install into the host provided"
+              },
+              {
+                "value": "try",
+                "description": "Try this extension"
+              },
+              {
+                "value": "request",
+                "description": "Request this extension for installation"
+              },
+              {
+                "value": "none",
+                "description": "No action found"
+              },
+              {
+                "value": "purchaseRequest",
+                "description": "Request admins for purchasing extension"
+              }
+            ]
+          }
+        },
+        "properties": {
+          "description": "Additional properties which can be added to the request.",
+          "$ref": "#/definitions/JObject"
+        },
+        "quantity": {
+          "description": "How many licenses should be purchased",
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "ExtensionAuditLog": {
+      "description": "Audit log for an extension",
+      "type": "object",
+      "properties": {
+        "entries": {
+          "description": "Collection of audit log entries",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ExtensionAuditLogEntry"
+          }
+        },
+        "extensionName": {
+          "description": "Extension that the change was made for",
+          "type": "string"
+        },
+        "publisherName": {
+          "description": "Publisher that the extension is part of",
+          "type": "string"
+        }
+      }
+    },
+    "ExtensionAuditLogEntry": {
+      "description": "An audit log entry for an extension",
+      "type": "object",
+      "properties": {
+        "auditAction": {
+          "description": "Change that was made to extension",
+          "type": "string"
+        },
+        "auditDate": {
+          "description": "Date at which the change was made",
+          "type": "string",
+          "format": "date-time"
+        },
+        "comment": {
+          "description": "Extra information about the change",
+          "type": "string"
+        },
+        "updatedBy": {
+          "description": "Represents the user who made the change",
+          "$ref": "#/definitions/IdentityRef"
+        }
+      }
+    },
+    "ExtensionAuthorization": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "scopes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "ExtensionBadge": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "imgUri": {
+          "type": "string"
+        },
+        "link": {
+          "type": "string"
+        }
+      }
+    },
+    "ExtensionDataCollection": {
+      "description": "Represents a single collection for extension data documents",
+      "type": "object",
+      "properties": {
+        "collectionName": {
+          "description": "The name of the collection",
+          "type": "string"
+        },
+        "documents": {
+          "description": "A list of documents belonging to the collection",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/JObject"
+          }
+        },
+        "scopeType": {
+          "description": "The type of the collection's scope, such as Default or User",
+          "type": "string"
+        },
+        "scopeValue": {
+          "description": "The value of the collection's scope, such as Current or Me",
+          "type": "string"
+        }
+      }
+    },
+    "ExtensionDataCollectionQuery": {
+      "description": "Represents a query to receive a set of extension data collections",
+      "type": "object",
+      "properties": {
+        "collections": {
+          "description": "A list of collections to query",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ExtensionDataCollection"
+          }
+        }
+      }
+    },
+    "ExtensionEvent": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "extension": {
+          "description": "The extension which has been updated",
+          "$ref": "#/definitions/PublishedExtension"
+        },
+        "extensionVersion": {
+          "description": "The current version of the extension that was updated",
+          "type": "string"
+        },
+        "host": {
+          "description": "Name of the collection for which the extension was requested",
+          "$ref": "#/definitions/ExtensionHost"
+        },
+        "links": {
+          "description": "Gallery host url",
+          "$ref": "#/definitions/ExtensionEventUrls"
+        },
+        "modifiedBy": {
+          "description": "Represents the user who initiated the update",
+          "$ref": "#/definitions/IdentityRef"
+        },
+        "updateType": {
+          "description": "The type of update that was made",
+          "enum": [
+            "installed",
+            "uninstalled",
+            "enabled",
+            "disabled",
+            "versionUpdated",
+            "actionRequired",
+            "actionResolved"
+          ],
+          "x-ms-enum": {
+            "name": "ExtensionUpdateType",
+            "values": [
+              {
+                "value": "installed",
+                "description": ""
+              },
+              {
+                "value": "uninstalled",
+                "description": ""
+              },
+              {
+                "value": "enabled",
+                "description": ""
+              },
+              {
+                "value": "disabled",
+                "description": ""
+              },
+              {
+                "value": "versionUpdated",
+                "description": ""
+              },
+              {
+                "value": "actionRequired",
+                "description": ""
+              },
+              {
+                "value": "actionResolved",
+                "description": ""
+              }
+            ]
+          }
+        }
+      }
+    },
+    "ExtensionEventCallback": {
+      "description": "Base class for an event callback for an extension",
+      "type": "object",
+      "properties": {
+        "uri": {
+          "description": "The uri of the endpoint that is hit when an event occurs",
+          "type": "string"
+        }
+      }
+    },
+    "ExtensionEventCallbackCollection": {
+      "description": "Collection of event callbacks - endpoints called when particular extension events occur.",
+      "type": "object",
+      "properties": {
+        "postDisable": {
+          "description": "Optional.  Defines an endpoint that gets called via a POST request to notify that an extension disable has occurred.",
+          "$ref": "#/definitions/ExtensionEventCallback"
+        },
+        "postEnable": {
+          "description": "Optional.  Defines an endpoint that gets called via a POST request to notify that an extension enable has occurred.",
+          "$ref": "#/definitions/ExtensionEventCallback"
+        },
+        "postInstall": {
+          "description": "Optional.  Defines an endpoint that gets called via a POST request to notify that an extension install has completed.",
+          "$ref": "#/definitions/ExtensionEventCallback"
+        },
+        "postUninstall": {
+          "description": "Optional.  Defines an endpoint that gets called via a POST request to notify that an extension uninstall has occurred.",
+          "$ref": "#/definitions/ExtensionEventCallback"
+        },
+        "postUpdate": {
+          "description": "Optional.  Defines an endpoint that gets called via a POST request to notify that an extension update has occurred.",
+          "$ref": "#/definitions/ExtensionEventCallback"
+        },
+        "preInstall": {
+          "description": "Optional.  Defines an endpoint that gets called via a POST request to notify that an extension install is about to occur.  Response indicates whether to proceed or abort.",
+          "$ref": "#/definitions/ExtensionEventCallback"
+        },
+        "versionCheck": {
+          "description": "For multi-version extensions, defines an endpoint that gets called via an OPTIONS request to determine the particular version of the extension to be used",
+          "$ref": "#/definitions/ExtensionEventCallback"
+        }
+      }
+    },
+    "ExtensionEventUrls": {
+      "description": "",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/ExtensionUrls"
+        }
+      ],
+      "properties": {
+        "manageExtensionsPage": {
+          "description": "Url of the extension management page",
+          "type": "string"
+        }
+      }
+    },
+    "ExtensionFile": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "assetType": {
+          "type": "string"
+        },
+        "language": {
+          "type": "string"
+        },
+        "source": {
+          "type": "string"
+        }
+      }
+    },
+    "ExtensionHost": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "ExtensionIdentifier": {
+      "description": "Represents the component pieces of an extensions fully qualified name, along with the fully qualified name.",
+      "type": "object",
+      "properties": {
+        "extensionName": {
+          "description": "The ExtensionName component part of the fully qualified ExtensionIdentifier",
+          "type": "string"
+        },
+        "publisherName": {
+          "description": "The PublisherName component part of the fully qualified ExtensionIdentifier",
+          "type": "string"
+        }
+      }
+    },
+    "ExtensionLicensing": {
+      "description": "How an extension should handle including contributions based on licensing",
+      "type": "object",
+      "properties": {
+        "overrides": {
+          "description": "A list of contributions which deviate from the default licensing behavior",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/LicensingOverride"
+          }
+        }
+      }
+    },
+    "ExtensionManifest": {
+      "description": "Base class for extension properties which are shared by the extension manifest and the extension model",
+      "type": "object",
+      "properties": {
+        "baseUri": {
+          "description": "Uri used as base for other relative uri's defined in extension",
+          "type": "string"
+        },
+        "constraints": {
+          "description": "List of shared constraints defined by this extension",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ContributionConstraint"
+          }
+        },
+        "contributions": {
+          "description": "List of contributions made by this extension",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Contribution"
+          }
+        },
+        "contributionTypes": {
+          "description": "List of contribution types defined by this extension",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ContributionType"
+          }
+        },
+        "demands": {
+          "description": "List of explicit demands required by this extension",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "eventCallbacks": {
+          "description": "Collection of endpoints that get called when particular extension events occur",
+          "$ref": "#/definitions/ExtensionEventCallbackCollection"
+        },
+        "fallbackBaseUri": {
+          "description": "Secondary location that can be used as base for other relative uri's defined in extension",
+          "type": "string"
+        },
+        "language": {
+          "description": "Language Culture Name set by the Gallery",
+          "type": "string"
+        },
+        "licensing": {
+          "description": "How this extension behaves with respect to licensing",
+          "$ref": "#/definitions/ExtensionLicensing"
+        },
+        "manifestVersion": {
+          "description": "Version of the extension manifest format/content",
+          "type": "number",
+          "format": "double"
+        },
+        "restrictedTo": {
+          "description": "Default user claims applied to all contributions (except the ones which have been specified restrictedTo explicitly) to control the visibility of a contribution.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "scopes": {
+          "description": "List of all oauth scopes required by this extension",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "serviceInstanceType": {
+          "description": "The ServiceInstanceType(Guid) of the VSTS service that must be available to an account in order for the extension to be installed",
+          "type": "string",
+          "format": "uuid"
+        }
+      }
+    },
+    "ExtensionPolicy": {
+      "description": "Policy with a set of permissions on extension operations",
+      "type": "object",
+      "properties": {
+        "install": {
+          "description": "Permissions on 'Install' operation",
+          "enum": [
+            "none",
+            "private",
+            "public",
+            "preview",
+            "released",
+            "firstParty",
+            "all"
+          ],
+          "x-ms-enum": {
+            "name": "ExtensionPolicyFlags",
+            "values": [
+              {
+                "value": "none",
+                "description": "No permission"
+              },
+              {
+                "value": "private",
+                "description": "Permission on private extensions"
+              },
+              {
+                "value": "public",
+                "description": "Permission on public extensions"
+              },
+              {
+                "value": "preview",
+                "description": "Permission in extensions that are in preview"
+              },
+              {
+                "value": "released",
+                "description": "Permission in released extensions"
+              },
+              {
+                "value": "firstParty",
+                "description": "Permission in 1st party extensions"
+              },
+              {
+                "value": "all",
+                "description": "Mask that defines all permissions"
+              }
+            ]
+          }
+        },
+        "request": {
+          "description": "Permission on 'Request' operation",
+          "enum": [
+            "none",
+            "private",
+            "public",
+            "preview",
+            "released",
+            "firstParty",
+            "all"
+          ],
+          "x-ms-enum": {
+            "name": "ExtensionPolicyFlags",
+            "values": [
+              {
+                "value": "none",
+                "description": "No permission"
+              },
+              {
+                "value": "private",
+                "description": "Permission on private extensions"
+              },
+              {
+                "value": "public",
+                "description": "Permission on public extensions"
+              },
+              {
+                "value": "preview",
+                "description": "Permission in extensions that are in preview"
+              },
+              {
+                "value": "released",
+                "description": "Permission in released extensions"
+              },
+              {
+                "value": "firstParty",
+                "description": "Permission in 1st party extensions"
+              },
+              {
+                "value": "all",
+                "description": "Mask that defines all permissions"
+              }
+            ]
+          }
+        }
+      }
+    },
+    "ExtensionRequest": {
+      "description": "A request for an extension (to be installed or have a license assigned)",
+      "type": "object",
+      "properties": {
+        "rejectMessage": {
+          "description": "Required message supplied if the request is rejected",
+          "type": "string"
+        },
+        "requestDate": {
+          "description": "Date at which the request was made",
+          "type": "string",
+          "format": "date-time"
+        },
+        "requestedBy": {
+          "description": "Represents the user who made the request",
+          "$ref": "#/definitions/IdentityRef"
+        },
+        "requestMessage": {
+          "description": "Optional message supplied by the requester justifying the request",
+          "type": "string"
+        },
+        "requestState": {
+          "description": "Represents the state of the request",
+          "enum": [
+            "open",
+            "accepted",
+            "rejected"
+          ],
+          "x-ms-enum": {
+            "name": "ExtensionRequestState",
+            "values": [
+              {
+                "value": "open",
+                "description": "The request has been opened, but not yet responded to"
+              },
+              {
+                "value": "accepted",
+                "description": "The request was accepted (extension installed or license assigned)"
+              },
+              {
+                "value": "rejected",
+                "description": "The request was rejected (extension not installed or license not assigned)"
+              }
+            ]
+          }
+        },
+        "resolveDate": {
+          "description": "Date at which the request was resolved",
+          "type": "string",
+          "format": "date-time"
+        },
+        "resolvedBy": {
+          "description": "Represents the user who resolved the request",
+          "$ref": "#/definitions/IdentityRef"
+        }
+      }
+    },
+    "ExtensionRequestEvent": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "extension": {
+          "description": "The extension which has been requested",
+          "$ref": "#/definitions/PublishedExtension"
+        },
+        "host": {
+          "description": "Information about the host for which this extension is requested",
+          "$ref": "#/definitions/ExtensionHost"
+        },
+        "hostName": {
+          "description": "Name of the collection for which the extension was requested",
+          "type": "string"
+        },
+        "links": {
+          "description": "Gallery host url",
+          "$ref": "#/definitions/ExtensionRequestUrls"
+        },
+        "request": {
+          "description": "The extension request object",
+          "$ref": "#/definitions/ExtensionRequest"
+        },
+        "updateType": {
+          "description": "The type of update that was made",
+          "enum": [
+            "created",
+            "approved",
+            "rejected",
+            "deleted"
+          ],
+          "x-ms-enum": {
+            "name": "ExtensionRequestUpdateType",
+            "values": [
+              {
+                "value": "created",
+                "description": ""
+              },
+              {
+                "value": "approved",
+                "description": ""
+              },
+              {
+                "value": "rejected",
+                "description": ""
+              },
+              {
+                "value": "deleted",
+                "description": ""
+              }
+            ]
+          }
+        }
+      }
+    },
+    "ExtensionRequestsEvent": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "extension": {
+          "description": "The extension which has been requested",
+          "$ref": "#/definitions/PublishedExtension"
+        },
+        "host": {
+          "description": "Information about the host for which this extension is requested",
+          "$ref": "#/definitions/ExtensionHost"
+        },
+        "links": {
+          "description": "Gallery host url",
+          "$ref": "#/definitions/ExtensionRequestUrls"
+        },
+        "requests": {
+          "description": "The extension request object",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ExtensionRequest"
+          }
+        },
+        "updateType": {
+          "description": "The type of update that was made",
+          "enum": [
+            "created",
+            "approved",
+            "rejected",
+            "deleted"
+          ],
+          "x-ms-enum": {
+            "name": "ExtensionRequestUpdateType",
+            "values": [
+              {
+                "value": "created",
+                "description": ""
+              },
+              {
+                "value": "approved",
+                "description": ""
+              },
+              {
+                "value": "rejected",
+                "description": ""
+              },
+              {
+                "value": "deleted",
+                "description": ""
+              }
+            ]
+          }
+        }
+      }
+    },
+    "ExtensionRequestUrls": {
+      "description": "",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/ExtensionUrls"
+        }
+      ],
+      "properties": {
+        "requestPage": {
+          "description": "Link to view the extension request",
+          "type": "string"
+        }
+      }
+    },
+    "ExtensionShare": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "isOrg": {
+          "type": "boolean"
+        },
+        "name": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string"
+        }
+      }
+    },
+    "ExtensionState": {
+      "description": "The state of an extension",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/InstalledExtensionState"
+        }
+      ],
+      "properties": {
+        "extensionName": {
+          "type": "string"
+        },
+        "lastVersionCheck": {
+          "description": "The time at which the version was last checked",
+          "type": "string",
+          "format": "date-time"
+        },
+        "publisherName": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        }
+      }
+    },
+    "ExtensionStatistic": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "statisticName": {
+          "type": "string"
+        },
+        "value": {
+          "type": "number",
+          "format": "double"
+        }
+      }
+    },
+    "ExtensionUrls": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "extensionIcon": {
+          "description": "Url of the extension icon",
+          "type": "string"
+        },
+        "extensionPage": {
+          "description": "Link to view the extension details page",
+          "type": "string"
+        }
+      }
+    },
+    "ExtensionVersion": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "assetUri": {
+          "type": "string"
+        },
+        "badges": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ExtensionBadge"
+          }
+        },
+        "fallbackAssetUri": {
+          "type": "string"
+        },
+        "files": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ExtensionFile"
+          }
+        },
+        "flags": {
+          "enum": [
+            "none",
+            "validated"
+          ],
+          "x-ms-enum": {
+            "name": "ExtensionVersionFlags",
+            "values": [
+              {
+                "value": "none",
+                "description": "No flags exist for this version."
+              },
+              {
+                "value": "validated",
+                "description": "The Validated flag for a version means the extension version has passed validation and can be used.."
+              }
+            ]
+          }
+        },
+        "lastUpdated": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "properties": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "validationResultMessage": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        },
+        "versionDescription": {
+          "type": "string"
+        }
+      }
+    },
+    "GraphSubjectBase": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "_links": {
+          "description": "This field contains zero or more interesting links about the graph subject. These links may be invoked to obtain additional relationships or more detailed information about this graph subject.",
+          "$ref": "#/definitions/ReferenceLinks"
+        },
+        "descriptor": {
+          "description": "The descriptor is the primary way to reference the graph subject while the system is running. This field will uniquely identify the same graph subject across both Accounts and Organizations.",
+          "type": "string"
+        },
+        "displayName": {
+          "description": "This is the non-unique display name of the graph subject. To change this field, you must alter its value in the source provider.",
+          "type": "string"
+        },
+        "url": {
+          "description": "This url is the full route to the source resource of this graph subject.",
+          "type": "string"
+        }
+      }
+    },
+    "IdentityRef": {
+      "description": "",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/GraphSubjectBase"
+        }
+      ],
+      "properties": {
+        "directoryAlias": {
+          "description": "Deprecated - Can be retrieved by querying the Graph user referenced in the \"self\" entry of the IdentityRef \"_links\" dictionary",
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "imageUrl": {
+          "description": "Deprecated - Available in the \"avatar\" entry of the IdentityRef \"_links\" dictionary",
+          "type": "string"
+        },
+        "inactive": {
+          "description": "Deprecated - Can be retrieved by querying the Graph membership state referenced in the \"membershipState\" entry of the GraphUser \"_links\" dictionary",
+          "type": "boolean"
+        },
+        "isAadIdentity": {
+          "description": "Deprecated - Can be inferred from the subject type of the descriptor (Descriptor.IsAadUserType/Descriptor.IsAadGroupType)",
+          "type": "boolean"
+        },
+        "isContainer": {
+          "description": "Deprecated - Can be inferred from the subject type of the descriptor (Descriptor.IsGroupType)",
+          "type": "boolean"
+        },
+        "isDeletedInOrigin": {
+          "type": "boolean"
+        },
+        "profileUrl": {
+          "description": "Deprecated - not in use in most preexisting implementations of ToIdentityRef",
+          "type": "string"
+        },
+        "uniqueName": {
+          "description": "Deprecated - use Domain+PrincipalName instead",
+          "type": "string"
+        }
+      }
+    },
+    "InstallationTarget": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "target": {
+          "type": "string"
+        },
+        "targetVersion": {
+          "type": "string"
+        }
+      }
+    },
+    "InstalledExtension": {
+      "description": "Represents a VSTS extension along with its installation state",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/ExtensionManifest"
+        }
+      ],
+      "properties": {
+        "extensionId": {
+          "description": "The friendly extension id for this extension - unique for a given publisher.",
+          "type": "string"
+        },
+        "extensionName": {
+          "description": "The display name of the extension.",
+          "type": "string"
+        },
+        "files": {
+          "description": "This is the set of files available from the extension.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ExtensionFile"
+          }
+        },
+        "flags": {
+          "description": "Extension flags relevant to contribution consumers",
+          "enum": [
+            "builtIn",
+            "trusted"
+          ],
+          "x-ms-enum": {
+            "name": "ExtensionFlags",
+            "values": [
+              {
+                "value": "builtIn",
+                "description": "A built-in extension is installed for all VSTS accounts by default"
+              },
+              {
+                "value": "trusted",
+                "description": "The extension comes from a fully-trusted publisher"
+              }
+            ]
+          }
+        },
+        "installState": {
+          "description": "Information about this particular installation of the extension",
+          "$ref": "#/definitions/InstalledExtensionState"
+        },
+        "lastPublished": {
+          "description": "This represents the date/time the extensions was last updated in the gallery. This doesnt mean this version was updated the value represents changes to any and all versions of the extension.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "publisherId": {
+          "description": "Unique id of the publisher of this extension",
+          "type": "string"
+        },
+        "publisherName": {
+          "description": "The display name of the publisher",
+          "type": "string"
+        },
+        "registrationId": {
+          "description": "Unique id for this extension (the same id is used for all versions of a single extension)",
+          "type": "string",
+          "format": "uuid"
+        },
+        "version": {
+          "description": "Version of this extension",
+          "type": "string"
+        }
+      }
+    },
+    "InstalledExtensionQuery": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "assetTypes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "monikers": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ExtensionIdentifier"
+          }
+        }
+      }
+    },
+    "InstalledExtensionState": {
+      "description": "The state of an installed extension",
+      "type": "object",
+      "properties": {
+        "flags": {
+          "description": "States of an installed extension",
+          "enum": [
+            "none",
+            "disabled",
+            "builtIn",
+            "multiVersion",
+            "unInstalled",
+            "versionCheckError",
+            "trusted",
+            "error",
+            "needsReauthorization",
+            "autoUpgradeError",
+            "warning"
+          ],
+          "x-ms-enum": {
+            "name": "ExtensionStateFlags",
+            "values": [
+              {
+                "value": "none",
+                "description": "No flags set"
+              },
+              {
+                "value": "disabled",
+                "description": "Extension is disabled"
+              },
+              {
+                "value": "builtIn",
+                "description": "Extension is a built in"
+              },
+              {
+                "value": "multiVersion",
+                "description": "Extension has multiple versions"
+              },
+              {
+                "value": "unInstalled",
+                "description": "Extension is not installed.  This is for builtin extensions only and can not otherwise be set."
+              },
+              {
+                "value": "versionCheckError",
+                "description": "Error performing version check"
+              },
+              {
+                "value": "trusted",
+                "description": "Trusted extensions are ones that are given special capabilities. These tend to come from Microsoft and can't be published by the general public.  Note: BuiltIn extensions are always trusted."
+              },
+              {
+                "value": "error",
+                "description": "Extension is currently in an error state"
+              },
+              {
+                "value": "needsReauthorization",
+                "description": "Extension scopes have changed and the extension requires re-authorization"
+              },
+              {
+                "value": "autoUpgradeError",
+                "description": "Error performing auto-upgrade. For example, if the new version has demands not supported the extension cannot be auto-upgraded."
+              },
+              {
+                "value": "warning",
+                "description": "Extension is currently in a warning state, that can cause a degraded experience. The degraded experience can be caused for example by some installation issues detected such as implicit demands not supported."
+              }
+            ]
+          }
+        },
+        "installationIssues": {
+          "description": "List of installation issues",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/InstalledExtensionStateIssue"
+          }
+        },
+        "lastUpdated": {
+          "description": "The time at which this installation was last updated",
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "InstalledExtensionStateIssue": {
+      "description": "Represents an installation issue",
+      "type": "object",
+      "properties": {
+        "message": {
+          "description": "The error message",
+          "type": "string"
+        },
+        "source": {
+          "description": "Source of the installation issue, for example  \"Demands\"",
+          "type": "string"
+        },
+        "type": {
+          "description": "Installation issue type (Warning, Error)",
+          "enum": [
+            "warning",
+            "error"
+          ],
+          "x-ms-enum": {
+            "name": "InstalledExtensionStateIssueType",
+            "values": [
+              {
+                "value": "warning",
+                "description": "Represents an installation warning, for example an implicit demand not supported"
+              },
+              {
+                "value": "error",
+                "description": "Represents an installation error, for example an explicit demand not supported"
+              }
+            ]
+          }
+        }
+      }
+    },
+    "JObject": {
+      "description": "Represents a JSON object.",
+      "type": "object",
+      "properties": {
+        "item": {
+          "type": "string",
+          "format": "JToken"
+        },
+        "type": {
+          "description": "Gets the node type for this JToken.",
+          "type": "string",
+          "format": "JTokenType"
+        }
+      }
+    },
+    "LicensingOverride": {
+      "description": "Maps a contribution to a licensing behavior",
+      "type": "object",
+      "properties": {
+        "behavior": {
+          "description": "How the inclusion of this contribution should change based on licensing",
+          "enum": [
+            "onlyIfLicensed",
+            "onlyIfUnlicensed",
+            "alwaysInclude"
+          ],
+          "x-ms-enum": {
+            "name": "ContributionLicensingBehaviorType",
+            "values": [
+              {
+                "value": "onlyIfLicensed",
+                "description": "Default value - only include the contribution if the user is licensed for the extension"
+              },
+              {
+                "value": "onlyIfUnlicensed",
+                "description": "Only include the contribution if the user is NOT licensed for the extension"
+              },
+              {
+                "value": "alwaysInclude",
+                "description": "Always include the contribution regardless of whether or not the user is licensed for the extension"
+              }
+            ]
+          }
+        },
+        "id": {
+          "description": "Fully qualified contribution id which we want to define licensing behavior for",
+          "type": "string"
+        }
+      }
+    },
+    "PublishedExtension": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "categories": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "deploymentType": {
+          "enum": [
+            "exe",
+            "msi",
+            "vsix",
+            "referralLink"
+          ],
+          "x-ms-enum": {
+            "name": "ExtensionDeploymentTechnology",
+            "values": [
+              {
+                "value": "exe",
+                "description": ""
+              },
+              {
+                "value": "msi",
+                "description": ""
+              },
+              {
+                "value": "vsix",
+                "description": ""
+              },
+              {
+                "value": "referralLink",
+                "description": ""
+              }
+            ]
+          }
+        },
+        "displayName": {
+          "type": "string"
+        },
+        "extensionId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "extensionName": {
+          "type": "string"
+        },
+        "flags": {
+          "enum": [
+            "none",
+            "disabled",
+            "builtIn",
+            "validated",
+            "trusted",
+            "paid",
+            "public",
+            "multiVersion",
+            "system",
+            "preview",
+            "unpublished",
+            "trial",
+            "locked",
+            "hidden"
+          ],
+          "x-ms-enum": {
+            "name": "PublishedExtensionFlags",
+            "values": [
+              {
+                "value": "none",
+                "description": "No flags exist for this extension."
+              },
+              {
+                "value": "disabled",
+                "description": "The Disabled flag for an extension means the extension can't be changed and won't be used by consumers. The disabled flag is managed by the service and can't be supplied by the Extension Developers."
+              },
+              {
+                "value": "builtIn",
+                "description": "BuiltIn Extension are available to all Tenants. An explicit registration is not required. This attribute is reserved and can't be supplied by Extension Developers.  BuiltIn extensions are by definition Public. There is no need to set the public flag for extensions marked BuiltIn."
+              },
+              {
+                "value": "validated",
+                "description": "This extension has been validated by the service. The extension meets the requirements specified. This attribute is reserved and can't be supplied by the Extension Developers. Validation is a process that ensures that all contributions are well formed. They meet the requirements defined by the contribution type they are extending. Note this attribute will be updated asynchronously as the extension is validated by the developer of the contribution type. There will be restricted access to the extension while this process is performed."
+              },
+              {
+                "value": "trusted",
+                "description": "Trusted extensions are ones that are given special capabilities. These tend to come from Microsoft and can't be published by the general public.  Note: BuiltIn extensions are always trusted."
+              },
+              {
+                "value": "paid",
+                "description": "The Paid flag indicates that the commerce can be enabled for this extension. Publisher needs to setup Offer/Pricing plan in Azure. If Paid flag is set and a corresponding Offer is not available, the extension will automatically be marked as Preview. If the publisher intends to make the extension Paid in the future, it is mandatory to set the Preview flag. This is currently available only for VSTS extensions only."
+              },
+              {
+                "value": "public",
+                "description": "This extension registration is public, making its visibility open to the public. This means all tenants have the ability to install this extension. Without this flag the extension will be private and will need to be shared with the tenants that can install it."
+              },
+              {
+                "value": "multiVersion",
+                "description": "This extension has multiple versions active at one time and version discovery should be done using the defined \"Version Discovery\" protocol to determine the version available to a specific user or tenant.  @TODO: Link to Version Discovery Protocol."
+              },
+              {
+                "value": "system",
+                "description": "The system flag is reserved, and cant be used by publishers."
+              },
+              {
+                "value": "preview",
+                "description": "The Preview flag indicates that the extension is still under preview (not yet of \"release\" quality). These extensions may be decorated differently in the gallery and may have different policies applied to them."
+              },
+              {
+                "value": "unpublished",
+                "description": "The Unpublished flag indicates that the extension can't be installed/downloaded. Users who have installed such an extension can continue to use the extension."
+              },
+              {
+                "value": "trial",
+                "description": "The Trial flag indicates that the extension is in Trial version. The flag is right now being used only with respect to Visual Studio extensions."
+              },
+              {
+                "value": "locked",
+                "description": "The Locked flag indicates that extension has been locked from Marketplace. Further updates/acquisitions are not allowed on the extension until this is present. This should be used along with making the extension private/unpublished."
+              },
+              {
+                "value": "hidden",
+                "description": "This flag is set for extensions we want to hide from Marketplace home and search pages. This will be used to override the exposure of builtIn flags."
+              }
+            ]
+          }
+        },
+        "installationTargets": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/InstallationTarget"
+          }
+        },
+        "lastUpdated": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "longDescription": {
+          "type": "string"
+        },
+        "publishedDate": {
+          "description": "Date on which the extension was first uploaded.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "publisher": {
+          "$ref": "#/definitions/PublisherFacts"
+        },
+        "releaseDate": {
+          "description": "Date on which the extension first went public.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "sharedWith": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ExtensionShare"
+          }
+        },
+        "shortDescription": {
+          "type": "string"
+        },
+        "statistics": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ExtensionStatistic"
+          }
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "versions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ExtensionVersion"
+          }
+        }
+      }
+    },
+    "PublisherFacts": {
+      "description": "High-level information about the publisher, like id's and names",
+      "type": "object",
+      "properties": {
+        "displayName": {
+          "type": "string"
+        },
+        "flags": {
+          "enum": [
+            "unChanged",
+            "none",
+            "disabled",
+            "verified",
+            "certified",
+            "serviceFlags"
+          ],
+          "x-ms-enum": {
+            "name": "PublisherFlags",
+            "values": [
+              {
+                "value": "unChanged",
+                "description": "This should never be returned, it is used to represent a publisher who's flags haven't changed during update calls."
+              },
+              {
+                "value": "none",
+                "description": "No flags exist for this publisher."
+              },
+              {
+                "value": "disabled",
+                "description": "The Disabled flag for a publisher means the publisher can't be changed and won't be used by consumers, this extends to extensions owned by the publisher as well. The disabled flag is managed by the service and can't be supplied by the Extension Developers."
+              },
+              {
+                "value": "verified",
+                "description": "A verified publisher is one that Microsoft has done some review of and ensured the publisher meets a set of requirements. The requirements to become a verified publisher are not listed here.  They can be found in public documentation (TBD)."
+              },
+              {
+                "value": "certified",
+                "description": "A Certified publisher is one that is Microsoft verified and in addition meets a set of requirements for its published extensions. The requirements to become a certified publisher are not listed here.  They can be found in public documentation (TBD)."
+              },
+              {
+                "value": "serviceFlags",
+                "description": "This is the set of flags that can't be supplied by the developer and is managed by the service itself."
+              }
+            ]
+          }
+        },
+        "publisherId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "publisherName": {
+          "type": "string"
+        }
+      }
+    },
+    "ReferenceLinks": {
+      "description": "The class to represent a collection of REST reference links.",
+      "type": "object",
+      "properties": {
+        "links": {
+          "description": "The readonly view of the links.  Because Reference links are readonly, we only want to expose them as read only.",
+          "type": "object",
+          "additionalProperties": {
+            "type": "object"
+          }
+        }
+      }
+    },
+    "RequestedExtension": {
+      "description": "A request for an extension (to be installed or have a license assigned)",
+      "type": "object",
+      "properties": {
+        "extensionName": {
+          "description": "The unique name of the extension",
+          "type": "string"
+        },
+        "extensionRequests": {
+          "description": "A list of each request for the extension",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ExtensionRequest"
+          }
+        },
+        "publisherDisplayName": {
+          "description": "DisplayName of the publisher that owns the extension being published.",
+          "type": "string"
+        },
+        "publisherName": {
+          "description": "Represents the Publisher of the requested extension",
+          "type": "string"
+        },
+        "requestCount": {
+          "description": "The total number of requests for an extension",
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "ResolvedDataProvider": {
+      "description": "Entry for a specific data provider's resulting data",
+      "type": "object",
+      "properties": {
+        "duration": {
+          "description": "The total time the data provider took to resolve its data (in milliseconds)",
+          "type": "string",
+          "format": "Single"
+        },
+        "error": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        }
+      }
+    },
+    "Scope": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        }
+      }
+    },
+    "SupportedExtension": {
+      "description": "Information about the extension",
+      "type": "object",
+      "properties": {
+        "extension": {
+          "description": "Unique Identifier for this extension",
+          "type": "string"
+        },
+        "publisher": {
+          "description": "Unique Identifier for this publisher",
+          "type": "string"
+        },
+        "version": {
+          "description": "Supported version for this extension",
+          "type": "string"
+        }
+      }
+    },
+    "UserExtensionPolicy": {
+      "description": "Represents the extension policy applied to a given user",
+      "type": "object",
+      "properties": {
+        "displayName": {
+          "description": "User display name that this policy refers to",
+          "type": "string"
+        },
+        "permissions": {
+          "description": "The extension policy applied to the user",
+          "$ref": "#/definitions/ExtensionPolicy"
+        },
+        "userId": {
+          "description": "User id that this policy refers to",
+          "type": "string"
+        }
+      }
+    },
+    "VssJsonCollectionWrapper": {
+      "description": "This class is used to serialized collections as a single JSON object on the wire, to avoid serializing JSON arrays directly to the client, which can be a security hole",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/VssJsonCollectionWrapperBase"
+        }
+      ],
+      "properties": {
+        "value": {
+          "type": "string",
+          "format": "T"
+        }
+      }
+    },
+    "VssJsonCollectionWrapperBase": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "count": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    }
+  },
+  "parameters": {
+    "api-Version-preview.1": {
+      "name": "api-version",
+      "in": "query",
+      "description": "Version of the API to use.  This should be set to '5.2-preview.1' to use this version of the api.",
+      "required": true,
+      "type": "string"
+    }
+  },
+  "securityDefinitions": {
+    "accessToken": {
+      "type": "basic",
+      "description": "Personal access token. Use any value for the user name and the token as the password."
+    },
+    "oauth2": {
+      "type": "oauth2",
+      "flow": "accessCode",
+      "authorizationUrl": "https://app.vssps.visualstudio.com/oauth2/authorize&response_type=Assertion",
+      "tokenUrl": "https://app.vssps.visualstudio.com/oauth2/token?client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer&grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer",
+      "scopes": {
+        "vso.extension": "Grants the ability to read installed extensions.",
+        "vso.extension_manage": "Grants the ability to install, uninstall, and perform other administrative actions on installed extensions.",
+        "vso.extension.data": "Grants the ability to read data (settings and documents) stored by installed extensions.",
+        "vso.extension.data_write": "Grants the ability to read and write data (settings and documents) stored by installed extensions."
+      }
+    }
+  },
+  "security": [
+    {
+      "accessToken": []
+    }
+  ],
+  "externalDocs": {
+    "description": "Azure DevOps REST APIs",
+    "url": "https://aka.ms/azure-devops-rest-apis"
+  }
+}

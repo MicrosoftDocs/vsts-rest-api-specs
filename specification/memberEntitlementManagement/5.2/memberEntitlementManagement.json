@@ -1,0 +1,2469 @@
+﻿{
+  "swagger": "2.0",
+  "info": {
+    "title": "MemberEntitlementManagement",
+    "description": "",
+    "termsOfService": "https://go.microsoft.com/fwlink/?LinkId=329770",
+    "contact": {
+      "name": "nugetvss",
+      "email": "nugetvss@microsoft.com"
+    },
+    "license": {
+      "name": "MICROSOFT SOFTWARE LICENSE TERMS",
+      "url": "https://go.microsoft.com/fwlink/?LinkId=329770"
+    },
+    "version": "5.2-preview"
+  },
+  "host": "vsaex.dev.azure.com",
+  "x-ms-vss-area": "MemberEntitlementManagement",
+  "x-ms-vss-resource-area-id": "68ddce18-2501-45f1-a17b-7931a9922690",
+  "basePath": "/",
+  "tags": [
+    {
+      "name": "Group Entitlements",
+      "description": "APIs to manage Group Licensing Rules."
+    },
+    {
+      "name": "Members",
+      "description": "APIs to Manage memberships for the Group Entitlements"
+    },
+    {
+      "name": "User Entitlements",
+      "description": "APIs to manage User Entitlements."
+    },
+    {
+      "name": "User Entitlement Summary",
+      "description": "APIs to get User Entitlements Summary."
+    }
+  ],
+  "schemes": [
+    "https"
+  ],
+  "paths": {
+    "/{organization}/_apis/groupentitlements": {
+      "post": {
+        "tags": [
+          "Group Entitlements"
+        ],
+        "x-ms-docs-override-version": "5.2-preview.1",
+        "x-ms-vss-resource": "groupEntitlements",
+        "x-ms-vss-method": "AddGroupEntitlement",
+        "x-ms-preview": true,
+        "description": "Create a group entitlement with license rule, extension rule.",
+        "operationId": "Add",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "GroupEntitlement object specifying License Rule, Extensions Rule for the group. Based on the rules the members of the group will be given licenses and extensions. The Group Entitlement can be used to add the group to another project level groups",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/GroupEntitlement"
+            }
+          },
+          {
+            "in": "query",
+            "name": "ruleOption",
+            "description": "RuleOption [ApplyGroupRule/TestApplyGroupRule] - specifies if the rules defined in group entitlement should be created and applied to it’s members (default option) or just be tested",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "applyGroupRule",
+              "testApplyGroupRule"
+            ],
+            "x-ms-enum": {
+              "name": "RuleOption",
+              "values": [
+                {
+                  "value": "applyGroupRule",
+                  "description": ""
+                },
+                {
+                  "value": "testApplyGroupRule",
+                  "description": ""
+                }
+              ]
+            }
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created",
+            "schema": {
+              "$ref": "#/definitions/GroupEntitlementOperationReference"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.memberentitlementmanagement_write"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "": {
+            "$ref": "./httpExamples/GroupEntitlements/POST__memberEntitlementManagement_GroupEntitlement.json"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Group Entitlements"
+        ],
+        "x-ms-docs-override-version": "5.2-preview.1",
+        "x-ms-vss-resource": "groupEntitlements",
+        "x-ms-vss-method": "GetGroupEntitlements",
+        "x-ms-preview": true,
+        "description": "Get the group entitlements for an account.",
+        "operationId": "List",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/GroupEntitlement"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.memberentitlementmanagement"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "": {
+            "$ref": "./httpExamples/GroupEntitlements/GET__memberEntitlementManagement_GroupEntitlements.json"
+          }
+        }
+      }
+    },
+    "/{organization}/_apis/groupentitlements/{groupId}": {
+      "delete": {
+        "tags": [
+          "Group Entitlements"
+        ],
+        "x-ms-docs-override-version": "5.2-preview.1",
+        "x-ms-vss-resource": "groupEntitlements",
+        "x-ms-vss-method": "DeleteGroupEntitlement",
+        "x-ms-preview": true,
+        "description": "Delete a group entitlement.",
+        "operationId": "Delete",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "groupId",
+            "description": "ID of the group to delete.",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "query",
+            "name": "ruleOption",
+            "description": "RuleOption [ApplyGroupRule/TestApplyGroupRule] - specifies if the rules defined in group entitlement should be deleted and the changes are applied to it’s members (default option) or just be tested",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "applyGroupRule",
+              "testApplyGroupRule"
+            ],
+            "x-ms-enum": {
+              "name": "RuleOption",
+              "values": [
+                {
+                  "value": "applyGroupRule",
+                  "description": ""
+                },
+                {
+                  "value": "testApplyGroupRule",
+                  "description": ""
+                }
+              ]
+            }
+          },
+          {
+            "in": "query",
+            "name": "removeGroupMembership",
+            "description": "Optional parameter that specifies whether the group with the given ID should be removed from all other groups",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/GroupEntitlementOperationReference"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.memberentitlementmanagement_write"
+            ]
+          }
+        ]
+      },
+      "get": {
+        "tags": [
+          "Group Entitlements"
+        ],
+        "x-ms-docs-override-version": "5.2-preview.1",
+        "x-ms-vss-resource": "groupEntitlements",
+        "x-ms-vss-method": "GetGroupEntitlement",
+        "x-ms-preview": true,
+        "description": "Get a group entitlement.\n\nIf the group entitlement does not exist, returns null.",
+        "operationId": "Get",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "groupId",
+            "description": "ID of the group.",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/GroupEntitlement"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.memberentitlementmanagement"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "": {
+            "$ref": "./httpExamples/GroupEntitlements/GET__memberEntitlementManagement_GroupEntitlement.json"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Group Entitlements"
+        ],
+        "x-ms-docs-override-version": "5.2-preview.1",
+        "x-ms-vss-resource": "groupEntitlements",
+        "x-ms-vss-method": "UpdateGroupEntitlement",
+        "x-ms-preview": true,
+        "description": "Update entitlements (License Rule, Extensions Rule, Project memberships etc.) for a group.",
+        "operationId": "Update",
+        "consumes": [
+          "application/json-patch+json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "JsonPatchDocument containing the operations to perform on the group.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/JsonPatchDocument"
+            }
+          },
+          {
+            "in": "path",
+            "name": "groupId",
+            "description": "ID of the group.",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "query",
+            "name": "ruleOption",
+            "description": "RuleOption [ApplyGroupRule/TestApplyGroupRule] - specifies if the rules defined in group entitlement should be updated and the changes are applied to it’s members (default option) or just be tested",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "applyGroupRule",
+              "testApplyGroupRule"
+            ],
+            "x-ms-enum": {
+              "name": "RuleOption",
+              "values": [
+                {
+                  "value": "applyGroupRule",
+                  "description": ""
+                },
+                {
+                  "value": "testApplyGroupRule",
+                  "description": ""
+                }
+              ]
+            }
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/GroupEntitlementOperationReference"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.memberentitlementmanagement_write"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "": {
+            "$ref": "./httpExamples/GroupEntitlements/PATCH_memberEntitlementManagement_GroupEntitlement.json"
+          }
+        }
+      }
+    },
+    "/{organization}/_apis/GroupEntitlements/{groupId}/members": {
+      "get": {
+        "tags": [
+          "Members"
+        ],
+        "x-ms-docs-override-version": "5.2-preview.1",
+        "x-ms-vss-resource": "members",
+        "x-ms-vss-method": "GetGroupMembers",
+        "x-ms-preview": true,
+        "description": "Get direct members of a Group.",
+        "operationId": "Get",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "groupId",
+            "description": "Id of the Group.",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "query",
+            "name": "maxResults",
+            "description": "Maximum number of results to retrieve.",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "pagingToken",
+            "description": "Paging Token from the previous page fetched. If the 'pagingToken' is null, the results would be fetched from the begining of the Members List.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/PagedGraphMemberList"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.memberentitlementmanagement"
+            ]
+          }
+        ]
+      }
+    },
+    "/{organization}/_apis/GroupEntitlements/{groupId}/members/{memberId}": {
+      "put": {
+        "tags": [
+          "Members"
+        ],
+        "x-ms-docs-override-version": "5.2-preview.1",
+        "x-ms-vss-resource": "members",
+        "x-ms-vss-method": "AddMemberToGroup",
+        "x-ms-preview": true,
+        "description": "Add a member to a Group.",
+        "operationId": "Add",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "groupId",
+            "description": "Id of the Group.",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "path",
+            "name": "memberId",
+            "description": "Id of the member to add.",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Members"
+        ],
+        "x-ms-docs-override-version": "5.2-preview.1",
+        "x-ms-vss-resource": "members",
+        "x-ms-vss-method": "RemoveMemberFromGroup",
+        "x-ms-preview": true,
+        "description": "Remove a member from a Group.",
+        "operationId": "Remove Member From Group",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "groupId",
+            "description": "Id of the group.",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "path",
+            "name": "memberId",
+            "description": "Id of the member to remove.",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.memberentitlementmanagement_write"
+            ]
+          }
+        ]
+      }
+    },
+    "/{organization}/_apis/userentitlements": {
+      "post": {
+        "tags": [
+          "User Entitlements"
+        ],
+        "x-ms-docs-override-version": "5.2-preview.2",
+        "x-ms-vss-resource": "userEntitlements",
+        "x-ms-vss-method": "AddUserEntitlement",
+        "x-ms-preview": true,
+        "description": "Add a user, assign license and extensions and make them a member of a project group in an account.",
+        "operationId": "Add",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "UserEntitlement object specifying License, Extensions and Project/Team groups the user should be added to.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UserEntitlement"
+            }
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.2"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/UserEntitlementsPostResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.memberentitlementmanagement_write"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "": {
+            "$ref": "./httpExamples/UserEntitlements/POST__memberEntitlementManagement_UserEntitlement.json"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "User Entitlements"
+        ],
+        "x-ms-docs-override-version": "5.2-preview.2",
+        "x-ms-vss-resource": "userEntitlements",
+        "x-ms-vss-method": "GetUserEntitlements",
+        "x-ms-preview": true,
+        "description": "Get a paged set of user entitlements matching the filter criteria. If no filter is is passed, a page from all the account users is returned.",
+        "operationId": "Get User Entitlements",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "top",
+            "description": "Maximum number of the user entitlements to return. Max value is 10000. Default value is 100",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "skip",
+            "description": "Offset: Number of records to skip. Default value is 0",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "filter",
+            "description": "Comma (\",\") separated list of properties and their values to filter on. Currently, the API only supports filtering by ExtensionId. An example parameter would be filter=extensionId eq search.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "sortOption",
+            "description": "PropertyName and Order (separated by a space ( )) to sort on (e.g. LastAccessDate Desc)",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.2"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/PagedGraphMemberList"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.memberentitlementmanagement"
+            ]
+          }
+        ]
+      },
+      "patch": {
+        "tags": [
+          "User Entitlements"
+        ],
+        "x-ms-docs-override-version": "5.2-preview.2",
+        "x-ms-vss-resource": "userEntitlements",
+        "x-ms-vss-method": "UpdateUserEntitlements",
+        "x-ms-preview": true,
+        "description": "Edit the entitlements (License, Extensions, Projects, Teams etc) for one or more users.",
+        "operationId": "Update User Entitlements",
+        "consumes": [
+          "application/json-patch+json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "JsonPatchDocument containing the operations to perform.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/JsonPatchDocument"
+            }
+          },
+          {
+            "in": "query",
+            "name": "doNotSendInviteForNewUsers",
+            "description": "Whether to send email invites to new users or not",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.2"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/UserEntitlementOperationReference"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.memberentitlementmanagement_write"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "": {
+            "$ref": "./httpExamples/UserEntitlements/PATCH__memberEntitlementManagement_UserEntitlements.json"
+          }
+        }
+      }
+    },
+    "/{organization}/_apis/userentitlements/{userId}": {
+      "delete": {
+        "tags": [
+          "User Entitlements"
+        ],
+        "x-ms-docs-override-version": "5.2-preview.2",
+        "x-ms-vss-resource": "userEntitlements",
+        "x-ms-vss-method": "DeleteUserEntitlement",
+        "x-ms-preview": true,
+        "description": "Delete a user from the account.\n\nThe delete operation includes unassigning Extensions and Licenses and removing the user from all project memberships.\nThe user would continue to have access to the account if she is member of an AAD group, that is added directly to the account.",
+        "operationId": "Delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "userId",
+            "description": "ID of the user.",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.2"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.memberentitlementmanagement_write"
+            ]
+          }
+        ]
+      },
+      "get": {
+        "tags": [
+          "User Entitlements"
+        ],
+        "x-ms-docs-override-version": "5.2-preview.2",
+        "x-ms-vss-resource": "userEntitlements",
+        "x-ms-vss-method": "GetUserEntitlement",
+        "x-ms-preview": true,
+        "description": "Get User Entitlement for a user.",
+        "operationId": "Get User Entitlement",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "userId",
+            "description": "ID of the user.",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.2"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/UserEntitlement"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.memberentitlementmanagement"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "": {
+            "$ref": "./httpExamples/UserEntitlements/GET__memberEntitlementManagement_UserEntitlementById.json"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "User Entitlements"
+        ],
+        "x-ms-docs-override-version": "5.2-preview.2",
+        "x-ms-vss-resource": "userEntitlements",
+        "x-ms-vss-method": "UpdateUserEntitlement",
+        "x-ms-preview": true,
+        "description": "Edit the entitlements (License, Extensions, Projects, Teams etc) for a user.",
+        "operationId": "Update User Entitlement",
+        "consumes": [
+          "application/json-patch+json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "JsonPatchDocument containing the operations to perform on the user.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/JsonPatchDocument"
+            }
+          },
+          {
+            "in": "path",
+            "name": "userId",
+            "description": "ID of the user.",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.2"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/UserEntitlementsPatchResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.memberentitlementmanagement_write"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "": {
+            "$ref": "./httpExamples/UserEntitlements/PATCH__memberEntitlementManagement_UserEntitlementById.json"
+          }
+        }
+      }
+    },
+    "/{organization}/_apis/userentitlementsummary": {
+      "get": {
+        "tags": [
+          "User Entitlement Summary"
+        ],
+        "x-ms-docs-override-version": "5.2-preview.1",
+        "x-ms-vss-resource": "userEntitlementSummary",
+        "x-ms-vss-method": "GetUsersSummary",
+        "x-ms-preview": true,
+        "description": "Get summary of Licenses, Extension, Projects, Groups and their assignments in the collection.",
+        "operationId": "Get",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "select",
+            "description": "Comma (\",\") separated list of properties to select. Supported property names are {AccessLevels, Licenses, Extensions, Projects, Groups}.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/UsersSummary"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.memberentitlementmanagement"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "AccessLevel": {
+      "description": "License assigned to a user",
+      "type": "object",
+      "properties": {
+        "accountLicenseType": {
+          "description": "Type of Account License (e.g. Express, Stakeholder etc.)",
+          "enum": [
+            "none",
+            "earlyAdopter",
+            "express",
+            "professional",
+            "advanced",
+            "stakeholder"
+          ],
+          "x-ms-enum": {
+            "name": "AccountLicenseType",
+            "values": [
+              {
+                "value": "none",
+                "description": ""
+              },
+              {
+                "value": "earlyAdopter",
+                "description": ""
+              },
+              {
+                "value": "express",
+                "description": ""
+              },
+              {
+                "value": "professional",
+                "description": ""
+              },
+              {
+                "value": "advanced",
+                "description": ""
+              },
+              {
+                "value": "stakeholder",
+                "description": ""
+              }
+            ]
+          }
+        },
+        "assignmentSource": {
+          "description": "Assignment Source of the License (e.g. Group, Unknown etc.",
+          "enum": [
+            "none",
+            "unknown",
+            "groupRule"
+          ],
+          "x-ms-enum": {
+            "name": "AssignmentSource",
+            "values": [
+              {
+                "value": "none",
+                "description": ""
+              },
+              {
+                "value": "unknown",
+                "description": ""
+              },
+              {
+                "value": "groupRule",
+                "description": ""
+              }
+            ]
+          }
+        },
+        "licenseDisplayName": {
+          "description": "Display name of the License",
+          "type": "string"
+        },
+        "licensingSource": {
+          "description": "Licensing Source (e.g. Account. MSDN etc.)",
+          "enum": [
+            "none",
+            "account",
+            "msdn",
+            "profile",
+            "auto",
+            "trial"
+          ],
+          "x-ms-enum": {
+            "name": "LicensingSource",
+            "values": [
+              {
+                "value": "none",
+                "description": ""
+              },
+              {
+                "value": "account",
+                "description": ""
+              },
+              {
+                "value": "msdn",
+                "description": ""
+              },
+              {
+                "value": "profile",
+                "description": ""
+              },
+              {
+                "value": "auto",
+                "description": ""
+              },
+              {
+                "value": "trial",
+                "description": ""
+              }
+            ]
+          }
+        },
+        "msdnLicenseType": {
+          "description": "Type of MSDN License (e.g. Visual Studio Professional, Visual Studio Enterprise etc.)",
+          "enum": [
+            "none",
+            "eligible",
+            "professional",
+            "platforms",
+            "testProfessional",
+            "premium",
+            "ultimate",
+            "enterprise"
+          ],
+          "x-ms-enum": {
+            "name": "MsdnLicenseType",
+            "values": [
+              {
+                "value": "none",
+                "description": ""
+              },
+              {
+                "value": "eligible",
+                "description": ""
+              },
+              {
+                "value": "professional",
+                "description": ""
+              },
+              {
+                "value": "platforms",
+                "description": ""
+              },
+              {
+                "value": "testProfessional",
+                "description": ""
+              },
+              {
+                "value": "premium",
+                "description": ""
+              },
+              {
+                "value": "ultimate",
+                "description": ""
+              },
+              {
+                "value": "enterprise",
+                "description": ""
+              }
+            ]
+          }
+        },
+        "status": {
+          "description": "User status in the account",
+          "enum": [
+            "none",
+            "active",
+            "disabled",
+            "deleted",
+            "pending",
+            "expired",
+            "pendingDisabled"
+          ],
+          "x-ms-enum": {
+            "name": "AccountUserStatus",
+            "values": [
+              {
+                "value": "none",
+                "description": ""
+              },
+              {
+                "value": "active",
+                "description": "User has signed in at least once to the VSTS account"
+              },
+              {
+                "value": "disabled",
+                "description": "User cannot sign in; primarily used by admin to temporarily remove a user due to absence or license reallocation"
+              },
+              {
+                "value": "deleted",
+                "description": "User is removed from the VSTS account by the VSTS account admin"
+              },
+              {
+                "value": "pending",
+                "description": "User is invited to join the VSTS account by the VSTS account admin, but has not signed up/signed in yet"
+              },
+              {
+                "value": "expired",
+                "description": "User can sign in; primarily used when license is in expired state and we give a grace period"
+              },
+              {
+                "value": "pendingDisabled",
+                "description": "User is disabled; if reenabled, they will still be in the Pending state"
+              }
+            ]
+          }
+        },
+        "statusMessage": {
+          "description": "Status message.",
+          "type": "string"
+        }
+      }
+    },
+    "BaseOperationResult": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "errors": {
+          "description": "List of error codes paired with their corresponding error messages",
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "isSuccess": {
+          "description": "Success status of the operation",
+          "type": "boolean"
+        }
+      }
+    },
+    "Extension": {
+      "description": "An extension assigned to a user",
+      "type": "object",
+      "properties": {
+        "assignmentSource": {
+          "description": "Assignment source for this extension. I.e. explicitly assigned or from a group rule.",
+          "enum": [
+            "none",
+            "unknown",
+            "groupRule"
+          ],
+          "x-ms-enum": {
+            "name": "AssignmentSource",
+            "values": [
+              {
+                "value": "none",
+                "description": ""
+              },
+              {
+                "value": "unknown",
+                "description": ""
+              },
+              {
+                "value": "groupRule",
+                "description": ""
+              }
+            ]
+          }
+        },
+        "id": {
+          "description": "Gallery Id of the Extension.",
+          "type": "string"
+        },
+        "name": {
+          "description": "Friendly name of this extension.",
+          "type": "string"
+        },
+        "source": {
+          "description": "Source of this extension assignment. Ex: msdn, account, none, etc.",
+          "enum": [
+            "none",
+            "account",
+            "msdn",
+            "profile",
+            "auto",
+            "trial"
+          ],
+          "x-ms-enum": {
+            "name": "LicensingSource",
+            "values": [
+              {
+                "value": "none",
+                "description": ""
+              },
+              {
+                "value": "account",
+                "description": ""
+              },
+              {
+                "value": "msdn",
+                "description": ""
+              },
+              {
+                "value": "profile",
+                "description": ""
+              },
+              {
+                "value": "auto",
+                "description": ""
+              },
+              {
+                "value": "trial",
+                "description": ""
+              }
+            ]
+          }
+        }
+      }
+    },
+    "ExtensionSummaryData": {
+      "description": "Summary of Extensions in the organization.",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/SummaryData"
+        }
+      ],
+      "properties": {
+        "assignedThroughSubscription": {
+          "description": "Count of Extension Licenses assigned to users through msdn.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "extensionId": {
+          "description": "Gallery Id of the Extension",
+          "type": "string"
+        },
+        "extensionName": {
+          "description": "Friendly name of this extension",
+          "type": "string"
+        },
+        "isTrialVersion": {
+          "description": "Whether its a Trial Version.",
+          "type": "boolean"
+        },
+        "minimumLicenseRequired": {
+          "description": "Minimum License Required for the Extension.",
+          "enum": [
+            "none",
+            "express",
+            "advanced",
+            "advancedPlus",
+            "stakeholder"
+          ],
+          "x-ms-enum": {
+            "name": "MinimumRequiredServiceLevel",
+            "values": [
+              {
+                "value": "none",
+                "description": "No service rights. The user cannot access the account"
+              },
+              {
+                "value": "express",
+                "description": "Default or minimum service level"
+              },
+              {
+                "value": "advanced",
+                "description": "Premium service level - either by purchasing on the Azure portal or by purchasing the appropriate MSDN subscription"
+              },
+              {
+                "value": "advancedPlus",
+                "description": "Only available to a specific set of MSDN Subscribers"
+              },
+              {
+                "value": "stakeholder",
+                "description": "Stakeholder service level"
+              }
+            ]
+          }
+        },
+        "remainingTrialDays": {
+          "description": "Days remaining for the Trial to expire.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "trialExpiryDate": {
+          "description": "Date on which the Trial expires.",
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "GraphGroup": {
+      "description": "Graph group entity",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/GraphMember"
+        }
+      ],
+      "properties": {
+        "description": {
+          "description": "A short phrase to help human readers disambiguate groups with similar names",
+          "type": "string"
+        }
+      }
+    },
+    "GraphMember": {
+      "description": "",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/GraphSubject"
+        }
+      ],
+      "properties": {
+        "domain": {
+          "description": "This represents the name of the container of origin for a graph member. (For MSA this is \"Windows Live ID\", for AD the name of the domain, for AAD the tenantID of the directory, for VSTS groups the ScopeId, etc)",
+          "type": "string"
+        },
+        "mailAddress": {
+          "description": "The email address of record for a given graph member. This may be different than the principal name.",
+          "type": "string"
+        },
+        "principalName": {
+          "description": "This is the PrincipalName of this graph member from the source provider. The source provider may change this field over time and it is not guaranteed to be immutable for the life of the graph member by VSTS.",
+          "type": "string"
+        }
+      }
+    },
+    "GraphSubject": {
+      "description": "Top-level graph entity",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/GraphSubjectBase"
+        }
+      ],
+      "properties": {
+        "legacyDescriptor": {
+          "description": "[Internal Use Only] The legacy descriptor is here in case you need to access old version IMS using identity descriptor.",
+          "type": "string"
+        },
+        "origin": {
+          "description": "The type of source provider for the origin identifier (ex:AD, AAD, MSA)",
+          "type": "string"
+        },
+        "originId": {
+          "description": "The unique identifier from the system of origin. Typically a sid, object id or Guid. Linking and unlinking operations can cause this value to change for a user because the user is not backed by a different provider and has a different unique id in the new provider.",
+          "type": "string"
+        },
+        "subjectKind": {
+          "description": "This field identifies the type of the graph subject (ex: Group, Scope, User).",
+          "type": "string"
+        }
+      }
+    },
+    "GraphSubjectBase": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "_links": {
+          "description": "This field contains zero or more interesting links about the graph subject. These links may be invoked to obtain additional relationships or more detailed information about this graph subject.",
+          "$ref": "#/definitions/ReferenceLinks"
+        },
+        "descriptor": {
+          "description": "The descriptor is the primary way to reference the graph subject while the system is running. This field will uniquely identify the same graph subject across both Accounts and Organizations.",
+          "type": "string"
+        },
+        "displayName": {
+          "description": "This is the non-unique display name of the graph subject. To change this field, you must alter its value in the source provider.",
+          "type": "string"
+        },
+        "url": {
+          "description": "This url is the full route to the source resource of this graph subject.",
+          "type": "string"
+        }
+      }
+    },
+    "GraphUser": {
+      "description": "Graph user entity",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/GraphMember"
+        }
+      ],
+      "properties": {
+        "directoryAlias": {
+          "description": "The short, generally unique name for the user in the backing directory. For AAD users, this corresponds to the mail nickname, which is often but not necessarily similar to the part of the user's mail address before the @ sign. For GitHub users, this corresponds to the GitHub user handle.",
+          "type": "string"
+        },
+        "isDeletedInOrigin": {
+          "description": "When true, the group has been deleted in the identity provider",
+          "type": "boolean"
+        },
+        "metaType": {
+          "description": "The meta type of the user in the origin, such as \"member\", \"guest\", etc. See UserMetaType for the set of possible values.",
+          "type": "string"
+        }
+      }
+    },
+    "Group": {
+      "description": "Project Group (e.g. Contributor, Reader etc.)",
+      "type": "object",
+      "properties": {
+        "displayName": {
+          "description": "Display Name of the Group",
+          "type": "string"
+        },
+        "groupType": {
+          "description": "Group Type",
+          "enum": [
+            "projectStakeholder",
+            "projectReader",
+            "projectContributor",
+            "projectAdministrator",
+            "custom"
+          ],
+          "x-ms-enum": {
+            "name": "GroupType",
+            "values": [
+              {
+                "value": "projectStakeholder",
+                "description": ""
+              },
+              {
+                "value": "projectReader",
+                "description": ""
+              },
+              {
+                "value": "projectContributor",
+                "description": ""
+              },
+              {
+                "value": "projectAdministrator",
+                "description": ""
+              },
+              {
+                "value": "custom",
+                "description": ""
+              }
+            ]
+          }
+        }
+      }
+    },
+    "GroupEntitlement": {
+      "description": "A group entity with additional properties including its license, extensions, and project membership",
+      "type": "object",
+      "properties": {
+        "extensionRules": {
+          "description": "Extension Rules.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Extension"
+          }
+        },
+        "group": {
+          "description": "Member reference.",
+          "$ref": "#/definitions/GraphGroup"
+        },
+        "id": {
+          "description": "The unique identifier which matches the Id of the GraphMember.",
+          "type": "string",
+          "format": "uuid"
+        },
+        "lastExecuted": {
+          "description": "[Readonly] The last time the group licensing rule was executed (regardless of whether any changes were made).",
+          "type": "string",
+          "format": "date-time"
+        },
+        "licenseRule": {
+          "description": "License Rule.",
+          "$ref": "#/definitions/AccessLevel"
+        },
+        "members": {
+          "description": "Group members. Only used when creating a new group.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/UserEntitlement"
+          }
+        },
+        "projectEntitlements": {
+          "description": "Relation between a project and the member's effective permissions in that project.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ProjectEntitlement"
+          }
+        },
+        "status": {
+          "description": "The status of the group rule.",
+          "enum": [
+            "applyPending",
+            "applied",
+            "incompatible",
+            "unableToApply"
+          ],
+          "x-ms-enum": {
+            "name": "GroupLicensingRuleStatus",
+            "values": [
+              {
+                "value": "applyPending",
+                "description": "Rule is created or updated, but apply is pending"
+              },
+              {
+                "value": "applied",
+                "description": "Rule is applied"
+              },
+              {
+                "value": "incompatible",
+                "description": "The group rule was incompatible"
+              },
+              {
+                "value": "unableToApply",
+                "description": "Rule failed to apply unexpectedly and should be retried"
+              }
+            ]
+          }
+        }
+      }
+    },
+    "GroupEntitlementOperationReference": {
+      "description": "",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/OperationReference"
+        }
+      ],
+      "properties": {
+        "completed": {
+          "description": "Operation completed with success or failure.",
+          "type": "boolean"
+        },
+        "haveResultsSucceeded": {
+          "description": "True if all operations were successful.",
+          "type": "boolean"
+        },
+        "results": {
+          "description": "List of results for each operation.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/GroupOperationResult"
+          }
+        }
+      }
+    },
+    "GroupOperationResult": {
+      "description": "",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/BaseOperationResult"
+        }
+      ],
+      "properties": {
+        "groupId": {
+          "description": "Identifier of the Group being acted upon",
+          "type": "string",
+          "format": "uuid"
+        },
+        "result": {
+          "description": "Result of the Groupentitlement after the operation",
+          "$ref": "#/definitions/GroupEntitlement"
+        }
+      }
+    },
+    "GroupOption": {
+      "description": "Group option to add a user to",
+      "type": "object",
+      "properties": {
+        "accessLevel": {
+          "description": "Access Level",
+          "$ref": "#/definitions/AccessLevel"
+        },
+        "group": {
+          "description": "Group",
+          "$ref": "#/definitions/Group"
+        }
+      }
+    },
+    "JsonPatchDocument": {
+      "description": "The JSON model for JSON Patch Operations",
+      "type": "object",
+      "allOf": [
+        {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/JsonPatchOperation"
+          }
+        }
+      ],
+      "properties": {}
+    },
+    "JsonPatchOperation": {
+      "description": "The JSON model for a JSON Patch operation",
+      "type": "object",
+      "properties": {
+        "from": {
+          "description": "The path to copy from for the Move/Copy operation.",
+          "type": "string"
+        },
+        "op": {
+          "description": "The patch operation",
+          "enum": [
+            "add",
+            "remove",
+            "replace",
+            "move",
+            "copy",
+            "test"
+          ],
+          "x-ms-enum": {
+            "name": "Operation",
+            "values": [
+              {
+                "value": "add",
+                "description": ""
+              },
+              {
+                "value": "remove",
+                "description": ""
+              },
+              {
+                "value": "replace",
+                "description": ""
+              },
+              {
+                "value": "move",
+                "description": ""
+              },
+              {
+                "value": "copy",
+                "description": ""
+              },
+              {
+                "value": "test",
+                "description": ""
+              }
+            ]
+          }
+        },
+        "path": {
+          "description": "The path for the operation. In the case of an array, a zero based index can be used to specify the position in the array (e.g. /biscuits/0/name). The \"-\" character can be used instead of an index to insert at the end of the array (e.g. /biscuits/-).",
+          "type": "string"
+        },
+        "value": {
+          "description": "The value for the operation. This is either a primitive or a JToken.",
+          "type": "object"
+        }
+      }
+    },
+    "LicenseSummaryData": {
+      "description": "Summary of Licenses in the organization.",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/SummaryData"
+        }
+      ],
+      "properties": {
+        "accountLicenseType": {
+          "description": "Type of Account License.",
+          "enum": [
+            "none",
+            "earlyAdopter",
+            "express",
+            "professional",
+            "advanced",
+            "stakeholder"
+          ],
+          "x-ms-enum": {
+            "name": "AccountLicenseType",
+            "values": [
+              {
+                "value": "none",
+                "description": ""
+              },
+              {
+                "value": "earlyAdopter",
+                "description": ""
+              },
+              {
+                "value": "express",
+                "description": ""
+              },
+              {
+                "value": "professional",
+                "description": ""
+              },
+              {
+                "value": "advanced",
+                "description": ""
+              },
+              {
+                "value": "stakeholder",
+                "description": ""
+              }
+            ]
+          }
+        },
+        "disabled": {
+          "description": "Count of Disabled Licenses.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "isPurchasable": {
+          "description": "Designates if this license quantity can be changed through purchase",
+          "type": "boolean"
+        },
+        "licenseName": {
+          "description": "Name of the License.",
+          "type": "string"
+        },
+        "msdnLicenseType": {
+          "description": "Type of MSDN License.",
+          "enum": [
+            "none",
+            "eligible",
+            "professional",
+            "platforms",
+            "testProfessional",
+            "premium",
+            "ultimate",
+            "enterprise"
+          ],
+          "x-ms-enum": {
+            "name": "MsdnLicenseType",
+            "values": [
+              {
+                "value": "none",
+                "description": ""
+              },
+              {
+                "value": "eligible",
+                "description": ""
+              },
+              {
+                "value": "professional",
+                "description": ""
+              },
+              {
+                "value": "platforms",
+                "description": ""
+              },
+              {
+                "value": "testProfessional",
+                "description": ""
+              },
+              {
+                "value": "premium",
+                "description": ""
+              },
+              {
+                "value": "ultimate",
+                "description": ""
+              },
+              {
+                "value": "enterprise",
+                "description": ""
+              }
+            ]
+          }
+        },
+        "nextBillingDate": {
+          "description": "Specifies the date when billing will charge for paid licenses",
+          "type": "string",
+          "format": "date-time"
+        },
+        "source": {
+          "description": "Source of the License.",
+          "enum": [
+            "none",
+            "account",
+            "msdn",
+            "profile",
+            "auto",
+            "trial"
+          ],
+          "x-ms-enum": {
+            "name": "LicensingSource",
+            "values": [
+              {
+                "value": "none",
+                "description": ""
+              },
+              {
+                "value": "account",
+                "description": ""
+              },
+              {
+                "value": "msdn",
+                "description": ""
+              },
+              {
+                "value": "profile",
+                "description": ""
+              },
+              {
+                "value": "auto",
+                "description": ""
+              },
+              {
+                "value": "trial",
+                "description": ""
+              }
+            ]
+          }
+        },
+        "totalAfterNextBillingDate": {
+          "description": "Total license count after next billing cycle",
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "MemberEntitlement": {
+      "description": "Deprecated: Use UserEntitlement instead",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/UserEntitlement"
+        }
+      ],
+      "properties": {
+        "member": {
+          "description": "Member reference",
+          "$ref": "#/definitions/GraphMember"
+        }
+      }
+    },
+    "MemberEntitlementOperationReference": {
+      "description": "",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/OperationReference"
+        }
+      ],
+      "properties": {
+        "completed": {
+          "description": "Operation completed with success or failure",
+          "type": "boolean"
+        },
+        "haveResultsSucceeded": {
+          "description": "True if all operations were successful",
+          "type": "boolean"
+        },
+        "results": {
+          "description": "List of results for each operation",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/OperationResult"
+          }
+        }
+      }
+    },
+    "MemberEntitlementsPatchResponse": {
+      "description": "",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/MemberEntitlementsResponseBase"
+        }
+      ],
+      "properties": {
+        "operationResults": {
+          "description": "List of results for each operation",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/OperationResult"
+          }
+        }
+      }
+    },
+    "MemberEntitlementsPostResponse": {
+      "description": "",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/MemberEntitlementsResponseBase"
+        }
+      ],
+      "properties": {
+        "operationResult": {
+          "description": "Operation result",
+          "$ref": "#/definitions/OperationResult"
+        }
+      }
+    },
+    "MemberEntitlementsResponseBase": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "isSuccess": {
+          "description": "True if all operations were successful.",
+          "type": "boolean"
+        },
+        "memberEntitlement": {
+          "description": "Result of the member entitlement after the operations. have been applied",
+          "$ref": "#/definitions/MemberEntitlement"
+        }
+      }
+    },
+    "OperationReference": {
+      "description": "Reference for an async operation.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "Unique identifier for the operation.",
+          "type": "string",
+          "format": "uuid"
+        },
+        "pluginId": {
+          "description": "Unique identifier for the plugin.",
+          "type": "string",
+          "format": "uuid"
+        },
+        "status": {
+          "description": "The current status of the operation.",
+          "enum": [
+            "notSet",
+            "queued",
+            "inProgress",
+            "cancelled",
+            "succeeded",
+            "failed"
+          ],
+          "x-ms-enum": {
+            "name": "OperationStatus",
+            "values": [
+              {
+                "value": "notSet",
+                "description": "The operation does not have a status set."
+              },
+              {
+                "value": "queued",
+                "description": "The operation has been queued."
+              },
+              {
+                "value": "inProgress",
+                "description": "The operation is in progress."
+              },
+              {
+                "value": "cancelled",
+                "description": "The operation was cancelled by the user."
+              },
+              {
+                "value": "succeeded",
+                "description": "The operation completed successfully."
+              },
+              {
+                "value": "failed",
+                "description": "The operation completed with a failure."
+              }
+            ]
+          }
+        },
+        "url": {
+          "description": "URL to get the full operation object.",
+          "type": "string"
+        }
+      }
+    },
+    "OperationResult": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "errors": {
+          "description": "List of error codes paired with their corresponding error messages.",
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "isSuccess": {
+          "description": "Success status of the operation.",
+          "type": "boolean"
+        },
+        "memberId": {
+          "description": "Identifier of the Member being acted upon.",
+          "type": "string",
+          "format": "uuid"
+        },
+        "result": {
+          "description": "Result of the MemberEntitlement after the operation.",
+          "$ref": "#/definitions/MemberEntitlement"
+        }
+      }
+    },
+    "PagedGraphMemberList": {
+      "description": "A page of users",
+      "type": "object",
+      "properties": {
+        "members": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/UserEntitlement"
+          }
+        }
+      }
+    },
+    "ProjectEntitlement": {
+      "description": "Relation between a project and the user's effective permissions in that project.",
+      "type": "object",
+      "properties": {
+        "assignmentSource": {
+          "description": "Assignment Source (e.g. Group or Unknown).",
+          "enum": [
+            "none",
+            "unknown",
+            "groupRule"
+          ],
+          "x-ms-enum": {
+            "name": "AssignmentSource",
+            "values": [
+              {
+                "value": "none",
+                "description": ""
+              },
+              {
+                "value": "unknown",
+                "description": ""
+              },
+              {
+                "value": "groupRule",
+                "description": ""
+              }
+            ]
+          }
+        },
+        "group": {
+          "description": "Project Group (e.g. Contributor, Reader etc.)",
+          "$ref": "#/definitions/Group"
+        },
+        "projectPermissionInherited": {
+          "description": "Whether the user is inheriting permissions to a project through a Azure DevOps or AAD group membership.",
+          "enum": [
+            "notSet",
+            "notInherited",
+            "inherited"
+          ],
+          "x-ms-enum": {
+            "name": "ProjectPermissionInherited",
+            "values": [
+              {
+                "value": "notSet",
+                "description": ""
+              },
+              {
+                "value": "notInherited",
+                "description": ""
+              },
+              {
+                "value": "inherited",
+                "description": ""
+              }
+            ]
+          }
+        },
+        "projectRef": {
+          "description": "Project Ref",
+          "$ref": "#/definitions/ProjectRef"
+        },
+        "teamRefs": {
+          "description": "Team Ref.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TeamRef"
+          }
+        }
+      }
+    },
+    "ProjectRef": {
+      "description": "A reference to a project",
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "Project ID.",
+          "type": "string",
+          "format": "uuid"
+        },
+        "name": {
+          "description": "Project Name.",
+          "type": "string"
+        }
+      }
+    },
+    "ReferenceLinks": {
+      "description": "The class to represent a collection of REST reference links.",
+      "type": "object",
+      "properties": {
+        "links": {
+          "description": "The readonly view of the links.  Because Reference links are readonly, we only want to expose them as read only.",
+          "type": "object",
+          "additionalProperties": {
+            "type": "object"
+          }
+        }
+      }
+    },
+    "SummaryData": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "assigned": {
+          "description": "Count of Licenses already assigned.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "available": {
+          "description": "Available Count.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "includedQuantity": {
+          "description": "Quantity",
+          "type": "integer",
+          "format": "int32"
+        },
+        "total": {
+          "description": "Total Count.",
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "TeamRef": {
+      "description": "A reference to a team",
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "Team ID",
+          "type": "string",
+          "format": "uuid"
+        },
+        "name": {
+          "description": "Team Name",
+          "type": "string"
+        }
+      }
+    },
+    "UserEntitlement": {
+      "description": "A user entity with additional properties including thier license, extensions, and project membership",
+      "type": "object",
+      "properties": {
+        "accessLevel": {
+          "description": "User's access level denoted by a license.",
+          "$ref": "#/definitions/AccessLevel"
+        },
+        "dateCreated": {
+          "description": "[Readonly] Date the user was added to the collection.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "extensions": {
+          "description": "User's extensions.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Extension"
+          }
+        },
+        "groupAssignments": {
+          "description": "[Readonly] GroupEntitlements that this user belongs to.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/GroupEntitlement"
+          }
+        },
+        "id": {
+          "description": "The unique identifier which matches the Id of the Identity associated with the GraphMember.",
+          "type": "string",
+          "format": "uuid"
+        },
+        "lastAccessedDate": {
+          "description": "[Readonly] Date the user last accessed the collection.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "projectEntitlements": {
+          "description": "Relation between a project and the user's effective permissions in that project.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ProjectEntitlement"
+          }
+        },
+        "user": {
+          "description": "User reference.",
+          "$ref": "#/definitions/GraphUser"
+        }
+      }
+    },
+    "UserEntitlementOperationReference": {
+      "description": "",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/OperationReference"
+        }
+      ],
+      "properties": {
+        "completed": {
+          "description": "Operation completed with success or failure.",
+          "type": "boolean"
+        },
+        "haveResultsSucceeded": {
+          "description": "True if all operations were successful.",
+          "type": "boolean"
+        },
+        "results": {
+          "description": "List of results for each operation.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/UserEntitlementOperationResult"
+          }
+        }
+      }
+    },
+    "UserEntitlementOperationResult": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "errors": {
+          "description": "List of error codes paired with their corresponding error messages.",
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "isSuccess": {
+          "description": "Success status of the operation.",
+          "type": "boolean"
+        },
+        "result": {
+          "description": "Result of the MemberEntitlement after the operation.",
+          "$ref": "#/definitions/UserEntitlement"
+        },
+        "userId": {
+          "description": "Identifier of the Member being acted upon.",
+          "type": "string",
+          "format": "uuid"
+        }
+      }
+    },
+    "UserEntitlementsPatchResponse": {
+      "description": "",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/UserEntitlementsResponseBase"
+        }
+      ],
+      "properties": {
+        "operationResults": {
+          "description": "List of results for each operation.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/UserEntitlementOperationResult"
+          }
+        }
+      }
+    },
+    "UserEntitlementsPostResponse": {
+      "description": "",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/UserEntitlementsResponseBase"
+        }
+      ],
+      "properties": {
+        "operationResult": {
+          "description": "Operation result.",
+          "$ref": "#/definitions/UserEntitlementOperationResult"
+        }
+      }
+    },
+    "UserEntitlementsResponseBase": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "isSuccess": {
+          "description": "True if all operations were successful.",
+          "type": "boolean"
+        },
+        "userEntitlement": {
+          "description": "Result of the user entitlement after the operations have been applied.",
+          "$ref": "#/definitions/UserEntitlement"
+        }
+      }
+    },
+    "UsersSummary": {
+      "description": "Summary of licenses and extensions assigned to users in the organization",
+      "type": "object",
+      "properties": {
+        "availableAccessLevels": {
+          "description": "Available Access Levels",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AccessLevel"
+          }
+        },
+        "extensions": {
+          "description": "Summary of Extensions in the organization",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ExtensionSummaryData"
+          }
+        },
+        "groupOptions": {
+          "description": "Group Options",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/GroupOption"
+          }
+        },
+        "licenses": {
+          "description": "Summary of Licenses in the organization",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/LicenseSummaryData"
+          }
+        },
+        "projectRefs": {
+          "description": "Summary of Projects in the organization",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ProjectRef"
+          }
+        }
+      }
+    },
+    "VssJsonCollectionWrapper": {
+      "description": "This class is used to serialized collections as a single JSON object on the wire, to avoid serializing JSON arrays directly to the client, which can be a security hole",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/VssJsonCollectionWrapperBase"
+        }
+      ],
+      "properties": {
+        "value": {
+          "type": "string",
+          "format": "T"
+        }
+      }
+    },
+    "VssJsonCollectionWrapperBase": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "count": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    }
+  },
+  "parameters": {
+    "api-Version-preview.1": {
+      "name": "api-version",
+      "in": "query",
+      "description": "Version of the API to use.  This should be set to '5.2-preview.1' to use this version of the api.",
+      "required": true,
+      "type": "string"
+    },
+    "api-Version-preview.2": {
+      "name": "api-version",
+      "in": "query",
+      "description": "Version of the API to use.  This should be set to '5.2-preview.2' to use this version of the api.",
+      "required": true,
+      "type": "string"
+    }
+  },
+  "securityDefinitions": {
+    "accessToken": {
+      "type": "basic",
+      "description": "Personal access token. Use any value for the user name and the token as the password."
+    },
+    "oauth2": {
+      "type": "oauth2",
+      "flow": "accessCode",
+      "authorizationUrl": "https://app.vssps.visualstudio.com/oauth2/authorize&response_type=Assertion",
+      "tokenUrl": "https://app.vssps.visualstudio.com/oauth2/token?client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer&grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer",
+      "scopes": {
+        "vso.memberentitlementmanagement": "Grants the ability to read users, their licenses as well as projects and extensions they can access",
+        "vso.memberentitlementmanagement_write": "Grants the ability to manage users, their licenses as well as projects and extensions they can access"
+      }
+    }
+  },
+  "security": [
+    {
+      "accessToken": []
+    }
+  ],
+  "externalDocs": {
+    "description": "Azure DevOps REST APIs",
+    "url": "https://aka.ms/azure-devops-rest-apis"
+  }
+}
