@@ -1,0 +1,1013 @@
+﻿{
+  "swagger": "2.0",
+  "info": {
+    "title": "Security",
+    "description": "",
+    "termsOfService": "https://go.microsoft.com/fwlink/?LinkId=329770",
+    "contact": {
+      "name": "nugetvss",
+      "email": "nugetvss@microsoft.com"
+    },
+    "license": {
+      "name": "MICROSOFT SOFTWARE LICENSE TERMS",
+      "url": "https://go.microsoft.com/fwlink/?LinkId=329770"
+    },
+    "version": "6.0-preview"
+  },
+  "host": "dev.azure.com",
+  "x-ms-vss-area": "Security",
+  "basePath": "/",
+  "tags": [
+    {
+      "name": "Access Control Entries",
+      "description": "Manage and query [access control entries](https://docs.microsoft.com/en-us/rest/api/azure/devops/security/access%20control%20entries/set%20access%20control%20entries?#accesscontrolentry)."
+    },
+    {
+      "name": "Access Control Lists",
+      "description": "Manage and query [access control lists](https://docs.microsoft.com/en-us/rest/api/vsts/security/access%20control%20lists/query?#accesscontrollist)."
+    },
+    {
+      "name": "Permissions",
+      "description": "Manage and query permissions."
+    },
+    {
+      "name": "Security Namespaces",
+      "description": "Security namespaces are used to store [access control lists](https://docs.microsoft.com/en-us/rest/api/vsts/security/access%20control%20lists/query?#accesscontrollist) (ACLs) on tokens.\n\n Local vs. remote\n  * Security namespaces may have their data mastered in one microservice, but still be visible in other microservices.\n  * If a security namespace's data is mastered in microservice X, it is said to be local to that microservice. Otherwise, it is said to be remote."
+    }
+  ],
+  "schemes": [
+    "https"
+  ],
+  "paths": {
+    "/{organization}/_apis/accesscontrolentries/{securityNamespaceId}": {
+      "delete": {
+        "tags": [
+          "Access Control Entries"
+        ],
+        "x-ms-docs-override-version": "6.0-preview.1",
+        "x-ms-vss-resource": "accessControlEntries",
+        "x-ms-vss-method": "RemoveAccessControlEntries",
+        "x-ms-preview": true,
+        "description": "Remove the specified ACEs from the ACL belonging to the specified token.",
+        "operationId": "Access Control Entries_Remove Access Control Entries",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "securityNamespaceId",
+            "description": "Security namespace identifier.",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "x-ms-required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "token",
+            "description": "The token whose ACL should be modified.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "descriptors",
+            "description": "String containing a list of identity descriptors separated by ',' whose entries should be removed.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.security_manage"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "": {
+            "$ref": "./httpExamples/AccessControlEntries/DELETE__accesscontrolentries__securityNamespaceId___token-_token__descriptors-_descriptor1_,_descriptor2_.json"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Access Control Entries"
+        ],
+        "x-ms-docs-override-version": "6.0-preview.1",
+        "x-ms-vss-resource": "accessControlEntries",
+        "x-ms-vss-method": "SetAccessControlEntries",
+        "x-ms-preview": true,
+        "description": "Add or update ACEs in the ACL for the provided token. The request body contains the target token, a list of [ACEs](https://docs.microsoft.com/en-us/rest/api/azure/devops/security/access%20control%20entries/set%20access%20control%20entries?#accesscontrolentry) and a optional merge parameter. In the case of a collision (by identity descriptor) with an existing ACE in the ACL, the \"merge\" parameter determines the behavior. If set, the existing ACE has its allow and deny merged with the incoming ACE's allow and deny. If unset, the existing ACE is displaced.",
+        "operationId": "Access Control Entries_Set Access Control Entries",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/JObject"
+            }
+          },
+          {
+            "in": "path",
+            "name": "securityNamespaceId",
+            "description": "Security namespace identifier.",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "x-ms-required": false,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/AccessControlEntry"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.security_manage"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "Replace": {
+            "$ref": "./httpExamples/AccessControlEntries/POST__accesscontrolentries__securityNamespaceId__.json"
+          },
+          "Merge": {
+            "$ref": "./httpExamples/AccessControlEntries/POST__accesscontrolentries__securityNamespaceId__merge.json"
+          }
+        }
+      }
+    },
+    "/{organization}/_apis/accesscontrollists/{securityNamespaceId}": {
+      "get": {
+        "tags": [
+          "Access Control Lists"
+        ],
+        "x-ms-docs-override-version": "6.0-preview.1",
+        "x-ms-vss-resource": "accessControlLists",
+        "x-ms-vss-method": "QueryAccessControlLists",
+        "x-ms-preview": true,
+        "description": "Return a list of access control lists for the specified security namespace and token. All ACLs in the security namespace will be retrieved if no optional parameters are provided.",
+        "operationId": "Access Control Lists_Query",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "securityNamespaceId",
+            "description": "Security namespace identifier.",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "x-ms-required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "token",
+            "description": "Security token",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "descriptors",
+            "description": "An optional filter string containing a list of identity descriptors separated by ',' whose ACEs should be retrieved. If this is left null, entire ACLs will be returned.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "includeExtendedInfo",
+            "description": "If true, populate the extended information properties for the access control entries contained in the returned lists.",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "recurse",
+            "description": "If true and this is a hierarchical namespace, return child ACLs of the specified token.",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/AccessControlList"
+              }
+            }
+          }
+        },
+        "x-ms-examples": {
+          "All ACLs in a security namespace": {
+            "$ref": "./httpExamples/AccessControlLists/GET__accesscontrollists__securityNamespaceId__.json"
+          },
+          "Filter by token": {
+            "$ref": "./httpExamples/AccessControlLists/GET__accesscontrollists__securityNamespaceId___token-_existingToken_.json"
+          },
+          "Filter by descriptors": {
+            "$ref": "./httpExamples/AccessControlLists/GET__accesscontrollists__securityNamespaceId___descriptors-_descriptor1_.json"
+          },
+          "Include extended info properties": {
+            "$ref": "./httpExamples/AccessControlLists/GET__accesscontrollists__securityNamespaceId___token-_existingToken__includeExtendedInfo-True.json"
+          },
+          "Include child ACLs": {
+            "$ref": "./httpExamples/AccessControlLists/GET__accesscontrollists__securityNamespaceId___token-_existingToken__includeExtendedInfo-False_recurse-True.json"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Access Control Lists"
+        ],
+        "x-ms-docs-override-version": "6.0-preview.1",
+        "x-ms-vss-resource": "accessControlLists",
+        "x-ms-vss-method": "RemoveAccessControlLists",
+        "x-ms-preview": true,
+        "description": "Remove access control lists under the specfied security namespace.",
+        "operationId": "Access Control Lists_Remove Access Control Lists",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "securityNamespaceId",
+            "description": "Security namespace identifier.",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "x-ms-required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "tokens",
+            "description": "One or more comma-separated security tokens",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "recurse",
+            "description": "If true and this is a hierarchical namespace, also remove child ACLs of the specified tokens.",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.security_manage"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "": {
+            "$ref": "./httpExamples/AccessControlLists/DELETE__accesscontrollists__securityNamespaceId___tokens-_newToken1_,_newToken2__recurse-False.json"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Access Control Lists"
+        ],
+        "x-ms-docs-override-version": "6.0-preview.1",
+        "x-ms-vss-resource": "accessControlLists",
+        "x-ms-vss-method": "SetAccessControlLists",
+        "x-ms-preview": true,
+        "description": "Create or update one or more access control lists. All data that currently exists for the ACLs supplied will be overwritten.",
+        "operationId": "Access Control Lists_Set Access Control Lists",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "A list of ACLs to create or update.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/VssJsonCollectionWrapper"
+            }
+          },
+          {
+            "in": "path",
+            "name": "securityNamespaceId",
+            "description": "Security namespace identifier.",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "x-ms-required": false,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.security_manage"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "": {
+            "$ref": "./httpExamples/AccessControlLists/POST__accesscontrollists__securityNamespaceId__.json"
+          }
+        }
+      }
+    },
+    "/{organization}/_apis/permissions/{securityNamespaceId}/{permissions}": {
+      "get": {
+        "tags": [
+          "Permissions"
+        ],
+        "x-ms-docs-override-version": "6.0-preview.2",
+        "x-ms-vss-resource": "permissions",
+        "x-ms-vss-method": "HasPermissions",
+        "x-ms-preview": true,
+        "description": "Evaluates whether the caller has the specified permissions on the specified set of security tokens.",
+        "operationId": "Permissions_Has Permissions",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "securityNamespaceId",
+            "description": "Security namespace identifier.",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "x-ms-required": false,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "permissions",
+            "description": "Permissions to evaluate.",
+            "required": true,
+            "x-ms-required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "tokens",
+            "description": "One or more security tokens to evaluate.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "alwaysAllowAdministrators",
+            "description": "If true and if the caller is an administrator, always return true.",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "delimiter",
+            "description": "Optional security token separator. Defaults to \",\".",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.2"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "boolean"
+              }
+            }
+          }
+        },
+        "x-ms-examples": {
+          "Singular token": {
+            "$ref": "./httpExamples/Permissions/GET__permissions__securityNamespaceId__8__token-_token1__alwaysAllowAdministrators-False.json"
+          },
+          "A list of tokens": {
+            "$ref": "./httpExamples/Permissions/GET__permissions__securityNamespaceId__8__api-version-2.2_tokens-_token1_,_token2_,_token3__alwaysAllowAdministrators-False.json"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Permissions"
+        ],
+        "x-ms-docs-override-version": "6.0-preview.2",
+        "x-ms-vss-resource": "permissions",
+        "x-ms-vss-method": "RemovePermission",
+        "x-ms-preview": true,
+        "description": "Removes the specified permissions on a security token for a user or group.",
+        "operationId": "Permissions_Remove Permission",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "securityNamespaceId",
+            "description": "Security namespace identifier.",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "query",
+            "name": "descriptor",
+            "description": "Identity descriptor of the user to remove permissions for.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "x-ms-required": false,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "permissions",
+            "description": "Permissions to remove.",
+            "required": true,
+            "x-ms-required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "token",
+            "description": "Security token to remove permissions for.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.2"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/AccessControlEntry"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.security_manage"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "": {
+            "$ref": "./httpExamples/Permissions/DELETE__permissions__securityNamespaceId__4__token-_token1__descriptor-_descriptor_.json"
+          }
+        }
+      }
+    },
+    "/{organization}/_apis/security/permissionevaluationbatch": {
+      "post": {
+        "tags": [
+          "Permissions"
+        ],
+        "x-ms-docs-override-version": "6.0-preview.1",
+        "x-ms-vss-resource": "permissionEvaluationBatch",
+        "x-ms-vss-method": "HasPermissionsBatch",
+        "x-ms-preview": true,
+        "description": "Evaluates multiple permissions for the calling user.  Note: This method does not aggregate the results, nor does it short-circuit if one of the permissions evaluates to false.",
+        "operationId": "Permissions_Has Permissions Batch",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "The set of evaluation requests.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/PermissionEvaluationBatch"
+            }
+          },
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "x-ms-required": false,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/PermissionEvaluationBatch"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "": {
+            "$ref": "./httpExamples/PermissionEvaluationBatch/POST__security_permissionevaluationbatch__api-version-3.0-preview.json"
+          }
+        }
+      }
+    },
+    "/{organization}/_apis/securitynamespaces/{securityNamespaceId}": {
+      "get": {
+        "tags": [
+          "Security Namespaces"
+        ],
+        "x-ms-docs-override-version": "6.0-preview.1",
+        "x-ms-vss-resource": "securityNamespaces",
+        "x-ms-vss-method": "QuerySecurityNamespaces",
+        "x-ms-preview": true,
+        "description": "List all security namespaces or just the specified namespace.",
+        "operationId": "Security Namespaces_Query",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "x-ms-required": false,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "securityNamespaceId",
+            "description": "Security namespace identifier.",
+            "required": true,
+            "x-ms-required": false,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "query",
+            "name": "localOnly",
+            "description": "If true, retrieve only local security namespaces.",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/SecurityNamespaceDescription"
+              }
+            }
+          }
+        },
+        "x-ms-examples": {
+          "All security namespaces": {
+            "$ref": "./httpExamples/SecurityNamespaces/GET__securitynamespaces_.json"
+          },
+          "Get the specified security namespace": {
+            "$ref": "./httpExamples/SecurityNamespaces/GET__securitynamespaces__securityNamespaceId__.json"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "AccessControlEntry": {
+      "description": "Class for encapsulating the allowed and denied permissions for a given IdentityDescriptor.",
+      "type": "object",
+      "properties": {
+        "allow": {
+          "description": "The set of permission bits that represent the actions that the associated descriptor is allowed to perform.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "deny": {
+          "description": "The set of permission bits that represent the actions that the associated descriptor is not allowed to perform.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "descriptor": {
+          "description": "The descriptor for the user this AccessControlEntry applies to.",
+          "$ref": "#/definitions/IdentityDescriptor"
+        },
+        "extendedInfo": {
+          "description": "This value, when set, reports the inherited and effective information for the associated descriptor. This value is only set on AccessControlEntries returned by the QueryAccessControlList(s) call when its includeExtendedInfo parameter is set to true.",
+          "$ref": "#/definitions/AceExtendedInformation"
+        }
+      }
+    },
+    "AccessControlList": {
+      "description": "The AccessControlList class is meant to associate a set of AccessControlEntries with a security token and its inheritance settings.",
+      "type": "object",
+      "properties": {
+        "acesDictionary": {
+          "description": "Storage of permissions keyed on the identity the permission is for.",
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/AccessControlEntry"
+          }
+        },
+        "includeExtendedInfo": {
+          "description": "True if this ACL holds ACEs that have extended information.",
+          "type": "boolean"
+        },
+        "inheritPermissions": {
+          "description": "True if the given token inherits permissions from parents.",
+          "type": "boolean"
+        },
+        "token": {
+          "description": "The token that this AccessControlList is for.",
+          "type": "string"
+        }
+      }
+    },
+    "AccessControlListsCollection": {
+      "description": "A list of AccessControlList. An AccessControlList is meant to associate a set of AccessControlEntries with a security token and its inheritance settings.",
+      "type": "object",
+      "allOf": [
+        {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AccessControlList"
+          }
+        }
+      ],
+      "properties": {}
+    },
+    "AceExtendedInformation": {
+      "description": "Holds the inherited and effective permission information for a given AccessControlEntry.",
+      "type": "object",
+      "properties": {
+        "effectiveAllow": {
+          "description": "This is the combination of all of the explicit and inherited permissions for this identity on this token.  These are the permissions used when determining if a given user has permission to perform an action.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "effectiveDeny": {
+          "description": "This is the combination of all of the explicit and inherited permissions for this identity on this token.  These are the permissions used when determining if a given user has permission to perform an action.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "inheritedAllow": {
+          "description": "These are the permissions that are inherited for this identity on this token.  If the token does not inherit permissions this will be 0.  Note that any permissions that have been explicitly set on this token for this identity, or any groups that this identity is a part of, are not included here.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "inheritedDeny": {
+          "description": "These are the permissions that are inherited for this identity on this token.  If the token does not inherit permissions this will be 0.  Note that any permissions that have been explicitly set on this token for this identity, or any groups that this identity is a part of, are not included here.",
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "ActionDefinition": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "bit": {
+          "description": "The bit mask integer for this action. Must be a power of 2.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "displayName": {
+          "description": "The localized display name for this action.",
+          "type": "string"
+        },
+        "name": {
+          "description": "The non-localized name for this action.",
+          "type": "string"
+        },
+        "namespaceId": {
+          "description": "The namespace that this action belongs to.  This will only be used for reading from the database.",
+          "type": "string",
+          "format": "uuid"
+        }
+      }
+    },
+    "IdentityDescriptor": {
+      "description": "An Identity descriptor is a wrapper for the identity type (Windows SID, Passport) along with a unique identifier such as the SID or PUID.",
+      "type": "object",
+      "properties": {
+        "identifier": {
+          "description": "The unique identifier for this identity, not exceeding 256 chars, which will be persisted.",
+          "type": "string"
+        },
+        "identityType": {
+          "description": "Type of descriptor (for example, Windows, Passport, etc.).",
+          "type": "string"
+        }
+      }
+    },
+    "JObject": {
+      "description": "Represents a JSON object.",
+      "type": "object",
+      "properties": {
+        "item": {
+          "type": "string",
+          "format": "JToken"
+        },
+        "type": {
+          "description": "Gets the node type for this JToken.",
+          "type": "string",
+          "format": "JTokenType"
+        }
+      }
+    },
+    "PermissionEvaluation": {
+      "description": "Represents an evaluated permission.",
+      "type": "object",
+      "properties": {
+        "permissions": {
+          "description": "Permission bit for this evaluated permission.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "securityNamespaceId": {
+          "description": "Security namespace identifier for this evaluated permission.",
+          "type": "string",
+          "format": "uuid"
+        },
+        "token": {
+          "description": "Security namespace-specific token for this evaluated permission.",
+          "type": "string"
+        },
+        "value": {
+          "description": "Permission evaluation value.",
+          "type": "boolean"
+        }
+      }
+    },
+    "PermissionEvaluationBatch": {
+      "description": "Represents a set of evaluated permissions.",
+      "type": "object",
+      "properties": {
+        "alwaysAllowAdministrators": {
+          "description": "True if members of the Administrators group should always pass the security check.",
+          "type": "boolean"
+        },
+        "evaluations": {
+          "description": "Array of permission evaluations to evaluate.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PermissionEvaluation"
+          }
+        }
+      }
+    },
+    "SecurityNamespaceDescription": {
+      "description": "Class for describing the details of a TeamFoundationSecurityNamespace.",
+      "type": "object",
+      "properties": {
+        "actions": {
+          "description": "The list of actions that this Security Namespace is responsible for securing.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ActionDefinition"
+          }
+        },
+        "dataspaceCategory": {
+          "description": "This is the dataspace category that describes where the security information for this SecurityNamespace should be stored.",
+          "type": "string"
+        },
+        "displayName": {
+          "description": "This localized name for this namespace.",
+          "type": "string"
+        },
+        "elementLength": {
+          "description": "If the security tokens this namespace will be operating on need to be split on certain character lengths to determine its elements, that length should be specified here. If not, this value will be -1.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "extensionType": {
+          "description": "This is the type of the extension that should be loaded from the plugins directory for extending this security namespace.",
+          "type": "string"
+        },
+        "isRemotable": {
+          "description": "If true, the security namespace is remotable, allowing another service to proxy the namespace.",
+          "type": "boolean"
+        },
+        "name": {
+          "description": "This non-localized for this namespace.",
+          "type": "string"
+        },
+        "namespaceId": {
+          "description": "The unique identifier for this namespace.",
+          "type": "string",
+          "format": "uuid"
+        },
+        "readPermission": {
+          "description": "The permission bits needed by a user in order to read security data on the Security Namespace.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "separatorValue": {
+          "description": "If the security tokens this namespace will be operating on need to be split on certain characters to determine its elements that character should be specified here. If not, this value will be the null character.",
+          "type": "string",
+          "format": "Char"
+        },
+        "structureValue": {
+          "description": "Used to send information about the structure of the security namespace over the web service.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "systemBitMask": {
+          "description": "The bits reserved by system store",
+          "type": "integer",
+          "format": "int32"
+        },
+        "useTokenTranslator": {
+          "description": "If true, the security service will expect an ISecurityDataspaceTokenTranslator plugin to exist for this namespace",
+          "type": "boolean"
+        },
+        "writePermission": {
+          "description": "The permission bits needed by a user in order to modify security data on the Security Namespace.",
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "VssJsonCollectionWrapper": {
+      "description": "This class is used to serialized collections as a single JSON object on the wire, to avoid serializing JSON arrays directly to the client, which can be a security hole",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/VssJsonCollectionWrapperBase"
+        }
+      ],
+      "properties": {
+        "value": {
+          "type": "string",
+          "format": "T"
+        }
+      }
+    },
+    "VssJsonCollectionWrapperBase": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "count": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    }
+  },
+  "parameters": {
+    "api-Version-preview.1": {
+      "name": "api-version",
+      "in": "query",
+      "description": "Version of the API to use.  This should be set to '6.0-preview.1' to use this version of the api.",
+      "required": true,
+      "type": "string"
+    },
+    "api-Version-preview.2": {
+      "name": "api-version",
+      "in": "query",
+      "description": "Version of the API to use.  This should be set to '6.0-preview.2' to use this version of the api.",
+      "required": true,
+      "type": "string"
+    }
+  },
+  "securityDefinitions": {
+    "accessToken": {
+      "type": "basic",
+      "description": "Personal access token. Use any value for the user name and the token as the password."
+    },
+    "oauth2": {
+      "type": "oauth2",
+      "flow": "accessCode",
+      "authorizationUrl": "https://app.vssps.visualstudio.com/oauth2/authorize&response_type=Assertion",
+      "tokenUrl": "https://app.vssps.visualstudio.com/oauth2/token?client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer&grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer",
+      "scopes": {
+        "vso.security_manage": "Grants the ability to read, write, and manage security permissions."
+      }
+    }
+  },
+  "security": [
+    {
+      "accessToken": []
+    }
+  ],
+  "externalDocs": {
+    "description": "Azure DevOps REST APIs",
+    "url": "https://aka.ms/azure-devops-rest-apis"
+  }
+}
