@@ -52,6 +52,9 @@
       "description": "This controller version exists to support returning project scoped urls for fields"
     },
     {
+      "name": "Project Process Migration"
+    },
+    {
       "name": "Queries",
       "description": "The queries in a team project are organized in folders.\n\nA sample structure of queries and folders might appear as shown here.\n\n* **My Queries**\n* **Shared Queries**\n  * Feedback (Query)\n    * **Current Sprint**\n      * Blocked Tasks (Query)\n      * Open Impediments (Query)\n      * Test Cases (Query)\n      * Unfinished Work (Query)\n      * Work in Progress (Query)"
     },
@@ -1633,6 +1636,68 @@
             }
           }
         }
+      }
+    },
+    "/{organization}/{project}/_apis/wit/projectprocessmigration": {
+      "post": {
+        "tags": [
+          "Project Process Migration"
+        ],
+        "x-ms-docs-override-version": "6.0-preview.1",
+        "x-ms-vss-resource": "projectProcessMigration",
+        "x-ms-vss-method": "MigrateProjectsProcess",
+        "x-ms-preview": true,
+        "description": "Migrates a project to a different process within the same OOB type. For example, you can only migrate a project from agile/custom-agile to agile/custom-agile.",
+        "operationId": "Project Process Migration_Migrate Projects Process",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ProcessIdModel"
+            }
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ProcessMigrationResultModel"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.work_write"
+            ]
+          }
+        ]
       }
     },
     "/{organization}/{project}/_apis/wit/queries": {
@@ -7722,6 +7787,33 @@
         "url": {
           "description": "Link url.",
           "type": "string"
+        }
+      }
+    },
+    "ProcessIdModel": {
+      "description": "Stores process ID.",
+      "type": "object",
+      "properties": {
+        "typeId": {
+          "description": "The ID of the process.",
+          "type": "string",
+          "format": "uuid"
+        }
+      }
+    },
+    "ProcessMigrationResultModel": {
+      "description": "Stores project ID and its process ID.",
+      "type": "object",
+      "properties": {
+        "processId": {
+          "description": "The ID of the process.",
+          "type": "string",
+          "format": "uuid"
+        },
+        "projectId": {
+          "description": "The ID of the project.",
+          "type": "string",
+          "format": "uuid"
         }
       }
     },
