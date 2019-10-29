@@ -28,6 +28,10 @@
       "description": "REST API for package search."
     },
     {
+      "name": "Repositories",
+      "description": "REST API controller for Repository Status."
+    },
+    {
       "name": "Wiki Search Results",
       "description": "REST API controller for wiki search."
     },
@@ -171,6 +175,63 @@
             "$ref": "./httpExamples/codeSearchResults/POST__CodeSearchResults.json"
           }
         }
+      }
+    },
+    "/{organization}/{project}/_apis/search/status/repositories/{repository}": {
+      "get": {
+        "tags": [
+          "Repositories"
+        ],
+        "x-ms-docs-override-version": "6.0-preview.1",
+        "x-ms-vss-resource": "repositories",
+        "x-ms-vss-method": "GetRepositoryStatus",
+        "x-ms-preview": true,
+        "description": "Provides status of Repository.",
+        "operationId": "Repositories_Get",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "repository",
+            "description": "Repository ID or repository name.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/RepositoryStatusResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.code"
+            ]
+          }
+        ]
       }
     },
     "/{organization}/{project}/_apis/search/wikisearchresults": {
@@ -363,6 +424,16 @@
           "items": {
             "$ref": "#/definitions/BoardResult"
           }
+        }
+      }
+    },
+    "BranchInfo": {
+      "description": "Defines the Configured branch.",
+      "type": "object",
+      "properties": {
+        "name": {
+          "description": "Indexed branch.",
+          "type": "string"
         }
       }
     },
@@ -779,6 +850,24 @@
                 "description": "For internal use."
               }
             ]
+          }
+        }
+      }
+    },
+    "RepositoryStatusResponse": {
+      "description": "Defines the repository status.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "Repository Id.",
+          "type": "string",
+          "format": "uuid"
+        },
+        "indexedBranches": {
+          "description": "List of Indexed branches info.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/BranchInfo"
           }
         }
       }
