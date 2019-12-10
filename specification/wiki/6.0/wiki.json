@@ -32,6 +32,14 @@
       "description": "Wiki pages are the MD files that are stored in a Git repository in the backend."
     },
     {
+      "name": "Pages Batch",
+      "description": "Controller to handle all Batch REST calls against Wiki pages."
+    },
+    {
+      "name": "Page Stats",
+      "description": "Controller to handle all REST calls related to  Wiki page stats."
+    },
+    {
       "name": "Wikis",
       "description": "Wiki is a collection of pages maintained in a particular hierarchy. Every wiki is backed up by a Git repository."
     }
@@ -1494,6 +1502,232 @@
           }
         }
       }
+    },
+    "/{organization}/{project}/_apis/wiki/wikis/{wikiIdentifier}/pages/{pageId}/stats": {
+      "get": {
+        "tags": [
+          "Page Stats"
+        ],
+        "x-ms-docs-override-version": "6.0-preview.1",
+        "x-ms-vss-resource": "pageStats",
+        "x-ms-vss-method": "GetPageData",
+        "x-ms-preview": true,
+        "description": "Returns page detail corresponding to Page ID.",
+        "operationId": "Page Stats_Get",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "wikiIdentifier",
+            "description": "Wiki ID or wiki name.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "pageId",
+            "description": "Wiki page ID.",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "pageViewsForDays",
+            "description": "last N days from the current day for which page views is to be returned. It's inclusive of current day.",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/WikiPageDetail"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.wiki"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "Get page stats by id": {
+            "$ref": "./httpExamples/pageStats/GET_wiki_pageStats.json"
+          }
+        }
+      }
+    },
+    "/{organization}/{project}/_apis/wiki/wikis/{wikiIdentifier}/pagesbatch": {
+      "post": {
+        "tags": [
+          "Pages Batch"
+        ],
+        "x-ms-docs-override-version": "6.0-preview.1",
+        "x-ms-vss-resource": "pagesBatch",
+        "x-ms-vss-method": "GetPagesBatch",
+        "x-ms-preview": true,
+        "description": "Returns pageable list of Wiki Pages",
+        "operationId": "Pages Batch_Get",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Wiki batch page request.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/WikiPagesBatchRequest"
+            }
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "wikiIdentifier",
+            "description": "Wiki ID or wiki name.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "versionDescriptor.version",
+            "description": "Version string identifier (name of tag/branch, SHA1 of commit)",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "versionDescriptor.versionOptions",
+            "description": "Version options - Specify additional modifiers to version (e.g Previous)",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "none",
+              "previousChange",
+              "firstParent"
+            ],
+            "x-ms-enum": {
+              "name": "GitVersionOptions",
+              "values": [
+                {
+                  "value": "none",
+                  "description": "Not specified"
+                },
+                {
+                  "value": "previousChange",
+                  "description": "Commit that changed item prior to the current version"
+                },
+                {
+                  "value": "firstParent",
+                  "description": "First parent of commit (HEAD^)"
+                }
+              ]
+            }
+          },
+          {
+            "in": "query",
+            "name": "versionDescriptor.versionType",
+            "description": "Version type (branch, tag, or commit). Determines how Id is interpreted",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "branch",
+              "tag",
+              "commit"
+            ],
+            "x-ms-enum": {
+              "name": "GitVersionType",
+              "values": [
+                {
+                  "value": "branch",
+                  "description": "Interpret the version as a branch name"
+                },
+                {
+                  "value": "tag",
+                  "description": "Interpret the version as a tag name"
+                },
+                {
+                  "value": "commit",
+                  "description": "Interpret the version as a commit ID (SHA1)"
+                }
+              ]
+            }
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/WikiPageDetail"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.wiki_write"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "Get page details in batch after sending continuation token": {
+            "$ref": "./httpExamples/pagesBatch/GET_wiki_pageBatch_WithContinuationToken.json"
+          },
+          "Get page details in batch without sending continuation token": {
+            "$ref": "./httpExamples/pagesBatch/GET_wiki_pageBatch_WithoutContinuationToken.json"
+          },
+          "Get page details in batch with page views": {
+            "$ref": "./httpExamples/pagesBatch/GET_wiki_pageBatch_WithPageViews.json"
+          }
+        }
+      }
     }
   },
   "definitions": {
@@ -2386,6 +2620,28 @@
         }
       }
     },
+    "WikiPageDetail": {
+      "description": "Defines a page with its metedata in a wiki.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "When present, permanent identifier for the wiki page",
+          "type": "integer",
+          "format": "int32"
+        },
+        "path": {
+          "description": "Path of the wiki page.",
+          "type": "string"
+        },
+        "viewStats": {
+          "description": "Path of the wiki page.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/WikiPageStat"
+          }
+        }
+      }
+    },
     "WikiPageMove": {
       "description": "Request contract for Wiki Page Move.",
       "type": "object",
@@ -2451,6 +2707,42 @@
         "page": {
           "description": "Defines properties for wiki page.",
           "$ref": "#/definitions/WikiPage"
+        }
+      }
+    },
+    "WikiPagesBatchRequest": {
+      "description": "Contract encapsulating parameters for the pages batch.",
+      "type": "object",
+      "properties": {
+        "continuationToken": {
+          "description": "A string token that can be used for retrieving next page of Wiki Page Data if available. Otherwise null.",
+          "type": "string"
+        },
+        "pageViewsForDays": {
+          "description": "last N days from the current day for which page views is to be returned. It's inclusive of current day.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "top": {
+          "description": "Total count of pages on a wiki.",
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "WikiPageStat": {
+      "description": "Defines properties for wiki page stat.",
+      "type": "object",
+      "properties": {
+        "count": {
+          "description": "the count of the stat for the Day",
+          "type": "integer",
+          "format": "int32"
+        },
+        "day": {
+          "description": "Day of the stat",
+          "type": "string",
+          "format": "date-time"
         }
       }
     },

@@ -170,7 +170,7 @@
         "tags": [
           "Dashboards"
         ],
-        "x-ms-docs-override-version": "6.0-preview.2",
+        "x-ms-docs-override-version": "6.0-preview.3",
         "x-ms-vss-resource": "dashboards",
         "x-ms-vss-method": "CreateDashboard",
         "x-ms-preview": true,
@@ -215,7 +215,7 @@
             "type": "string"
           },
           {
-            "$ref": "#/parameters/api-Version-preview.2"
+            "$ref": "#/parameters/api-Version-preview.3"
           }
         ],
         "responses": {
@@ -243,11 +243,11 @@
         "tags": [
           "Dashboards"
         ],
-        "x-ms-docs-override-version": "6.0-preview.2",
+        "x-ms-docs-override-version": "6.0-preview.3",
         "x-ms-vss-resource": "dashboards",
-        "x-ms-vss-method": "GetDashboards",
+        "x-ms-vss-method": "GetDashboardsByProject",
         "x-ms-preview": true,
-        "description": "Get a list of dashboards.",
+        "description": "Get a list of dashboards under a project.",
         "operationId": "Dashboards_List",
         "produces": [
           "application/json"
@@ -276,14 +276,17 @@
             "type": "string"
           },
           {
-            "$ref": "#/parameters/api-Version-preview.2"
+            "$ref": "#/parameters/api-Version-preview.3"
           }
         ],
         "responses": {
           "200": {
             "description": "successful operation",
             "schema": {
-              "$ref": "#/definitions/DashboardGroup"
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Dashboard"
+              }
             }
           }
         },
@@ -296,7 +299,7 @@
         ],
         "x-ms-examples": {
           "": {
-            "$ref": "./httpExamples/Dashboards/GET_dashboards.json"
+            "$ref": "./httpExamples/Dashboards/GET_dashboards_by_project.json"
           }
         }
       },
@@ -304,7 +307,7 @@
         "tags": [
           "Dashboards"
         ],
-        "x-ms-docs-override-version": "6.0-preview.2",
+        "x-ms-docs-override-version": "6.0-preview.3",
         "x-ms-vss-resource": "dashboards",
         "x-ms-vss-method": "ReplaceDashboards",
         "x-ms-preview": true,
@@ -349,7 +352,7 @@
             "type": "string"
           },
           {
-            "$ref": "#/parameters/api-Version-preview.2"
+            "$ref": "#/parameters/api-Version-preview.3"
           }
         ],
         "responses": {
@@ -372,7 +375,7 @@
         "tags": [
           "Dashboards"
         ],
-        "x-ms-docs-override-version": "6.0-preview.2",
+        "x-ms-docs-override-version": "6.0-preview.3",
         "x-ms-vss-resource": "dashboards",
         "x-ms-vss-method": "DeleteDashboard",
         "x-ms-preview": true,
@@ -410,7 +413,7 @@
             "type": "string"
           },
           {
-            "$ref": "#/parameters/api-Version-preview.2"
+            "$ref": "#/parameters/api-Version-preview.3"
           }
         ],
         "responses": {
@@ -435,7 +438,7 @@
         "tags": [
           "Dashboards"
         ],
-        "x-ms-docs-override-version": "6.0-preview.2",
+        "x-ms-docs-override-version": "6.0-preview.3",
         "x-ms-vss-resource": "dashboards",
         "x-ms-vss-method": "GetDashboard",
         "x-ms-preview": true,
@@ -476,7 +479,7 @@
             "type": "string"
           },
           {
-            "$ref": "#/parameters/api-Version-preview.2"
+            "$ref": "#/parameters/api-Version-preview.3"
           }
         ],
         "responses": {
@@ -504,7 +507,7 @@
         "tags": [
           "Dashboards"
         ],
-        "x-ms-docs-override-version": "6.0-preview.2",
+        "x-ms-docs-override-version": "6.0-preview.3",
         "x-ms-vss-resource": "dashboards",
         "x-ms-vss-method": "ReplaceDashboard",
         "x-ms-preview": true,
@@ -557,7 +560,7 @@
             "type": "string"
           },
           {
-            "$ref": "#/parameters/api-Version-preview.2"
+            "$ref": "#/parameters/api-Version-preview.3"
           }
         ],
         "responses": {
@@ -1278,6 +1281,31 @@
         "_links": {
           "$ref": "#/definitions/ReferenceLinks"
         },
+        "dashboardScope": {
+          "description": "Entity to which the dashboard is scoped.",
+          "enum": [
+            "collection_User",
+            "project_Team",
+            "project"
+          ],
+          "x-ms-enum": {
+            "name": "DashboardScope",
+            "values": [
+              {
+                "value": "collection_User",
+                "description": "[DEPRECATED] Dashboard is scoped to the collection user."
+              },
+              {
+                "value": "project_Team",
+                "description": "Dashboard is scoped to the team."
+              },
+              {
+                "value": "project",
+                "description": "Dashboard is scoped to the project."
+              }
+            ]
+          }
+        },
         "description": {
           "description": "Description of the dashboard.",
           "type": "string"
@@ -1285,6 +1313,11 @@
         "eTag": {
           "description": "Server defined version tracking value, used for edit collision detection.",
           "type": "string"
+        },
+        "groupId": {
+          "description": "ID of the group for a dashboard. For team-scoped dashboards, this is the unique identifier for the team associated with the dashboard. For project-scoped dashboards this property is empty.",
+          "type": "string",
+          "format": "uuid"
         },
         "id": {
           "description": "ID of the Dashboard. Provided by service at creation time.",
@@ -1296,7 +1329,7 @@
           "type": "string"
         },
         "ownerId": {
-          "description": "ID of the Owner for a dashboard. For any legacy dashboards, this would be the unique identifier for the team associated with the dashboard.",
+          "description": "ID of the owner for a dashboard. For team-scoped dashboards, this is the unique identifier for the team associated with the dashboard. For project-scoped dashboards, this is the unique identifier for the user identity associated with the dashboard.",
           "type": "string",
           "format": "uuid"
         },
@@ -1516,6 +1549,31 @@
           "description": "The Team Id",
           "type": "string",
           "format": "uuid"
+        }
+      }
+    },
+    "VssJsonCollectionWrapper": {
+      "description": "This class is used to serialized collections as a single JSON object on the wire, to avoid serializing JSON arrays directly to the client, which can be a security hole",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/VssJsonCollectionWrapperBase"
+        }
+      ],
+      "properties": {
+        "value": {
+          "type": "string",
+          "format": "T"
+        }
+      }
+    },
+    "VssJsonCollectionWrapperBase": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "count": {
+          "type": "integer",
+          "format": "int32"
         }
       }
     },
@@ -1830,6 +1888,13 @@
       "name": "api-version",
       "in": "query",
       "description": "Version of the API to use.  This should be set to '6.0-preview.2' to use this version of the api.",
+      "required": true,
+      "type": "string"
+    },
+    "api-Version-preview.3": {
+      "name": "api-version",
+      "in": "query",
+      "description": "Version of the API to use.  This should be set to '6.0-preview.3' to use this version of the api.",
       "required": true,
       "type": "string"
     }

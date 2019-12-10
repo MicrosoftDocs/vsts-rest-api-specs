@@ -53,6 +53,10 @@
       "description": "Provides methods to return the latest builds for definitions."
     },
     {
+      "name": "Leases",
+      "description": "Retention leases are used to manage the lifetime of pipeline runs beyond the configured retention periods."
+    },
+    {
       "name": "Metrics",
       "description": "Provides methods for getting summary information about builds that have run in the system."
     },
@@ -368,7 +372,14 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.build_execute"
+            ]
+          }
+        ]
       },
       "get": {
         "tags": [
@@ -426,7 +437,14 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.build"
+            ]
+          }
+        ]
       }
     },
     "/{organization}/{project}/_apis/build/builds": {
@@ -3055,7 +3073,7 @@
           {
             "in": "body",
             "name": "body",
-            "description": "The new version of the defintion.",
+            "description": "The new version of the definition.",
             "required": true,
             "schema": {
               "$ref": "#/definitions/BuildDefinition"
@@ -4637,6 +4655,229 @@
         }
       }
     },
+    "/{organization}/{project}/_apis/build/retention/leases": {
+      "post": {
+        "tags": [
+          "Leases"
+        ],
+        "x-ms-docs-override-version": "6.0-preview.1",
+        "x-ms-vss-resource": "leases",
+        "x-ms-vss-method": "AddRetentionLeases",
+        "x-ms-preview": true,
+        "description": "Adds new leases for pipeline runs.",
+        "operationId": "Leases_Add",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/NewRetentionLease"
+              }
+            }
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/RetentionLease"
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Leases"
+        ],
+        "x-ms-docs-override-version": "6.0-preview.1",
+        "x-ms-vss-resource": "leases",
+        "x-ms-vss-method": "DeleteRetentionLeasesById",
+        "x-ms-preview": true,
+        "description": "Removes specific retention leases.",
+        "operationId": "Leases_Delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "ids",
+            "description": "",
+            "required": true,
+            "type": "string",
+            "format": "array (int32)"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Leases"
+        ],
+        "x-ms-docs-override-version": "6.0-preview.1",
+        "x-ms-vss-resource": "leases",
+        "x-ms-vss-method": "GetRetentionLeasesByUserId",
+        "x-ms-preview": true,
+        "description": "Returns any leases owned by the specified user, optionally scoped to a single pipeline definition and run.",
+        "operationId": "Leases_Get Retention Leases By User Id",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "userOwnerId",
+            "description": "The user id to search for.",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "query",
+            "name": "definitionId",
+            "description": "An optional parameter to limit the search to a specific pipeline definition.",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "runId",
+            "description": "An optional parameter to limit the search to a single pipeline run. Requires definitionId.",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/RetentionLease"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/{organization}/{project}/_apis/build/retention/leases/{leaseId}": {
+      "get": {
+        "tags": [
+          "Leases"
+        ],
+        "x-ms-docs-override-version": "6.0-preview.1",
+        "x-ms-vss-resource": "leases",
+        "x-ms-vss-method": "GetRetentionLease",
+        "x-ms-preview": true,
+        "description": "Returns the details of the retention lease given a lease id.",
+        "operationId": "Leases_Get",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "leaseId",
+            "description": "",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/RetentionLease"
+            }
+          }
+        }
+      }
+    },
     "/{organization}/{project}/_apis/build/settings": {
       "get": {
         "tags": [
@@ -5741,6 +5982,75 @@
             ]
           }
         ]
+      }
+    },
+    "/{organization}/{project}/_apis/build/retention/leases?": {
+      "get": {
+        "tags": [
+          "Leases"
+        ],
+        "x-ms-docs-override-version": "6.0-preview.1",
+        "x-ms-vss-resource": "leases",
+        "x-ms-vss-method": "GetRetentionLeasesByOwnerId",
+        "x-ms-preview": true,
+        "description": "Returns any leases owned by the specified entity, optionally scoped to a single pipeline definition and run.",
+        "operationId": "Leases_Get Retention Leases By Owner Id",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "ownerId",
+            "description": "",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "definitionId",
+            "description": "An optional parameter to limit the search to a specific pipeline definition.",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "runId",
+            "description": "An optional parameter to limit the search to a single pipeline run. Requires definitionId.",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/RetentionLease"
+              }
+            }
+          }
+        }
       }
     }
   },
@@ -9423,6 +9733,35 @@
         }
       }
     },
+    "NewRetentionLease": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "daysValid": {
+          "description": "The number of days to consider the lease valid.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "definitionId": {
+          "description": "The pipeline definition of the run.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "ownerId": {
+          "description": "User-provided string that identifies the owner of a retention lease.",
+          "type": "string"
+        },
+        "protectPipeline": {
+          "description": "If set, this lease will also prevent the pipeline from being deleted while the lease is still valid.",
+          "type": "boolean"
+        },
+        "runId": {
+          "description": "The pipeline run to protect.",
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
     "Phase": {
       "description": "Represents a phase of a build definition.",
       "type": "object",
@@ -9872,6 +10211,41 @@
         "alias": {
           "description": "An alias to be used when referencing the resource.",
           "type": "string"
+        }
+      }
+    },
+    "RetentionLease": {
+      "description": "A valid retention lease prevents automated systems from deleting a pipeline run.",
+      "type": "object",
+      "properties": {
+        "createdOn": {
+          "description": "When the lease was created.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "definitionId": {
+          "description": "The pipeline definition of the run.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "leaseId": {
+          "description": "The unique identifier for this lease.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "ownerId": {
+          "description": "Non-unique string that identifies the owner of a retention lease.",
+          "type": "string"
+        },
+        "runId": {
+          "description": "The pipeline run protected by this lease.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "validUntil": {
+          "description": "The last day the lease is considered valid.",
+          "type": "string",
+          "format": "date-time"
         }
       }
     },

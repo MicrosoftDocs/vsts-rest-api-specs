@@ -649,7 +649,7 @@
                 },
                 {
                   "value": "all",
-                  "description": "Used in pull request search criterias to include all statuses."
+                  "description": "Used in pull request search criteria to include all statuses."
                 }
               ]
             }
@@ -979,7 +979,7 @@
           {
             "in": "body",
             "name": "body",
-            "description": "Specify the repo name, team project and/or parent repository. Team project information can be ommitted from gitRepositoryToCreate if the request is project-scoped (i.e., includes project Id).",
+            "description": "Specify the repo name, team project and/or parent repository. Team project information can be omitted from gitRepositoryToCreate if the request is project-scoped (i.e., includes project Id).",
             "required": true,
             "schema": {
               "$ref": "#/definitions/GitRepositoryCreateOptions"
@@ -3452,7 +3452,7 @@
                 },
                 {
                   "value": "all",
-                  "description": "Used in pull request search criterias to include all statuses."
+                  "description": "Used in pull request search criteria to include all statuses."
                 }
               ]
             }
@@ -4045,6 +4045,21 @@
             "description": "Project ID or project name",
             "required": true,
             "x-ms-required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "$top",
+            "description": "Maximum number of commits to return.",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "continuationToken",
+            "description": "The continuation token used for pagination.",
+            "required": false,
             "type": "string"
           },
           {
@@ -9438,6 +9453,13 @@
           },
           {
             "in": "query",
+            "name": "searchCriteria.showOldestCommitsFirst",
+            "description": "If enabled, this option will ignore the itemVersion and compareVersion parameters",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "in": "query",
             "name": "searchCriteria.toCommitId",
             "description": "If provided, an upper bound for filtering commits alphabetically",
             "required": false,
@@ -12429,7 +12451,15 @@
       "description": "",
       "type": "object",
       "properties": {
+        "cherryPickId": {
+          "type": "integer",
+          "format": "int32"
+        },
         "pullRequestId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "revertId": {
           "type": "integer",
           "format": "int32"
         }
@@ -12818,7 +12848,7 @@
               },
               {
                 "value": "all",
-                "description": "Used in pull request search criterias to include all statuses."
+                "description": "Used in pull request search criteria to include all statuses."
               }
             ]
           }
@@ -12949,7 +12979,7 @@
           }
         },
         "squashMerge": {
-          "description": "SquashMerge is deprecated. You should explicity set the value of MergeStrategy. If MergeStrategy is set to any value, the SquashMerge value will be ignored. If MergeStrategy is not set, the merge strategy will be no-fast-forward if this flag is false, or squash if true.",
+          "description": "SquashMerge is deprecated. You should explicitly set the value of MergeStrategy. If MergeStrategy is set to any value, the SquashMerge value will be ignored. If MergeStrategy is not set, the merge strategy will be no-fast-forward if this flag is false, or squash if true.",
           "type": "boolean"
         },
         "transitionWorkItems": {
@@ -13256,7 +13286,7 @@
               },
               {
                 "value": "all",
-                "description": "Used in pull request search criterias to include all statuses."
+                "description": "Used in pull request search criteria to include all statuses."
               }
             ]
           }
@@ -13497,6 +13527,10 @@
         "itemVersion": {
           "description": "If provided, identifies the commit or branch to search",
           "$ref": "#/definitions/GitVersionDescriptor"
+        },
+        "showOldestCommitsFirst": {
+          "description": "If enabled, this option will ignore the itemVersion and compareVersion parameters",
+          "type": "boolean"
         },
         "toCommitId": {
           "description": "If provided, an upper bound for filtering commits alphabetically",
@@ -14329,7 +14363,7 @@
           "type": "string"
         },
         "diffEntries": {
-          "description": "List of tree entries that differ between the base and target tree.  Renames and object type changes are returned as a delete for the old object and add for the new object.  If a continuation token is returned in the response header, some tree entries are yet to be processed and may yeild more diff entries. If the continuation token is not returned all the diff entries have been included in this response.",
+          "description": "List of tree entries that differ between the base and target tree.  Renames and object type changes are returned as a delete for the old object and add for the new object.  If a continuation token is returned in the response header, some tree entries are yet to be processed and may yield more diff entries. If the continuation token is not returned all the diff entries have been included in this response.",
           "type": "array",
           "items": {
             "$ref": "#/definitions/GitTreeDiffEntry"
@@ -15250,6 +15284,10 @@
         },
         "isEnabled": {
           "description": "Indicates whether the policy is enabled.",
+          "type": "boolean"
+        },
+        "isEnterpriseManaged": {
+          "description": "If set, this policy requires \"Manage Enterprise Policies\" permission to create, edit, or delete.",
           "type": "boolean"
         },
         "settings": {
