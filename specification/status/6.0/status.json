@@ -1,0 +1,725 @@
+﻿{
+  "swagger": "2.0",
+  "info": {
+    "title": "Status",
+    "description": "",
+    "termsOfService": "https://go.microsoft.com/fwlink/?LinkId=329770",
+    "contact": {
+      "name": "nugetvss",
+      "email": "nugetvss@microsoft.com"
+    },
+    "license": {
+      "name": "MICROSOFT SOFTWARE LICENSE TERMS",
+      "url": "https://go.microsoft.com/fwlink/?LinkId=329770"
+    },
+    "version": "6.0-preview"
+  },
+  "host": "status.dev.azure.com",
+  "x-ms-vss-area": "Status",
+  "basePath": "/",
+  "tags": [
+    {
+      "name": "Health"
+    }
+  ],
+  "schemes": [
+    "https"
+  ],
+  "paths": {
+    "/_apis/status/health": {
+      "get": {
+        "tags": [
+          "Health"
+        ],
+        "x-ms-docs-override-version": "6.0-preview.1",
+        "x-ms-vss-resource": "health",
+        "x-ms-vss-method": "GetServiceStatus",
+        "x-ms-preview": true,
+        "description": "Queries status information for the service all-up, or scoped to a particular service and/or geography",
+        "operationId": "Health_Get",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "services",
+            "description": "A comma-separated list of services for which to get status information for. Supported values: Artifacts, Boards, Core services, Other services, Pipelines, Repos, Test Plans.",
+            "required": false,
+            "type": "string",
+            "format": "array (string)"
+          },
+          {
+            "in": "query",
+            "name": "geographies",
+            "description": "A comma-separated list of geographies for which to get status information for. Supported values: APAC, AU, BR, CA, EU, IN, UK, US.",
+            "required": false,
+            "type": "string",
+            "format": "array (string)"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ServiceStatus"
+            }
+          }
+        },
+        "security": [],
+        "x-ms-examples": {
+          "Get service health": {
+            "$ref": "./httpExamples/health/GET__health.json"
+          },
+          "Get service health for one or more services": {
+            "$ref": "./httpExamples/health/GET__health__services.json"
+          },
+          "Get service health for one or more geographies": {
+            "$ref": "./httpExamples/health/GET__health__geographies.json"
+          },
+          "Get service health for one or more services and one or more geographies": {
+            "$ref": "./httpExamples/health/GET__health__services__geographies.json"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "EnterpriseStatus": {
+      "description": "",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/Status"
+        }
+      ],
+      "properties": {
+        "organizations": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/OrganizationHealth"
+          }
+        }
+      }
+    },
+    "Geography": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "GeographyWithHealth": {
+      "description": "",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/Geography"
+        }
+      ],
+      "properties": {
+        "health": {
+          "enum": [
+            "unknown",
+            "unhealthy",
+            "degraded",
+            "advisory",
+            "healthy"
+          ],
+          "x-ms-enum": {
+            "name": "ScopeHealth",
+            "values": [
+              {
+                "value": "unknown",
+                "description": ""
+              },
+              {
+                "value": "unhealthy",
+                "description": ""
+              },
+              {
+                "value": "degraded",
+                "description": ""
+              },
+              {
+                "value": "advisory",
+                "description": ""
+              },
+              {
+                "value": "healthy",
+                "description": ""
+              }
+            ]
+          }
+        }
+      }
+    },
+    "LiveSiteEvent": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "endTime": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "impact": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/LiveSiteEventImpact"
+          }
+        },
+        "incidentUri": {
+          "type": "string"
+        },
+        "logs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/LiveSiteEventLog"
+          }
+        },
+        "nextUpdateTime": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "severity": {
+          "enum": [
+            "unhealthy",
+            "degraded",
+            "advisory"
+          ],
+          "x-ms-enum": {
+            "name": "LiveSiteEventSeverity",
+            "values": [
+              {
+                "value": "unhealthy",
+                "description": ""
+              },
+              {
+                "value": "degraded",
+                "description": ""
+              },
+              {
+                "value": "advisory",
+                "description": ""
+              }
+            ]
+          }
+        },
+        "startTime": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "state": {
+          "enum": [
+            "active",
+            "resolved"
+          ],
+          "x-ms-enum": {
+            "name": "LiveSiteEventState",
+            "values": [
+              {
+                "value": "active",
+                "description": ""
+              },
+              {
+                "value": "resolved",
+                "description": ""
+              }
+            ]
+          }
+        },
+        "title": {
+          "type": "string"
+        }
+      }
+    },
+    "LiveSiteEventAuthor": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "displayName": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        }
+      }
+    },
+    "LiveSiteEventImpact": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "scopeName": {
+          "type": "string"
+        },
+        "scopeType": {
+          "enum": [
+            "geography",
+            "organization"
+          ],
+          "x-ms-enum": {
+            "name": "ScopeType",
+            "values": [
+              {
+                "value": "geography",
+                "description": ""
+              },
+              {
+                "value": "organization",
+                "description": ""
+              }
+            ]
+          }
+        },
+        "serviceId": {
+          "type": "string"
+        }
+      }
+    },
+    "LiveSiteEventLog": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "author": {
+          "$ref": "#/definitions/LiveSiteEventAuthor"
+        },
+        "creationDateTime": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "description": {
+          "type": "string"
+        },
+        "descriptionMd": {
+          "type": "string"
+        },
+        "id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "isDeleted": {
+          "type": "boolean"
+        },
+        "lastUpdatedDateTime": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "scopeType": {
+          "enum": [
+            "geography",
+            "organization"
+          ],
+          "x-ms-enum": {
+            "name": "ScopeType",
+            "values": [
+              {
+                "value": "geography",
+                "description": ""
+              },
+              {
+                "value": "organization",
+                "description": ""
+              }
+            ]
+          }
+        },
+        "type": {
+          "enum": [
+            "event",
+            "postmortem",
+            "notification"
+          ],
+          "x-ms-enum": {
+            "name": "LiveSiteEventLogType",
+            "values": [
+              {
+                "value": "event",
+                "description": ""
+              },
+              {
+                "value": "postmortem",
+                "description": ""
+              },
+              {
+                "value": "notification",
+                "description": ""
+              }
+            ]
+          }
+        }
+      }
+    },
+    "LiveSiteEventLogAttachment": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "author": {
+          "$ref": "#/definitions/LiveSiteEventAuthor"
+        },
+        "creationDateTime": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "displayName": {
+          "type": "string"
+        },
+        "eventId": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "fileId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "fileName": {
+          "type": "string"
+        },
+        "scopeType": {
+          "enum": [
+            "geography",
+            "organization"
+          ],
+          "x-ms-enum": {
+            "name": "ScopeType",
+            "values": [
+              {
+                "value": "geography",
+                "description": ""
+              },
+              {
+                "value": "organization",
+                "description": ""
+              }
+            ]
+          }
+        }
+      }
+    },
+    "LiveSiteEventTemplate": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "initialDescription": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        }
+      }
+    },
+    "LiveSiteEventTemplateData": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "defaultId": {
+          "type": "string"
+        },
+        "finalDescription": {
+          "type": "string"
+        },
+        "intermediateDescription": {
+          "type": "string"
+        },
+        "templates": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/LiveSiteEventTemplate"
+          }
+        }
+      }
+    },
+    "MicroService": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "name": {
+          "type": "string"
+        },
+        "scaleUnits": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/MicroServiceScaleUnit"
+          }
+        },
+        "services": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Service"
+          }
+        }
+      }
+    },
+    "MicroServiceScaleUnit": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "geography": {
+          "$ref": "#/definitions/Geography"
+        },
+        "id": {
+          "type": "string"
+        },
+        "isInternal": {
+          "type": "boolean"
+        }
+      }
+    },
+    "OrganizationHealth": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "name": {
+          "type": "string"
+        },
+        "services": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ServiceWithHealth"
+          }
+        }
+      }
+    },
+    "Service": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "isInternal": {
+          "type": "boolean"
+        },
+        "state": {
+          "enum": [
+            "active",
+            "hidden",
+            "deleted"
+          ],
+          "x-ms-enum": {
+            "name": "ScopeState",
+            "values": [
+              {
+                "value": "active",
+                "description": ""
+              },
+              {
+                "value": "hidden",
+                "description": ""
+              },
+              {
+                "value": "deleted",
+                "description": ""
+              }
+            ]
+          }
+        }
+      }
+    },
+    "ServiceHealth": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "geographies": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/GeographyWithHealth"
+          }
+        },
+        "id": {
+          "type": "string"
+        }
+      }
+    },
+    "ServiceStatus": {
+      "description": "",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/Status"
+        }
+      ],
+      "properties": {
+        "services": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ServiceHealth"
+          }
+        }
+      }
+    },
+    "ServiceWithHealth": {
+      "description": "",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/Service"
+        }
+      ],
+      "properties": {
+        "health": {
+          "enum": [
+            "unknown",
+            "unhealthy",
+            "degraded",
+            "advisory",
+            "healthy"
+          ],
+          "x-ms-enum": {
+            "name": "ScopeHealth",
+            "values": [
+              {
+                "value": "unknown",
+                "description": ""
+              },
+              {
+                "value": "unhealthy",
+                "description": ""
+              },
+              {
+                "value": "degraded",
+                "description": ""
+              },
+              {
+                "value": "advisory",
+                "description": ""
+              },
+              {
+                "value": "healthy",
+                "description": ""
+              }
+            ]
+          }
+        }
+      }
+    },
+    "Status": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "lastUpdated": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "status": {
+          "$ref": "#/definitions/StatusSummary"
+        }
+      }
+    },
+    "StatusSummary": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "health": {
+          "enum": [
+            "unknown",
+            "unhealthy",
+            "degraded",
+            "advisory",
+            "healthy"
+          ],
+          "x-ms-enum": {
+            "name": "ScopeHealth",
+            "values": [
+              {
+                "value": "unknown",
+                "description": ""
+              },
+              {
+                "value": "unhealthy",
+                "description": ""
+              },
+              {
+                "value": "degraded",
+                "description": ""
+              },
+              {
+                "value": "advisory",
+                "description": ""
+              },
+              {
+                "value": "healthy",
+                "description": ""
+              }
+            ]
+          }
+        },
+        "message": {
+          "type": "string"
+        }
+      }
+    },
+    "VssJsonCollectionWrapper": {
+      "description": "This class is used to serialized collections as a single JSON object on the wire, to avoid serializing JSON arrays directly to the client, which can be a security hole",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/VssJsonCollectionWrapperBase"
+        }
+      ],
+      "properties": {
+        "value": {
+          "type": "string",
+          "format": "T"
+        }
+      }
+    },
+    "VssJsonCollectionWrapperBase": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "count": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    }
+  },
+  "parameters": {
+    "api-Version-preview.1": {
+      "name": "api-version",
+      "in": "query",
+      "description": "Version of the API to use.  This should be set to '6.0-preview.1' to use this version of the api.",
+      "required": true,
+      "type": "string"
+    }
+  },
+  "securityDefinitions": {
+    "accessToken": {
+      "type": "basic",
+      "description": "Personal access token. Use any value for the user name and the token as the password."
+    }
+  },
+  "security": [
+    {
+      "accessToken": []
+    }
+  ],
+  "externalDocs": {
+    "description": "Azure DevOps REST APIs",
+    "url": "https://aka.ms/azure-devops-rest-apis"
+  }
+}
