@@ -4107,7 +4107,42 @@
           "$ref": "#/definitions/Demand"
         }
       ],
-      "properties": {}
+      "properties": {
+        "source": {
+          "$ref": "#/definitions/DemandSource"
+        }
+      }
+    },
+    "DemandSource": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "sourceName": {
+          "type": "string"
+        },
+        "sourceType": {
+          "enum": [
+            "task",
+            "feature"
+          ],
+          "x-ms-enum": {
+            "name": "DemandSourceType",
+            "values": [
+              {
+                "value": "task",
+                "description": ""
+              },
+              {
+                "value": "feature",
+                "description": ""
+              }
+            ]
+          }
+        },
+        "sourceVersion": {
+          "type": "string"
+        }
+      }
     },
     "DependencyBinding": {
       "description": "",
@@ -4460,6 +4495,69 @@
         "poolId": {
           "type": "integer",
           "format": "int32"
+        }
+      }
+    },
+    "ElasticPool": {
+      "description": "Data and settings for an elastic pool",
+      "type": "object",
+      "properties": {
+        "azureId": {
+          "description": "Azure string representing to location of the resource",
+          "type": "string"
+        },
+        "desiredIdle": {
+          "description": "Number of machines to have ready waiting for jobs",
+          "type": "integer",
+          "format": "int32"
+        },
+        "maxCapacity": {
+          "description": "Maximum number of machines that will exist in the elastic pool",
+          "type": "integer",
+          "format": "int32"
+        },
+        "osType": {
+          "description": "Operating system type of the machines in the pool",
+          "enum": [
+            "windows",
+            "linux"
+          ],
+          "x-ms-enum": {
+            "name": "OperatingSystemType",
+            "values": [
+              {
+                "value": "windows",
+                "description": ""
+              },
+              {
+                "value": "linux",
+                "description": ""
+              }
+            ]
+          }
+        },
+        "poolId": {
+          "description": "Id of the associated TaskAgentPool",
+          "type": "integer",
+          "format": "int32"
+        },
+        "preserveFailures": {
+          "description": "Keep machines in the pool on failure for investigation",
+          "type": "boolean"
+        },
+        "recycleAfterEachUse": {
+          "description": "Discard machines after each job completes",
+          "type": "boolean"
+        },
+        "serviceEndpointId": {
+          "description": "Id of the Service Endpoint used to connect to Azure",
+          "type": "string",
+          "format": "uuid"
+        },
+        "serviceEndpointScope": {
+          "description": "Scope the Service Endpoint belongs to",
+          "type": "string",
+          "format": "uuid"
         }
       }
     },
@@ -7417,6 +7515,10 @@
         },
         "autoSize": {
           "description": "Whether or not the pool should autosize itself based on the Agent Cloud Provider settings.",
+          "type": "boolean"
+        },
+        "autoUpdate": {
+          "description": "Whether or not agents in this pool are allowed to automatically update",
           "type": "boolean"
         },
         "createdBy": {

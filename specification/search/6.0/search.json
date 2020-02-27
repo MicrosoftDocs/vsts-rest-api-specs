@@ -32,6 +32,10 @@
       "description": "REST API controller for Repository Status."
     },
     {
+      "name": "Tfvc",
+      "description": "REST API controller for TFVC Repository Status."
+    },
+    {
       "name": "Wiki Search Results",
       "description": "REST API controller for wiki search."
     },
@@ -232,6 +236,49 @@
             ]
           }
         ]
+      }
+    },
+    "/{organization}/{project}/_apis/search/status/tfvc": {
+      "get": {
+        "tags": [
+          "Tfvc"
+        ],
+        "x-ms-docs-override-version": "6.0-preview.1",
+        "x-ms-vss-resource": "tfvc",
+        "x-ms-vss-method": "GetTfvcRepositoryStatus",
+        "x-ms-preview": true,
+        "description": "Provides status of TFVC Repository.",
+        "operationId": "Tfvc_Get",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/TfvcRepositoryStatusResponse"
+            }
+          }
+        }
       }
     },
     "/{organization}/{project}/_apis/search/wikisearchresults": {
@@ -528,6 +575,34 @@
       "properties": {
         "name": {
           "description": "Name of the collection.",
+          "type": "string"
+        }
+      }
+    },
+    "CustomRepositoryStatusResponse": {
+      "description": "Defines the custom repository status.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "Repository Id.",
+          "type": "string",
+          "format": "uuid"
+        },
+        "indexedTopLevelFolders": {
+          "description": "List of indexed top level folders info.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/DepotInfo"
+          }
+        }
+      }
+    },
+    "DepotInfo": {
+      "description": "Information about the custom repository indexing freshness for configured branches and depots.",
+      "type": "object",
+      "properties": {
+        "name": {
+          "description": "Name of the indexed top level folder (depot).",
           "type": "string"
         }
       }
@@ -1028,6 +1103,23 @@
         },
         "name": {
           "description": "Name of the Team.",
+          "type": "string"
+        }
+      }
+    },
+    "TfvcRepositoryStatusResponse": {
+      "description": "Defines the TFVC repository status.",
+      "type": "object",
+      "properties": {
+        "indexingInformation": {
+          "description": "List of Indexing Information for TFVC repository",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/BranchInfo"
+          }
+        },
+        "name": {
+          "description": "Repository name.",
           "type": "string"
         }
       }

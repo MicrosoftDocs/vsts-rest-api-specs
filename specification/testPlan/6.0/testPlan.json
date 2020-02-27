@@ -1765,6 +1765,13 @@
             "type": "boolean"
           },
           {
+            "in": "query",
+            "name": "isRecursive",
+            "description": "If set to true, will also fetch test points belonging to child suites recursively.",
+            "required": false,
+            "type": "boolean"
+          },
+          {
             "$ref": "#/parameters/api-Version-preview.2"
           }
         ],
@@ -3142,7 +3149,60 @@
         }
       }
     },
-    "LibraryTestCasesDataProviderRequest": {
+    "LibraryWorkItemsData": {
+      "description": "This data model is used in Work item-based tabs of Test Plans Library.",
+      "type": "object",
+      "properties": {
+        "continuationToken": {
+          "description": "Continuation token to fetch next set of elements. Present only when HasMoreElements is true.",
+          "type": "string"
+        },
+        "exceededWorkItemQueryLimit": {
+          "description": "Boolean indicating if the WIQL query has exceeded the limit of items returned.",
+          "type": "boolean"
+        },
+        "hasMoreElements": {
+          "description": "Boolean indicating if there are more elements present than what are being sent.",
+          "type": "boolean"
+        },
+        "returnCode": {
+          "description": "Specifies if there was an error while execution of data provider.",
+          "enum": [
+            "success",
+            "error"
+          ],
+          "x-ms-enum": {
+            "name": "LibraryTestCasesDataReturnCode",
+            "values": [
+              {
+                "value": "success",
+                "description": ""
+              },
+              {
+                "value": "error",
+                "description": ""
+              }
+            ]
+          }
+        },
+        "workItemIds": {
+          "description": "List of work items returned when OrderByField is sent something other than Id.",
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "workItems": {
+          "description": "List of work items to be returned.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/WorkItemDetails"
+          }
+        }
+      }
+    },
+    "LibraryWorkItemsDataProviderRequest": {
       "description": "This is the request data contract for LibraryTestCaseDataProvider.",
       "type": "object",
       "properties": {
@@ -3152,9 +3212,9 @@
         },
         "filterValues": {
           "description": "List of filter values to be supplied. Currently supported filters are Title, State, AssignedTo, Priority, AreaPath.",
-          "type": "object",
-          "additionalProperties": {
-            "type": "string"
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TestPlansLibraryWorkItemFilter"
           }
         },
         "isAscending": {
@@ -3216,59 +3276,6 @@
           "items": {
             "type": "integer",
             "format": "int32"
-          }
-        }
-      }
-    },
-    "LibraryWorkItemsData": {
-      "description": "This data model is used in Work item-based tabs of Test Plans Library.",
-      "type": "object",
-      "properties": {
-        "continuationToken": {
-          "description": "Continuation token to fetch next set of elements. Present only when HasMoreElements is true.",
-          "type": "string"
-        },
-        "exceededWorkItemQueryLimit": {
-          "description": "Boolean indicating if the WIQL query has exceeded the limit of items returned.",
-          "type": "boolean"
-        },
-        "hasMoreElements": {
-          "description": "Boolean indicating if there are more elements present than what are being sent.",
-          "type": "boolean"
-        },
-        "returnCode": {
-          "description": "Specifies if there was an error while execution of data provider.",
-          "enum": [
-            "success",
-            "error"
-          ],
-          "x-ms-enum": {
-            "name": "LibraryTestCasesDataReturnCode",
-            "values": [
-              {
-                "value": "success",
-                "description": ""
-              },
-              {
-                "value": "error",
-                "description": ""
-              }
-            ]
-          }
-        },
-        "workItemIds": {
-          "description": "List of work items returned when OrderByField is sent something other than Id.",
-          "type": "array",
-          "items": {
-            "type": "integer",
-            "format": "int32"
-          }
-        },
-        "workItems": {
-          "description": "List of work items to be returned.",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/WorkItemDetails"
           }
         }
       }
@@ -4152,6 +4159,9 @@
         "isAdvancedExtensionEnabled": {
           "type": "boolean"
         },
+        "selectedPivotId": {
+          "type": "string"
+        },
         "selectedSuiteId": {
           "type": "integer",
           "format": "int32"
@@ -4193,6 +4203,43 @@
         },
         "testSuitesContinuationToken": {
           "type": "string"
+        }
+      }
+    },
+    "TestPlansLibraryWorkItemFilter": {
+      "description": "Container to hold information about a filter being applied in Test Plans Library.",
+      "type": "object",
+      "properties": {
+        "fieldName": {
+          "description": "Work item field name on which the items are to be filtered.",
+          "type": "string"
+        },
+        "fieldValues": {
+          "description": "Work item field values corresponding to the field name.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "filterMode": {
+          "description": "Mode of the filter.",
+          "enum": [
+            "or",
+            "and"
+          ],
+          "x-ms-enum": {
+            "name": "TestPlansLibraryWorkItemFilterMode",
+            "values": [
+              {
+                "value": "or",
+                "description": "Default. Have the field values separated by an OR clause."
+              },
+              {
+                "value": "and",
+                "description": "Have the field values separated by an AND clause."
+              }
+            ]
+          }
         }
       }
     },
