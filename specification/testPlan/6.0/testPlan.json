@@ -12,7 +12,7 @@
       "name": "MICROSOFT SOFTWARE LICENSE TERMS",
       "url": "https://go.microsoft.com/fwlink/?LinkId=329770"
     },
-    "version": "6.0-preview"
+    "version": "6.0"
   },
   "host": "dev.azure.com",
   "x-ms-vss-area": "TestPlan",
@@ -37,6 +37,9 @@
     {
       "name": "Test  Suites",
       "description": "Test suites help in organizing test cases in a test plan. A test suite can contain child test suites, helping you build a folder structure under a test plan or it can contain test cases. Leaf test suites typically contain test cases, where are intermediate suites represent a folder hierarchy. Intermediate suites can on Static type, whereas leaf suites can be of static suites, requirement based suites or query based suites."
+    },
+    {
+      "name": "Test Case Clone"
     },
     {
       "name": "Test Cases",
@@ -67,10 +70,9 @@
         "tags": [
           "Test  Suites"
         ],
-        "x-ms-docs-override-version": "6.0-preview.1",
+        "x-ms-docs-override-version": "6.0",
         "x-ms-vss-resource": "suites",
         "x-ms-vss-method": "GetSuitesByTestCaseId",
-        "x-ms-preview": true,
         "description": "Find the list of all test suites in which a given test case is present. This is helpful if you need to find out which test suites are using a test case, when you need to make changes to a test case.",
         "operationId": "Test  Suites_Get Suites By Test Case Id",
         "produces": [
@@ -93,7 +95,7 @@
             "format": "int32"
           },
           {
-            "$ref": "#/parameters/api-Version-preview.1"
+            "$ref": "#/parameters/api-Version"
           }
         ],
         "responses": {
@@ -2465,9 +2467,122 @@
             "description": "successful operation"
           }
         },
+        "security": [
+          {
+            "oauth2": [
+              "vso.test_write"
+            ]
+          }
+        ],
         "x-ms-examples": {
           "Delete a test case": {
             "$ref": "./httpExamples/TestCases/DeleteTestCases.json"
+          }
+        }
+      }
+    },
+    "/{organization}/{project}/_apis/testplan/TestCases/CloneTestCaseOperation": {
+      "post": {
+        "tags": [
+          "Test Case Clone"
+        ],
+        "x-ms-docs-override-version": "6.0-preview.2",
+        "x-ms-vss-resource": "testCaseClone",
+        "x-ms-vss-method": "CloneTestCase",
+        "x-ms-preview": true,
+        "description": "",
+        "operationId": "Test Case Clone_Clone Test Case",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CloneTestCaseParams"
+            }
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.2"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/CloneTestCaseOperationInformation"
+            }
+          }
+        }
+      }
+    },
+    "/{organization}/{project}/_apis/testplan/TestCases/CloneTestCaseOperation/{cloneOperationId}": {
+      "get": {
+        "tags": [
+          "Test Case Clone"
+        ],
+        "x-ms-docs-override-version": "6.0-preview.2",
+        "x-ms-vss-resource": "testCaseClone",
+        "x-ms-vss-method": "GetTestCaseCloneInformation",
+        "x-ms-preview": true,
+        "description": "Get clone information.",
+        "operationId": "Test Case Clone_Get",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "cloneOperationId",
+            "description": "Operation ID returned when we queue a clone operation",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.2"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/CloneTestCaseOperationInformation"
+            }
           }
         }
       }
@@ -2937,6 +3052,80 @@
         }
       }
     },
+    "CloneTestCaseOperationInformation": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "cloneOperationResponse": {
+          "description": "Various information related to the clone",
+          "$ref": "#/definitions/CloneOperationCommonResponse"
+        },
+        "cloneOptions": {
+          "description": "Test Plan Clone create parameters",
+          "$ref": "#/definitions/CloneTestCaseOptions"
+        },
+        "destinationTestSuite": {
+          "description": "Information of destination Test Suite",
+          "$ref": "#/definitions/TestSuiteReferenceWithProject"
+        },
+        "sourceTestSuite": {
+          "description": "Information of source Test Suite",
+          "$ref": "#/definitions/SourceTestSuiteResponse"
+        }
+      }
+    },
+    "CloneTestCaseOptions": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "includeAttachments": {
+          "description": "If set to true, include the attachments",
+          "type": "boolean"
+        },
+        "includeLinks": {
+          "description": "If set to true, include the links",
+          "type": "boolean"
+        },
+        "relatedLinkComment": {
+          "description": "Comment on the link that will link the new clone  test case to the original Set null for no comment",
+          "type": "string"
+        }
+      }
+    },
+    "CloneTestCaseParams": {
+      "description": "Parameters for Test Suite clone operation",
+      "type": "object",
+      "properties": {
+        "cloneOptions": {
+          "description": "Test Case Clone create parameters",
+          "$ref": "#/definitions/CloneTestCaseOptions"
+        },
+        "destinationTestPlan": {
+          "description": "Information about destination Test Plan",
+          "$ref": "#/definitions/TestPlanReference"
+        },
+        "destinationTestSuite": {
+          "description": "Information about destination Test Suite",
+          "$ref": "#/definitions/DestinationTestSuiteInfo"
+        },
+        "sourceTestPlan": {
+          "description": "Information about source Test Plan",
+          "$ref": "#/definitions/TestPlanReference"
+        },
+        "sourceTestSuite": {
+          "description": "Information about source Test Suite",
+          "$ref": "#/definitions/SourceTestSuiteInfo"
+        },
+        "testCaseIds": {
+          "description": "Test Case IDs",
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      }
+    },
     "CloneTestPlanOperationInformation": {
       "description": "Response for Test Plan clone operation",
       "type": "object",
@@ -3153,6 +3342,13 @@
       "description": "This data model is used in Work item-based tabs of Test Plans Library.",
       "type": "object",
       "properties": {
+        "columnOptions": {
+          "description": "Specifies the column option field names",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
         "continuationToken": {
           "description": "Continuation token to fetch next set of elements. Present only when HasMoreElements is true.",
           "type": "string"
@@ -3206,6 +3402,13 @@
       "description": "This is the request data contract for LibraryTestCaseDataProvider.",
       "type": "object",
       "properties": {
+        "columnOptions": {
+          "description": "Specifies the list of column options to show in test cases table.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
         "continuationToken": {
           "description": "The continuation token required for paging of work items. This is required when getting subsequent sets of work items when OrderByField is Id.",
           "type": "string"
@@ -3493,6 +3696,29 @@
           "description": "Id of the Source Test Suite",
           "type": "integer",
           "format": "int32"
+        }
+      }
+    },
+    "SourceTestSuiteResponse": {
+      "description": "Source Test Suite Response for Test Case clone operation",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/TestSuiteReference"
+        }
+      ],
+      "properties": {
+        "project": {
+          "description": "project reference",
+          "$ref": "#/definitions/TeamProjectReference"
+        },
+        "testCaseIds": {
+          "description": "Id of suites to be cloned inside source Test Plan",
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "format": "int32"
+          }
         }
       }
     },
@@ -3964,6 +4190,32 @@
         }
       }
     },
+    "TestEntityCount": {
+      "description": "Test Entity Count Used to store test cases count (define tab) and test point count (execute tab) Used to store test cases count (define tab) and test point count (execute tab)",
+      "type": "object",
+      "properties": {
+        "count": {
+          "description": "Test Entity Count",
+          "type": "integer",
+          "format": "int32"
+        },
+        "testPlanId": {
+          "description": "Test Plan under which the Test Entities are",
+          "type": "integer",
+          "format": "int32"
+        },
+        "testSuiteId": {
+          "description": "Test Suite under which the Test Entities are",
+          "type": "integer",
+          "format": "int32"
+        },
+        "totalCount": {
+          "description": "Total test entities in the suite without the applied filters",
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
     "TestEnvironment": {
       "description": "Test environment Detail.",
       "type": "object",
@@ -4325,32 +4577,6 @@
         "testSuite": {
           "description": "Test Suite under which the Test Point is",
           "$ref": "#/definitions/TestSuiteReference"
-        }
-      }
-    },
-    "TestPointCount": {
-      "description": "Test Point Count",
-      "type": "object",
-      "properties": {
-        "count": {
-          "description": "Test Point Count",
-          "type": "integer",
-          "format": "int32"
-        },
-        "testPlanId": {
-          "description": "Test Plan under which the Test Points are",
-          "type": "integer",
-          "format": "int32"
-        },
-        "testSuiteId": {
-          "description": "Test Suite under which the Test Points are",
-          "type": "integer",
-          "format": "int32"
-        },
-        "totalCount": {
-          "description": "Total test points in the suite without the applied filters",
-          "type": "integer",
-          "format": "int32"
         }
       }
     },
@@ -5014,6 +5240,13 @@
     }
   },
   "parameters": {
+    "api-Version": {
+      "name": "api-version",
+      "in": "query",
+      "description": "Version of the API to use.  This should be set to '6.0' to use this version of the api.",
+      "required": true,
+      "type": "string"
+    },
     "api-Version-preview.1": {
       "name": "api-version",
       "in": "query",

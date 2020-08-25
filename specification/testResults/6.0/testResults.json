@@ -12,13 +12,17 @@
       "name": "MICROSOFT SOFTWARE LICENSE TERMS",
       "url": "https://go.microsoft.com/fwlink/?LinkId=329770"
     },
-    "version": "6.0-preview"
+    "version": "6.0"
   },
   "host": "vstmr.dev.azure.com",
   "x-ms-vss-area": "testResults",
   "x-ms-vss-resource-area-id": "c83eaf52-edf3-4034-ae11-17d38f25404c",
   "basePath": "/",
   "tags": [
+    {
+      "name": "Result Meta Data",
+      "description": "Work with test results MetaData programmatically using the REST APIs for Azure dev ops and Team Foundation Server."
+    },
     {
       "name": "Testlog"
     },
@@ -30,6 +34,171 @@
     "https"
   ],
   "paths": {
+    "/{organization}/{project}/_apis/testresults/results/resultmetadata": {
+      "post": {
+        "tags": [
+          "Result Meta Data"
+        ],
+        "x-ms-docs-override-version": "6.0-preview.4",
+        "x-ms-vss-resource": "resultMetaData",
+        "x-ms-vss-method": "QueryTestResultsMetaData",
+        "x-ms-preview": true,
+        "description": "Get list of test Result meta data details for corresponding testcasereferenceId",
+        "operationId": "Result Meta Data_Query",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "TestCaseReference Ids of the test Result to be queried, comma separated list of valid ids (limit no. of ids 200).",
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "detailsToInclude",
+            "description": "Details to include with test results metadata. Default is None. Other values are FlakyIdentifiers.",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "none",
+              "flakyIdentifiers"
+            ],
+            "x-ms-enum": {
+              "name": "ResultMetaDataDetails",
+              "values": [
+                {
+                  "value": "none",
+                  "description": "Core fields of test result metadata."
+                },
+                {
+                  "value": "flakyIdentifiers",
+                  "description": "Test FlakyIdentifiers details in test result metadata."
+                }
+              ]
+            }
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.4"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/TestResultMetaData"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.test_write"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "Get test result metadata": {
+            "$ref": "./httpExamples/ResultMetaData/Post_testresultmetadata_6_0.json"
+          }
+        }
+      }
+    },
+    "/{organization}/{project}/_apis/testresults/results/resultmetadata/{testCaseReferenceId}": {
+      "patch": {
+        "tags": [
+          "Result Meta Data"
+        ],
+        "x-ms-docs-override-version": "6.0-preview.4",
+        "x-ms-vss-resource": "resultMetaData",
+        "x-ms-vss-method": "UpdateTestResultsMetaData",
+        "x-ms-preview": true,
+        "description": "Update properties of test result meta data",
+        "operationId": "Result Meta Data_Update",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "TestResultMetaData update input TestResultMetaDataUpdateInput",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/TestResultMetaDataUpdateInput"
+            }
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "testCaseReferenceId",
+            "description": "TestCaseReference Id of Test Result to be updated.",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.4"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/TestResultMetaData"
+            }
+          }
+        },
+        "x-ms-examples": {
+          "Update test result metadata": {
+            "$ref": "./httpExamples/ResultMetaData/Patch_testresultsmetadata_6_0.json"
+          }
+        }
+      }
+    },
     "/{organization}/{project}/_apis/testresults/runs/{runId}/results/{resultId}/testlog": {
       "get": {
         "tags": [
@@ -4865,6 +5034,13 @@
     }
   },
   "parameters": {
+    "api-Version": {
+      "name": "api-version",
+      "in": "query",
+      "description": "Version of the API to use.  This should be set to '6.0' to use this version of the api.",
+      "required": true,
+      "type": "string"
+    },
     "api-Version-preview.1": {
       "name": "api-version",
       "in": "query",
@@ -4883,6 +5059,13 @@
       "name": "api-version",
       "in": "query",
       "description": "Version of the API to use.  This should be set to '6.0-preview.3' to use this version of the api.",
+      "required": true,
+      "type": "string"
+    },
+    "api-Version-preview.4": {
+      "name": "api-version",
+      "in": "query",
+      "description": "Version of the API to use.  This should be set to '6.0-preview.4' to use this version of the api.",
       "required": true,
       "type": "string"
     }
