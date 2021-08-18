@@ -27,6 +27,154 @@
     "https"
   ],
   "paths": {
+    "/{organization}/{project}/_apis/packaging/feeds/{feed}/maven/groups/{groupId}/artifacts/{artifactId}/upstreaming": {
+      "get": {
+        "tags": [
+          "Maven"
+        ],
+        "x-ms-docs-override-version": "6.1-preview.1",
+        "x-ms-vss-resource": "upstreaming",
+        "x-ms-vss-method": "GetUpstreamingBehavior",
+        "x-ms-preview": true,
+        "description": "Get the upstreaming behavior of a package within the context of a feed",
+        "operationId": "Maven_Get Upstreaming Behavior",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "feed",
+            "description": "The name or id of the feed",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "groupId",
+            "description": "The group id of the package",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "artifactId",
+            "description": "The artifact id of the package",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "x-ms-required": false,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/UpstreamingBehavior"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.packaging"
+            ]
+          }
+        ]
+      },
+      "patch": {
+        "tags": [
+          "Maven"
+        ],
+        "x-ms-docs-override-version": "6.1-preview.1",
+        "x-ms-vss-resource": "upstreaming",
+        "x-ms-vss-method": "SetUpstreamingBehavior",
+        "x-ms-preview": true,
+        "description": "Set the upstreaming behavior of a package within the context of a feed\n\nThe package does not need to necessarily exist in the feed prior to setting the behavior.\nThis assists with packages that are not yet ingested from an upstream, yet the feed owner wants\nto apply a specific behavior on the first ingestion.",
+        "operationId": "Maven_Set Upstreaming Behavior",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "feed",
+            "description": "The name or id of the feed",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "groupId",
+            "description": "",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "artifactId",
+            "description": "",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "The behavior to apply to the package within the scope of the feed",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UpstreamingBehavior"
+            }
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "x-ms-required": false,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.packaging_manage"
+            ]
+          }
+        ]
+      }
+    },
     "/{organization}/{project}/_apis/packaging/feeds/{feed}/maven/groups/{groupId}/artifacts/{artifactId}/versions/{version}": {
       "get": {
         "tags": [
@@ -500,6 +648,70 @@
         ]
       }
     },
+    "/{organization}/{project}/_apis/packaging/feeds/{feed}/maven/RecycleBin/packagesBatch": {
+      "post": {
+        "tags": [
+          "Maven"
+        ],
+        "x-ms-docs-override-version": "6.1-preview.1",
+        "x-ms-vss-resource": "recyclebinpackagesbatch",
+        "x-ms-vss-method": "UpdateRecycleBinPackagesAsync",
+        "x-ms-preview": true,
+        "description": "Delete or restore several package versions from the recycle bin.\n\nThe project parameter must be supplied if the feed was created in a project.\nIf the feed is not associated with any project, omit the project parameter from the request.",
+        "operationId": "Maven_Update Recycle Bin Packages",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Information about the packages to update, the operation to perform, and its associated data.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/MavenPackagesBatchRequest"
+            }
+          },
+          {
+            "in": "path",
+            "name": "feed",
+            "description": "",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "x-ms-required": false,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.packaging_write"
+            ]
+          }
+        ]
+      }
+    },
     "/{organization}/{project}/_apis/packaging/feeds/{feedId}/maven/{groupId}/{artifactId}/{version}/{fileName}/content": {
       "get": {
         "tags": [
@@ -582,6 +794,70 @@
           {
             "oauth2": [
               "vso.packaging"
+            ]
+          }
+        ]
+      }
+    },
+    "/{organization}/{project}/_apis/packaging/feeds/{feedId}/maven/packagesbatch": {
+      "post": {
+        "tags": [
+          "Maven"
+        ],
+        "x-ms-docs-override-version": "6.1-preview.1",
+        "x-ms-vss-resource": "packagesBatch",
+        "x-ms-vss-method": "UpdatePackageVersions",
+        "x-ms-preview": true,
+        "description": "Update several packages from a single feed in a single request. The updates to the packages do not happen atomically.\n\nThe project parameter must be supplied if the feed was created in a project.\nIf the feed is not associated with any project, omit the project parameter from the request.",
+        "operationId": "Maven_Update Package Versions",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Information about the packages to update, the operation to perform, and its associated data.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/MavenPackagesBatchRequest"
+            }
+          },
+          {
+            "in": "path",
+            "name": "feedId",
+            "description": "Feed which contains the packages to update.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "x-ms-required": false,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.packaging_write"
             ]
           }
         ]
@@ -1249,6 +1525,32 @@
           "type": "object",
           "additionalProperties": {
             "type": "object"
+          }
+        }
+      }
+    },
+    "UpstreamingBehavior": {
+      "description": "Describes upstreaming behavior for a given feed/protocol/package",
+      "type": "object",
+      "properties": {
+        "versionsFromExternalUpstreams": {
+          "description": "Indicates whether external upstream versions should be considered for this package",
+          "enum": [
+            "auto",
+            "allowExternalVersions"
+          ],
+          "x-ms-enum": {
+            "name": "UpstreamVersionVisibility",
+            "values": [
+              {
+                "value": "auto",
+                "description": ""
+              },
+              {
+                "value": "allowExternalVersions",
+                "description": ""
+              }
+            ]
           }
         }
       }

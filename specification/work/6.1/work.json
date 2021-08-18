@@ -62,6 +62,9 @@
       "name": "Deliverytimeline"
     },
     {
+      "name": "Iterationcapacities"
+    },
+    {
       "name": "Iterations"
     },
     {
@@ -211,6 +214,57 @@
         "x-ms-examples": {
           "Get available board rows in a project": {
             "$ref": "./httpExamples/boardrows/GET__work_boardRows_ByProject.json"
+          }
+        }
+      }
+    },
+    "/{organization}/{project}/_apis/work/iterations/{iterationId}/iterationcapacities": {
+      "get": {
+        "tags": [
+          "Iterationcapacities"
+        ],
+        "x-ms-docs-override-version": "6.1-preview.1",
+        "x-ms-vss-resource": "iterationcapacities",
+        "x-ms-vss-method": "GetTotalIterationCapacities",
+        "x-ms-preview": true,
+        "description": "Get an iteration's capacity for all teams in iteration",
+        "operationId": "Iterationcapacities_Get",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "iterationId",
+            "description": "ID of the iteration",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/IterationCapacity"
+            }
           }
         }
       }
@@ -3326,12 +3380,12 @@
         "tags": [
           "Capacities"
         ],
-        "x-ms-docs-override-version": "6.1-preview.2",
+        "x-ms-docs-override-version": "6.1-preview.3",
         "x-ms-vss-resource": "capacities",
-        "x-ms-vss-method": "GetCapacitiesWithIdentityRef",
+        "x-ms-vss-method": "GetCapacitiesWithIdentityRefAndTotals",
         "x-ms-preview": true,
-        "description": "Get a team's capacity",
-        "operationId": "Capacities_List",
+        "description": "Get a team's capacity including total capacity and days off",
+        "operationId": "Capacities_Get Capacities With Identity Ref And Totals",
         "produces": [
           "application/json"
         ],
@@ -3367,17 +3421,14 @@
             "type": "string"
           },
           {
-            "$ref": "#/parameters/api-Version-preview.2"
+            "$ref": "#/parameters/api-Version-preview.3"
           }
         ],
         "responses": {
           "200": {
             "description": "successful operation",
             "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/TeamMemberCapacityIdentityRef"
-              }
+              "$ref": "#/definitions/TeamCapacity"
             }
           }
         },
@@ -3387,18 +3438,13 @@
               "vso.work"
             ]
           }
-        ],
-        "x-ms-examples": {
-          "Get a team's capacity": {
-            "$ref": "./httpExamples/capacities/GET__work_teamsettings_iterations__iterationId__capacities.json"
-          }
-        }
+        ]
       },
       "put": {
         "tags": [
           "Capacities"
         ],
-        "x-ms-docs-override-version": "6.1-preview.2",
+        "x-ms-docs-override-version": "6.1-preview.3",
         "x-ms-vss-resource": "capacities",
         "x-ms-vss-method": "ReplaceCapacitiesWithIdentityRef",
         "x-ms-preview": true,
@@ -3454,7 +3500,7 @@
             "type": "string"
           },
           {
-            "$ref": "#/parameters/api-Version-preview.2"
+            "$ref": "#/parameters/api-Version-preview.3"
           }
         ],
         "responses": {
@@ -3487,12 +3533,12 @@
         "tags": [
           "Capacities"
         ],
-        "x-ms-docs-override-version": "6.1-preview.2",
+        "x-ms-docs-override-version": "6.1-preview.3",
         "x-ms-vss-resource": "capacities",
         "x-ms-vss-method": "GetCapacityWithIdentityRef",
         "x-ms-preview": true,
         "description": "Get a team member's capacity",
-        "operationId": "Capacities_Get",
+        "operationId": "Capacities_Get Capacity With Identity Ref",
         "produces": [
           "application/json"
         ],
@@ -3536,7 +3582,7 @@
             "type": "string"
           },
           {
-            "$ref": "#/parameters/api-Version-preview.2"
+            "$ref": "#/parameters/api-Version-preview.3"
           }
         ],
         "responses": {
@@ -3564,7 +3610,7 @@
         "tags": [
           "Capacities"
         ],
-        "x-ms-docs-override-version": "6.1-preview.2",
+        "x-ms-docs-override-version": "6.1-preview.3",
         "x-ms-vss-resource": "capacities",
         "x-ms-vss-method": "UpdateCapacityWithIdentityRef",
         "x-ms-preview": true,
@@ -3625,7 +3671,7 @@
             "type": "string"
           },
           {
-            "$ref": "#/parameters/api-Version-preview.2"
+            "$ref": "#/parameters/api-Version-preview.3"
           }
         ],
         "responses": {
@@ -4686,12 +4732,20 @@
           "description": "Flag indicating whether to show assigned to field on cards. When true, AssignedToDisplayFormat will determine how the field will be displayed",
           "type": "boolean"
         },
+        "showChildRollup": {
+          "description": "Flag indicating whether to show child rollup on cards",
+          "type": "boolean"
+        },
         "showEmptyFields": {
           "description": "Flag indicating whether to show empty fields on cards",
           "type": "boolean"
         },
         "showId": {
           "description": "Flag indicating whether to show ID on cards",
+          "type": "boolean"
+        },
+        "showParent": {
+          "description": "Flag indicating whether to show show parent field on cards",
           "type": "boolean"
         },
         "showState": {
@@ -4811,9 +4865,16 @@
           "format": "date-time"
         },
         "maxExpandedTeams": {
-          "description": "Max number of teams can be configured for a delivery plan.",
+          "description": "Max number of teams that can be configured for a delivery plan",
           "type": "integer",
           "format": "int32"
+        },
+        "parentItemMaps": {
+          "description": "Mapping between parent id, title and all the child work item ids",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ParentChildWIMap"
+          }
         },
         "startDate": {
           "description": "The start date for the delivery view data",
@@ -4825,6 +4886,14 @@
           "type": "array",
           "items": {
             "$ref": "#/definitions/TimelineTeamData"
+          }
+        },
+        "workItemViolations": {
+          "description": "List of all work item ids that have a violation",
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "format": "int32"
           }
         }
       }
@@ -4849,6 +4918,13 @@
           "type": "array",
           "items": {
             "$ref": "#/definitions/Marker"
+          }
+        },
+        "styleSettings": {
+          "description": "Card style settings",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Rule"
           }
         },
         "teamBacklogMappings": {
@@ -5069,6 +5145,26 @@
         }
       }
     },
+    "IterationCapacity": {
+      "description": "Capacity and teams for all teams in an iteration",
+      "type": "object",
+      "properties": {
+        "teams": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TeamCapacityTotals"
+          }
+        },
+        "totalIterationCapacityPerDay": {
+          "type": "number",
+          "format": "double"
+        },
+        "totalIterationDaysOff": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
     "IterationWorkItems": {
       "description": "Represents work items in an iteration backlog",
       "type": "object",
@@ -5165,6 +5261,9 @@
           "format": "int32"
         },
         "title": {
+          "type": "string"
+        },
+        "workItemTypeName": {
           "type": "string"
         }
       }
@@ -5600,6 +5699,44 @@
         "teamId": {
           "type": "string",
           "format": "uuid"
+        }
+      }
+    },
+    "TeamCapacity": {
+      "description": "Represents team member capacity with totals aggregated",
+      "type": "object",
+      "properties": {
+        "teamMembers": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TeamMemberCapacityIdentityRef"
+          }
+        },
+        "totalCapacityPerDay": {
+          "type": "number",
+          "format": "double"
+        },
+        "totalDaysOff": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "TeamCapacityTotals": {
+      "description": "Team information with total capacity and days off",
+      "type": "object",
+      "properties": {
+        "teamCapacityPerDay": {
+          "type": "number",
+          "format": "double"
+        },
+        "teamId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "teamTotalDaysOff": {
+          "type": "integer",
+          "format": "int32"
         }
       }
     },
@@ -6126,10 +6263,26 @@
             "type": "string"
           }
         },
+        "partiallyPagedWorkItems": {
+          "type": "array",
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          }
+        },
         "projectId": {
           "description": "The project id the team belongs team",
           "type": "string",
           "format": "uuid"
+        },
+        "rollupWorkItemTypes": {
+          "description": "Work item types for which we will collect roll up data on the client side",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
         },
         "status": {
           "description": "Status for this team.",
@@ -6148,6 +6301,16 @@
           "type": "array",
           "items": {
             "$ref": "#/definitions/TeamFieldValue"
+          }
+        },
+        "workItems": {
+          "description": "Work items associated with the team that are not under any of the team's iterations",
+          "type": "array",
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
           }
         },
         "workItemTypeColors": {
@@ -6581,6 +6744,13 @@
       "name": "api-version",
       "in": "query",
       "description": "Version of the API to use.  This should be set to '6.1-preview.2' to use this version of the api.",
+      "required": true,
+      "type": "string"
+    },
+    "api-Version-preview.3": {
+      "name": "api-version",
+      "in": "query",
+      "description": "Version of the API to use.  This should be set to '6.1-preview.3' to use this version of the api.",
       "required": true,
       "type": "string"
     }
