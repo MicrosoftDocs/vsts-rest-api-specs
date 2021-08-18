@@ -600,6 +600,13 @@
             "type": "boolean"
           },
           {
+            "in": "query",
+            "name": "includeUrls",
+            "description": "Resolve names if true",
+            "required": false,
+            "type": "boolean"
+          },
+          {
             "$ref": "#/parameters/api-Version-preview.1"
           }
         ],
@@ -1723,6 +1730,62 @@
       }
     },
     "/{organization}/{project}/_apis/packaging/Feeds/{feedId}/RecycleBin/Packages": {
+      "delete": {
+        "tags": [
+          "Recycle  Bin"
+        ],
+        "x-ms-docs-override-version": "6.1-preview.1",
+        "x-ms-vss-resource": "recycleBinPackages",
+        "x-ms-vss-method": "EmptyRecycleBin",
+        "x-ms-preview": true,
+        "description": "Queues a job to remove all package versions from a feed's recycle bin",
+        "operationId": "Recycle  Bin_Empty Recycle Bin",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "feedId",
+            "description": "Name or Id of the feed",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "x-ms-required": false,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/OperationReference"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.packaging_manage"
+            ]
+          }
+        ]
+      },
       "get": {
         "tags": [
           "Recycle  Bin"
@@ -3299,6 +3362,66 @@
         }
       }
     },
+    "OperationReference": {
+      "description": "Reference for an async operation.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "Unique identifier for the operation.",
+          "type": "string",
+          "format": "uuid"
+        },
+        "pluginId": {
+          "description": "Unique identifier for the plugin.",
+          "type": "string",
+          "format": "uuid"
+        },
+        "status": {
+          "description": "The current status of the operation.",
+          "enum": [
+            "notSet",
+            "queued",
+            "inProgress",
+            "cancelled",
+            "succeeded",
+            "failed"
+          ],
+          "x-ms-enum": {
+            "name": "OperationStatus",
+            "values": [
+              {
+                "value": "notSet",
+                "description": "The operation does not have a status set."
+              },
+              {
+                "value": "queued",
+                "description": "The operation has been queued."
+              },
+              {
+                "value": "inProgress",
+                "description": "The operation is in progress."
+              },
+              {
+                "value": "cancelled",
+                "description": "The operation was cancelled by the user."
+              },
+              {
+                "value": "succeeded",
+                "description": "The operation completed successfully."
+              },
+              {
+                "value": "failed",
+                "description": "The operation completed with a failure."
+              }
+            ]
+          }
+        },
+        "url": {
+          "description": "URL to get the full operation object.",
+          "type": "string"
+        }
+      }
+    },
     "Package": {
       "description": "A package, which is a container for one or more package versions.",
       "type": "object",
@@ -3813,6 +3936,16 @@
         "protocol": {
           "description": "Package type associated with the upstream source.",
           "type": "string"
+        },
+        "serviceEndpointId": {
+          "description": "The identity of the service endpoint that holds credentials to use when accessing the upstream.",
+          "type": "string",
+          "format": "uuid"
+        },
+        "serviceEndpointProjectId": {
+          "description": "Specifies the projectId of the Service Endpoint.",
+          "type": "string",
+          "format": "uuid"
         },
         "status": {
           "description": "Specifies the status of the upstream.",
