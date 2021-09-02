@@ -28,10 +28,6 @@
       "description": "The endpoint to query and retrieve symbol client.\n\nTrace Format: Artifact Services: 57, Symbol Service: 3, ClientController: 3 -> 5733MM0 for all Exception traces"
     },
     {
-      "name": "Contents",
-      "description": "The endpoint to stitch chunks of a chunk dedup debug entry.\n\nTrace Format: Artifact Services: 57, Symbol Service: 3, SymbolContentController: 7 -> 5737MM0 for all Exception traces"
-    },
-    {
       "name": "Requests",
       "description": "The endpoints to perfrom CRUD operations on symbol requests and debug entries.\n\nTrace Format: Artifact Services: 57, Symbol Service: 3, Requests2Controller: 5 -> 5735MM0 for all Exception traces"
     },
@@ -681,60 +677,6 @@
         }
       }
     },
-    "/{organization}/_apis/symbol/requests/{requestId}/contents/{debugEntryId}": {
-      "get": {
-        "tags": [
-          "Contents"
-        ],
-        "x-ms-docs-override-version": "6.1-preview.1",
-        "x-ms-vss-resource": "contents",
-        "x-ms-vss-method": "GetDebugEntryContentAsync",
-        "x-ms-preview": true,
-        "description": "Get a stitched debug entry for a symbol request as specified by symbol request identifier and debug entry identifier.",
-        "operationId": "Contents_Get",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "organization",
-            "description": "The name of the Azure DevOps organization.",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "in": "path",
-            "name": "requestId",
-            "description": "The symbol request identifier.",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "in": "path",
-            "name": "debugEntryId",
-            "description": "The debug entry identifier.",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "$ref": "#/parameters/api-Version-preview.1"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "The debug entry is found and stream content is placed in the response content."
-          },
-          "404": {
-            "description": "No content was found for this debug entry identifier."
-          }
-        },
-        "security": [
-          {
-            "oauth2": [
-              "vso.symbols"
-            ]
-          }
-        ]
-      }
-    },
     "/{organization}/_apis/symbol/symsrv/{debugEntryClientKey}": {
       "get": {
         "tags": [
@@ -901,10 +843,6 @@
           "description": "A key the client (debugger, for example) uses to find the debug entry. Note it is not unique for each different symbol file as it does not distinguish between those which only differ by information level.",
           "type": "string"
         },
-        "domainId": {
-          "description": "The Domain Id where this debugEntry lives. This property should not be null.",
-          "$ref": "#/definitions/IDomainId"
-        },
         "informationLevel": {
           "description": "The information level this debug entry contains.",
           "enum": [
@@ -1031,20 +969,8 @@
           "items": {
             "$ref": "#/definitions/DebugEntry"
           }
-        },
-        "proofNodes": {
-          "description": "Serialized Proof nodes, used to verify uploads on server side for Chunk Dedup DebugEntry",
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
         }
       }
-    },
-    "IDomainId": {
-      "description": "",
-      "type": "object",
-      "properties": {}
     },
     "JsonBlobBlockHash": {
       "description": "BlobBlock hash formatted to be deserialized for symbol service.",
@@ -1106,10 +1032,6 @@
         "description": {
           "description": "An optional human-facing description.",
           "type": "string"
-        },
-        "domainId": {
-          "description": "The Domain Id where this request lives. This property should not be null.",
-          "$ref": "#/definitions/IDomainId"
         },
         "expirationDate": {
           "description": "An optional expiration date for the request. The request will become inaccessible and get deleted after the date, regardless of its status.  On an HTTP POST, if expiration date is null/missing, the server will assign a default expiration data (30 days unless overwridden in the registry at the account level). On PATCH, if expiration date is null/missing, the behavior is to not change whatever the request's current expiration date is.",
