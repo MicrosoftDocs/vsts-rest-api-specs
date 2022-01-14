@@ -1,0 +1,1382 @@
+﻿{
+  "swagger": "2.0",
+  "info": {
+    "title": "Pipelines",
+    "description": "",
+    "termsOfService": "https://go.microsoft.com/fwlink/?LinkId=329770",
+    "contact": {
+      "name": "nugetvss",
+      "email": "nugetvss@microsoft.com"
+    },
+    "license": {
+      "name": "MICROSOFT SOFTWARE LICENSE TERMS",
+      "url": "https://go.microsoft.com/fwlink/?LinkId=329770"
+    },
+    "version": "7.1-preview"
+  },
+  "host": "dev.azure.com",
+  "x-ms-vss-area": "Pipelines",
+  "basePath": "/",
+  "tags": [
+    {
+      "name": "Artifacts"
+    },
+    {
+      "name": "Logs"
+    },
+    {
+      "name": "Pipelines"
+    },
+    {
+      "name": "Preview"
+    },
+    {
+      "name": "Runs"
+    }
+  ],
+  "schemes": [
+    "https"
+  ],
+  "paths": {
+    "/{organization}/{project}/_apis/pipelines": {
+      "post": {
+        "tags": [
+          "Pipelines"
+        ],
+        "x-ms-docs-override-version": "7.1-preview.1",
+        "x-ms-vss-resource": "pipelines",
+        "x-ms-vss-method": "CreatePipeline",
+        "x-ms-preview": true,
+        "description": "Create a pipeline.",
+        "operationId": "Pipelines_Create",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Input parameters.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CreatePipelineParameters"
+            }
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/Pipeline"
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Pipelines"
+        ],
+        "x-ms-docs-override-version": "7.1-preview.1",
+        "x-ms-vss-resource": "pipelines",
+        "x-ms-vss-method": "ListPipelines",
+        "x-ms-preview": true,
+        "description": "Get a list of pipelines.",
+        "operationId": "Pipelines_List",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "orderBy",
+            "description": "A sort expression. Defaults to \"name asc\"",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "$top",
+            "description": "The maximum number of pipelines to return",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "continuationToken",
+            "description": "A continuation token from a previous request, to retrieve the next page of results",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Pipeline"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/{organization}/{project}/_apis/pipelines/{pipelineId}": {
+      "get": {
+        "tags": [
+          "Pipelines"
+        ],
+        "x-ms-docs-override-version": "7.1-preview.1",
+        "x-ms-vss-resource": "pipelines",
+        "x-ms-vss-method": "GetPipeline",
+        "x-ms-preview": true,
+        "description": "Gets a pipeline, optionally at the specified version",
+        "operationId": "Pipelines_Get",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "pipelineId",
+            "description": "The pipeline ID",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "pipelineVersion",
+            "description": "The pipeline version",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/Pipeline"
+            }
+          }
+        }
+      }
+    },
+    "/{organization}/{project}/_apis/pipelines/{pipelineId}/preview": {
+      "post": {
+        "tags": [
+          "Preview"
+        ],
+        "x-ms-docs-override-version": "7.1-preview.1",
+        "x-ms-vss-resource": "preview",
+        "x-ms-vss-method": "Preview",
+        "x-ms-preview": true,
+        "description": "Queues a dry run of the pipeline and returns an object containing the final yaml.",
+        "operationId": "Preview_Preview",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Optional additional parameters for this run.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/RunPipelineParameters"
+            }
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "pipelineId",
+            "description": "The pipeline ID.",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "pipelineVersion",
+            "description": "The pipeline version.",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/PreviewRun"
+            }
+          }
+        }
+      }
+    },
+    "/{organization}/{project}/_apis/pipelines/{pipelineId}/runs": {
+      "get": {
+        "tags": [
+          "Runs"
+        ],
+        "x-ms-docs-override-version": "7.1-preview.1",
+        "x-ms-vss-resource": "runs",
+        "x-ms-vss-method": "ListRuns",
+        "x-ms-preview": true,
+        "description": "Gets top 10000 runs for a particular pipeline.",
+        "operationId": "Runs_List",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "pipelineId",
+            "description": "The pipeline id",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Run"
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Runs"
+        ],
+        "x-ms-docs-override-version": "7.1-preview.1",
+        "x-ms-vss-resource": "runs",
+        "x-ms-vss-method": "RunPipeline",
+        "x-ms-preview": true,
+        "description": "Runs a pipeline.",
+        "operationId": "Runs_Run Pipeline",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Optional additional parameters for this run.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/RunPipelineParameters"
+            }
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "pipelineId",
+            "description": "The pipeline ID.",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "pipelineVersion",
+            "description": "The pipeline version.",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/Run"
+            }
+          }
+        }
+      }
+    },
+    "/{organization}/{project}/_apis/pipelines/{pipelineId}/runs/{runId}": {
+      "get": {
+        "tags": [
+          "Runs"
+        ],
+        "x-ms-docs-override-version": "7.1-preview.1",
+        "x-ms-vss-resource": "runs",
+        "x-ms-vss-method": "GetRun",
+        "x-ms-preview": true,
+        "description": "Gets a run for a particular pipeline.",
+        "operationId": "Runs_Get",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "pipelineId",
+            "description": "The pipeline id",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "path",
+            "name": "runId",
+            "description": "The run id",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/Run"
+            }
+          }
+        }
+      }
+    },
+    "/{organization}/{project}/_apis/pipelines/{pipelineId}/runs/{runId}/artifacts": {
+      "get": {
+        "tags": [
+          "Artifacts"
+        ],
+        "x-ms-docs-override-version": "7.1-preview.1",
+        "x-ms-vss-resource": "artifacts",
+        "x-ms-vss-method": "GetArtifact",
+        "x-ms-preview": true,
+        "description": "Get a specific artifact from a pipeline run",
+        "operationId": "Artifacts_Get",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "pipelineId",
+            "description": "ID of the pipeline.",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "path",
+            "name": "runId",
+            "description": "ID of the run of that pipeline.",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "artifactName",
+            "description": "Name of the artifact.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "$expand",
+            "description": "Expand options. Default is None.",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "none",
+              "signedContent"
+            ],
+            "x-ms-enum": {
+              "name": "GetArtifactExpandOptions",
+              "values": [
+                {
+                  "value": "none",
+                  "description": "No expansion."
+                },
+                {
+                  "value": "signedContent",
+                  "description": "Include signed content."
+                }
+              ]
+            }
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/Artifact"
+            }
+          }
+        }
+      }
+    },
+    "/{organization}/{project}/_apis/pipelines/{pipelineId}/runs/{runId}/logs": {
+      "get": {
+        "tags": [
+          "Logs"
+        ],
+        "x-ms-docs-override-version": "7.1-preview.1",
+        "x-ms-vss-resource": "logs",
+        "x-ms-vss-method": "ListLogs",
+        "x-ms-preview": true,
+        "description": "Get a list of logs from a pipeline run.",
+        "operationId": "Logs_List",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "pipelineId",
+            "description": "ID of the pipeline.",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "path",
+            "name": "runId",
+            "description": "ID of the run of that pipeline.",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "$expand",
+            "description": "Expand options. Default is None.",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "none",
+              "signedContent"
+            ],
+            "x-ms-enum": {
+              "name": "GetLogExpandOptions",
+              "values": [
+                {
+                  "value": "none",
+                  "description": ""
+                },
+                {
+                  "value": "signedContent",
+                  "description": ""
+                }
+              ]
+            }
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/LogCollection"
+            }
+          }
+        }
+      }
+    },
+    "/{organization}/{project}/_apis/pipelines/{pipelineId}/runs/{runId}/logs/{logId}": {
+      "get": {
+        "tags": [
+          "Logs"
+        ],
+        "x-ms-docs-override-version": "7.1-preview.1",
+        "x-ms-vss-resource": "logs",
+        "x-ms-vss-method": "GetLog",
+        "x-ms-preview": true,
+        "description": "Get a specific log from a pipeline run",
+        "operationId": "Logs_Get",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "pipelineId",
+            "description": "ID of the pipeline.",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "path",
+            "name": "runId",
+            "description": "ID of the run of that pipeline.",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "path",
+            "name": "logId",
+            "description": "ID of the log.",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "$expand",
+            "description": "Expand options. Default is None.",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "none",
+              "signedContent"
+            ],
+            "x-ms-enum": {
+              "name": "GetLogExpandOptions",
+              "values": [
+                {
+                  "value": "none",
+                  "description": ""
+                },
+                {
+                  "value": "signedContent",
+                  "description": ""
+                }
+              ]
+            }
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/Log"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "Artifact": {
+      "description": "Artifacts are collections of files produced by a pipeline. Use artifacts to share files between stages in a pipeline or between different pipelines.",
+      "type": "object",
+      "properties": {
+        "name": {
+          "description": "The name of the artifact.",
+          "type": "string"
+        },
+        "signedContent": {
+          "description": "Signed url for downloading this artifact",
+          "$ref": "#/definitions/SignedUrl"
+        },
+        "url": {
+          "description": "Self-referential url",
+          "type": "string"
+        }
+      }
+    },
+    "BuildResourceParameters": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "version": {
+          "type": "string"
+        }
+      }
+    },
+    "ContainerResourceParameters": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "version": {
+          "type": "string"
+        }
+      }
+    },
+    "CreatePipelineConfigurationParameters": {
+      "description": "Configuration parameters of the pipeline.",
+      "type": "object",
+      "properties": {
+        "type": {
+          "description": "Type of configuration.",
+          "enum": [
+            "unknown",
+            "yaml",
+            "designerJson",
+            "justInTime",
+            "designerHyphenJson"
+          ],
+          "x-ms-enum": {
+            "name": "ConfigurationType",
+            "values": [
+              {
+                "value": "unknown",
+                "description": "Unknown type."
+              },
+              {
+                "value": "yaml",
+                "description": "YAML."
+              },
+              {
+                "value": "designerJson",
+                "description": "Designer JSON."
+              },
+              {
+                "value": "justInTime",
+                "description": "Just-in-time."
+              },
+              {
+                "value": "designerHyphenJson",
+                "description": "Designer-JSON."
+              }
+            ]
+          }
+        }
+      }
+    },
+    "CreatePipelineParameters": {
+      "description": "Parameters to create a pipeline.",
+      "type": "object",
+      "properties": {
+        "configuration": {
+          "description": "Configuration parameters of the pipeline.",
+          "$ref": "#/definitions/CreatePipelineConfigurationParameters"
+        },
+        "folder": {
+          "description": "Folder of the pipeline.",
+          "type": "string"
+        },
+        "name": {
+          "description": "Name of the pipeline.",
+          "type": "string"
+        }
+      }
+    },
+    "Log": {
+      "description": "Log for a pipeline.",
+      "type": "object",
+      "properties": {
+        "createdOn": {
+          "description": "The date and time the log was created.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "id": {
+          "description": "The ID of the log.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "lastChangedOn": {
+          "description": "The date and time the log was last changed.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "lineCount": {
+          "description": "The number of lines in the log.",
+          "type": "integer",
+          "format": "int64"
+        },
+        "signedContent": {
+          "$ref": "#/definitions/SignedUrl"
+        },
+        "url": {
+          "type": "string"
+        }
+      }
+    },
+    "LogCollection": {
+      "description": "A collection of logs.",
+      "type": "object",
+      "properties": {
+        "logs": {
+          "description": "The list of logs.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Log"
+          }
+        },
+        "signedContent": {
+          "$ref": "#/definitions/SignedUrl"
+        },
+        "url": {
+          "description": "URL of the log.",
+          "type": "string"
+        }
+      }
+    },
+    "PackageResourceParameters": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "version": {
+          "type": "string"
+        }
+      }
+    },
+    "Pipeline": {
+      "description": "Definition of a pipeline.",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/PipelineBase"
+        }
+      ],
+      "properties": {
+        "_links": {
+          "$ref": "#/definitions/ReferenceLinks"
+        },
+        "configuration": {
+          "$ref": "#/definitions/PipelineConfiguration"
+        },
+        "url": {
+          "description": "URL of the pipeline",
+          "type": "string"
+        }
+      }
+    },
+    "PipelineBase": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "folder": {
+          "description": "Pipeline folder",
+          "type": "string"
+        },
+        "id": {
+          "description": "Pipeline ID",
+          "type": "integer",
+          "format": "int32"
+        },
+        "name": {
+          "description": "Pipeline name",
+          "type": "string"
+        },
+        "revision": {
+          "description": "Revision number",
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "PipelineConfiguration": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "type": {
+          "enum": [
+            "unknown",
+            "yaml",
+            "designerJson",
+            "justInTime",
+            "designerHyphenJson"
+          ],
+          "x-ms-enum": {
+            "name": "ConfigurationType",
+            "values": [
+              {
+                "value": "unknown",
+                "description": "Unknown type."
+              },
+              {
+                "value": "yaml",
+                "description": "YAML."
+              },
+              {
+                "value": "designerJson",
+                "description": "Designer JSON."
+              },
+              {
+                "value": "justInTime",
+                "description": "Just-in-time."
+              },
+              {
+                "value": "designerHyphenJson",
+                "description": "Designer-JSON."
+              }
+            ]
+          }
+        }
+      }
+    },
+    "PipelineReference": {
+      "description": "A reference to a Pipeline.",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/PipelineBase"
+        }
+      ],
+      "properties": {
+        "url": {
+          "type": "string"
+        }
+      }
+    },
+    "PipelineResourceParameters": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "version": {
+          "type": "string"
+        }
+      }
+    },
+    "PreviewRun": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "finalYaml": {
+          "type": "string"
+        }
+      }
+    },
+    "ReferenceLinks": {
+      "description": "The class to represent a collection of REST reference links.",
+      "type": "object",
+      "properties": {
+        "links": {
+          "description": "The readonly view of the links.  Because Reference links are readonly, we only want to expose them as read only.",
+          "type": "object",
+          "additionalProperties": {
+            "type": "object"
+          }
+        }
+      }
+    },
+    "Repository": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "type": {
+          "enum": [
+            "unknown",
+            "gitHub",
+            "azureReposGit",
+            "gitHubEnterprise",
+            "azureReposGitHyphenated"
+          ],
+          "x-ms-enum": {
+            "name": "RepositoryType",
+            "values": [
+              {
+                "value": "unknown",
+                "description": ""
+              },
+              {
+                "value": "gitHub",
+                "description": ""
+              },
+              {
+                "value": "azureReposGit",
+                "description": ""
+              },
+              {
+                "value": "gitHubEnterprise",
+                "description": ""
+              },
+              {
+                "value": "azureReposGitHyphenated",
+                "description": ""
+              }
+            ]
+          }
+        }
+      }
+    },
+    "RepositoryResource": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "refName": {
+          "type": "string"
+        },
+        "repository": {
+          "$ref": "#/definitions/Repository"
+        },
+        "version": {
+          "type": "string"
+        }
+      }
+    },
+    "RepositoryResourceParameters": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "refName": {
+          "type": "string"
+        },
+        "token": {
+          "description": "This is the security token to use when connecting to the repository.",
+          "type": "string"
+        },
+        "tokenType": {
+          "description": "Optional. This is the type of the token given. If not provided, a type of \"Bearer\" is assumed. Note: Use \"Basic\" for a PAT token.",
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        }
+      }
+    },
+    "Run": {
+      "description": "",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/RunReference"
+        }
+      ],
+      "properties": {
+        "_links": {
+          "$ref": "#/definitions/ReferenceLinks"
+        },
+        "createdDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "finalYaml": {
+          "type": "string"
+        },
+        "finishedDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "pipeline": {
+          "$ref": "#/definitions/PipelineReference"
+        },
+        "resources": {
+          "$ref": "#/definitions/RunResources"
+        },
+        "result": {
+          "enum": [
+            "unknown",
+            "succeeded",
+            "failed",
+            "canceled"
+          ],
+          "x-ms-enum": {
+            "name": "RunResult",
+            "values": [
+              {
+                "value": "unknown",
+                "description": ""
+              },
+              {
+                "value": "succeeded",
+                "description": ""
+              },
+              {
+                "value": "failed",
+                "description": ""
+              },
+              {
+                "value": "canceled",
+                "description": ""
+              }
+            ]
+          }
+        },
+        "state": {
+          "enum": [
+            "unknown",
+            "inProgress",
+            "canceling",
+            "completed"
+          ],
+          "x-ms-enum": {
+            "name": "RunState",
+            "values": [
+              {
+                "value": "unknown",
+                "description": ""
+              },
+              {
+                "value": "inProgress",
+                "description": ""
+              },
+              {
+                "value": "canceling",
+                "description": ""
+              },
+              {
+                "value": "completed",
+                "description": ""
+              }
+            ]
+          }
+        },
+        "url": {
+          "type": "string"
+        },
+        "variables": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/Variable"
+          }
+        }
+      }
+    },
+    "RunPipelineParameters": {
+      "description": "Settings which influence pipeline runs.",
+      "type": "object",
+      "properties": {
+        "previewRun": {
+          "description": "If true, don't actually create a new run. Instead, return the final YAML document after parsing templates.",
+          "type": "boolean"
+        },
+        "resources": {
+          "description": "The resources the run requires.",
+          "$ref": "#/definitions/RunResourcesParameters"
+        },
+        "stagesToSkip": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "templateParameters": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "variables": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/Variable"
+          }
+        },
+        "yamlOverride": {
+          "description": "If you use the preview run option, you may optionally supply different YAML. This allows you to preview the final YAML document without committing a changed file.",
+          "type": "string"
+        }
+      }
+    },
+    "RunReference": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "RunResources": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "repositories": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/RepositoryResource"
+          }
+        }
+      }
+    },
+    "RunResourcesParameters": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "builds": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/BuildResourceParameters"
+          }
+        },
+        "containers": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/ContainerResourceParameters"
+          }
+        },
+        "packages": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/PackageResourceParameters"
+          }
+        },
+        "pipelines": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/PipelineResourceParameters"
+          }
+        },
+        "repositories": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/RepositoryResourceParameters"
+          }
+        }
+      }
+    },
+    "SignalRConnection": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "signedContent": {
+          "$ref": "#/definitions/SignedUrl"
+        }
+      }
+    },
+    "SignedUrl": {
+      "description": "A signed url allowing limited-time anonymous access to private resources.",
+      "type": "object",
+      "properties": {
+        "signatureExpires": {
+          "description": "Timestamp when access expires.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "url": {
+          "description": "The URL to allow access to.",
+          "type": "string"
+        }
+      }
+    },
+    "Variable": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "isSecret": {
+          "type": "boolean"
+        },
+        "value": {
+          "type": "string"
+        }
+      }
+    },
+    "VssJsonCollectionWrapper": {
+      "description": "This class is used to serialized collections as a single JSON object on the wire, to avoid serializing JSON arrays directly to the client, which can be a security hole",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/VssJsonCollectionWrapperBase"
+        }
+      ],
+      "properties": {
+        "value": {
+          "type": "string",
+          "format": "T"
+        }
+      }
+    },
+    "VssJsonCollectionWrapperBase": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "count": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    }
+  },
+  "parameters": {
+    "api-Version-preview.1": {
+      "name": "api-version",
+      "in": "query",
+      "description": "Version of the API to use.  This should be set to '7.1-preview.1' to use this version of the api.",
+      "required": true,
+      "type": "string"
+    }
+  },
+  "securityDefinitions": {
+    "accessToken": {
+      "type": "basic",
+      "description": "Personal access token. Use any value for the user name and the token as the password."
+    }
+  },
+  "security": [
+    {
+      "accessToken": []
+    }
+  ],
+  "externalDocs": {
+    "description": "Azure DevOps REST APIs",
+    "url": "https://aka.ms/azure-devops-rest-apis"
+  }
+}
