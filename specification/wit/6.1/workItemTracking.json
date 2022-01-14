@@ -74,6 +74,9 @@
       "description": "This controller version exists to support returning identity values and project scoped urls for work items"
     },
     {
+      "name": "Send Mail"
+    },
+    {
       "name": "Tags"
     },
     {
@@ -2059,6 +2062,13 @@
             "type": "boolean"
           },
           {
+            "in": "query",
+            "name": "$useIsoDateFormat",
+            "description": "DateTime query clauses will be formatted using a ISO 8601 compliant format",
+            "required": false,
+            "type": "boolean"
+          },
+          {
             "$ref": "#/parameters/api-Version-preview.2"
           }
         ],
@@ -2917,6 +2927,63 @@
             "schema": {
               "$ref": "#/definitions/ReportingWorkItemRevisionsBatch"
             }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.work"
+            ]
+          }
+        ]
+      }
+    },
+    "/{organization}/{project}/_apis/wit/sendmail": {
+      "post": {
+        "tags": [
+          "Send Mail"
+        ],
+        "x-ms-docs-override-version": "6.1-preview.1",
+        "x-ms-vss-resource": "sendMail",
+        "x-ms-vss-method": "SendMailAsync",
+        "x-ms-preview": true,
+        "description": "RESTful method to send mail for selected/queried work items.",
+        "operationId": "Send Mail_Send Mail",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/SendMailBody"
+            }
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "x-ms-required": false,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
           }
         },
         "security": [
@@ -7520,6 +7587,35 @@
         }
       }
     },
+    "EmailRecipients": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "emailAddresses": {
+          "description": "Plaintext email addresses.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "tfIds": {
+          "description": "TfIds",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "unresolvedEntityIds": {
+          "description": "Unresolved entity ids",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      }
+    },
     "ExternalDeployment": {
       "description": "",
       "type": "object",
@@ -7799,6 +7895,40 @@
         "url": {
           "description": "Link url.",
           "type": "string"
+        }
+      }
+    },
+    "MailMessage": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "body": {
+          "description": "The mail body in HTML format.",
+          "type": "string"
+        },
+        "cc": {
+          "description": "CC recipients.",
+          "$ref": "#/definitions/EmailRecipients"
+        },
+        "inReplyTo": {
+          "description": "The in-reply-to header value",
+          "type": "string"
+        },
+        "messageId": {
+          "description": "The Message Id value",
+          "type": "string"
+        },
+        "replyTo": {
+          "description": "Reply To recipients.",
+          "$ref": "#/definitions/EmailRecipients"
+        },
+        "subject": {
+          "description": "The mail subject.",
+          "type": "string"
+        },
+        "to": {
+          "description": "To recipients",
+          "$ref": "#/definitions/EmailRecipients"
         }
       }
     },
@@ -8218,6 +8348,47 @@
           "items": {
             "type": "string"
           }
+        }
+      }
+    },
+    "SendMailBody": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "fields": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "ids": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "message": {
+          "$ref": "#/definitions/MailMessage"
+        },
+        "persistenceId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "projectId": {
+          "type": "string"
+        },
+        "sortFields": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "tempQueryId": {
+          "type": "string"
+        },
+        "wiql": {
+          "type": "string"
         }
       }
     },

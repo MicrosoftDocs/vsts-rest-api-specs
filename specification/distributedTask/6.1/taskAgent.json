@@ -238,6 +238,60 @@
             }
           }
         }
+      },
+      "patch": {
+        "tags": [
+          "Agentclouds"
+        ],
+        "x-ms-docs-override-version": "6.1-preview.1",
+        "x-ms-vss-resource": "agentclouds",
+        "x-ms-vss-method": "UpdateAgentCloud",
+        "x-ms-preview": true,
+        "description": "",
+        "operationId": "Agentclouds_Update",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/TaskAgentCloud"
+            }
+          },
+          {
+            "in": "path",
+            "name": "agentCloudId",
+            "description": "",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/TaskAgentCloud"
+            }
+          }
+        }
       }
     },
     "/{organization}/_apis/distributedtask/agentclouds/{agentCloudId}/requests": {
@@ -2331,7 +2385,14 @@
               "$ref": "#/definitions/EnvironmentInstance"
             }
           }
-        }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.environment_manage"
+            ]
+          }
+        ]
       },
       "get": {
         "tags": [
@@ -2397,7 +2458,14 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.environment_manage"
+            ]
+          }
+        ]
       }
     },
     "/{organization}/{project}/_apis/distributedtask/environments/{environmentId}": {
@@ -2442,7 +2510,14 @@
           "200": {
             "description": "successful operation"
           }
-        }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.environment_manage"
+            ]
+          }
+        ]
       },
       "get": {
         "tags": [
@@ -2515,7 +2590,14 @@
               "$ref": "#/definitions/EnvironmentInstance"
             }
           }
-        }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.environment_manage"
+            ]
+          }
+        ]
       },
       "patch": {
         "tags": [
@@ -2576,7 +2658,14 @@
               "$ref": "#/definitions/EnvironmentInstance"
             }
           }
-        }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.environment_manage"
+            ]
+          }
+        ]
       }
     },
     "/{organization}/{project}/_apis/distributedtask/environments/{environmentId}/environmentdeploymentrecords": {
@@ -2645,7 +2734,14 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.environment_manage"
+            ]
+          }
+        ]
       }
     },
     "/{organization}/{project}/_apis/distributedtask/environments/{environmentId}/providers/kubernetes": {
@@ -2708,7 +2804,14 @@
               "$ref": "#/definitions/KubernetesResource"
             }
           }
-        }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.environment_manage"
+            ]
+          }
+        ]
       }
     },
     "/{organization}/{project}/_apis/distributedtask/environments/{environmentId}/providers/kubernetes/{resourceId}": {
@@ -2761,7 +2864,14 @@
           "200": {
             "description": "successful operation"
           }
-        }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.environment_manage"
+            ]
+          }
+        ]
       },
       "get": {
         "tags": [
@@ -2818,7 +2928,14 @@
               "$ref": "#/definitions/KubernetesResource"
             }
           }
-        }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.environment_manage"
+            ]
+          }
+        ]
       }
     },
     "/{organization}/{project}/_apis/distributedtask/queues": {
@@ -5064,11 +5181,352 @@
         }
       }
     },
+    "ElasticNode": {
+      "description": "Data and settings for an elastic node",
+      "type": "object",
+      "properties": {
+        "agentId": {
+          "description": "Distributed Task's Agent Id",
+          "type": "integer",
+          "format": "int32"
+        },
+        "agentState": {
+          "description": "Summary of the state of the agent",
+          "enum": [
+            "none",
+            "enabled",
+            "online",
+            "assigned"
+          ],
+          "x-ms-enum": {
+            "name": "ElasticAgentState",
+            "values": [
+              {
+                "value": "none",
+                "description": ""
+              },
+              {
+                "value": "enabled",
+                "description": ""
+              },
+              {
+                "value": "online",
+                "description": ""
+              },
+              {
+                "value": "assigned",
+                "description": ""
+              }
+            ]
+          }
+        },
+        "computeId": {
+          "description": "Compute Id.  VMSS's InstanceId",
+          "type": "string"
+        },
+        "computeState": {
+          "description": "State of the compute host",
+          "enum": [
+            "none",
+            "healthy",
+            "creating",
+            "deleting",
+            "failed",
+            "stopped"
+          ],
+          "x-ms-enum": {
+            "name": "ElasticComputeState",
+            "values": [
+              {
+                "value": "none",
+                "description": ""
+              },
+              {
+                "value": "healthy",
+                "description": ""
+              },
+              {
+                "value": "creating",
+                "description": ""
+              },
+              {
+                "value": "deleting",
+                "description": ""
+              },
+              {
+                "value": "failed",
+                "description": ""
+              },
+              {
+                "value": "stopped",
+                "description": ""
+              }
+            ]
+          }
+        },
+        "desiredState": {
+          "description": "Users can force state changes to specific states (ToReimage, ToDelete, Save)",
+          "enum": [
+            "none",
+            "new",
+            "creatingCompute",
+            "startingAgent",
+            "idle",
+            "assigned",
+            "offline",
+            "pendingReimage",
+            "pendingDelete",
+            "saved",
+            "deletingCompute",
+            "deleted",
+            "lost"
+          ],
+          "x-ms-enum": {
+            "name": "ElasticNodeState",
+            "values": [
+              {
+                "value": "none",
+                "description": ""
+              },
+              {
+                "value": "new",
+                "description": ""
+              },
+              {
+                "value": "creatingCompute",
+                "description": ""
+              },
+              {
+                "value": "startingAgent",
+                "description": ""
+              },
+              {
+                "value": "idle",
+                "description": ""
+              },
+              {
+                "value": "assigned",
+                "description": ""
+              },
+              {
+                "value": "offline",
+                "description": ""
+              },
+              {
+                "value": "pendingReimage",
+                "description": ""
+              },
+              {
+                "value": "pendingDelete",
+                "description": ""
+              },
+              {
+                "value": "saved",
+                "description": ""
+              },
+              {
+                "value": "deletingCompute",
+                "description": ""
+              },
+              {
+                "value": "deleted",
+                "description": ""
+              },
+              {
+                "value": "lost",
+                "description": ""
+              }
+            ]
+          }
+        },
+        "id": {
+          "description": "Unique identifier since the agent and/or VM may be null",
+          "type": "integer",
+          "format": "int32"
+        },
+        "name": {
+          "description": "Computer name. Used to match a scaleset VM with an agent",
+          "type": "string"
+        },
+        "poolId": {
+          "description": "Pool Id that this node belongs to",
+          "type": "integer",
+          "format": "int32"
+        },
+        "requestId": {
+          "description": "Last job RequestId assigned to this agent",
+          "type": "integer",
+          "format": "int64"
+        },
+        "state": {
+          "description": "State of the ElasticNode",
+          "enum": [
+            "none",
+            "new",
+            "creatingCompute",
+            "startingAgent",
+            "idle",
+            "assigned",
+            "offline",
+            "pendingReimage",
+            "pendingDelete",
+            "saved",
+            "deletingCompute",
+            "deleted",
+            "lost"
+          ],
+          "x-ms-enum": {
+            "name": "ElasticNodeState",
+            "values": [
+              {
+                "value": "none",
+                "description": ""
+              },
+              {
+                "value": "new",
+                "description": ""
+              },
+              {
+                "value": "creatingCompute",
+                "description": ""
+              },
+              {
+                "value": "startingAgent",
+                "description": ""
+              },
+              {
+                "value": "idle",
+                "description": ""
+              },
+              {
+                "value": "assigned",
+                "description": ""
+              },
+              {
+                "value": "offline",
+                "description": ""
+              },
+              {
+                "value": "pendingReimage",
+                "description": ""
+              },
+              {
+                "value": "pendingDelete",
+                "description": ""
+              },
+              {
+                "value": "saved",
+                "description": ""
+              },
+              {
+                "value": "deletingCompute",
+                "description": ""
+              },
+              {
+                "value": "deleted",
+                "description": ""
+              },
+              {
+                "value": "lost",
+                "description": ""
+              }
+            ]
+          }
+        },
+        "stateChangedOn": {
+          "description": "Last state change. Only updated by SQL.",
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "ElasticNodeSettings": {
+      "description": "Class used for updating an elastic node where only certain members are populated",
+      "type": "object",
+      "properties": {
+        "state": {
+          "description": "State of the ElasticNode",
+          "enum": [
+            "none",
+            "new",
+            "creatingCompute",
+            "startingAgent",
+            "idle",
+            "assigned",
+            "offline",
+            "pendingReimage",
+            "pendingDelete",
+            "saved",
+            "deletingCompute",
+            "deleted",
+            "lost"
+          ],
+          "x-ms-enum": {
+            "name": "ElasticNodeState",
+            "values": [
+              {
+                "value": "none",
+                "description": ""
+              },
+              {
+                "value": "new",
+                "description": ""
+              },
+              {
+                "value": "creatingCompute",
+                "description": ""
+              },
+              {
+                "value": "startingAgent",
+                "description": ""
+              },
+              {
+                "value": "idle",
+                "description": ""
+              },
+              {
+                "value": "assigned",
+                "description": ""
+              },
+              {
+                "value": "offline",
+                "description": ""
+              },
+              {
+                "value": "pendingReimage",
+                "description": ""
+              },
+              {
+                "value": "pendingDelete",
+                "description": ""
+              },
+              {
+                "value": "saved",
+                "description": ""
+              },
+              {
+                "value": "deletingCompute",
+                "description": ""
+              },
+              {
+                "value": "deleted",
+                "description": ""
+              },
+              {
+                "value": "lost",
+                "description": ""
+              }
+            ]
+          }
+        }
+      }
+    },
     "ElasticPool": {
       "description": "Data and settings for an elastic pool",
       "type": "object",
       "properties": {
         "agentInteractiveUI": {
+          "description": "Set whether agents should be configured to run with interactive UI",
           "type": "boolean"
         },
         "azureId": {
@@ -5076,7 +5534,7 @@
           "type": "string"
         },
         "desiredIdle": {
-          "description": "Number of machines to have ready waiting for jobs",
+          "description": "Number of agents to have ready waiting for jobs",
           "type": "integer",
           "format": "int32"
         },
@@ -5086,7 +5544,12 @@
           "format": "int32"
         },
         "maxCapacity": {
-          "description": "Maximum number of machines that will exist in the elastic pool",
+          "description": "Maximum number of nodes that will exist in the elastic pool",
+          "type": "integer",
+          "format": "int32"
+        },
+        "maxSavedNodeCount": {
+          "description": "Keep nodes in the pool on failure for investigation",
           "type": "integer",
           "format": "int32"
         },
@@ -5096,7 +5559,7 @@
           "format": "date-time"
         },
         "osType": {
-          "description": "Operating system type of the machines in the pool",
+          "description": "Operating system type of the nodes in the pool",
           "enum": [
             "windows",
             "linux"
@@ -5120,12 +5583,8 @@
           "type": "integer",
           "format": "int32"
         },
-        "preserveFailures": {
-          "description": "Keep machines in the pool on failure for investigation",
-          "type": "boolean"
-        },
         "recycleAfterEachUse": {
-          "description": "Discard machines after each job completes",
+          "description": "Discard node after each job completes",
           "type": "boolean"
         },
         "serviceEndpointId": {
@@ -5174,8 +5633,27 @@
           }
         },
         "timeToLiveMinutes": {
+          "description": "The minimum time in minutes to keep idle agents alive",
           "type": "integer",
           "format": "int32"
+        }
+      }
+    },
+    "ElasticPoolCreationResult": {
+      "description": "Returned result from creating a new elastic pool",
+      "type": "object",
+      "properties": {
+        "agentPool": {
+          "description": "Created agent pool",
+          "$ref": "#/definitions/TaskAgentPool"
+        },
+        "agentQueue": {
+          "description": "Created agent queue",
+          "$ref": "#/definitions/TaskAgentQueue"
+        },
+        "elasticPool": {
+          "description": "Created elastic pool",
+          "$ref": "#/definitions/ElasticPool"
         }
       }
     },
@@ -5261,6 +5739,74 @@
           "description": "Datetime that the log occurred",
           "type": "string",
           "format": "date-time"
+        }
+      }
+    },
+    "ElasticPoolSettings": {
+      "description": "Class used for updating an elastic pool where only certain members are populated",
+      "type": "object",
+      "properties": {
+        "agentInteractiveUI": {
+          "description": "Set whether agents should be configured to run with interactive UI",
+          "type": "boolean"
+        },
+        "azureId": {
+          "description": "Azure string representing to location of the resource",
+          "type": "string"
+        },
+        "desiredIdle": {
+          "description": "Number of machines to have ready waiting for jobs",
+          "type": "integer",
+          "format": "int32"
+        },
+        "maxCapacity": {
+          "description": "Maximum number of machines that will exist in the elastic pool",
+          "type": "integer",
+          "format": "int32"
+        },
+        "maxSavedNodeCount": {
+          "description": "Keep machines in the pool on failure for investigation",
+          "type": "integer",
+          "format": "int32"
+        },
+        "osType": {
+          "description": "Operating system type of the machines in the pool",
+          "enum": [
+            "windows",
+            "linux"
+          ],
+          "x-ms-enum": {
+            "name": "OperatingSystemType",
+            "values": [
+              {
+                "value": "windows",
+                "description": ""
+              },
+              {
+                "value": "linux",
+                "description": ""
+              }
+            ]
+          }
+        },
+        "recycleAfterEachUse": {
+          "description": "Discard machines after each job completes",
+          "type": "boolean"
+        },
+        "serviceEndpointId": {
+          "description": "Id of the Service Endpoint used to connect to Azure",
+          "type": "string",
+          "format": "uuid"
+        },
+        "serviceEndpointScope": {
+          "description": "Scope the Service Endpoint belongs to",
+          "type": "string",
+          "format": "uuid"
+        },
+        "timeToLiveMinutes": {
+          "description": "The minimum time in minutes to keep idle agents alive",
+          "type": "integer",
+          "format": "int32"
         }
       }
     },
@@ -6161,6 +6707,24 @@
         }
       }
     },
+    "JobCanceledEvent": {
+      "description": "",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/JobEvent"
+        }
+      ],
+      "properties": {
+        "reason": {
+          "type": "string"
+        },
+        "timeout": {
+          "type": "string",
+          "format": "TimeSpan"
+        }
+      }
+    },
     "JobCancelMessage": {
       "description": "",
       "type": "object",
@@ -6325,6 +6889,34 @@
           "description": "Gets the node type for this JToken.",
           "type": "string",
           "format": "JTokenType"
+        }
+      }
+    },
+    "JobMetadataEvent": {
+      "description": "",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/JobEvent"
+        }
+      ],
+      "properties": {
+        "message": {
+          "$ref": "#/definitions/JobMetadataMessage"
+        }
+      }
+    },
+    "JobMetadataMessage": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "jobId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "postLinesFrequencyMillis": {
+          "type": "integer",
+          "format": "int32"
         }
       }
     },
@@ -6923,6 +7515,26 @@
           "type": "string",
           "format": "date-time"
         },
+        "lockType": {
+          "description": "The behavior this request should exhibit in relation to other lock requests",
+          "enum": [
+            "runLatest",
+            "sequential"
+          ],
+          "x-ms-enum": {
+            "name": "ExclusiveLockType",
+            "values": [
+              {
+                "value": "runLatest",
+                "description": ""
+              },
+              {
+                "value": "sequential",
+                "description": ""
+              }
+            ]
+          }
+        },
         "nodeAttempt": {
           "description": "Attempt of the graph node",
           "type": "integer",
@@ -6968,7 +7580,8 @@
             "finished",
             "timedOut",
             "canceled",
-            "abandoned"
+            "abandoned",
+            "waitingOnChecks"
           ],
           "x-ms-enum": {
             "name": "ResourceLockStatus",
@@ -6995,6 +7608,10 @@
               },
               {
                 "value": "abandoned",
+                "description": ""
+              },
+              {
+                "value": "waitingOnChecks",
                 "description": ""
               }
             ]
@@ -7777,12 +8394,14 @@
           "format": "date-time"
         },
         "systemCapabilities": {
+          "description": "System-defined capabilities supported by this agent's host. Warning: To set capabilities use the PUT method, PUT will completely overwrite existing capabilities.",
           "type": "object",
           "additionalProperties": {
             "type": "string"
           }
         },
         "userCapabilities": {
+          "description": "User-defined capabilities supported by this agent's host. Warning: To set capabilities use the PUT method, PUT will completely overwrite existing capabilities.",
           "type": "object",
           "additionalProperties": {
             "type": "string"
@@ -7924,22 +8543,6 @@
         }
       }
     },
-    "TaskAgentDelaySource": {
-      "description": "",
-      "type": "object",
-      "properties": {
-        "delays": {
-          "type": "array",
-          "items": {
-            "type": "string",
-            "format": "TimeSpan"
-          }
-        },
-        "taskAgent": {
-          "$ref": "#/definitions/TaskAgentReference"
-        }
-      }
-    },
     "TaskAgentDowngrade": {
       "description": "",
       "type": "object",
@@ -7988,12 +8591,6 @@
       "description": "A job request for an agent.",
       "type": "object",
       "properties": {
-        "agentDelays": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/TaskAgentDelaySource"
-          }
-        },
         "agentSpecification": {
           "$ref": "#/definitions/JObject"
         },
@@ -8019,10 +8616,6 @@
           "items": {
             "$ref": "#/definitions/Demand"
           }
-        },
-        "expectedDuration": {
-          "type": "string",
-          "format": "TimeSpan"
         },
         "finishTime": {
           "description": "The date/time this request was finished.",
@@ -8078,6 +8671,10 @@
         },
         "poolId": {
           "description": "The ID of the pool this request targets",
+          "type": "integer",
+          "format": "int32"
+        },
+        "priority": {
           "type": "integer",
           "format": "int32"
         },
@@ -8194,6 +8791,10 @@
         },
         "name": {
           "type": "string"
+        },
+        "retryCountOnTaskFailure": {
+          "type": "integer",
+          "format": "int32"
         },
         "task": {
           "$ref": "#/definitions/TaskAgentJobTask"
@@ -9078,6 +9679,31 @@
         }
       }
     },
+    "TaskCommandRestrictions": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "mode": {
+          "enum": [
+            "any",
+            "restricted"
+          ],
+          "x-ms-enum": {
+            "name": "TaskCommandMode",
+            "values": [
+              {
+                "value": "any",
+                "description": ""
+              },
+              {
+                "value": "restricted",
+                "description": ""
+              }
+            ]
+          }
+        }
+      }
+    },
     "TaskCompletedEvent": {
       "description": "",
       "type": "object",
@@ -9249,6 +9875,9 @@
         },
         "releaseNotes": {
           "type": "string"
+        },
+        "restrictions": {
+          "$ref": "#/definitions/TaskRestrictions"
         },
         "runsOn": {
           "type": "array",
@@ -9660,6 +10289,11 @@
             "type": "string"
           }
         },
+        "retryCountOnTaskFailure": {
+          "description": "Gets or sets the maximum number of retries",
+          "type": "integer",
+          "format": "int32"
+        },
         "task": {
           "description": "Gets or sets the reference of the task.",
           "$ref": "#/definitions/TaskDefinitionReference"
@@ -9931,6 +10565,10 @@
         },
         "refName": {
           "type": "string"
+        },
+        "retryCountOnTaskFailure": {
+          "type": "integer",
+          "format": "int32"
         },
         "timeoutInMinutes": {
           "type": "integer",
@@ -10426,6 +11064,18 @@
         }
       }
     },
+    "TaskRestrictions": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "commands": {
+          "$ref": "#/definitions/TaskCommandRestrictions"
+        },
+        "settableVariables": {
+          "$ref": "#/definitions/TaskVariableRestrictions"
+        }
+      }
+    },
     "TaskSourceDefinition": {
       "description": "",
       "type": "object",
@@ -10466,6 +11116,18 @@
         }
       ],
       "properties": {}
+    },
+    "TaskVariableRestrictions": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "allowed": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
     },
     "TaskVersion": {
       "description": "",
@@ -11047,7 +11709,8 @@
         "vso.variablegroups_read": "Grants the ability to read variable groups",
         "vso.securefiles_write": "Grants the ability to read and create secure files.",
         "vso.securefiles_read": "Grants the ability to read secure files.",
-        "vso.securefiles_manage": "Grants the ability to read, create, and manage secure files."
+        "vso.securefiles_manage": "Grants the ability to read, create, and manage secure files.",
+        "vso.environment_manage": "Provides ability to manage environment"
       }
     }
   },
