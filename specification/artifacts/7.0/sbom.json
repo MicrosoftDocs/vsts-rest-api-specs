@@ -1,0 +1,333 @@
+﻿{
+  "swagger": "2.0",
+  "info": {
+    "title": "SBOM",
+    "description": "",
+    "termsOfService": "https://go.microsoft.com/fwlink/?LinkId=329770",
+    "contact": {
+      "name": "nugetvss",
+      "email": "nugetvss@microsoft.com"
+    },
+    "license": {
+      "name": "MICROSOFT SOFTWARE LICENSE TERMS",
+      "url": "https://go.microsoft.com/fwlink/?LinkId=329770"
+    },
+    "version": "7.0-preview"
+  },
+  "host": "pkgs.dev.azure.com",
+  "x-ms-vss-area": "SBOM",
+  "x-ms-vss-resource-area-id": "2e504d18-2c0c-46f8-af8f-322d2af0068a",
+  "basePath": "/",
+  "tags": [],
+  "schemes": [
+    "https"
+  ],
+  "paths": {},
+  "definitions": {
+    "Configuration": {
+      "description": "This holds the configuration for the ManifestTool. The values in this file are populated from the command line, config file and default.",
+      "type": "object",
+      "properties": {
+        "additionalComponentDetectorArgs": {
+          "description": "Additional set of command-line arguments for Component Detector.",
+          "$ref": "#/definitions/ConfigurationSetting"
+        },
+        "buildComponentPath": {
+          "description": "The folder containing the build components and packages.",
+          "$ref": "#/definitions/ConfigurationSetting"
+        },
+        "buildDropPath": {
+          "description": "The root folder of the drop directory to validate or generate.",
+          "$ref": "#/definitions/ConfigurationSetting"
+        },
+        "buildListFile": {
+          "description": "Full file name of a list file that contains all files to be validated.",
+          "$ref": "#/definitions/ConfigurationSetting"
+        },
+        "catalogFilePath": {
+          "description": "The path of the signed catalog file used to validate the manifest.json.",
+          "$ref": "#/definitions/ConfigurationSetting"
+        },
+        "configFilePath": {
+          "description": "The json file that contains the configuration for the DropValidator.",
+          "$ref": "#/definitions/ConfigurationSetting"
+        },
+        "dockerImagesToScan": {
+          "description": "Comma separated list of docker image names or hashes to be scanned for packages, ex: ubuntu:16.04, 56bab49eef2ef07505f6a1b0d5bd3a601dfc3c76ad4460f24c91d6fa298369ab.",
+          "$ref": "#/definitions/ConfigurationSetting"
+        },
+        "externalDocumentReferenceListFile": {
+          "description": "Full file path to a file that contains list of external SBOMs to be included as External document reference.",
+          "$ref": "#/definitions/ConfigurationSetting"
+        },
+        "hashAlgorithm": {
+          "description": "The Hash algorithm to use while verifying the hash value of a file.",
+          "$ref": "#/definitions/ConfigurationSetting"
+        },
+        "ignoreMissing": {
+          "description": "If set, will not fail validation on the files presented in Manifest but missing on the disk.",
+          "$ref": "#/definitions/ConfigurationSetting"
+        },
+        "manifestDirPath": {
+          "description": "The root folder where the generated manifest (and other files like bsi.json) files will be placed. By default we will generate this folder in the same level as the build drop with the name '_manifest'",
+          "$ref": "#/definitions/ConfigurationSetting"
+        },
+        "manifestInfo": {
+          "description": "A list of name and version of the manifest that we are generating.",
+          "$ref": "#/definitions/ConfigurationSetting"
+        },
+        "manifestToolAction": {
+          "description": "The action currently being performed by the manifest tool.",
+          "enum": [
+            "none",
+            "validate",
+            "generate",
+            "all"
+          ],
+          "x-ms-enum": {
+            "name": "ManifestToolActions",
+            "values": [
+              {
+                "value": "none",
+                "description": ""
+              },
+              {
+                "value": "validate",
+                "description": ""
+              },
+              {
+                "value": "generate",
+                "description": ""
+              },
+              {
+                "value": "all",
+                "description": ""
+              }
+            ]
+          }
+        },
+        "packageName": {
+          "description": "The name of the package this SBOM represents.",
+          "$ref": "#/definitions/ConfigurationSetting"
+        },
+        "packageVersion": {
+          "description": "The version of the package this SBOM represents.",
+          "$ref": "#/definitions/ConfigurationSetting"
+        },
+        "parallelism": {
+          "description": "The number of parallel threads to use for the workflows.",
+          "$ref": "#/definitions/ConfigurationSetting"
+        },
+        "rootPathFilter": {
+          "description": "If you're downloading only a part of the drop using the '-r' or 'root' parameter in the drop client, specify the same string value here in order to skip validating paths that are not downloaded.",
+          "$ref": "#/definitions/ConfigurationSetting"
+        },
+        "telemetryFilePath": {
+          "description": "If specified, we will store the generated telemetry for the execution of the SBOM tool at this path.",
+          "$ref": "#/definitions/ConfigurationSetting"
+        },
+        "validateSignature": {
+          "description": "If set, will validate the manifest using the signed catalog file.",
+          "$ref": "#/definitions/ConfigurationSetting"
+        }
+      }
+    },
+    "ConfigurationSetting": {
+      "description": "Encapsulates a configuration setting to provide metadata about the setting source and type.",
+      "type": "object",
+      "properties": {
+        "source": {
+          "description": "The source where this setting came from.",
+          "type": "string"
+        },
+        "value": {
+          "description": "The actual value of the setting.",
+          "type": "string",
+          "format": "T"
+        }
+      }
+    },
+    "FileHash": {
+      "description": "Used to provide the filename and hash of the SBOM file to be added to the catalog file.",
+      "type": "object",
+      "properties": {
+        "fileName": {
+          "description": "The filename of the SBOM.",
+          "type": "string"
+        },
+        "hash": {
+          "description": "The string hash of the SBOM file.",
+          "type": "string"
+        },
+        "hashAlgorithmName": {
+          "description": "The HashAlgorithmName used to generate the hash of the file.",
+          "type": "string",
+          "format": "HashAlgorithmName"
+        }
+      }
+    },
+    "ManifestInfo": {
+      "description": "Defines a manifest name and version.",
+      "type": "object",
+      "properties": {
+        "name": {
+          "description": "The name of the manifest.",
+          "type": "string"
+        },
+        "version": {
+          "description": "The version of the manifest.",
+          "type": "string"
+        }
+      }
+    },
+    "SBOMFile": {
+      "description": "Represents a SBOM file object and contains additional properties related to the file.",
+      "type": "object",
+      "properties": {
+        "fileSizeInBytes": {
+          "description": "The size of the SBOM file in bytes.",
+          "type": "integer",
+          "format": "int64"
+        },
+        "sbomFilePath": {
+          "description": "The path where the final generated SBOM is placed.",
+          "type": "string"
+        },
+        "sbomFormatName": {
+          "description": "The name and version of the format of the generated SBOM.",
+          "$ref": "#/definitions/ManifestInfo"
+        }
+      }
+    },
+    "SBOMTelemetry": {
+      "description": "The telemetry that is logged to a file/console for the given SBOM execution.",
+      "type": "object",
+      "properties": {
+        "bsiData": {
+          "description": "All available bsi data from the task build execution which includes build and system environment variables like repository and build information.",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "bsiSource": {
+          "description": "The source of the bsi data.",
+          "type": "string"
+        },
+        "e2ETaskResult": {
+          "description": "The end to end results of the extension task.",
+          "type": "string"
+        },
+        "parameters": {
+          "description": "A list of ConfigurationSetting`1 representing each input parameter used in the validation.",
+          "$ref": "#/definitions/Configuration"
+        },
+        "result": {
+          "description": "The result of the execution",
+          "type": "string"
+        },
+        "sbomFormatsUsed": {
+          "description": "A list of the SBOM formats and related file properties that was used in the generation/validation of the SBOM.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SBOMFile"
+          }
+        },
+        "switches": {
+          "description": "Any internal switches and their value that were used during the execution. A switch can be something that was provided through a configuraiton or an environment variable.",
+          "type": "object",
+          "additionalProperties": {
+            "type": "object"
+          }
+        },
+        "taskErrorMessage": {
+          "description": "Error messages that came from the extension task.",
+          "type": "string"
+        },
+        "toolExecutionResult": {
+          "description": "The result of the tool as a numeric value.",
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "SignResponseBase": {
+      "description": "The base reponse object for all responses from the signing api.",
+      "type": "object",
+      "properties": {
+        "customerCorrelationId": {
+          "description": "The customer correlation id that is sent to ESRP for correlating the current request to ESRP.",
+          "type": "string"
+        },
+        "errorInfo": {
+          "description": "If this is an error response, it will have more information about the error.",
+          "type": "string"
+        },
+        "result": {
+          "description": "The result of the response.",
+          "enum": [
+            "success",
+            "failure",
+            "inProgress"
+          ],
+          "x-ms-enum": {
+            "name": "Result",
+            "values": [
+              {
+                "value": "success",
+                "description": ""
+              },
+              {
+                "value": "failure",
+                "description": ""
+              },
+              {
+                "value": "inProgress",
+                "description": ""
+              }
+            ]
+          }
+        }
+      }
+    },
+    "SignStatusResponse": {
+      "description": "The response returned by the sign status api.",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/SignResponseBase"
+        }
+      ],
+      "properties": {
+        "downloadUrl": {
+          "description": "The pre-signed download url used to download the signed catalog file.",
+          "type": "string"
+        }
+      }
+    }
+  },
+  "parameters": {
+    "api-Version-preview.1": {
+      "name": "api-version",
+      "in": "query",
+      "description": "Version of the API to use.  This should be set to '7.0-preview.1' to use this version of the api.",
+      "required": true,
+      "type": "string"
+    }
+  },
+  "securityDefinitions": {
+    "accessToken": {
+      "type": "basic",
+      "description": "Personal access token. Use any value for the user name and the token as the password."
+    }
+  },
+  "security": [
+    {
+      "accessToken": []
+    }
+  ],
+  "externalDocs": {
+    "description": "Azure DevOps REST APIs",
+    "url": "https://aka.ms/azure-devops-rest-apis"
+  }
+}

@@ -1,0 +1,3616 @@
+﻿{
+  "swagger": "2.0",
+  "info": {
+    "title": "Tfvc",
+    "description": "",
+    "termsOfService": "https://go.microsoft.com/fwlink/?LinkId=329770",
+    "contact": {
+      "name": "nugetvss",
+      "email": "nugetvss@microsoft.com"
+    },
+    "license": {
+      "name": "MICROSOFT SOFTWARE LICENSE TERMS",
+      "url": "https://go.microsoft.com/fwlink/?LinkId=329770"
+    },
+    "version": "7.0"
+  },
+  "host": "dev.azure.com",
+  "x-ms-vss-area": "Tfvc",
+  "x-ms-vss-resource-area-id": "8aa40520-446d-40e6-89f6-9c9f9ce44c48",
+  "basePath": "/",
+  "tags": [
+    {
+      "name": "Branches"
+    },
+    {
+      "name": "Changesets",
+      "description": "Controller to handle all Rest Calls for Changeset Changes"
+    },
+    {
+      "name": "Items",
+      "description": "Controller that handles REST API calls for Tfvc Items"
+    },
+    {
+      "name": "Labels"
+    },
+    {
+      "name": "Shelvesets"
+    }
+  ],
+  "schemes": [
+    "https"
+  ],
+  "paths": {
+    "/{organization}/_apis/tfvc/changesets/{id}/changes": {
+      "get": {
+        "tags": [
+          "Changesets"
+        ],
+        "x-ms-docs-override-version": "7.0",
+        "x-ms-vss-resource": "changesetChanges",
+        "x-ms-vss-method": "GetChangesetChanges",
+        "description": "Retrieve Tfvc changes for a given changeset.",
+        "operationId": "Changesets_Get Changeset Changes",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "id",
+            "description": "ID of the changeset. Default: null",
+            "required": true,
+            "x-ms-required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "$skip",
+            "description": "Number of results to skip. Default: null",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "$top",
+            "description": "The maximum number of results to return. Default: null",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "continuationToken",
+            "description": "Return the next page of results. Default: null",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/TfvcChange"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.code"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "GET the Tfvc changes for a given changeset": {
+            "$ref": "./httpExamples/ChangesetChanges/GET__tfvc_changesetChanges.json"
+          }
+        }
+      }
+    },
+    "/{organization}/_apis/tfvc/changesets/{id}/workItems": {
+      "get": {
+        "tags": [
+          "Changesets"
+        ],
+        "x-ms-docs-override-version": "7.0",
+        "x-ms-vss-resource": "changesetWorkItems",
+        "x-ms-vss-method": "GetChangesetWorkItems",
+        "description": "Retrieves the work items associated with a particular changeset.",
+        "operationId": "Changesets_Get Changeset Work Items",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "id",
+            "description": "ID of the changeset.",
+            "required": true,
+            "x-ms-required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "$ref": "#/parameters/api-Version"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/AssociatedWorkItem"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.code"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "GET the work items associated with a changeset": {
+            "$ref": "./httpExamples/ChangesetWorkItems/GET__tfvc_changesetWorkItems.json"
+          }
+        }
+      }
+    },
+    "/{organization}/_apis/tfvc/changesetsbatch": {
+      "post": {
+        "tags": [
+          "Changesets"
+        ],
+        "x-ms-docs-override-version": "7.0",
+        "x-ms-vss-resource": "changesetsBatch",
+        "x-ms-vss-method": "GetBatchedChangesets",
+        "description": "Returns changesets for a given list of changeset Ids.",
+        "operationId": "Changesets_Get Batched Changesets",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "List of changeset IDs.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/TfvcChangesetsRequestData"
+            }
+          },
+          {
+            "$ref": "#/parameters/api-Version"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/TfvcChangesetRef"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.code"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "Returns the Tfvc changes for a given set of changes": {
+            "$ref": "./httpExamples/ChangesetsBatch/POST__tfvc_changesetsBatched.json"
+          }
+        }
+      }
+    },
+    "/{organization}/_apis/tfvc/labels/{labelId}/items": {
+      "get": {
+        "tags": [
+          "Labels"
+        ],
+        "x-ms-docs-override-version": "7.0",
+        "x-ms-vss-resource": "labelItems",
+        "x-ms-vss-method": "GetLabelItems",
+        "description": "Get items under a label.",
+        "operationId": "Labels_Get Label Items",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "labelId",
+            "description": "Unique identifier of label",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "$top",
+            "description": "Max number of items to return",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "$skip",
+            "description": "Number of items to skip",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "$ref": "#/parameters/api-Version"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/TfvcItem"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.code"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "items": {
+            "$ref": "./httpExamples/LabelItems/GET__tfvc_labels__labelId__items.json"
+          },
+          "top and skip": {
+            "$ref": "./httpExamples/LabelItems/GET__tfvc_labels__labelId__items__top-_top___skip-_skip_.json"
+          }
+        }
+      }
+    },
+    "/{organization}/_apis/tfvc/shelvesets": {
+      "get": {
+        "tags": [
+          "Shelvesets"
+        ],
+        "x-ms-docs-override-version": "7.0",
+        "x-ms-vss-resource": "shelvesets",
+        "x-ms-vss-method": "GetShelveset",
+        "description": "Get a single deep shelveset.",
+        "operationId": "Shelvesets_Get",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "shelvesetId",
+            "description": "Shelveset's unique ID",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "requestData.includeDetails",
+            "description": "Whether to include policyOverride and notes Only applies when requesting a single deep shelveset",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "requestData.includeLinks",
+            "description": "Whether to include the _links field on the shallow references. Does not apply when requesting a single deep shelveset object. Links will always be included in the deep shelveset.",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "requestData.includeWorkItems",
+            "description": "Whether to include workItems",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "requestData.maxChangeCount",
+            "description": "Max number of changes to include",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "requestData.maxCommentLength",
+            "description": "Max length of comment",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "requestData.name",
+            "description": "Shelveset name",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "requestData.owner",
+            "description": "Owner's ID. Could be a name or a guid.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/TfvcShelveset"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.code"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "GET a specific Shelveset.": {
+            "$ref": "./httpExamples/shelvesets/GET__tfvc_shelvesets__shelvesetId_.json"
+          },
+          "GET a specific Shelveset with associated changes.": {
+            "$ref": "./httpExamples/shelvesets/GET__tfvc_shelvesets__shelvesetId__maxChangeCount-100.json"
+          },
+          "GET a specific Shelveset with associated workitems.": {
+            "$ref": "./httpExamples/shelvesets/GET__tfvc_shelvesets__shelvesetId__includeWorkItems-true.json"
+          },
+          "GET a specific Shelveset with details.": {
+            "$ref": "./httpExamples/shelvesets/GET__tfvc_shelvesets__shelvesetId__includeDetails-true.json"
+          },
+          "GET a specific Shelveset with a comment lenght limit.": {
+            "$ref": "./httpExamples/shelvesets/GET__tfvc_shelvesets__shelvesetId__maxCommentLength-_maxCommentLength_.json"
+          }
+        }
+      }
+    },
+    "/{organization}/_apis/tfvc/shelvesets/changes": {
+      "get": {
+        "tags": [
+          "Shelvesets"
+        ],
+        "x-ms-docs-override-version": "7.0",
+        "x-ms-vss-resource": "shelvesetChanges",
+        "x-ms-vss-method": "GetShelvesetChanges",
+        "description": "Get changes included in a shelveset.",
+        "operationId": "Shelvesets_Get Shelveset Changes",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "shelvesetId",
+            "description": "Shelveset's unique ID",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "$top",
+            "description": "Max number of changes to return",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "$skip",
+            "description": "Number of changes to skip",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "$ref": "#/parameters/api-Version"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/TfvcChange"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.code"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "GET a list of changesets for a ShelvesetId.": {
+            "$ref": "./httpExamples/ShelvesetChanges/GET__tfvc_shelvesetChanges__shelvesetId.json"
+          },
+          "GET a list of changesets for a ShelvesetId with top and skip.": {
+            "$ref": "./httpExamples/ShelvesetChanges/GET__tfvc_shelvesetChanges__shelvesetId__top-_top___skip-_skip.json"
+          }
+        }
+      }
+    },
+    "/{organization}/_apis/tfvc/shelvesets/workitems": {
+      "get": {
+        "tags": [
+          "Shelvesets"
+        ],
+        "x-ms-docs-override-version": "7.0",
+        "x-ms-vss-resource": "shelvesetWorkItems",
+        "x-ms-vss-method": "GetShelvesetWorkItems",
+        "description": "Get work items associated with a shelveset.",
+        "operationId": "Shelvesets_Get Shelveset Work Items",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "shelvesetId",
+            "description": "Shelveset's unique ID",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/AssociatedWorkItem"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.code"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "GET a list of workitems for a ShelvesetId.": {
+            "$ref": "./httpExamples/ShelvesetWorkItems/GET__tfvc_shelvesetWorkItems__shelvesetId.json"
+          }
+        }
+      }
+    },
+    "/{organization}/{project}/_apis/tfvc/branches": {
+      "get": {
+        "tags": [
+          "Branches"
+        ],
+        "x-ms-docs-override-version": "7.0",
+        "x-ms-vss-resource": "branches",
+        "x-ms-vss-method": "GetBranchRefs",
+        "description": "Get branch hierarchies below the specified scopePath",
+        "operationId": "Branches_Get Branch Refs",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "scopePath",
+            "description": "Full path to the branch.  Default: $/ Examples: $/, $/MyProject, $/MyProject/SomeFolder.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "x-ms-required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "includeDeleted",
+            "description": "Return deleted branches. Default: False",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "includeLinks",
+            "description": "Return links. Default: False",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "$ref": "#/parameters/api-Version"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/TfvcBranchRef"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.code"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "GET a list of branch refs": {
+            "$ref": "./httpExamples/Branches/GET__tfvc_branchRefs.json"
+          },
+          "GET a list of branch refs including deleted": {
+            "$ref": "./httpExamples/Branches/GET__tfvc_branchRefs_includeDeleted.json"
+          },
+          "GET a list of branch refs with links": {
+            "$ref": "./httpExamples/Branches/GET__tfvc_branchRefs_includeLinks.json"
+          }
+        }
+      }
+    },
+    "/{organization}/{project}/_apis/tfvc/changesets": {
+      "post": {
+        "tags": [
+          "Changesets"
+        ],
+        "x-ms-docs-override-version": "7.0",
+        "x-ms-vss-resource": "changesets",
+        "x-ms-vss-method": "CreateChangeset",
+        "description": "Create a new changeset.\n\nAccepts TfvcChangeset as JSON body",
+        "operationId": "Changesets_Create",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/TfvcChangeset"
+            }
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "x-ms-required": false,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/TfvcChangesetRef"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.code_write"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "POST an add text file changeset.": {
+            "$ref": "./httpExamples/changesets/POST__tfvc_changesets_CreateChange.json"
+          },
+          "POST an add binary file changeset.": {
+            "$ref": "./httpExamples/changesets/POST__tfvc_changesets_CreateChange_Binary.json"
+          },
+          "POST an add multiple file changeset.": {
+            "$ref": "./httpExamples/changesets/POST__tfvc_changesets_CreateChangeMultiFile.json"
+          },
+          "POST a file edit changeset.": {
+            "$ref": "./httpExamples/changesets/POST__tfvc_changesets_EditExistingFile.json"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Changesets"
+        ],
+        "x-ms-docs-override-version": "7.0",
+        "x-ms-vss-resource": "changesets",
+        "x-ms-vss-method": "GetChangesets",
+        "description": "Retrieve Tfvc Changesets\n\nNote: This is a new version of the GetChangesets API that doesn't expose the unneeded queryParams\npresent in the 1.0 version of the API.",
+        "operationId": "Changesets_Get Changesets",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "x-ms-required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "maxCommentLength",
+            "description": "Include details about associated work items in the response. Default: null",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "$skip",
+            "description": "Number of results to skip. Default: null",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "$top",
+            "description": "The maximum number of results to return. Default: null",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "$orderby",
+            "description": "Results are sorted by ID in descending order by default. Use id asc to sort by ID in ascending order.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "searchCriteria.author",
+            "description": "Alias or display name of user who made the changes.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "searchCriteria.followRenames",
+            "description": "Whether or not to follow renames for the given item being queried.",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "searchCriteria.fromDate",
+            "description": "If provided, only include changesets created after this date (string).",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "searchCriteria.fromId",
+            "description": "If provided, only include changesets after this changesetID.",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "searchCriteria.includeLinks",
+            "description": "Whether to include the _links field on the shallow references.",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "searchCriteria.itemPath",
+            "description": "Path of item to search under.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "searchCriteria.mappings",
+            "description": "Following criteria available (.itemPath, .version, .versionType, .versionOption, .author, .fromId, .toId, .fromDate, .toDate) Default: null",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/TfvcMappingFilter"
+              }
+            }
+          },
+          {
+            "in": "query",
+            "name": "searchCriteria.toDate",
+            "description": "If provided, only include changesets created before this date (string).",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "searchCriteria.toId",
+            "description": "If provided, a version descriptor for the latest change list to include.",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "$ref": "#/parameters/api-Version"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/TfvcChangesetRef"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.code"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "GET list of changesets": {
+            "$ref": "./httpExamples/changesets/GET__tfvc_changesets.json"
+          },
+          "GET the changesets that contain changes to the specified item.": {
+            "$ref": "./httpExamples/changesets/GET__tfvc_changesets_searchCriteria.itemPath-_path_.json"
+          },
+          "GET the changesets filtered by author.": {
+            "$ref": "./httpExamples/changesets/GET__tfvc_changesets_searchcriteria.author-_author_.json"
+          },
+          "GET the changesets for a range of changeset IDs.": {
+            "$ref": "./httpExamples/changesets/GET__tfvc_changesets_fromId-_from__toId-_to_.json"
+          },
+          "GET the changesets for a range of dates.": {
+            "$ref": "./httpExamples/changesets/GET__tfvc_changesets_fromDate-_fromDate__toDate-_toDate_.json"
+          },
+          "GET the changesets a page at a time.": {
+            "$ref": "./httpExamples/changesets/GET__tfvc_changesets__top-_top___skip-_skip_.json"
+          },
+          "GET the changesets ordering by ID ascending.": {
+            "$ref": "./httpExamples/changesets/GET__tfvc_changesets__orderBy-_order_.json"
+          },
+          "GET changesets with more or less of each comment. By default 80 characters are returned.": {
+            "$ref": "./httpExamples/changesets/GET__tfvc_changesets_maxCommentLength-_commentLength_.json"
+          }
+        }
+      }
+    },
+    "/{organization}/{project}/_apis/tfvc/changesets/{id}": {
+      "get": {
+        "tags": [
+          "Changesets"
+        ],
+        "x-ms-docs-override-version": "7.0",
+        "x-ms-vss-resource": "changesets",
+        "x-ms-vss-method": "GetChangeset",
+        "description": "Retrieve a Tfvc Changeset",
+        "operationId": "Changesets_Get",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "id",
+            "description": "Changeset Id to retrieve.",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "x-ms-required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "maxChangeCount",
+            "description": "Number of changes to return (maximum 100 changes) Default: 0",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "includeDetails",
+            "description": "Include policy details and check-in notes in the response. Default: false",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "includeWorkItems",
+            "description": "Include workitems. Default: false",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "maxCommentLength",
+            "description": "Include details about associated work items in the response. Default: null",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "includeSourceRename",
+            "description": "Include renames.  Default: false",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "$skip",
+            "description": "Number of results to skip. Default: null",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "$top",
+            "description": "The maximum number of results to return. Default: null",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "$orderby",
+            "description": "Results are sorted by ID in descending order by default. Use id asc to sort by ID in ascending order.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "searchCriteria.author",
+            "description": "Alias or display name of user who made the changes.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "searchCriteria.followRenames",
+            "description": "Whether or not to follow renames for the given item being queried.",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "searchCriteria.fromDate",
+            "description": "If provided, only include changesets created after this date (string).",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "searchCriteria.fromId",
+            "description": "If provided, only include changesets after this changesetID.",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "searchCriteria.includeLinks",
+            "description": "Whether to include the _links field on the shallow references.",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "searchCriteria.itemPath",
+            "description": "Path of item to search under.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "searchCriteria.mappings",
+            "description": "Following criteria available (.itemPath, .version, .versionType, .versionOption, .author, .fromId, .toId, .fromDate, .toDate) Default: null",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/TfvcMappingFilter"
+              }
+            }
+          },
+          {
+            "in": "query",
+            "name": "searchCriteria.toDate",
+            "description": "If provided, only include changesets created before this date (string).",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "searchCriteria.toId",
+            "description": "If provided, a version descriptor for the latest change list to include.",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "$ref": "#/parameters/api-Version"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/TfvcChangeset"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.code"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "GET a changeset": {
+            "$ref": "./httpExamples/changesets/GET__tfvc_changesets__id_.json"
+          },
+          "Get a changeset with policy details and check-in notes.": {
+            "$ref": "./httpExamples/changesets/GET__tfvc_changesets__id__includeDetails-true.json"
+          },
+          "Get a changeset with workitems.": {
+            "$ref": "./httpExamples/changesets/GET__tfvc_changesets__id__includeWorkItems-true.json"
+          },
+          "Get a changeset with a max number of changes. ": {
+            "$ref": "./httpExamples/changesets/GET__tfvc_changesets__id__maxChangeCount.json"
+          }
+        }
+      }
+    },
+    "/{organization}/{project}/_apis/tfvc/itembatch": {
+      "post": {
+        "tags": [
+          "Items"
+        ],
+        "x-ms-docs-override-version": "7.0",
+        "x-ms-vss-resource": "itemBatch",
+        "x-ms-vss-method": "GetItemsBatch",
+        "description": "Post for retrieving a set of items given a list of paths or a long path. Allows for specifying the recursionLevel and version descriptors for each path.",
+        "operationId": "Items_Get Items Batch",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/zip",
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/TfvcItemRequestData"
+            }
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "x-ms-required": false,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "array"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.code"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "Multiple items": {
+            "$ref": "./httpExamples/ItemBatch/POST__tfvc_itembatch.json"
+          }
+        }
+      }
+    },
+    "/{organization}/{project}/_apis/tfvc/items": {
+      "get": {
+        "tags": [
+          "Items"
+        ],
+        "x-ms-docs-override-version": "7.0",
+        "x-ms-vss-resource": "items",
+        "x-ms-vss-method": "GetItems",
+        "description": "Get a list of Tfvc items",
+        "operationId": "Items_List",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "x-ms-required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "scopePath",
+            "description": "Version control path of a folder to return multiple items.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "recursionLevel",
+            "description": "None (just the item), or OneLevel (contents of a folder).",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "none",
+              "oneLevel",
+              "oneLevelPlusNestedEmptyFolders",
+              "full"
+            ],
+            "x-ms-enum": {
+              "name": "VersionControlRecursionType",
+              "values": [
+                {
+                  "value": "none",
+                  "description": "Only return the specified item."
+                },
+                {
+                  "value": "oneLevel",
+                  "description": "Return the specified item and its direct children."
+                },
+                {
+                  "value": "oneLevelPlusNestedEmptyFolders",
+                  "description": "Return the specified item and its direct children, as well as recursive chains of nested child folders that only contain a single folder."
+                },
+                {
+                  "value": "full",
+                  "description": "Return specified item and all descendants"
+                }
+              ]
+            }
+          },
+          {
+            "in": "query",
+            "name": "includeLinks",
+            "description": "True to include links.",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "versionDescriptor.version",
+            "description": "Version object.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "versionDescriptor.versionOption",
+            "description": "",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "none",
+              "previous",
+              "useRename"
+            ],
+            "x-ms-enum": {
+              "name": "TfvcVersionOption",
+              "values": [
+                {
+                  "value": "none",
+                  "description": "None."
+                },
+                {
+                  "value": "previous",
+                  "description": "Return the previous version."
+                },
+                {
+                  "value": "useRename",
+                  "description": "Only usuable with versiontype MergeSource and integer versions, uses RenameSource identifier instead of Merge identifier."
+                }
+              ]
+            }
+          },
+          {
+            "in": "query",
+            "name": "versionDescriptor.versionType",
+            "description": "",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "none",
+              "changeset",
+              "shelveset",
+              "change",
+              "date",
+              "latest",
+              "tip",
+              "mergeSource"
+            ],
+            "x-ms-enum": {
+              "name": "TfvcVersionType",
+              "values": [
+                {
+                  "value": "none",
+                  "description": "Version is treated as a ChangesetId."
+                },
+                {
+                  "value": "changeset",
+                  "description": "Version is treated as a ChangesetId."
+                },
+                {
+                  "value": "shelveset",
+                  "description": "Version is treated as a Shelveset name and owner."
+                },
+                {
+                  "value": "change",
+                  "description": "Version is treated as a Change."
+                },
+                {
+                  "value": "date",
+                  "description": "Version is treated as a Date."
+                },
+                {
+                  "value": "latest",
+                  "description": "If Version is defined the Latest of that Version will be used, if no version is defined the latest ChangesetId will be used."
+                },
+                {
+                  "value": "tip",
+                  "description": "Version will be treated as a Tip, if no version is defined latest will be used."
+                },
+                {
+                  "value": "mergeSource",
+                  "description": "Version will be treated as a MergeSource."
+                }
+              ]
+            }
+          },
+          {
+            "$ref": "#/parameters/api-Version"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/TfvcItem"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.code"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "A folder": {
+            "$ref": "./httpExamples/Items/GET__tfvc_items_scopePath-_folder_.json"
+          },
+          "A folder and its children": {
+            "$ref": "./httpExamples/Items/GET__tfvc_items_scopePath-_folder__recursionLevel-_recursionLevel_.json"
+          },
+          "Changeset version": {
+            "$ref": "./httpExamples/Items/GET__tfvc_items__itempath__versionType-Changeset_version-_version_.json"
+          }
+        }
+      }
+    },
+    "/{organization}/{project}/_apis/tfvc/labels": {
+      "get": {
+        "tags": [
+          "Labels"
+        ],
+        "x-ms-docs-override-version": "7.0",
+        "x-ms-vss-resource": "labels",
+        "x-ms-vss-method": "GetLabels",
+        "description": "Get a collection of shallow label references.",
+        "operationId": "Labels_List",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "x-ms-required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "requestData.includeLinks",
+            "description": "Whether to include the _links field on the shallow references",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "requestData.itemLabelFilter",
+            "description": "labelScope, name, owner, and itemLabelFilter",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "requestData.labelScope",
+            "description": "labelScope, name, owner, and itemLabelFilter",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "requestData.maxItemCount",
+            "description": "labelScope, name, owner, and itemLabelFilter",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "requestData.name",
+            "description": "labelScope, name, owner, and itemLabelFilter",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "requestData.owner",
+            "description": "labelScope, name, owner, and itemLabelFilter",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "$top",
+            "description": "Max number of labels to return, defaults to 100 when undefined",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "$skip",
+            "description": "Number of labels to skip",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "$ref": "#/parameters/api-Version"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/TfvcLabelRef"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.code"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "Labels": {
+            "$ref": "./httpExamples/Labels/GET__tfvc_labels.json"
+          },
+          "itemLabelFilter": {
+            "$ref": "./httpExamples/Labels/GET__tfvc_labels_itemLabelFilter-_item_.json"
+          },
+          "Name": {
+            "$ref": "./httpExamples/Labels/GET__tfvc_labels_name-_name_.json"
+          },
+          "Owner": {
+            "$ref": "./httpExamples/Labels/GET__tfvc_labels_owner-_person_.json"
+          },
+          "top and skip": {
+            "$ref": "./httpExamples/Labels/GET__tfvc_labels__skip-_skip___top-_top_.json"
+          }
+        }
+      }
+    },
+    "/{organization}/{project}/_apis/tfvc/labels/{labelId}": {
+      "get": {
+        "tags": [
+          "Labels"
+        ],
+        "x-ms-docs-override-version": "7.0",
+        "x-ms-vss-resource": "labels",
+        "x-ms-vss-method": "GetLabel",
+        "description": "Get a single deep label.",
+        "operationId": "Labels_Get",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "labelId",
+            "description": "Unique identifier of label",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "x-ms-required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "requestData.includeLinks",
+            "description": "Whether to include the _links field on the shallow references",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "requestData.itemLabelFilter",
+            "description": "maxItemCount",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "requestData.labelScope",
+            "description": "maxItemCount",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "requestData.maxItemCount",
+            "description": "maxItemCount",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "requestData.name",
+            "description": "maxItemCount",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "requestData.owner",
+            "description": "maxItemCount",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/TfvcLabel"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.code"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "labelId": {
+            "$ref": "./httpExamples/Labels/GET__tfvc_labels__labelId_.json"
+          },
+          "maxItemCount": {
+            "$ref": "./httpExamples/Labels/GET__tfvc_labels__labelId__maxItemCount-100.json"
+          }
+        }
+      }
+    }
+  },
+  "x-ms-paths": {
+    "/{organization}/_apis/tfvc/shelvesets?": {
+      "get": {
+        "tags": [
+          "Shelvesets"
+        ],
+        "x-ms-docs-override-version": "7.0",
+        "x-ms-vss-resource": "shelvesets",
+        "x-ms-vss-method": "GetShelvesets",
+        "description": "Return a collection of shallow shelveset references.",
+        "operationId": "Shelvesets_List",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "requestData.includeDetails",
+            "description": "Whether to include policyOverride and notes Only applies when requesting a single deep shelveset",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "requestData.includeLinks",
+            "description": "Whether to include the _links field on the shallow references. Does not apply when requesting a single deep shelveset object. Links will always be included in the deep shelveset.",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "requestData.includeWorkItems",
+            "description": "Whether to include workItems",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "requestData.maxChangeCount",
+            "description": "Max number of changes to include",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "requestData.maxCommentLength",
+            "description": "Max length of comment",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "requestData.name",
+            "description": "Shelveset name",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "requestData.owner",
+            "description": "Owner's ID. Could be a name or a guid.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "$top",
+            "description": "Max number of shelvesets to return",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "$skip",
+            "description": "Number of shelvesets to skip",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "$ref": "#/parameters/api-Version"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/TfvcShelvesetRef"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.code"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "GET a list of shelveset refs.": {
+            "$ref": "./httpExamples/shelvesets/GET__tfvc_shelvesets_list.json"
+          },
+          "GET a list of shelveset refs with top and skip.": {
+            "$ref": "./httpExamples/shelvesets/GET__tfvc_shelvesets_list_top-_top___skip-_skip_.json"
+          },
+          "GET a list of shelveset refs with a max comment length.": {
+            "$ref": "./httpExamples/shelvesets/GET__tfvc_shelvesets_list_maxCommentLength-_maxCommentLength_.json"
+          },
+          "GET a list of shelveset refs for a specific Owner.": {
+            "$ref": "./httpExamples/shelvesets/GET__tfvc_shelvesets_list_owner-_owner_.json"
+          }
+        }
+      }
+    },
+    "/{organization}/{project}/_apis/tfvc/branches?path={path}": {
+      "get": {
+        "tags": [
+          "Branches"
+        ],
+        "x-ms-docs-override-version": "7.0",
+        "x-ms-vss-resource": "branches",
+        "x-ms-vss-method": "GetBranch",
+        "description": "Get a single branch hierarchy at the given path with parents or children as specified.",
+        "operationId": "Branches_Get",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "path",
+            "description": "Full path to the branch.  Default: $/ Examples: $/, $/MyProject, $/MyProject/SomeFolder.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "x-ms-required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "includeParent",
+            "description": "Return the parent branch, if there is one. Default: False",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "includeChildren",
+            "description": "Return child branches, if there are any. Default: False",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "$ref": "#/parameters/api-Version"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/TfvcBranch"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.code"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "GET a branch": {
+            "$ref": "./httpExamples/Branches/GET__tfvc_branches__path_.json"
+          },
+          "GET a branch with children": {
+            "$ref": "./httpExamples/Branches/GET__tfvc_branches__path__includeChildren-true.json"
+          },
+          "GET a branch with parents": {
+            "$ref": "./httpExamples/Branches/GET__tfvc_branches__path__includeParent-true.json"
+          },
+          "GET a branch with deleted": {
+            "$ref": "./httpExamples/Branches/GET__tfvc_branches__deleted__includeDeleted-true.json"
+          }
+        }
+      }
+    },
+    "/{organization}/{project}/_apis/tfvc/branches?": {
+      "get": {
+        "tags": [
+          "Branches"
+        ],
+        "x-ms-docs-override-version": "7.0",
+        "x-ms-vss-resource": "branches",
+        "x-ms-vss-method": "GetBranches",
+        "description": "Get a collection of branch roots -- first-level children, branches with no parents.",
+        "operationId": "Branches_Get Branches",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "x-ms-required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "includeParent",
+            "description": "Return the parent branch, if there is one. Default: False",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "includeChildren",
+            "description": "Return the child branches for each root branch. Default: False",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "includeDeleted",
+            "description": "Return deleted branches. Default: False",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "includeLinks",
+            "description": "Return links. Default: False",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "$ref": "#/parameters/api-Version"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/TfvcBranch"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.code"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "GET a list of root branches": {
+            "$ref": "./httpExamples/Branches/GET__tfvc_branches.json"
+          },
+          "GET a list of root branches with children": {
+            "$ref": "./httpExamples/Branches/GET__tfvc_branches_includeChildren-true.json"
+          },
+          "GET a list of root branches with deleted": {
+            "$ref": "./httpExamples/Branches/GET__tfvc_branches_includeDeleted-true.json"
+          }
+        }
+      }
+    },
+    "/{organization}/{project}/_apis/tfvc/items?path={path}": {
+      "get": {
+        "tags": [
+          "Items"
+        ],
+        "x-ms-docs-override-version": "7.0",
+        "x-ms-vss-resource": "items",
+        "x-ms-vss-method": "GetItem",
+        "description": "Get Item Metadata and/or Content for a single item. The download parameter is to indicate whether the content should be available as a download or just sent as a stream in the response. Doesn't apply to zipped content which is always returned as a download.",
+        "operationId": "Items_Get",
+        "produces": [
+          "text/plain",
+          "application/octet-stream",
+          "application/zip",
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "path",
+            "description": "Version control path of an individual item to return.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "x-ms-required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "fileName",
+            "description": "file name of item returned.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "download",
+            "description": "If true, create a downloadable attachment.",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "scopePath",
+            "description": "Version control path of a folder to return multiple items.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "recursionLevel",
+            "description": "None (just the item), or OneLevel (contents of a folder).",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "none",
+              "oneLevel",
+              "oneLevelPlusNestedEmptyFolders",
+              "full"
+            ],
+            "x-ms-enum": {
+              "name": "VersionControlRecursionType",
+              "values": [
+                {
+                  "value": "none",
+                  "description": "Only return the specified item."
+                },
+                {
+                  "value": "oneLevel",
+                  "description": "Return the specified item and its direct children."
+                },
+                {
+                  "value": "oneLevelPlusNestedEmptyFolders",
+                  "description": "Return the specified item and its direct children, as well as recursive chains of nested child folders that only contain a single folder."
+                },
+                {
+                  "value": "full",
+                  "description": "Return specified item and all descendants"
+                }
+              ]
+            }
+          },
+          {
+            "in": "query",
+            "name": "versionDescriptor.version",
+            "description": "Version object.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "versionDescriptor.versionOption",
+            "description": "Version descriptor.  Default is null.",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "none",
+              "previous",
+              "useRename"
+            ],
+            "x-ms-enum": {
+              "name": "TfvcVersionOption",
+              "values": [
+                {
+                  "value": "none",
+                  "description": "None."
+                },
+                {
+                  "value": "previous",
+                  "description": "Return the previous version."
+                },
+                {
+                  "value": "useRename",
+                  "description": "Only usuable with versiontype MergeSource and integer versions, uses RenameSource identifier instead of Merge identifier."
+                }
+              ]
+            }
+          },
+          {
+            "in": "query",
+            "name": "versionDescriptor.versionType",
+            "description": "Version descriptor.  Default is null.",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "none",
+              "changeset",
+              "shelveset",
+              "change",
+              "date",
+              "latest",
+              "tip",
+              "mergeSource"
+            ],
+            "x-ms-enum": {
+              "name": "TfvcVersionType",
+              "values": [
+                {
+                  "value": "none",
+                  "description": "Version is treated as a ChangesetId."
+                },
+                {
+                  "value": "changeset",
+                  "description": "Version is treated as a ChangesetId."
+                },
+                {
+                  "value": "shelveset",
+                  "description": "Version is treated as a Shelveset name and owner."
+                },
+                {
+                  "value": "change",
+                  "description": "Version is treated as a Change."
+                },
+                {
+                  "value": "date",
+                  "description": "Version is treated as a Date."
+                },
+                {
+                  "value": "latest",
+                  "description": "If Version is defined the Latest of that Version will be used, if no version is defined the latest ChangesetId will be used."
+                },
+                {
+                  "value": "tip",
+                  "description": "Version will be treated as a Tip, if no version is defined latest will be used."
+                },
+                {
+                  "value": "mergeSource",
+                  "description": "Version will be treated as a MergeSource."
+                }
+              ]
+            }
+          },
+          {
+            "in": "query",
+            "name": "includeContent",
+            "description": "Set to true to include item content when requesting json.  Default is false.",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "$ref": "#/parameters/api-Version"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/TfvcItem"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.code"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "GET item metadata and/or content for a single item.": {
+            "$ref": "./httpExamples/Items/GET__tfvc_items_path.json"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "AssociatedWorkItem": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "assignedTo": {
+          "type": "string"
+        },
+        "id": {
+          "description": "Id of associated the work item.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "state": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "url": {
+          "description": "REST Url of the work item.",
+          "type": "string"
+        },
+        "webUrl": {
+          "type": "string"
+        },
+        "workItemType": {
+          "type": "string"
+        }
+      }
+    },
+    "Change": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "changeType": {
+          "description": "The type of change that was made to the item.",
+          "enum": [
+            "none",
+            "add",
+            "edit",
+            "encoding",
+            "rename",
+            "delete",
+            "undelete",
+            "branch",
+            "merge",
+            "lock",
+            "rollback",
+            "sourceRename",
+            "targetRename",
+            "property",
+            "all"
+          ],
+          "x-ms-enum": {
+            "name": "VersionControlChangeType",
+            "values": [
+              {
+                "value": "none",
+                "description": ""
+              },
+              {
+                "value": "add",
+                "description": ""
+              },
+              {
+                "value": "edit",
+                "description": ""
+              },
+              {
+                "value": "encoding",
+                "description": ""
+              },
+              {
+                "value": "rename",
+                "description": ""
+              },
+              {
+                "value": "delete",
+                "description": ""
+              },
+              {
+                "value": "undelete",
+                "description": ""
+              },
+              {
+                "value": "branch",
+                "description": ""
+              },
+              {
+                "value": "merge",
+                "description": ""
+              },
+              {
+                "value": "lock",
+                "description": ""
+              },
+              {
+                "value": "rollback",
+                "description": ""
+              },
+              {
+                "value": "sourceRename",
+                "description": ""
+              },
+              {
+                "value": "targetRename",
+                "description": ""
+              },
+              {
+                "value": "property",
+                "description": ""
+              },
+              {
+                "value": "all",
+                "description": ""
+              }
+            ]
+          }
+        },
+        "item": {
+          "description": "Current version.",
+          "type": "string",
+          "format": "T"
+        },
+        "newContent": {
+          "description": "Content of the item after the change.",
+          "$ref": "#/definitions/ItemContent"
+        },
+        "sourceServerItem": {
+          "description": "Path of the item on the server.",
+          "type": "string"
+        },
+        "url": {
+          "description": "URL to retrieve the item.",
+          "type": "string"
+        }
+      }
+    },
+    "CheckinNote": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "value": {
+          "type": "string"
+        }
+      }
+    },
+    "FileContentMetadata": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "contentType": {
+          "type": "string"
+        },
+        "encoding": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "extension": {
+          "type": "string"
+        },
+        "fileName": {
+          "type": "string"
+        },
+        "isBinary": {
+          "type": "boolean"
+        },
+        "isImage": {
+          "type": "boolean"
+        },
+        "vsLink": {
+          "type": "string"
+        }
+      }
+    },
+    "GitRepository": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "_links": {
+          "$ref": "#/definitions/ReferenceLinks"
+        },
+        "defaultBranch": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "isDisabled": {
+          "description": "True if the repository is disabled. False otherwise.",
+          "type": "boolean"
+        },
+        "isFork": {
+          "description": "True if the repository was created as a fork.",
+          "type": "boolean"
+        },
+        "name": {
+          "type": "string"
+        },
+        "parentRepository": {
+          "$ref": "#/definitions/GitRepositoryRef"
+        },
+        "project": {
+          "$ref": "#/definitions/TeamProjectReference"
+        },
+        "remoteUrl": {
+          "type": "string"
+        },
+        "size": {
+          "description": "Compressed size (bytes) of the repository.",
+          "type": "integer",
+          "format": "int64"
+        },
+        "sshUrl": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        },
+        "validRemoteUrls": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "webUrl": {
+          "type": "string"
+        }
+      }
+    },
+    "GitRepositoryRef": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "collection": {
+          "description": "Team Project Collection where this Fork resides",
+          "$ref": "#/definitions/TeamProjectCollectionReference"
+        },
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "isFork": {
+          "description": "True if the repository was created as a fork",
+          "type": "boolean"
+        },
+        "name": {
+          "type": "string"
+        },
+        "project": {
+          "$ref": "#/definitions/TeamProjectReference"
+        },
+        "remoteUrl": {
+          "type": "string"
+        },
+        "sshUrl": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        }
+      }
+    },
+    "GraphSubjectBase": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "_links": {
+          "description": "This field contains zero or more interesting links about the graph subject. These links may be invoked to obtain additional relationships or more detailed information about this graph subject.",
+          "$ref": "#/definitions/ReferenceLinks"
+        },
+        "descriptor": {
+          "description": "The descriptor is the primary way to reference the graph subject while the system is running. This field will uniquely identify the same graph subject across both Accounts and Organizations.",
+          "type": "string"
+        },
+        "displayName": {
+          "description": "This is the non-unique display name of the graph subject. To change this field, you must alter its value in the source provider.",
+          "type": "string"
+        },
+        "url": {
+          "description": "This url is the full route to the source resource of this graph subject.",
+          "type": "string"
+        }
+      }
+    },
+    "IdentityRef": {
+      "description": "",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/GraphSubjectBase"
+        }
+      ],
+      "properties": {
+        "directoryAlias": {
+          "description": "Deprecated - Can be retrieved by querying the Graph user referenced in the \"self\" entry of the IdentityRef \"_links\" dictionary",
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "imageUrl": {
+          "description": "Deprecated - Available in the \"avatar\" entry of the IdentityRef \"_links\" dictionary",
+          "type": "string"
+        },
+        "inactive": {
+          "description": "Deprecated - Can be retrieved by querying the Graph membership state referenced in the \"membershipState\" entry of the GraphUser \"_links\" dictionary",
+          "type": "boolean"
+        },
+        "isAadIdentity": {
+          "description": "Deprecated - Can be inferred from the subject type of the descriptor (Descriptor.IsAadUserType/Descriptor.IsAadGroupType)",
+          "type": "boolean"
+        },
+        "isContainer": {
+          "description": "Deprecated - Can be inferred from the subject type of the descriptor (Descriptor.IsGroupType)",
+          "type": "boolean"
+        },
+        "isDeletedInOrigin": {
+          "type": "boolean"
+        },
+        "profileUrl": {
+          "description": "Deprecated - not in use in most preexisting implementations of ToIdentityRef",
+          "type": "string"
+        },
+        "uniqueName": {
+          "description": "Deprecated - use Domain+PrincipalName instead",
+          "type": "string"
+        }
+      }
+    },
+    "ItemContent": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "content": {
+          "type": "string"
+        },
+        "contentType": {
+          "enum": [
+            "rawText",
+            "base64Encoded"
+          ],
+          "x-ms-enum": {
+            "name": "ItemContentType",
+            "values": [
+              {
+                "value": "rawText",
+                "description": ""
+              },
+              {
+                "value": "base64Encoded",
+                "description": ""
+              }
+            ]
+          }
+        }
+      }
+    },
+    "ItemModel": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "_links": {
+          "$ref": "#/definitions/ReferenceLinks"
+        },
+        "content": {
+          "type": "string"
+        },
+        "contentMetadata": {
+          "$ref": "#/definitions/FileContentMetadata"
+        },
+        "isFolder": {
+          "type": "boolean"
+        },
+        "isSymLink": {
+          "type": "boolean"
+        },
+        "path": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        }
+      }
+    },
+    "ReferenceLinks": {
+      "description": "The class to represent a collection of REST reference links.",
+      "type": "object",
+      "properties": {
+        "links": {
+          "description": "The readonly view of the links.  Because Reference links are readonly, we only want to expose them as read only.",
+          "type": "object",
+          "additionalProperties": {
+            "type": "object"
+          }
+        }
+      }
+    },
+    "TeamProjectCollectionReference": {
+      "description": "Reference object for a TeamProjectCollection.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "Collection Id.",
+          "type": "string",
+          "format": "uuid"
+        },
+        "name": {
+          "description": "Collection Name.",
+          "type": "string"
+        },
+        "url": {
+          "description": "Collection REST Url.",
+          "type": "string"
+        }
+      }
+    },
+    "TeamProjectReference": {
+      "description": "Represents a shallow reference to a TeamProject.",
+      "type": "object",
+      "properties": {
+        "abbreviation": {
+          "description": "Project abbreviation.",
+          "type": "string"
+        },
+        "defaultTeamImageUrl": {
+          "description": "Url to default team identity image.",
+          "type": "string"
+        },
+        "description": {
+          "description": "The project's description (if any).",
+          "type": "string"
+        },
+        "id": {
+          "description": "Project identifier.",
+          "type": "string",
+          "format": "uuid"
+        },
+        "lastUpdateTime": {
+          "description": "Project last update time.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "name": {
+          "description": "Project name.",
+          "type": "string"
+        },
+        "revision": {
+          "description": "Project revision.",
+          "type": "integer",
+          "format": "int64"
+        },
+        "state": {
+          "description": "Project state.",
+          "enum": [
+            "deleting",
+            "new",
+            "wellFormed",
+            "createPending",
+            "all",
+            "unchanged",
+            "deleted"
+          ],
+          "x-ms-enum": {
+            "name": "ProjectState",
+            "values": [
+              {
+                "value": "deleting",
+                "description": "Project is in the process of being deleted."
+              },
+              {
+                "value": "new",
+                "description": "Project is in the process of being created."
+              },
+              {
+                "value": "wellFormed",
+                "description": "Project is completely created and ready to use."
+              },
+              {
+                "value": "createPending",
+                "description": "Project has been queued for creation, but the process has not yet started."
+              },
+              {
+                "value": "all",
+                "description": "All projects regardless of state except Deleted."
+              },
+              {
+                "value": "unchanged",
+                "description": "Project has not been changed."
+              },
+              {
+                "value": "deleted",
+                "description": "Project has been deleted."
+              }
+            ]
+          }
+        },
+        "url": {
+          "description": "Url to the full version of the object.",
+          "type": "string"
+        },
+        "visibility": {
+          "description": "Project visibility.",
+          "enum": [
+            "private",
+            "public"
+          ],
+          "x-ms-enum": {
+            "name": "ProjectVisibility",
+            "values": [
+              {
+                "value": "private",
+                "description": "The project is only visible to users with explicit access."
+              },
+              {
+                "value": "public",
+                "description": "The project is visible to all."
+              }
+            ]
+          }
+        }
+      }
+    },
+    "TfvcBranch": {
+      "description": "Class representing a branch object.",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/TfvcBranchRef"
+        }
+      ],
+      "properties": {
+        "children": {
+          "description": "List of children for the branch.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TfvcBranch"
+          }
+        },
+        "mappings": {
+          "description": "List of branch mappings.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TfvcBranchMapping"
+          }
+        },
+        "parent": {
+          "description": "Path of the branch's parent.",
+          "$ref": "#/definitions/TfvcShallowBranchRef"
+        },
+        "relatedBranches": {
+          "description": "List of paths of the related branches.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TfvcShallowBranchRef"
+          }
+        }
+      }
+    },
+    "TfvcBranchMapping": {
+      "description": "A branch mapping.",
+      "type": "object",
+      "properties": {
+        "depth": {
+          "description": "Depth of the branch.",
+          "type": "string"
+        },
+        "serverItem": {
+          "description": "Server item for the branch.",
+          "type": "string"
+        },
+        "type": {
+          "description": "Type of the branch.",
+          "type": "string"
+        }
+      }
+    },
+    "TfvcBranchRef": {
+      "description": "Metadata for a branchref.",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/TfvcShallowBranchRef"
+        }
+      ],
+      "properties": {
+        "_links": {
+          "description": "A collection of REST reference links.",
+          "$ref": "#/definitions/ReferenceLinks"
+        },
+        "createdDate": {
+          "description": "Creation date of the branch.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "description": {
+          "description": "Branch description.",
+          "type": "string"
+        },
+        "isDeleted": {
+          "description": "Is the branch deleted?",
+          "type": "boolean"
+        },
+        "owner": {
+          "description": "Alias or display name of user",
+          "$ref": "#/definitions/IdentityRef"
+        },
+        "url": {
+          "description": "URL to retrieve the item.",
+          "type": "string"
+        }
+      }
+    },
+    "TfvcChange": {
+      "description": "A change.",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/Change"
+        }
+      ],
+      "properties": {
+        "mergeSources": {
+          "description": "List of merge sources in case of rename or branch creation.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TfvcMergeSource"
+          }
+        },
+        "pendingVersion": {
+          "description": "Version at which a (shelved) change was pended against",
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "TfvcChangeset": {
+      "description": "A collection of changes.",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/TfvcChangesetRef"
+        }
+      ],
+      "properties": {
+        "accountId": {
+          "description": "Changeset Account Id also known as Organization Id.",
+          "type": "string",
+          "format": "uuid"
+        },
+        "changes": {
+          "description": "List of associated changes.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TfvcChange"
+          }
+        },
+        "checkinNotes": {
+          "description": "List of Checkin Notes for the changeset.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CheckinNote"
+          }
+        },
+        "collectionId": {
+          "description": "Changeset collection Id.",
+          "type": "string",
+          "format": "uuid"
+        },
+        "hasMoreChanges": {
+          "description": "True if more changes are available.",
+          "type": "boolean"
+        },
+        "policyOverride": {
+          "description": "Policy Override for the changeset.",
+          "$ref": "#/definitions/TfvcPolicyOverrideInfo"
+        },
+        "teamProjectIds": {
+          "description": "Team Project Ids for the changeset.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "workItems": {
+          "description": "List of work items associated with the changeset.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AssociatedWorkItem"
+          }
+        }
+      }
+    },
+    "TfvcChangesetRef": {
+      "description": "Metadata for a changeset.",
+      "type": "object",
+      "properties": {
+        "_links": {
+          "description": "A collection of REST reference links.",
+          "$ref": "#/definitions/ReferenceLinks"
+        },
+        "author": {
+          "description": "Alias or display name of user.",
+          "$ref": "#/definitions/IdentityRef"
+        },
+        "changesetId": {
+          "description": "Changeset Id.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "checkedInBy": {
+          "description": "Alias or display name of user.",
+          "$ref": "#/definitions/IdentityRef"
+        },
+        "comment": {
+          "description": "Comment for the changeset.",
+          "type": "string"
+        },
+        "commentTruncated": {
+          "description": "Was the Comment result truncated?",
+          "type": "boolean"
+        },
+        "createdDate": {
+          "description": "Creation date of the changeset.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "url": {
+          "description": "URL to retrieve the item.",
+          "type": "string"
+        }
+      }
+    },
+    "TfvcChangesetSearchCriteria": {
+      "description": "Criteria used in a search for change lists.",
+      "type": "object",
+      "properties": {
+        "author": {
+          "description": "Alias or display name of user who made the changes.",
+          "type": "string"
+        },
+        "followRenames": {
+          "description": "Whether or not to follow renames for the given item being queried.",
+          "type": "boolean"
+        },
+        "fromDate": {
+          "description": "If provided, only include changesets created after this date (string).",
+          "type": "string"
+        },
+        "fromId": {
+          "description": "If provided, only include changesets after this changesetID.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "includeLinks": {
+          "description": "Whether to include the _links field on the shallow references.",
+          "type": "boolean"
+        },
+        "itemPath": {
+          "description": "Path of item to search under.",
+          "type": "string"
+        },
+        "mappings": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TfvcMappingFilter"
+          }
+        },
+        "toDate": {
+          "description": "If provided, only include changesets created before this date (string).",
+          "type": "string"
+        },
+        "toId": {
+          "description": "If provided, a version descriptor for the latest change list to include.",
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "TfvcChangesetsRequestData": {
+      "description": "Request body for Get batched changesets.",
+      "type": "object",
+      "properties": {
+        "changesetIds": {
+          "description": "List of changeset Ids.",
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "commentLength": {
+          "description": "Max length of the comment.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "includeLinks": {
+          "description": "Whether to include the _links field on the shallow references",
+          "type": "boolean"
+        }
+      }
+    },
+    "TfvcItem": {
+      "description": "Metadata for an item.",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/ItemModel"
+        }
+      ],
+      "properties": {
+        "changeDate": {
+          "description": "Item changed datetime.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "deletionId": {
+          "description": "Greater than 0 if item is deleted.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "encoding": {
+          "description": "File encoding from database, -1 represents binary.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "hashValue": {
+          "description": "MD5 hash as a base 64 string, applies to files only.",
+          "type": "string"
+        },
+        "isBranch": {
+          "description": "True if item is a branch.",
+          "type": "boolean"
+        },
+        "isPendingChange": {
+          "description": "True if there is a change pending.",
+          "type": "boolean"
+        },
+        "size": {
+          "description": "The size of the file, if applicable.",
+          "type": "integer",
+          "format": "int64"
+        },
+        "version": {
+          "description": "Changeset version Id.",
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "TfvcItemDescriptor": {
+      "description": "Item path and Version descriptor properties",
+      "type": "object",
+      "properties": {
+        "path": {
+          "description": "Item path.",
+          "type": "string"
+        },
+        "recursionLevel": {
+          "description": "Defaults to OneLevel.",
+          "enum": [
+            "none",
+            "oneLevel",
+            "oneLevelPlusNestedEmptyFolders",
+            "full"
+          ],
+          "x-ms-enum": {
+            "name": "VersionControlRecursionType",
+            "values": [
+              {
+                "value": "none",
+                "description": "Only return the specified item."
+              },
+              {
+                "value": "oneLevel",
+                "description": "Return the specified item and its direct children."
+              },
+              {
+                "value": "oneLevelPlusNestedEmptyFolders",
+                "description": "Return the specified item and its direct children, as well as recursive chains of nested child folders that only contain a single folder."
+              },
+              {
+                "value": "full",
+                "description": "Return specified item and all descendants"
+              }
+            ]
+          }
+        },
+        "version": {
+          "description": "Specify the desired version, can be null or empty string only if VersionType is latest or tip.",
+          "type": "string"
+        },
+        "versionOption": {
+          "description": "Defaults to None.",
+          "enum": [
+            "none",
+            "previous",
+            "useRename"
+          ],
+          "x-ms-enum": {
+            "name": "TfvcVersionOption",
+            "values": [
+              {
+                "value": "none",
+                "description": "None."
+              },
+              {
+                "value": "previous",
+                "description": "Return the previous version."
+              },
+              {
+                "value": "useRename",
+                "description": "Only usuable with versiontype MergeSource and integer versions, uses RenameSource identifier instead of Merge identifier."
+              }
+            ]
+          }
+        },
+        "versionType": {
+          "description": "Defaults to Latest.",
+          "enum": [
+            "none",
+            "changeset",
+            "shelveset",
+            "change",
+            "date",
+            "latest",
+            "tip",
+            "mergeSource"
+          ],
+          "x-ms-enum": {
+            "name": "TfvcVersionType",
+            "values": [
+              {
+                "value": "none",
+                "description": "Version is treated as a ChangesetId."
+              },
+              {
+                "value": "changeset",
+                "description": "Version is treated as a ChangesetId."
+              },
+              {
+                "value": "shelveset",
+                "description": "Version is treated as a Shelveset name and owner."
+              },
+              {
+                "value": "change",
+                "description": "Version is treated as a Change."
+              },
+              {
+                "value": "date",
+                "description": "Version is treated as a Date."
+              },
+              {
+                "value": "latest",
+                "description": "If Version is defined the Latest of that Version will be used, if no version is defined the latest ChangesetId will be used."
+              },
+              {
+                "value": "tip",
+                "description": "Version will be treated as a Tip, if no version is defined latest will be used."
+              },
+              {
+                "value": "mergeSource",
+                "description": "Version will be treated as a MergeSource."
+              }
+            ]
+          }
+        }
+      }
+    },
+    "TfvcItemRequestData": {
+      "description": "Request body used by Get Items Batch",
+      "type": "object",
+      "properties": {
+        "includeContentMetadata": {
+          "description": "If true, include metadata about the file type",
+          "type": "boolean"
+        },
+        "includeLinks": {
+          "description": "Whether to include the _links field on the shallow references",
+          "type": "boolean"
+        },
+        "itemDescriptors": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TfvcItemDescriptor"
+          }
+        }
+      }
+    },
+    "TfvcLabel": {
+      "description": "Metadata for a label.",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/TfvcLabelRef"
+        }
+      ],
+      "properties": {
+        "items": {
+          "description": "List of items.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TfvcItem"
+          }
+        }
+      }
+    },
+    "TfvcLabelRef": {
+      "description": "Metadata for a Label.",
+      "type": "object",
+      "properties": {
+        "_links": {
+          "description": "Collection of reference links.",
+          "$ref": "#/definitions/ReferenceLinks"
+        },
+        "description": {
+          "description": "Label description.",
+          "type": "string"
+        },
+        "id": {
+          "description": "Label Id.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "labelScope": {
+          "description": "Label scope.",
+          "type": "string"
+        },
+        "modifiedDate": {
+          "description": "Last modified datetime for the label.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "name": {
+          "description": "Label name.",
+          "type": "string"
+        },
+        "owner": {
+          "description": "Label owner.",
+          "$ref": "#/definitions/IdentityRef"
+        },
+        "url": {
+          "description": "Label Url.",
+          "type": "string"
+        }
+      }
+    },
+    "TfvcLabelRequestData": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "includeLinks": {
+          "description": "Whether to include the _links field on the shallow references",
+          "type": "boolean"
+        },
+        "itemLabelFilter": {
+          "type": "string"
+        },
+        "labelScope": {
+          "type": "string"
+        },
+        "maxItemCount": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "name": {
+          "type": "string"
+        },
+        "owner": {
+          "type": "string"
+        }
+      }
+    },
+    "TfvcMappingFilter": {
+      "description": "MappingFilter can be used to include or exclude specific paths.",
+      "type": "object",
+      "properties": {
+        "exclude": {
+          "description": "True if ServerPath should be excluded.",
+          "type": "boolean"
+        },
+        "serverPath": {
+          "description": "Path to be included or excluded.",
+          "type": "string"
+        }
+      }
+    },
+    "TfvcMergeSource": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "isRename": {
+          "description": "Indicates if this a rename source. If false, it is a merge source.",
+          "type": "boolean"
+        },
+        "serverItem": {
+          "description": "The server item of the merge source.",
+          "type": "string"
+        },
+        "versionFrom": {
+          "description": "Start of the version range.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "versionTo": {
+          "description": "End of the version range.",
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "TfvcPolicyFailureInfo": {
+      "description": "Policy failure information.",
+      "type": "object",
+      "properties": {
+        "message": {
+          "description": "Policy failure message.",
+          "type": "string"
+        },
+        "policyName": {
+          "description": "Name of the policy that failed.",
+          "type": "string"
+        }
+      }
+    },
+    "TfvcPolicyOverrideInfo": {
+      "description": "Information on the policy override.",
+      "type": "object",
+      "properties": {
+        "comment": {
+          "description": "Overidden policy comment.",
+          "type": "string"
+        },
+        "policyFailures": {
+          "description": "Information on the failed policy that was overridden.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TfvcPolicyFailureInfo"
+          }
+        }
+      }
+    },
+    "TfvcShallowBranchRef": {
+      "description": "This is the shallow branchref class.",
+      "type": "object",
+      "properties": {
+        "path": {
+          "description": "Path for the branch.",
+          "type": "string"
+        }
+      }
+    },
+    "TfvcShelveset": {
+      "description": "Metadata for a shelveset.",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/TfvcShelvesetRef"
+        }
+      ],
+      "properties": {
+        "changes": {
+          "description": "List of changes.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TfvcChange"
+          }
+        },
+        "notes": {
+          "description": "List of checkin notes.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CheckinNote"
+          }
+        },
+        "policyOverride": {
+          "description": "Policy override information if applicable.",
+          "$ref": "#/definitions/TfvcPolicyOverrideInfo"
+        },
+        "workItems": {
+          "description": "List of associated workitems.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AssociatedWorkItem"
+          }
+        }
+      }
+    },
+    "TfvcShelvesetRef": {
+      "description": "Metadata for a shallow shelveset.",
+      "type": "object",
+      "properties": {
+        "_links": {
+          "description": "List of reference links for the shelveset.",
+          "$ref": "#/definitions/ReferenceLinks"
+        },
+        "comment": {
+          "description": "Shelveset comment.",
+          "type": "string"
+        },
+        "commentTruncated": {
+          "description": "Shelveset comment truncated as applicable.",
+          "type": "boolean"
+        },
+        "createdDate": {
+          "description": "Shelveset create date.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "id": {
+          "description": "Shelveset Id.",
+          "type": "string"
+        },
+        "name": {
+          "description": "Shelveset name.",
+          "type": "string"
+        },
+        "owner": {
+          "description": "Shelveset Owner.",
+          "$ref": "#/definitions/IdentityRef"
+        },
+        "url": {
+          "description": "Shelveset Url.",
+          "type": "string"
+        }
+      }
+    },
+    "TfvcShelvesetRequestData": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "includeDetails": {
+          "description": "Whether to include policyOverride and notes Only applies when requesting a single deep shelveset",
+          "type": "boolean"
+        },
+        "includeLinks": {
+          "description": "Whether to include the _links field on the shallow references. Does not apply when requesting a single deep shelveset object. Links will always be included in the deep shelveset.",
+          "type": "boolean"
+        },
+        "includeWorkItems": {
+          "description": "Whether to include workItems",
+          "type": "boolean"
+        },
+        "maxChangeCount": {
+          "description": "Max number of changes to include",
+          "type": "integer",
+          "format": "int32"
+        },
+        "maxCommentLength": {
+          "description": "Max length of comment",
+          "type": "integer",
+          "format": "int32"
+        },
+        "name": {
+          "description": "Shelveset name",
+          "type": "string"
+        },
+        "owner": {
+          "description": "Owner's ID. Could be a name or a guid.",
+          "type": "string"
+        }
+      }
+    },
+    "TfvcStatistics": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "changesetId": {
+          "description": "Id of the last changeset the stats are based on.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "fileCountTotal": {
+          "description": "Count of files at the requested scope.",
+          "type": "integer",
+          "format": "int64"
+        }
+      }
+    },
+    "TfvcVersionDescriptor": {
+      "description": "Version descriptor properties.",
+      "type": "object",
+      "properties": {
+        "version": {
+          "description": "Version object.",
+          "type": "string"
+        },
+        "versionOption": {
+          "enum": [
+            "none",
+            "previous",
+            "useRename"
+          ],
+          "x-ms-enum": {
+            "name": "TfvcVersionOption",
+            "values": [
+              {
+                "value": "none",
+                "description": "None."
+              },
+              {
+                "value": "previous",
+                "description": "Return the previous version."
+              },
+              {
+                "value": "useRename",
+                "description": "Only usuable with versiontype MergeSource and integer versions, uses RenameSource identifier instead of Merge identifier."
+              }
+            ]
+          }
+        },
+        "versionType": {
+          "enum": [
+            "none",
+            "changeset",
+            "shelveset",
+            "change",
+            "date",
+            "latest",
+            "tip",
+            "mergeSource"
+          ],
+          "x-ms-enum": {
+            "name": "TfvcVersionType",
+            "values": [
+              {
+                "value": "none",
+                "description": "Version is treated as a ChangesetId."
+              },
+              {
+                "value": "changeset",
+                "description": "Version is treated as a ChangesetId."
+              },
+              {
+                "value": "shelveset",
+                "description": "Version is treated as a Shelveset name and owner."
+              },
+              {
+                "value": "change",
+                "description": "Version is treated as a Change."
+              },
+              {
+                "value": "date",
+                "description": "Version is treated as a Date."
+              },
+              {
+                "value": "latest",
+                "description": "If Version is defined the Latest of that Version will be used, if no version is defined the latest ChangesetId will be used."
+              },
+              {
+                "value": "tip",
+                "description": "Version will be treated as a Tip, if no version is defined latest will be used."
+              },
+              {
+                "value": "mergeSource",
+                "description": "Version will be treated as a MergeSource."
+              }
+            ]
+          }
+        }
+      }
+    },
+    "VersionControlProjectInfo": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "defaultSourceControlType": {
+          "enum": [
+            "tfvc",
+            "git"
+          ],
+          "x-ms-enum": {
+            "name": "SourceControlTypes",
+            "values": [
+              {
+                "value": "tfvc",
+                "description": ""
+              },
+              {
+                "value": "git",
+                "description": ""
+              }
+            ]
+          }
+        },
+        "project": {
+          "$ref": "#/definitions/TeamProjectReference"
+        },
+        "supportsGit": {
+          "type": "boolean"
+        },
+        "supportsTFVC": {
+          "type": "boolean"
+        }
+      }
+    },
+    "VssJsonCollectionWrapper": {
+      "description": "This class is used to serialized collections as a single JSON object on the wire, to avoid serializing JSON arrays directly to the client, which can be a security hole",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/VssJsonCollectionWrapperBase"
+        }
+      ],
+      "properties": {
+        "value": {
+          "type": "string",
+          "format": "T"
+        }
+      }
+    },
+    "VssJsonCollectionWrapperBase": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "count": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    }
+  },
+  "parameters": {
+    "api-Version": {
+      "name": "api-version",
+      "in": "query",
+      "description": "Version of the API to use.  This should be set to '7.0' to use this version of the api.",
+      "required": true,
+      "type": "string"
+    },
+    "api-Version-preview.1": {
+      "name": "api-version",
+      "in": "query",
+      "description": "Version of the API to use.  This should be set to '7.0-preview.1' to use this version of the api.",
+      "required": true,
+      "type": "string"
+    }
+  },
+  "securityDefinitions": {
+    "accessToken": {
+      "type": "basic",
+      "description": "Personal access token. Use any value for the user name and the token as the password."
+    },
+    "oauth2": {
+      "type": "oauth2",
+      "flow": "accessCode",
+      "authorizationUrl": "https://app.vssps.visualstudio.com/oauth2/authorize&response_type=Assertion",
+      "tokenUrl": "https://app.vssps.visualstudio.com/oauth2/token?client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer&grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer",
+      "scopes": {
+        "vso.code": "Grants the ability to read source code and metadata about commits, changesets, branches, and other version control artifacts. Also grants the ability to search code and get notified about version control events via service hooks.",
+        "vso.code_write": "Grants the ability to read, update, and delete source code, access metadata about commits, changesets, branches, and other version control artifacts. Also grants the ability to create and manage pull requests and code reviews and to receive notifications about version control events via service hooks."
+      }
+    }
+  },
+  "security": [
+    {
+      "accessToken": []
+    }
+  ],
+  "externalDocs": {
+    "description": "Azure DevOps REST APIs",
+    "url": "https://aka.ms/azure-devops-rest-apis"
+  }
+}
