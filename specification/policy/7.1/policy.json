@@ -40,6 +40,89 @@
   ],
   "paths": {
     "/{organization}/{project}/_apis/policy/configurations": {
+      "post": {
+        "tags": [
+          "Configurations"
+        ],
+        "x-ms-docs-override-version": "7.1-preview.1",
+        "x-ms-vss-resource": "configurations",
+        "x-ms-vss-method": "CreatePolicyConfiguration",
+        "x-ms-preview": true,
+        "description": "Create a policy configuration of a given policy type.",
+        "operationId": "Configurations_Create",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "The policy configuration to create.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/PolicyConfiguration"
+            }
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/PolicyConfiguration"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.code_write"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "Example policy": {
+            "$ref": "./httpExamples/Configurations/POST__policy_configurations.json"
+          },
+          "Approval count policy": {
+            "$ref": "./httpExamples/Configurations/POST__policy_configurations2.json"
+          },
+          "Build policy": {
+            "$ref": "./httpExamples/Configurations/POST__policy_configurations3.json"
+          },
+          "Work item policy": {
+            "$ref": "./httpExamples/Configurations/POST__policy_configurations4.json"
+          },
+          "Merge strategy policy": {
+            "$ref": "./httpExamples/Configurations/POST__policy_configurations5.json"
+          },
+          "Git case enforcement policy": {
+            "$ref": "./httpExamples/Configurations/POST__policy_configurations6.json"
+          },
+          "Git maximum blob size policy": {
+            "$ref": "./httpExamples/Configurations/POST__policy_configurations7.json"
+          }
+        }
+      },
       "get": {
         "tags": [
           "Configurations"
@@ -128,98 +211,6 @@
       }
     },
     "/{organization}/{project}/_apis/policy/configurations/{configurationId}": {
-      "post": {
-        "tags": [
-          "Configurations"
-        ],
-        "x-ms-docs-override-version": "7.1-preview.1",
-        "x-ms-vss-resource": "configurations",
-        "x-ms-vss-method": "CreatePolicyConfiguration",
-        "x-ms-preview": true,
-        "description": "Create a policy configuration of a given policy type.",
-        "operationId": "Configurations_Create",
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "organization",
-            "description": "The name of the Azure DevOps organization.",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "in": "body",
-            "name": "body",
-            "description": "The policy configuration to create.",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/PolicyConfiguration"
-            }
-          },
-          {
-            "in": "path",
-            "name": "project",
-            "description": "Project ID or project name",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "in": "path",
-            "name": "configurationId",
-            "description": "",
-            "required": true,
-            "x-ms-required": false,
-            "type": "integer",
-            "format": "int32"
-          },
-          {
-            "$ref": "#/parameters/api-Version-preview.1"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "$ref": "#/definitions/PolicyConfiguration"
-            }
-          }
-        },
-        "security": [
-          {
-            "oauth2": [
-              "vso.code_write"
-            ]
-          }
-        ],
-        "x-ms-examples": {
-          "Example policy": {
-            "$ref": "./httpExamples/Configurations/POST__policy_configurations.json"
-          },
-          "Approval count policy": {
-            "$ref": "./httpExamples/Configurations/POST__policy_configurations2.json"
-          },
-          "Build policy": {
-            "$ref": "./httpExamples/Configurations/POST__policy_configurations3.json"
-          },
-          "Work item policy": {
-            "$ref": "./httpExamples/Configurations/POST__policy_configurations4.json"
-          },
-          "Merge strategy policy": {
-            "$ref": "./httpExamples/Configurations/POST__policy_configurations5.json"
-          },
-          "Git case enforcement policy": {
-            "$ref": "./httpExamples/Configurations/POST__policy_configurations6.json"
-          },
-          "Git maximum blob size policy": {
-            "$ref": "./httpExamples/Configurations/POST__policy_configurations7.json"
-          }
-        }
-      },
       "delete": {
         "tags": [
           "Configurations"
@@ -1153,7 +1144,7 @@
       }
     },
     "VssJsonCollectionWrapper": {
-      "description": "This class is used to serialized collections as a single JSON object on the wire, to avoid serializing JSON arrays directly to the client, which can be a security hole",
+      "description": "This class is used to serialize collections as a single JSON object on the wire.",
       "type": "object",
       "allOf": [
         {
@@ -1162,6 +1153,7 @@
       ],
       "properties": {
         "value": {
+          "description": "The serialized item.",
           "type": "string",
           "format": "T"
         }
@@ -1172,6 +1164,7 @@
       "type": "object",
       "properties": {
         "count": {
+          "description": "The number of serialized items.",
           "type": "integer",
           "format": "int32"
         }

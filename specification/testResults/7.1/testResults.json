@@ -24,6 +24,9 @@
       "description": "Work with test results MetaData programmatically using the REST APIs for Azure dev ops and Team Foundation Server."
     },
     {
+      "name": "Testattachments"
+    },
+    {
       "name": "Testlog"
     },
     {
@@ -192,6 +195,13 @@
             }
           }
         },
+        "security": [
+          {
+            "oauth2": [
+              "vso.test_write"
+            ]
+          }
+        ],
         "x-ms-examples": {
           "Update test result metadata": {
             "$ref": "./httpExamples/ResultMetaData/Patch_testresultsmetadata_6_0.json"
@@ -528,6 +538,192 @@
         }
       }
     },
+    "/{organization}/{project}/_apis/testresults/runs/{runId}/testattachments": {
+      "post": {
+        "tags": [
+          "Testattachments"
+        ],
+        "x-ms-docs-override-version": "7.1-preview.1",
+        "x-ms-vss-resource": "testattachments",
+        "x-ms-vss-method": "CreateTestRunLogStoreAttachment",
+        "x-ms-preview": true,
+        "description": "Creates an attachment in the LogStore for the specified runId.",
+        "operationId": "Testattachments_Create Test Run Log Store Attachment",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Contains attachment info like stream, filename, comment, attachmentType",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/TestAttachmentRequestModel"
+            }
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "runId",
+            "description": "Test RunId",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/TestLogStoreAttachmentReference"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.test_write"
+            ]
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "Testattachments"
+        ],
+        "x-ms-docs-override-version": "7.1-preview.1",
+        "x-ms-vss-resource": "testattachments",
+        "x-ms-vss-method": "DeleteTestRunLogStoreAttachment",
+        "x-ms-preview": true,
+        "description": "Deletes the attachment with the specified filename for the specified runId from the LogStore.",
+        "operationId": "Testattachments_Delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "runId",
+            "description": "Test RunId",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "filename",
+            "description": "Attachment FileName",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.test_write"
+            ]
+          }
+        ]
+      },
+      "get": {
+        "tags": [
+          "Testattachments"
+        ],
+        "x-ms-docs-override-version": "7.1-preview.1",
+        "x-ms-vss-resource": "testattachments",
+        "x-ms-vss-method": "GetTestRunLogStoreAttachments",
+        "x-ms-preview": true,
+        "description": "Returns a list of attachments for the specified runId from the LogStore.",
+        "operationId": "Testattachments_List",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "runId",
+            "description": "Test RunId",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/TestLogStoreAttachment"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.test"
+            ]
+          }
+        ]
+      }
+    },
     "/{organization}/{project}/_apis/testresults/runs/{runId}/testlog": {
       "get": {
         "tags": [
@@ -843,6 +1039,63 @@
           }
         }
       }
+    },
+    "/{organization}/{project}/_apis/testresults/uploadbuildattachments/{buildId}": {
+      "post": {
+        "tags": [
+          "Testattachments"
+        ],
+        "x-ms-docs-override-version": "7.1-preview.1",
+        "x-ms-vss-resource": "testattachments",
+        "x-ms-vss-method": "CreateBuildAttachmentInLogStore",
+        "x-ms-preview": true,
+        "description": "Creates an attachment in the LogStore for the specified buildId.",
+        "operationId": "Testattachments_Create Build Attachment In Log Store",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Contains attachment info like stream, filename, comment, attachmentType",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/TestAttachmentRequestModel"
+            }
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "buildId",
+            "description": "BuildId",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        }
+      }
     }
   },
   "x-ms-paths": {
@@ -1086,6 +1339,73 @@
             "$ref": "./httpExamples/testlogstoreendpoint/Get_testlogstore_subresults_endpoint.json"
           }
         }
+      }
+    },
+    "/{organization}/{project}/_apis/testresults/runs/{runId}/testattachments?filename={filename}": {
+      "get": {
+        "tags": [
+          "Testattachments"
+        ],
+        "x-ms-docs-override-version": "7.1-preview.1",
+        "x-ms-vss-resource": "testattachments",
+        "x-ms-vss-method": "GetTestRunLogStoreAttachment",
+        "x-ms-preview": true,
+        "description": "Returns the attachment with the specified filename for the specified runId from the LogStore.",
+        "operationId": "Testattachments_Get",
+        "produces": [
+          "application/octet-stream",
+          "application/zip"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "runId",
+            "description": "Test RunId",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "filename",
+            "description": "Attachment FileName",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "string",
+              "format": "Stream"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.test"
+            ]
+          }
+        ]
       }
     }
   },
@@ -3826,6 +4146,69 @@
         }
       }
     },
+    "TestLogStoreAttachment": {
+      "description": "Attachment metadata for test attachments from LogStore.",
+      "type": "object",
+      "properties": {
+        "attachmentType": {
+          "description": "Attachment type.",
+          "enum": [
+            "generalAttachment",
+            "codeCoverage",
+            "consoleLog"
+          ],
+          "x-ms-enum": {
+            "name": "AttachmentType",
+            "values": [
+              {
+                "value": "generalAttachment",
+                "description": "Attachment type GeneralAttachment , use this as default type unless you have other type."
+              },
+              {
+                "value": "codeCoverage",
+                "description": "Attachment type CodeCoverage."
+              },
+              {
+                "value": "consoleLog",
+                "description": "Attachment type ConsoleLog."
+              }
+            ]
+          }
+        },
+        "comment": {
+          "description": "Comment associated with attachment.",
+          "type": "string"
+        },
+        "createdDate": {
+          "description": "Attachment created date.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "fileName": {
+          "description": "Attachment file name.",
+          "type": "string"
+        },
+        "size": {
+          "description": "Attachment size.",
+          "type": "integer",
+          "format": "int64"
+        },
+        "url": {
+          "description": "Attachment Url.",
+          "type": "string"
+        }
+      }
+    },
+    "TestLogStoreAttachmentReference": {
+      "description": "Reference to test attachment.",
+      "type": "object",
+      "properties": {
+        "url": {
+          "description": "Url to download the attachment.",
+          "type": "string"
+        }
+      }
+    },
     "TestLogStoreEndpointDetails": {
       "description": "Represents Test Log store endpoint details.",
       "type": "object",
@@ -4943,7 +5326,7 @@
       }
     },
     "VssJsonCollectionWrapper": {
-      "description": "This class is used to serialized collections as a single JSON object on the wire, to avoid serializing JSON arrays directly to the client, which can be a security hole",
+      "description": "This class is used to serialize collections as a single JSON object on the wire.",
       "type": "object",
       "allOf": [
         {
@@ -4952,6 +5335,7 @@
       ],
       "properties": {
         "value": {
+          "description": "The serialized item.",
           "type": "string",
           "format": "T"
         }
@@ -4962,6 +5346,7 @@
       "type": "object",
       "properties": {
         "count": {
+          "description": "The number of serialized items.",
           "type": "integer",
           "format": "int32"
         }

@@ -90,7 +90,14 @@
               "$ref": "#/definitions/Pipeline"
             }
           }
-        }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.build_execute"
+            ]
+          }
+        ]
       },
       "get": {
         "tags": [
@@ -156,7 +163,14 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.build"
+            ]
+          }
+        ]
       }
     },
     "/{organization}/{project}/_apis/pipelines/{pipelineId}": {
@@ -215,7 +229,14 @@
               "$ref": "#/definitions/Pipeline"
             }
           }
-        }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.build"
+            ]
+          }
+        ]
       }
     },
     "/{organization}/{project}/_apis/pipelines/{pipelineId}/preview": {
@@ -286,7 +307,14 @@
               "$ref": "#/definitions/PreviewRun"
             }
           }
-        }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.build"
+            ]
+          }
+        ]
       }
     },
     "/{organization}/{project}/_apis/pipelines/{pipelineId}/runs": {
@@ -340,7 +368,14 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.build"
+            ]
+          }
+        ]
       },
       "post": {
         "tags": [
@@ -409,7 +444,14 @@
               "$ref": "#/definitions/Run"
             }
           }
-        }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.build_execute"
+            ]
+          }
+        ]
       }
     },
     "/{organization}/{project}/_apis/pipelines/{pipelineId}/runs/{runId}": {
@@ -468,7 +510,14 @@
               "$ref": "#/definitions/Run"
             }
           }
-        }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.build"
+            ]
+          }
+        ]
       }
     },
     "/{organization}/{project}/_apis/pipelines/{pipelineId}/runs/{runId}/artifacts": {
@@ -558,7 +607,14 @@
               "$ref": "#/definitions/Artifact"
             }
           }
-        }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.build"
+            ]
+          }
+        ]
       }
     },
     "/{organization}/{project}/_apis/pipelines/{pipelineId}/runs/{runId}/logs": {
@@ -641,7 +697,14 @@
               "$ref": "#/definitions/LogCollection"
             }
           }
-        }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.build"
+            ]
+          }
+        ]
       }
     },
     "/{organization}/{project}/_apis/pipelines/{pipelineId}/runs/{runId}/logs/{logId}": {
@@ -732,7 +795,14 @@
               "$ref": "#/definitions/Log"
             }
           }
-        }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.build"
+            ]
+          }
+        ]
       }
     }
   },
@@ -761,6 +831,48 @@
       "properties": {
         "version": {
           "type": "string"
+        }
+      }
+    },
+    "Container": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "environment": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "image": {
+          "type": "string"
+        },
+        "mapDockerSocket": {
+          "type": "boolean"
+        },
+        "options": {
+          "type": "string"
+        },
+        "ports": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "volumes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "ContainerResource": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "container": {
+          "$ref": "#/definitions/Container"
         }
       }
     },
@@ -992,6 +1104,18 @@
         }
       }
     },
+    "PipelineResource": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "pipeline": {
+          "$ref": "#/definitions/PipelineReference"
+        },
+        "version": {
+          "type": "string"
+        }
+      }
+    },
     "PipelineResourceParameters": {
       "description": "",
       "type": "object",
@@ -1185,6 +1309,12 @@
             ]
           }
         },
+        "templateParameters": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object"
+          }
+        },
         "url": {
           "type": "string"
         },
@@ -1249,6 +1379,18 @@
       "description": "",
       "type": "object",
       "properties": {
+        "containers": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/ContainerResource"
+          }
+        },
+        "pipelines": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/PipelineResource"
+          }
+        },
         "repositories": {
           "type": "object",
           "additionalProperties": {
@@ -1330,7 +1472,7 @@
       }
     },
     "VssJsonCollectionWrapper": {
-      "description": "This class is used to serialized collections as a single JSON object on the wire, to avoid serializing JSON arrays directly to the client, which can be a security hole",
+      "description": "This class is used to serialize collections as a single JSON object on the wire.",
       "type": "object",
       "allOf": [
         {
@@ -1339,6 +1481,7 @@
       ],
       "properties": {
         "value": {
+          "description": "The serialized item.",
           "type": "string",
           "format": "T"
         }
@@ -1349,6 +1492,7 @@
       "type": "object",
       "properties": {
         "count": {
+          "description": "The number of serialized items.",
           "type": "integer",
           "format": "int32"
         }
@@ -1368,6 +1512,16 @@
     "accessToken": {
       "type": "basic",
       "description": "Personal access token. Use any value for the user name and the token as the password."
+    },
+    "oauth2": {
+      "type": "oauth2",
+      "flow": "accessCode",
+      "authorizationUrl": "https://app.vssps.visualstudio.com/oauth2/authorize&response_type=Assertion",
+      "tokenUrl": "https://app.vssps.visualstudio.com/oauth2/token?client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer&grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer",
+      "scopes": {
+        "vso.build": "Grants the ability to access build artifacts, including build results, definitions, and requests, and the ability to receive notifications about build events via service hooks.",
+        "vso.build_execute": "Grants the ability to access build artifacts, including build results, definitions, and requests, and the ability to queue a build, update build properties, and the ability to receive notifications about build events via service hooks."
+      }
     }
   },
   "security": [

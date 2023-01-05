@@ -508,7 +508,14 @@
           "200": {
             "description": "successful operation"
           }
-        }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.memberentitlementmanagement_write"
+            ]
+          }
+        ]
       },
       "delete": {
         "tags": [
@@ -1005,6 +1012,29 @@
     }
   },
   "definitions": {
+    "AadGraphMember": {
+      "description": "",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/GraphMember"
+        }
+      ],
+      "properties": {
+        "directoryAlias": {
+          "description": "The short, generally unique name for the user in the backing directory. For AAD users, this corresponds to the mail nickname, which is often but not necessarily similar to the part of the user's mail address before the @ sign. For GitHub users, this corresponds to the GitHub user handle.",
+          "type": "string"
+        },
+        "isDeletedInOrigin": {
+          "description": "When true, the group has been deleted in the identity provider",
+          "type": "boolean"
+        },
+        "metaType": {
+          "description": "The meta type of the user in the origin, such as \"member\", \"guest\", etc. See UserMetaType for the set of possible values.",
+          "type": "string"
+        }
+      }
+    },
     "AccessLevel": {
       "description": "License assigned to a user",
       "type": "object",
@@ -1236,6 +1266,67 @@
         }
       }
     },
+    "EntitlementBase": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "accessLevel": {
+          "description": "Member's access level denoted by a license.",
+          "$ref": "#/definitions/AccessLevel"
+        },
+        "dateCreated": {
+          "description": "[Readonly] Date the member was added to the collection.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "groupAssignments": {
+          "description": "[Readonly] GroupEntitlements that this member belongs to.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/GroupEntitlement"
+          }
+        },
+        "id": {
+          "description": "The unique identifier which matches the Id of the Identity associated with the GraphMember.",
+          "type": "string",
+          "format": "uuid"
+        },
+        "lastAccessedDate": {
+          "description": "[Readonly] Date the member last accessed the collection.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "projectEntitlements": {
+          "description": "Relation between a project and the member's effective permissions in that project.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ProjectEntitlement"
+          }
+        }
+      }
+    },
+    "EntitlementOperationResultBase": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "errors": {
+          "description": "List of error codes paired with their corresponding error messages.",
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "isSuccess": {
+          "description": "Success status of the operation.",
+          "type": "boolean"
+        },
+        "result": {
+          "description": "Resulting entitlement property.  For specific implementations, see also: <seealso cref=\"T:Microsoft.VisualStudio.Services.MemberEntitlementManagement.WebApi.ServicePrincipalEntitlementOperationResult\" /><seealso cref=\"T:Microsoft.VisualStudio.Services.MemberEntitlementManagement.WebApi.UserEntitlementOperationResult\" />",
+          "type": "string",
+          "format": "T"
+        }
+      }
+    },
     "Extension": {
       "description": "An extension assigned to a user",
       "type": "object",
@@ -1426,6 +1517,20 @@
         }
       }
     },
+    "GraphServicePrincipal": {
+      "description": "",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/AadGraphMember"
+        }
+      ],
+      "properties": {
+        "applicationId": {
+          "type": "string"
+        }
+      }
+    },
     "GraphSubject": {
       "description": "Top-level graph entity",
       "type": "object",
@@ -1476,27 +1581,14 @@
       }
     },
     "GraphUser": {
-      "description": "Graph user entity",
+      "description": "",
       "type": "object",
       "allOf": [
         {
-          "$ref": "#/definitions/GraphMember"
+          "$ref": "#/definitions/AadGraphMember"
         }
       ],
-      "properties": {
-        "directoryAlias": {
-          "description": "The short, generally unique name for the user in the backing directory. For AAD users, this corresponds to the mail nickname, which is often but not necessarily similar to the part of the user's mail address before the @ sign. For GitHub users, this corresponds to the GitHub user handle.",
-          "type": "string"
-        },
-        "isDeletedInOrigin": {
-          "description": "When true, the group has been deleted in the identity provider",
-          "type": "boolean"
-        },
-        "metaType": {
-          "description": "The meta type of the user in the origin, such as \"member\", \"guest\", etc. See UserMetaType for the set of possible values.",
-          "type": "string"
-        }
-      }
+      "properties": {}
     },
     "Group": {
       "description": "Project Group (e.g. Contributor, Reader etc.)",
@@ -1921,6 +2013,109 @@
         }
       }
     },
+    "MemberEntitlement2": {
+      "description": "An AAD member entity",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/EntitlementBase"
+        }
+      ],
+      "properties": {
+        "member": {
+          "$ref": "#/definitions/AadGraphMember"
+        }
+      }
+    },
+    "MemberEntitlement2OperationReference": {
+      "description": "",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/OperationReference"
+        }
+      ],
+      "properties": {
+        "completed": {
+          "description": "Operation completed with success or failure.",
+          "type": "boolean"
+        },
+        "haveResultsSucceeded": {
+          "description": "True if all operations were successful.",
+          "type": "boolean"
+        },
+        "results": {
+          "description": "List of results for each operation.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/MemberEntitlement2OperationResult"
+          }
+        }
+      }
+    },
+    "MemberEntitlement2OperationResult": {
+      "description": "",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/EntitlementOperationResultBase"
+        }
+      ],
+      "properties": {
+        "memberId": {
+          "description": "Identifier of the Member being acted upon.",
+          "type": "string",
+          "format": "uuid"
+        }
+      }
+    },
+    "MemberEntitlement2PatchResponse": {
+      "description": "",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/MemberEntitlement2ResponseBase"
+        }
+      ],
+      "properties": {
+        "operationResults": {
+          "description": "List of results for each operation",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/MemberEntitlement2OperationResult"
+          }
+        }
+      }
+    },
+    "MemberEntitlement2PostResponse": {
+      "description": "",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/MemberEntitlement2ResponseBase"
+        }
+      ],
+      "properties": {
+        "operationResult": {
+          "description": "Operation result",
+          "$ref": "#/definitions/MemberEntitlement2OperationResult"
+        }
+      }
+    },
+    "MemberEntitlement2ResponseBase": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "isSuccess": {
+          "description": "True if all operations were successful.",
+          "type": "boolean"
+        },
+        "memberEntitlement": {
+          "description": "Result of the member entitlement after the operations. have been applied",
+          "$ref": "#/definitions/MemberEntitlement2"
+        }
+      }
+    },
     "MemberEntitlementOperationReference": {
       "description": "",
       "type": "object",
@@ -2191,6 +2386,106 @@
         }
       }
     },
+    "ServicePrincipalEntitlement": {
+      "description": "",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/EntitlementBase"
+        }
+      ],
+      "properties": {
+        "servicePrincipal": {
+          "description": "ServicePrincipal reference.",
+          "$ref": "#/definitions/GraphServicePrincipal"
+        }
+      }
+    },
+    "ServicePrincipalEntitlementOperationReference": {
+      "description": "",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/OperationReference"
+        }
+      ],
+      "properties": {
+        "completed": {
+          "description": "Operation completed with success or failure.",
+          "type": "boolean"
+        },
+        "haveResultsSucceeded": {
+          "description": "True if all operations were successful.",
+          "type": "boolean"
+        },
+        "results": {
+          "description": "List of results for each operation.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ServicePrincipalEntitlementOperationResult"
+          }
+        }
+      }
+    },
+    "ServicePrincipalEntitlementOperationResult": {
+      "description": "",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/EntitlementOperationResultBase"
+        }
+      ],
+      "properties": {
+        "servicePrincipalId": {
+          "description": "Identifier of the ServicePrincipal being acted upon.",
+          "type": "string",
+          "format": "uuid"
+        }
+      }
+    },
+    "ServicePrincipalEntitlementsPatchResponse": {
+      "description": "",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/ServicePrincipalEntitlementsResponseBase"
+        }
+      ],
+      "properties": {
+        "operationResults": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ServicePrincipalEntitlementOperationResult"
+          }
+        }
+      }
+    },
+    "ServicePrincipalEntitlementsPostResponse": {
+      "description": "",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/ServicePrincipalEntitlementsResponseBase"
+        }
+      ],
+      "properties": {
+        "operationResult": {
+          "$ref": "#/definitions/ServicePrincipalEntitlementOperationResult"
+        }
+      }
+    },
+    "ServicePrincipalEntitlementsResponseBase": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "isSuccess": {
+          "type": "boolean"
+        },
+        "servicePrincipalEntitlement": {
+          "$ref": "#/definitions/ServicePrincipalEntitlement"
+        }
+      }
+    },
     "SummaryData": {
       "description": "",
       "type": "object",
@@ -2235,40 +2530,12 @@
     "UserEntitlement": {
       "description": "A user entity with additional properties including their license, extensions, and project membership",
       "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/EntitlementBase"
+        }
+      ],
       "properties": {
-        "accessLevel": {
-          "description": "User's access level denoted by a license.",
-          "$ref": "#/definitions/AccessLevel"
-        },
-        "dateCreated": {
-          "description": "[Readonly] Date the user was added to the collection.",
-          "type": "string",
-          "format": "date-time"
-        },
-        "groupAssignments": {
-          "description": "[Readonly] GroupEntitlements that this user belongs to.",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/GroupEntitlement"
-          }
-        },
-        "id": {
-          "description": "The unique identifier which matches the Id of the Identity associated with the GraphMember.",
-          "type": "string",
-          "format": "uuid"
-        },
-        "lastAccessedDate": {
-          "description": "[Readonly] Date the user last accessed the collection.",
-          "type": "string",
-          "format": "date-time"
-        },
-        "projectEntitlements": {
-          "description": "Relation between a project and the user's effective permissions in that project.",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/ProjectEntitlement"
-          }
-        },
         "user": {
           "description": "User reference.",
           "$ref": "#/definitions/GraphUser"
@@ -2304,22 +2571,12 @@
     "UserEntitlementOperationResult": {
       "description": "",
       "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/EntitlementOperationResultBase"
+        }
+      ],
       "properties": {
-        "errors": {
-          "description": "List of error codes paired with their corresponding error messages.",
-          "type": "array",
-          "items": {
-            "type": "object"
-          }
-        },
-        "isSuccess": {
-          "description": "Success status of the operation.",
-          "type": "boolean"
-        },
-        "result": {
-          "description": "Result of the MemberEntitlement after the operation.",
-          "$ref": "#/definitions/UserEntitlement"
-        },
         "userId": {
           "description": "Identifier of the Member being acted upon.",
           "type": "string",
@@ -2413,7 +2670,7 @@
       }
     },
     "VssJsonCollectionWrapper": {
-      "description": "This class is used to serialized collections as a single JSON object on the wire, to avoid serializing JSON arrays directly to the client, which can be a security hole",
+      "description": "This class is used to serialize collections as a single JSON object on the wire.",
       "type": "object",
       "allOf": [
         {
@@ -2422,6 +2679,7 @@
       ],
       "properties": {
         "value": {
+          "description": "The serialized item.",
           "type": "string",
           "format": "T"
         }
@@ -2432,6 +2690,7 @@
       "type": "object",
       "properties": {
         "count": {
+          "description": "The number of serialized items.",
           "type": "integer",
           "format": "int32"
         }
@@ -2443,6 +2702,13 @@
       "name": "api-version",
       "in": "query",
       "description": "Version of the API to use.  This should be set to '7.1-preview.1' to use this version of the api.",
+      "required": true,
+      "type": "string"
+    },
+    "api-Version-preview.2": {
+      "name": "api-version",
+      "in": "query",
+      "description": "Version of the API to use.  This should be set to '7.1-preview.2' to use this version of the api.",
       "required": true,
       "type": "string"
     },
@@ -2465,8 +2731,8 @@
       "authorizationUrl": "https://app.vssps.visualstudio.com/oauth2/authorize&response_type=Assertion",
       "tokenUrl": "https://app.vssps.visualstudio.com/oauth2/token?client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer&grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer",
       "scopes": {
-        "vso.memberentitlementmanagement": "Grants the ability to read users, their licenses as well as projects and extensions they can access",
-        "vso.memberentitlementmanagement_write": "Grants the ability to manage users, their licenses as well as projects and extensions they can access"
+        "vso.memberentitlementmanagement_write": "Grants the ability to manage users, their licenses as well as projects and extensions they can access",
+        "vso.memberentitlementmanagement": "Grants the ability to read users, their licenses as well as projects and extensions they can access"
       }
     }
   },

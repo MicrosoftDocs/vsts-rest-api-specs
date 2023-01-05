@@ -29,9 +29,6 @@
       "name": "Groups"
     },
     {
-      "name": "Identity Translation"
-    },
-    {
       "name": "Memberships"
     },
     {
@@ -42,6 +39,9 @@
     },
     {
       "name": "Request Access"
+    },
+    {
+      "name": "Resolve Disconnected Users"
     },
     {
       "name": "Storage Keys"
@@ -443,57 +443,6 @@
         "x-ms-examples": {
           "": {
             "$ref": "./httpExamples/Groups/UpdateGroup.json"
-          }
-        }
-      }
-    },
-    "/{organization}/_apis/graph/identitytranslation": {
-      "get": {
-        "tags": [
-          "Identity Translation"
-        ],
-        "x-ms-docs-override-version": "7.1-preview.1",
-        "x-ms-vss-resource": "identityTranslation",
-        "x-ms-vss-method": "Translate",
-        "x-ms-preview": true,
-        "description": "",
-        "operationId": "Identity Translation_Translate",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "organization",
-            "description": "The name of the Azure DevOps organization.",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "in": "query",
-            "name": "masterId",
-            "description": "",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "in": "query",
-            "name": "localId",
-            "description": "",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "$ref": "#/parameters/api-Version-preview.1"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
           }
         }
       }
@@ -929,7 +878,69 @@
           "200": {
             "description": "successful operation"
           }
-        }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.graph"
+            ]
+          }
+        ]
+      }
+    },
+    "/{organization}/_apis/graph/resolvedisconnectedusers": {
+      "post": {
+        "tags": [
+          "Resolve Disconnected Users"
+        ],
+        "x-ms-docs-override-version": "7.1-preview.1",
+        "x-ms-vss-resource": "resolveDisconnectedUsers",
+        "x-ms-vss-method": "Resolve",
+        "x-ms-preview": true,
+        "description": "Batch-map a list of users to new users.",
+        "operationId": "Resolve Disconnected Users_Resolve",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "A list of mappings.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/IdentityMappings"
+            }
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ResolveDisconnectedUsersResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.graph_manage"
+            ]
+          }
+        ]
       }
     },
     "/{organization}/_apis/graph/storagekeys/{subjectDescriptor}": {
@@ -1099,7 +1110,14 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.graph"
+            ]
+          }
+        ]
       }
     },
     "/{organization}/_apis/graph/Subjects/{subjectDescriptor}/avatars": {
@@ -1137,7 +1155,14 @@
           "200": {
             "description": "successful operation"
           }
-        }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.graph_manage"
+            ]
+          }
+        ]
       },
       "get": {
         "tags": [
@@ -1270,7 +1295,14 @@
           "200": {
             "description": "successful operation"
           }
-        }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.graph_manage"
+            ]
+          }
+        ]
       }
     },
     "/{organization}/_apis/graph/users": {
@@ -1438,7 +1470,7 @@
         "x-ms-vss-resource": "users",
         "x-ms-vss-method": "DeleteUser",
         "x-ms-preview": true,
-        "description": "Disables a user.\n\nThe user will still be visible, but membership checks for the user will return false.”",
+        "description": "Disables a user.\n\nThe user will still be visible, but membership checks for the user will return false.",
         "operationId": "Users_Delete",
         "parameters": [
           {
@@ -1538,7 +1570,7 @@
         "x-ms-vss-resource": "users",
         "x-ms-vss-method": "UpdateUser",
         "x-ms-preview": true,
-        "description": "Map an existing user to a different identity",
+        "description": "Map an existing user to a different user.\n\nThe body of the request must be a derived type of GraphUserUpdateContext:\n * GraphUserOriginIdUpdateContext - Map an existing user in an account, to an existing user from an external AD or AAD backed provider using the OriginId as a reference.",
         "operationId": "Users_Update",
         "consumes": [
           "application/json"
@@ -1566,7 +1598,7 @@
           {
             "in": "path",
             "name": "userDescriptor",
-            "description": "the descriptor of the user to update",
+            "description": "The descriptor of the user to update",
             "required": true,
             "type": "string"
           },
@@ -1581,7 +1613,14 @@
               "$ref": "#/definitions/GraphUser"
             }
           }
-        }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.graph_manage"
+            ]
+          }
+        ]
       }
     },
     "/{organization}/_apis/graph/Users/{userDescriptor}/providerinfo": {
@@ -1637,6 +1676,29 @@
     }
   },
   "definitions": {
+    "AadGraphMember": {
+      "description": "",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/GraphMember"
+        }
+      ],
+      "properties": {
+        "directoryAlias": {
+          "description": "The short, generally unique name for the user in the backing directory. For AAD users, this corresponds to the mail nickname, which is often but not necessarily similar to the part of the user's mail address before the @ sign. For GitHub users, this corresponds to the GitHub user handle.",
+          "type": "string"
+        },
+        "isDeletedInOrigin": {
+          "description": "When true, the group has been deleted in the identity provider",
+          "type": "boolean"
+        },
+        "metaType": {
+          "description": "The meta type of the user in the origin, such as \"member\", \"guest\", etc. See UserMetaType for the set of possible values.",
+          "type": "string"
+        }
+      }
+    },
     "Avatar": {
       "description": "",
       "type": "object",
@@ -2049,6 +2111,66 @@
         }
       }
     },
+    "GraphServicePrincipal": {
+      "description": "",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/AadGraphMember"
+        }
+      ],
+      "properties": {
+        "applicationId": {
+          "type": "string"
+        }
+      }
+    },
+    "GraphServicePrincipalCreationContext": {
+      "description": "Do not attempt to use this type to create a new service principal. Use one of the subclasses instead. This type does not contain sufficient fields to create a new service principal.",
+      "type": "object",
+      "properties": {
+        "storageKey": {
+          "description": "Optional: If provided, we will use this identifier for the storage key of the created service principal",
+          "type": "string",
+          "format": "uuid"
+        }
+      }
+    },
+    "GraphServicePrincipalOriginIdCreationContext": {
+      "description": "Use this type to create a new service principal using the OriginID as a reference to an existing service principal from an external AAD backed provider. This is the subset of GraphServicePrincipal fields required for creation of a GraphServicePrincipal for the AAD use case when looking up the service principal by its unique ID in the backing provider.",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/GraphServicePrincipalCreationContext"
+        }
+      ],
+      "properties": {
+        "originId": {
+          "description": "This should be the object id of the service principal from the AAD provider. Example: d47d025a-ce2f-4a79-8618-e8862ade30dd Team Services will communicate with the source provider to fill all other fields on creation.",
+          "type": "string"
+        }
+      }
+    },
+    "GraphServicePrincipalOriginIdUpdateContext": {
+      "description": "Use this type to update an existing service principal using the OriginID as a reference to an existing service principal from an external AAD backed provider. This is the subset of GraphServicePrincipal fields required for creation of a GraphServicePrincipal for AAD use case when looking up the service principal by its unique ID in the backing provider.",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/GraphServicePrincipalUpdateContext"
+        }
+      ],
+      "properties": {
+        "originId": {
+          "description": "This should be the object id or sid of the service principal from the source AAD provider. Example: d47d025a-ce2f-4a79-8618-e8862ade30dd Azure Devops will communicate with the source provider to fill all other fields on creation.",
+          "type": "string"
+        }
+      }
+    },
+    "GraphServicePrincipalUpdateContext": {
+      "description": "Do not attempt to use this type to update service principal. Use one of the subclasses instead. This type does not contain sufficient fields to create a new service principal.",
+      "type": "object",
+      "properties": {}
+    },
     "GraphStorageKeyResult": {
       "description": "Storage key of a Graph entity",
       "type": "object",
@@ -2165,27 +2287,14 @@
       "properties": {}
     },
     "GraphUser": {
-      "description": "Graph user entity",
+      "description": "",
       "type": "object",
       "allOf": [
         {
-          "$ref": "#/definitions/GraphMember"
+          "$ref": "#/definitions/AadGraphMember"
         }
       ],
-      "properties": {
-        "directoryAlias": {
-          "description": "The short, generally unique name for the user in the backing directory. For AAD users, this corresponds to the mail nickname, which is often but not necessarily similar to the part of the user's mail address before the @ sign. For GitHub users, this corresponds to the GitHub user handle.",
-          "type": "string"
-        },
-        "isDeletedInOrigin": {
-          "description": "When true, the group has been deleted in the identity provider",
-          "type": "boolean"
-        },
-        "metaType": {
-          "description": "The meta type of the user in the origin, such as \"member\", \"guest\", etc. See UserMetaType for the set of possible values.",
-          "type": "string"
-        }
-      }
+      "properties": {}
     },
     "GraphUserCreationContext": {
       "description": "Do not attempt to use this type to create a new user. Use one of the subclasses instead. This type does not contain sufficient fields to create a new user.",
@@ -2208,6 +2317,7 @@
       ],
       "properties": {
         "mailAddress": {
+          "description": "This should be the mail address of the user in the source AD or AAD provider. Example: Jamal.Hartnett@contoso.com Team Services will communicate with the source provider to fill all other fields on creation.",
           "type": "string"
         }
       }
@@ -2261,10 +2371,49 @@
         }
       }
     },
+    "GraphUserPrincipalNameUpdateContext": {
+      "description": "Use this type for transfering identity rights, for instance after performing a Tenant switch.",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/GraphUserUpdateContext"
+        }
+      ],
+      "properties": {
+        "principalName": {
+          "description": "This should be Principal Name (UPN) to which we want to transfer rights. Example: destination@email.com",
+          "type": "string"
+        }
+      }
+    },
     "GraphUserUpdateContext": {
       "description": "Do not attempt to use this type to update user. Use one of the subclasses instead. This type does not contain sufficient fields to create a new user.",
       "type": "object",
       "properties": {}
+    },
+    "IdentityMapping": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "source": {
+          "$ref": "#/definitions/UserPrincipalName"
+        },
+        "target": {
+          "$ref": "#/definitions/UserPrincipalName"
+        }
+      }
+    },
+    "IdentityMappings": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "mappings": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/IdentityMapping"
+          }
+        }
+      }
     },
     "JsonPatchDocument": {
       "description": "The JSON model for JSON Patch Operations",
@@ -2384,6 +2533,18 @@
         }
       }
     },
+    "MappingResult": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "string"
+        },
+        "errorMessage": {
+          "type": "string"
+        }
+      }
+    },
     "PagedGraphGroups": {
       "description": "",
       "type": "object",
@@ -2400,6 +2561,26 @@
           "type": "array",
           "items": {
             "$ref": "#/definitions/GraphGroup"
+          }
+        }
+      }
+    },
+    "PagedGraphServicePrincipals": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "continuationToken": {
+          "description": "This will be non-null if there is another page of data. There will never be more than one continuation token returned by a request.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "graphServicePrincipals": {
+          "description": "The enumerable list of service principals found within a page.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/GraphServicePrincipal"
           }
         }
       }
@@ -2452,8 +2633,35 @@
         }
       }
     },
+    "ResolveDisconnectedUsersResponse": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "string"
+        },
+        "errorMessage": {
+          "type": "string"
+        },
+        "mappingResults": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/MappingResult"
+          }
+        }
+      }
+    },
+    "UserPrincipalName": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "principalName": {
+          "type": "string"
+        }
+      }
+    },
     "VssJsonCollectionWrapper": {
-      "description": "This class is used to serialized collections as a single JSON object on the wire, to avoid serializing JSON arrays directly to the client, which can be a security hole",
+      "description": "This class is used to serialize collections as a single JSON object on the wire.",
       "type": "object",
       "allOf": [
         {
@@ -2462,6 +2670,7 @@
       ],
       "properties": {
         "value": {
+          "description": "The serialized item.",
           "type": "string",
           "format": "T"
         }
@@ -2472,6 +2681,7 @@
       "type": "object",
       "properties": {
         "count": {
+          "description": "The number of serialized items.",
           "type": "integer",
           "format": "int32"
         }
@@ -2498,8 +2708,8 @@
       "authorizationUrl": "https://app.vssps.visualstudio.com/oauth2/authorize&response_type=Assertion",
       "tokenUrl": "https://app.vssps.visualstudio.com/oauth2/token?client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer&grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer",
       "scopes": {
-        "vso.graph": "Grants the ability to read user, group, scope and group membership information",
-        "vso.graph_manage": "Grants the ability to read user, group, scope and group membership information, and to add users, groups and manage group memberships"
+        "vso.graph_manage": "Grants the ability to read user, group, scope and group membership information, and to add users, groups and manage group memberships",
+        "vso.graph": "Grants the ability to read user, group, scope and group membership information"
       }
     }
   },

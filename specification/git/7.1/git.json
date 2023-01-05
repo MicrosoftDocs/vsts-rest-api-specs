@@ -206,7 +206,14 @@
               }
             }
           }
-        }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.code"
+            ]
+          }
+        ]
       }
     },
     "/{organization}/{project}/_apis/git/favorites/refs": {
@@ -1530,7 +1537,7 @@
         "security": [
           {
             "oauth2": [
-              "vso.code_manage"
+              "vso.code"
             ]
           }
         ]
@@ -3076,6 +3083,13 @@
             }
           },
           {
+            "in": "query",
+            "name": "zipForUnix",
+            "description": "Set to true to keep the file permissions for unix (and POSIX) systems like executables and symlinks",
+            "required": false,
+            "type": "boolean"
+          },
+          {
             "$ref": "#/parameters/api-Version-preview.1"
           }
         ],
@@ -4094,7 +4108,7 @@
         "tags": [
           "Pull Request Iterations"
         ],
-        "x-ms-docs-override-version": "7.1-preview.1",
+        "x-ms-docs-override-version": "7.1-preview.2",
         "x-ms-vss-resource": "pullRequestIterations",
         "x-ms-vss-method": "GetPullRequestIterations",
         "x-ms-preview": true,
@@ -4142,7 +4156,7 @@
             "type": "boolean"
           },
           {
-            "$ref": "#/parameters/api-Version-preview.1"
+            "$ref": "#/parameters/api-Version-preview.2"
           }
         ],
         "responses": {
@@ -4170,7 +4184,7 @@
         "tags": [
           "Pull Request Iterations"
         ],
-        "x-ms-docs-override-version": "7.1-preview.1",
+        "x-ms-docs-override-version": "7.1-preview.2",
         "x-ms-vss-resource": "pullRequestIterations",
         "x-ms-vss-method": "GetPullRequestIteration",
         "x-ms-preview": true,
@@ -4219,7 +4233,7 @@
             "type": "string"
           },
           {
-            "$ref": "#/parameters/api-Version-preview.1"
+            "$ref": "#/parameters/api-Version-preview.2"
           }
         ],
         "responses": {
@@ -11285,6 +11299,10 @@
           "description": "Committer of the commit.",
           "$ref": "#/definitions/GitUserDate"
         },
+        "commitTooManyChanges": {
+          "description": "Indicates that commit contains too many changes to be displayed",
+          "type": "boolean"
+        },
         "parents": {
           "description": "An enumeration of the parent commit IDs for this commit.",
           "type": "array",
@@ -13163,7 +13181,8 @@
             "create",
             "rebase",
             "unknown",
-            "retarget"
+            "retarget",
+            "resolveConflicts"
           ],
           "x-ms-enum": {
             "name": "IterationReason",
@@ -13190,6 +13209,10 @@
               },
               {
                 "value": "retarget",
+                "description": ""
+              },
+              {
+                "value": "resolveConflicts",
                 "description": ""
               }
             ]
@@ -13966,6 +13989,10 @@
         },
         "isFork": {
           "description": "True if the repository was created as a fork.",
+          "type": "boolean"
+        },
+        "isInMaintenance": {
+          "description": "True if the repository is in maintenance. False otherwise.",
           "type": "boolean"
         },
         "name": {
@@ -15066,7 +15093,7 @@
           "format": "int16"
         },
         "votedFor": {
-          "description": "Groups or teams that that this reviewer contributed to. <br /> Groups and teams can be reviewers on pull requests but can not vote directly.  When a member of the group or team votes, that vote is rolled up into the group or team vote.  VotedFor is a list of such votes.",
+          "description": "Groups or teams that this reviewer contributed to. <br /> Groups and teams can be reviewers on pull requests but can not vote directly.  When a member of the group or team votes, that vote is rolled up into the group or team vote.  VotedFor is a list of such votes.",
           "type": "array",
           "items": {
             "$ref": "#/definitions/IdentityRefWithVote"
@@ -15849,7 +15876,7 @@
               },
               {
                 "value": "all",
-                "description": "All projects regardless of state."
+                "description": "All projects regardless of state except Deleted."
               },
               {
                 "value": "unchanged",
@@ -16868,7 +16895,7 @@
       }
     },
     "VssJsonCollectionWrapper": {
-      "description": "This class is used to serialized collections as a single JSON object on the wire, to avoid serializing JSON arrays directly to the client, which can be a security hole",
+      "description": "This class is used to serialize collections as a single JSON object on the wire.",
       "type": "object",
       "allOf": [
         {
@@ -16877,6 +16904,7 @@
       ],
       "properties": {
         "value": {
+          "description": "The serialized item.",
           "type": "string",
           "format": "T"
         }
@@ -16887,6 +16915,7 @@
       "type": "object",
       "properties": {
         "count": {
+          "description": "The number of serialized items.",
           "type": "integer",
           "format": "int32"
         }
