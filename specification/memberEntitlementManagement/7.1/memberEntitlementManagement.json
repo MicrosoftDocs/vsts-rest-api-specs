@@ -24,8 +24,15 @@
       "description": "APIs to manage Group Licensing Rules."
     },
     {
+      "name": "Member Entitlements"
+    },
+    {
       "name": "Members",
       "description": "APIs to Manage memberships for the Group Entitlements"
+    },
+    {
+      "name": "Service Principal Entitlements",
+      "description": "APIs to manage Service principal Entitlements."
     },
     {
       "name": "User Entitlements",
@@ -569,6 +576,392 @@
         ]
       }
     },
+    "/{organization}/_apis/memberentitlements": {
+      "get": {
+        "tags": [
+          "Member Entitlements"
+        ],
+        "x-ms-docs-override-version": "7.1-preview.2",
+        "x-ms-vss-resource": "memberEntitlements",
+        "x-ms-vss-method": "SearchMemberEntitlements",
+        "x-ms-preview": true,
+        "description": "",
+        "operationId": "Member Entitlements_Search Member Entitlements",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "continuationToken",
+            "description": "",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "select",
+            "description": "",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "license",
+              "extensions",
+              "projects",
+              "groupRules",
+              "all"
+            ],
+            "x-ms-enum": {
+              "name": "UserEntitlementProperty",
+              "values": [
+                {
+                  "value": "license",
+                  "description": ""
+                },
+                {
+                  "value": "extensions",
+                  "description": ""
+                },
+                {
+                  "value": "projects",
+                  "description": ""
+                },
+                {
+                  "value": "groupRules",
+                  "description": ""
+                },
+                {
+                  "value": "all",
+                  "description": ""
+                }
+              ]
+            }
+          },
+          {
+            "in": "query",
+            "name": "$filter",
+            "description": "",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "$orderBy",
+            "description": "",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.2"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.memberentitlementmanagement"
+            ]
+          }
+        ]
+      }
+    },
+    "/{organization}/_apis/serviceprincipalentitlements": {
+      "post": {
+        "tags": [
+          "Service Principal Entitlements"
+        ],
+        "x-ms-docs-override-version": "7.1-preview.1",
+        "x-ms-vss-resource": "servicePrincipalEntitlements",
+        "x-ms-vss-method": "AddServicePrincipalEntitlement",
+        "x-ms-preview": true,
+        "description": "Add a service principal, assign license and extensions and make them a member of a project group in an account.\n\nNOTE: If you are working with AAD app registration, you can find service principal of your app\nin enterprise applications, and make sure to use service principal's object id as originId parameter\nin the request body",
+        "operationId": "Service Principal Entitlements_Add",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "ServicePrincipalEntitlement object specifying License, Extensions and Project/Team groups the service principal should be added to.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ServicePrincipalEntitlement"
+            }
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ServicePrincipalEntitlementsPostResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.memberentitlementmanagement_write"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "": {
+            "$ref": "./httpExamples/ServicePrincipalEntitlements/POST__memberEntitlementManagement_ServicePrincipalEntitlement.json"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Service Principal Entitlements"
+        ],
+        "x-ms-docs-override-version": "7.1-preview.1",
+        "x-ms-vss-resource": "servicePrincipalEntitlements",
+        "x-ms-vss-method": "UpdateServicePrincipalEntitlements",
+        "x-ms-preview": true,
+        "description": "Edit the entitlements (License, Extensions, Projects, Teams etc) for one or more service principals.",
+        "operationId": "Service Principal Entitlements_Update Service Principal Entitlements",
+        "consumes": [
+          "application/json-patch+json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "JsonPatchDocument containing the operations to perform.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/JsonPatchDocument"
+            }
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ServicePrincipalEntitlementOperationReference"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.memberentitlementmanagement_write"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "": {
+            "$ref": "./httpExamples/ServicePrincipalEntitlements/PATCH__memberEntitlementManagement_ServicePrincipalEntitlements.json"
+          }
+        }
+      }
+    },
+    "/{organization}/_apis/serviceprincipalentitlements/{servicePrincipalId}": {
+      "delete": {
+        "tags": [
+          "Service Principal Entitlements"
+        ],
+        "x-ms-docs-override-version": "7.1-preview.1",
+        "x-ms-vss-resource": "servicePrincipalEntitlements",
+        "x-ms-vss-method": "DeleteServicePrincipalEntitlement",
+        "x-ms-preview": true,
+        "description": "Delete a service principal from the account.\n\nThe delete operation includes unassigning Extensions and Licenses and removing the service principal from all project memberships.\nThe service principal would continue to have access to the account if it is member of an AAD group, that is added directly to the account.",
+        "operationId": "Service Principal Entitlements_Delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "servicePrincipalId",
+            "description": "ID of the service principal.",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.memberentitlementmanagement_write"
+            ]
+          }
+        ]
+      },
+      "get": {
+        "tags": [
+          "Service Principal Entitlements"
+        ],
+        "x-ms-docs-override-version": "7.1-preview.1",
+        "x-ms-vss-resource": "servicePrincipalEntitlements",
+        "x-ms-vss-method": "GetServicePrincipalEntitlement",
+        "x-ms-preview": true,
+        "description": "Get Service principal Entitlement for a service principal.",
+        "operationId": "Service Principal Entitlements_Get",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "servicePrincipalId",
+            "description": "ID of the service principal.",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ServicePrincipalEntitlement"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.memberentitlementmanagement"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "": {
+            "$ref": "./httpExamples/ServicePrincipalEntitlements/GET__memberEntitlementManagement_ServicePrincipalEntitlementById.json"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Service Principal Entitlements"
+        ],
+        "x-ms-docs-override-version": "7.1-preview.1",
+        "x-ms-vss-resource": "servicePrincipalEntitlements",
+        "x-ms-vss-method": "UpdateServicePrincipalEntitlement",
+        "x-ms-preview": true,
+        "description": "Edit the entitlements (License, Extensions, Projects, Teams etc) for a service principal.",
+        "operationId": "Service Principal Entitlements_Update Service Principal Entitlement",
+        "consumes": [
+          "application/json-patch+json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "JsonPatchDocument containing the operations to perform on the service principal.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/JsonPatchDocument"
+            }
+          },
+          {
+            "in": "path",
+            "name": "servicePrincipalId",
+            "description": "ID of the service principal.",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ServicePrincipalEntitlementsPatchResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.memberentitlementmanagement_write"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "": {
+            "$ref": "./httpExamples/ServicePrincipalEntitlements/PATCH__memberEntitlementManagement_ServicePrincipalEntitlementById.json"
+          }
+        }
+      }
+    },
     "/{organization}/_apis/userentitlements": {
       "post": {
         "tags": [
@@ -1040,7 +1433,7 @@
       "type": "object",
       "properties": {
         "accountLicenseType": {
-          "description": "Type of Account License (e.g. Express, Stakeholder etc.)",
+          "description": "Type of Account License (e.g. Express, Stakeholder etc.). To use the AccountLicenseType, LicensingSource should be defined as 'account' in the request body.",
           "enum": [
             "none",
             "earlyAdopter",
@@ -1149,7 +1542,7 @@
           }
         },
         "msdnLicenseType": {
-          "description": "Type of MSDN License (e.g. Visual Studio Professional, Visual Studio Enterprise etc.)",
+          "description": "Type of MSDN License (e.g. Visual Studio Professional, Visual Studio Enterprise etc.). To use the MsdnLicenseType, LicensingSource should be defined as 'msdn' in the request body.",
           "enum": [
             "none",
             "eligible",
@@ -1844,7 +2237,7 @@
       ],
       "properties": {
         "accountLicenseType": {
-          "description": "Type of Account License.",
+          "description": "Type of Account License. To use the AccountLicenseType, LicensingSource should be defined as 'account' in the request body.",
           "enum": [
             "none",
             "earlyAdopter",
@@ -1897,7 +2290,7 @@
           "type": "string"
         },
         "msdnLicenseType": {
-          "description": "Type of MSDN License.",
+          "description": "Type of MSDN License. To use the MsdnLicenseType, LicensingSource should be defined as 'msdn' in the request body.",
           "enum": [
             "none",
             "eligible",

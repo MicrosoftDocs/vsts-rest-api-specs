@@ -88,7 +88,7 @@
     },
     {
       "name": "Pull Request Labels",
-      "description": "Pull Request labels provide extensibility to the pull request experience. \nThird party services or users with read permission in the repository can\ncreate, get, and delete labels associated with a pull request via this REST API.\nLabels are used to provide quick insights into a pull request, an example\ncan be labelling a Pull request as \"WIP\", \"Feature\", or \"Bug\" to let others\nknow the state and purpose of the Pull Request.\n\nLabels are posted to the pull request and will be displayed in both the details and list views for pull requests."
+      "description": "Pull Request labels (tags) provide extensibility to the pull request experience. \nThird party services or users with read permission in the repository can\ncreate (add), get, and delete labels (tags) associated with a pull request via this REST API.\nThe names for the labels is shared  with work item tags. There is separate REST API used to manage the list of tags.\nLabels (tags) are used to provide quick insights into a pull request, an example\ncan be labelling a Pull request as \"WIP\", \"Feature\", or \"Bug\" to let others\nknow the state and purpose of the Pull Request.\n\nLabels are posted to the pull request and will be displayed in both the details and list views for pull requests."
     },
     {
       "name": "Pull Request Properties",
@@ -590,6 +590,46 @@
             "description": "Whether to include the _links field on the shallow references",
             "required": false,
             "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "searchCriteria.maxTime",
+            "description": "If specified, filters pull requests that created/closed before this date based on the queryTimeRangeType specified.",
+            "required": false,
+            "type": "string",
+            "format": "date-time"
+          },
+          {
+            "in": "query",
+            "name": "searchCriteria.minTime",
+            "description": "If specified, filters pull requests that created/closed after this date based on the queryTimeRangeType specified.",
+            "required": false,
+            "type": "string",
+            "format": "date-time"
+          },
+          {
+            "in": "query",
+            "name": "searchCriteria.queryTimeRangeType",
+            "description": "The type of time range which should be used for minTime and maxTime. Defaults to Created if unset.",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "created",
+              "closed"
+            ],
+            "x-ms-enum": {
+              "name": "PullRequestTimeRangeType",
+              "values": [
+                {
+                  "value": "created",
+                  "description": "The date when the pull request was created."
+                },
+                {
+                  "value": "closed",
+                  "description": "The date when the pull request was closed (completed, abandoned, or merged externally)."
+                }
+              ]
+            }
           },
           {
             "in": "query",
@@ -3406,6 +3446,46 @@
           },
           {
             "in": "query",
+            "name": "searchCriteria.maxTime",
+            "description": "If specified, filters pull requests that created/closed before this date based on the queryTimeRangeType specified.",
+            "required": false,
+            "type": "string",
+            "format": "date-time"
+          },
+          {
+            "in": "query",
+            "name": "searchCriteria.minTime",
+            "description": "If specified, filters pull requests that created/closed after this date based on the queryTimeRangeType specified.",
+            "required": false,
+            "type": "string",
+            "format": "date-time"
+          },
+          {
+            "in": "query",
+            "name": "searchCriteria.queryTimeRangeType",
+            "description": "The type of time range which should be used for minTime and maxTime. Defaults to Created if unset.",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "created",
+              "closed"
+            ],
+            "x-ms-enum": {
+              "name": "PullRequestTimeRangeType",
+              "values": [
+                {
+                  "value": "created",
+                  "description": "The date when the pull request was created."
+                },
+                {
+                  "value": "closed",
+                  "description": "The date when the pull request was closed (completed, abandoned, or merged externally)."
+                }
+              ]
+            }
+          },
+          {
+            "in": "query",
             "name": "searchCriteria.repositoryId",
             "description": "If set, search for pull requests whose target branch is in this repository.",
             "required": false,
@@ -4886,7 +4966,7 @@
         "x-ms-vss-resource": "pullRequestLabels",
         "x-ms-vss-method": "CreatePullRequestLabel",
         "x-ms-preview": true,
-        "description": "Create a label for a specified pull request. The only required field is the name of the new label.",
+        "description": "Create a tag (if that does not exists yet) and add that as a label (tag) for a specified pull request. The only required field is the name of the new label (tag).",
         "operationId": "Pull Request Labels_Create",
         "consumes": [
           "application/json"
@@ -4969,7 +5049,7 @@
         "x-ms-vss-resource": "pullRequestLabels",
         "x-ms-vss-method": "GetPullRequestLabels",
         "x-ms-preview": true,
-        "description": "Get all the labels assigned to a pull request.",
+        "description": "Get all the labels (tags) assigned to a pull request.",
         "operationId": "Pull Request Labels_List",
         "produces": [
           "application/json"
@@ -5045,7 +5125,7 @@
         "x-ms-vss-resource": "pullRequestLabels",
         "x-ms-vss-method": "DeletePullRequestLabels",
         "x-ms-preview": true,
-        "description": "Removes a label from the set of those assigned to the pull request.",
+        "description": "Removes a label (tag) from the set of those assigned to the pull request. The tag itself will not be deleted.",
         "operationId": "Pull Request Labels_Delete",
         "parameters": [
           {
@@ -5117,7 +5197,7 @@
         "x-ms-vss-resource": "pullRequestLabels",
         "x-ms-vss-method": "GetPullRequestLabel",
         "x-ms-preview": true,
-        "description": "Retrieves a single label that has been assigned to a pull request.",
+        "description": "Retrieves a single label (tag) that has been assigned to a pull request.",
         "operationId": "Pull Request Labels_Get",
         "produces": [
           "application/json"
@@ -10008,6 +10088,61 @@
     }
   },
   "definitions": {
+    "AdvSecEnablementStatus": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "changedById": {
+          "description": "Enabled by VSID",
+          "type": "string",
+          "format": "uuid"
+        },
+        "changedOnDate": {
+          "description": "Enabled changed on datetime",
+          "type": "string",
+          "format": "date-time"
+        },
+        "enabled": {
+          "description": "Enabled status 0 disabled, 1 enabled, Null never explicitly set, always whatever project is, ya this should probably be an enum somewhere",
+          "type": "boolean"
+        },
+        "enabledChangedOnDate": {
+          "description": "Enabled changed on datetime To Be Removed M223 +",
+          "type": "string",
+          "format": "date-time"
+        },
+        "projectId": {
+          "description": "ProjectId",
+          "type": "string",
+          "format": "uuid"
+        },
+        "repositoryId": {
+          "description": "RepositoryId",
+          "type": "string",
+          "format": "uuid"
+        }
+      }
+    },
+    "AdvSecEnablementUpdate": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "newStatus": {
+          "description": "New status",
+          "type": "boolean"
+        },
+        "projectId": {
+          "description": "ProjectId",
+          "type": "string",
+          "format": "uuid"
+        },
+        "repositoryId": {
+          "description": "RepositoryId Actual RepositoryId to Modify or Magic Repository Id \"FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF\" for ALL Repositories for that project",
+          "type": "string",
+          "format": "uuid"
+        }
+      }
+    },
     "AssociatedWorkItem": {
       "description": "",
       "type": "object",
@@ -10174,6 +10309,69 @@
         }
       ],
       "properties": {}
+    },
+    "BillableCommitter": {
+      "description": "Used by AdvSec to return billable committers.",
+      "type": "object",
+      "properties": {
+        "repoId": {
+          "description": "RepositoryId commit was pushed to.",
+          "type": "string",
+          "format": "uuid"
+        },
+        "vsid": {
+          "description": "Visual Studio ID /Team Foundation ID",
+          "type": "string",
+          "format": "uuid"
+        }
+      }
+    },
+    "BillableCommitterDetail": {
+      "description": "",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/BillableCommitter"
+        }
+      ],
+      "properties": {
+        "commitId": {
+          "description": "ID (SHA-1) of the commit.",
+          "type": "string"
+        },
+        "committerEmail": {
+          "description": "Committer email address after parsing.",
+          "type": "string"
+        },
+        "commitTime": {
+          "description": "Time reported by the commit.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "projectId": {
+          "description": "Project Id commit was pushed to.",
+          "type": "string",
+          "format": "uuid"
+        },
+        "projectName": {
+          "description": "Project name commit was pushed to.",
+          "type": "string"
+        },
+        "pushedTime": {
+          "description": "Time of the push that contained the commit.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "pushId": {
+          "description": "Push Id that contained the commit.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "repoName": {
+          "description": "Repository name commit was pushed to.",
+          "type": "string"
+        }
+      }
     },
     "BranchUpdatedEvent": {
       "description": "Real time event (SignalR) for a source/target branch update on a pull request",
@@ -13367,6 +13565,36 @@
           "description": "Whether to include the _links field on the shallow references",
           "type": "boolean"
         },
+        "maxTime": {
+          "description": "If specified, filters pull requests that created/closed before this date based on the queryTimeRangeType specified.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "minTime": {
+          "description": "If specified, filters pull requests that created/closed after this date based on the queryTimeRangeType specified.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "queryTimeRangeType": {
+          "description": "The type of time range which should be used for minTime and maxTime. Defaults to Created if unset.",
+          "enum": [
+            "created",
+            "closed"
+          ],
+          "x-ms-enum": {
+            "name": "PullRequestTimeRangeType",
+            "values": [
+              {
+                "value": "created",
+                "description": "The date when the pull request was created."
+              },
+              {
+                "value": "closed",
+                "description": "The date when the pull request was closed (completed, abandoned, or merged externally)."
+              }
+            ]
+          }
+        },
         "repositoryId": {
           "description": "If set, search for pull requests whose target branch is in this repository.",
           "type": "string",
@@ -15794,6 +16022,10 @@
       "description": "Reference object for a TeamProjectCollection.",
       "type": "object",
       "properties": {
+        "avatarUrl": {
+          "description": "Collection avatar Url.",
+          "type": "string"
+        },
         "id": {
           "description": "Collection Id.",
           "type": "string",

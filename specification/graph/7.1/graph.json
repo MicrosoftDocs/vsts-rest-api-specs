@@ -41,7 +41,7 @@
       "name": "Request Access"
     },
     {
-      "name": "Resolve Disconnected Users"
+      "name": "Service Principals"
     },
     {
       "name": "Storage Keys"
@@ -888,17 +888,17 @@
         ]
       }
     },
-    "/{organization}/_apis/graph/resolvedisconnectedusers": {
+    "/{organization}/_apis/graph/serviceprincipals": {
       "post": {
         "tags": [
-          "Resolve Disconnected Users"
+          "Service Principals"
         ],
         "x-ms-docs-override-version": "7.1-preview.1",
-        "x-ms-vss-resource": "resolveDisconnectedUsers",
-        "x-ms-vss-method": "Resolve",
+        "x-ms-vss-resource": "servicePrincipals",
+        "x-ms-vss-method": "CreateServicePrincipal",
         "x-ms-preview": true,
-        "description": "Batch-map a list of users to new users.",
-        "operationId": "Resolve Disconnected Users_Resolve",
+        "description": "Materialize an existing AAD service principal into the ADO account.\n\nNOTE: Created service principals are not active in an account.\n\n Adding a service principal to an account is required before the service principal can be added to ADO groups or assigned an asset.\n\n The body of the request must be a derived type of GraphServicePrincipalCreationContext:\n  * GraphServicePrincipalOriginIdCreationContext - Create a new service principal using the OriginID as a reference to an existing service principal from AAD backed provider.\n\n If the service principal to be added corresponds to a service principal that was previously deleted, then that service principal will be restored.\n\n Optionally, you can add the newly created service principal as a member of an existing ADO group and/or specify a custom storage key for the service principal.",
+        "operationId": "Service Principals_Create",
         "consumes": [
           "application/json"
         ],
@@ -916,11 +916,19 @@
           {
             "in": "body",
             "name": "body",
-            "description": "A list of mappings.",
+            "description": "The subset of the full graph service principal used to uniquely find the graph subject in an external provider.",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/IdentityMappings"
+              "$ref": "#/definitions/GraphServicePrincipalCreationContext"
             }
+          },
+          {
+            "in": "query",
+            "name": "groupDescriptors",
+            "description": "A comma separated list of descriptors of groups you want the graph service principal to join",
+            "required": false,
+            "type": "string",
+            "format": "array (string)"
           },
           {
             "$ref": "#/parameters/api-Version-preview.1"
@@ -930,7 +938,7 @@
           "200": {
             "description": "successful operation",
             "schema": {
-              "$ref": "#/definitions/ResolveDisconnectedUsersResponse"
+              "$ref": "#/definitions/GraphServicePrincipal"
             }
           }
         },
@@ -940,7 +948,182 @@
               "vso.graph_manage"
             ]
           }
-        ]
+        ],
+        "x-ms-examples": {
+          "": {
+            "$ref": "./httpExamples/ServicePrincipals/CreateServicePrincipal.json"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Service Principals"
+        ],
+        "x-ms-docs-override-version": "7.1-preview.1",
+        "x-ms-vss-resource": "servicePrincipals",
+        "x-ms-vss-method": "ListServicePrincipals",
+        "x-ms-preview": true,
+        "description": "Get a list of all service principals in a given scope.\n\nSince the list of service principals may be large, results are returned in pages of service principals. If there are more results\n than can be returned in a single page, the result set will contain a continuation token for retrieval of the\n next set of results. The only reliable way to know if there is no more service principals left is the lack of a continuation token.",
+        "operationId": "Service Principals_List",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "continuationToken",
+            "description": "An opaque data blob that allows the next page of data to resume immediately after where the previous page ended. The only reliable way to know if there is more data left is the presence of a continuation token.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "scopeDescriptor",
+            "description": "Specify a non-default scope (collection, project) to search for service principals.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/GraphServicePrincipal"
+              }
+            },
+            "headers": {
+              "X-MS-ContinuationToken": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.graph"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "": {
+            "$ref": "./httpExamples/ServicePrincipals/GetAllServicePrincipals.json"
+          }
+        }
+      }
+    },
+    "/{organization}/_apis/graph/serviceprincipals/{servicePrincipalDescriptor}": {
+      "delete": {
+        "tags": [
+          "Service Principals"
+        ],
+        "x-ms-docs-override-version": "7.1-preview.1",
+        "x-ms-vss-resource": "servicePrincipals",
+        "x-ms-vss-method": "DeleteServicePrincipal",
+        "x-ms-preview": true,
+        "description": "Disables a service principal.\n\nThe service principal will still be visible, but membership checks for the service principal will return false.",
+        "operationId": "Service Principals_Delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "servicePrincipalDescriptor",
+            "description": "The descriptor of the service principal to delete.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.graph_manage"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "": {
+            "$ref": "./httpExamples/ServicePrincipals/DeleteServicePrincipal.json"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Service Principals"
+        ],
+        "x-ms-docs-override-version": "7.1-preview.1",
+        "x-ms-vss-resource": "servicePrincipals",
+        "x-ms-vss-method": "GetServicePrincipal",
+        "x-ms-preview": true,
+        "description": "Get a service principal by its descriptor.",
+        "operationId": "Service Principals_Get",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "servicePrincipalDescriptor",
+            "description": "The descriptor of the desired service principal.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/GraphServicePrincipal"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.graph"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "": {
+            "$ref": "./httpExamples/ServicePrincipals/GetServicePrincipal.json"
+          }
+        }
       }
     },
     "/{organization}/_apis/graph/storagekeys/{subjectDescriptor}": {
@@ -1314,7 +1497,7 @@
         "x-ms-vss-resource": "users",
         "x-ms-vss-method": "CreateUser",
         "x-ms-preview": true,
-        "description": "Materialize an existing AAD or MSA user into the VSTS account.\n\nNOTE: Created users are not active in an account unless they have been explicitly assigned a parent group at creation time or have signed in\n  and been autolicensed through AAD group memberships.\n\n Adding a user to an account is required before the user can be added to VSTS groups or assigned an asset.\n\n The body of the request must be a derived type of GraphUserCreationContext:\n  * GraphUserMailAddressCreationContext - Create a new user using the mail address as a reference to an existing user from an external AD or AAD backed provider.\n  * GraphUserOriginIdCreationContext - Create a new user using the OriginID as a reference to an existing user from an external AD or AAD backed provider.\n  * GraphUserPrincipalNameCreationContext - Create a new user using the principal name as a reference to an existing user from an external AD or AAD backed provider.\n\n If the user to be added corresponds to a user that was previously deleted, then that user will be restored.\n\n Optionally, you can add the newly created user as a member of an existing VSTS group and/or specify a custom storage key for the user.",
+        "description": "Materialize an existing AAD or MSA user into the ADO account.\n\nNOTE: Created users are not active in an account unless they have been explicitly assigned a parent group at creation time or have signed in\n  and been autolicensed through AAD group memberships.\n\n Adding a user to an account is required before the user can be added to ADO groups or assigned an asset.\n\n The body of the request must be a derived type of GraphUserCreationContext:\n  * GraphUserMailAddressCreationContext - Create a new user using the mail address as a reference to an existing user from an external AD or AAD backed provider.\n  * GraphUserOriginIdCreationContext - Create a new user using the OriginID as a reference to an existing user from an external AD or AAD backed provider.\n  * GraphUserPrincipalNameCreationContext - Create a new user using the principal name as a reference to an existing user from an external AD or AAD backed provider.\n\n If the user to be added corresponds to a user that was previously deleted, then that user will be restored.\n\n Optionally, you can add the newly created user as a member of an existing ADO group and/or specify a custom storage key for the user.",
         "operationId": "Users_Create",
         "consumes": [
           "application/json"
@@ -2565,6 +2748,26 @@
         }
       }
     },
+    "PagedGraphMembers": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "continuationToken": {
+          "description": "This will be non-null if there is another page of data. There will never be more than one continuation token returned by a request.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "graphMembers": {
+          "description": "The enumerable list of members found within a page.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/GraphMember"
+          }
+        }
+      }
+    },
     "PagedGraphServicePrincipals": {
       "description": "",
       "type": "object",
@@ -2695,6 +2898,13 @@
       "description": "Version of the API to use.  This should be set to '7.1-preview.1' to use this version of the api.",
       "required": true,
       "type": "string"
+    },
+    "api-Version-preview.2": {
+      "name": "api-version",
+      "in": "query",
+      "description": "Version of the API to use.  This should be set to '7.1-preview.2' to use this version of the api.",
+      "required": true,
+      "type": "string"
     }
   },
   "securityDefinitions": {
@@ -2708,8 +2918,8 @@
       "authorizationUrl": "https://app.vssps.visualstudio.com/oauth2/authorize&response_type=Assertion",
       "tokenUrl": "https://app.vssps.visualstudio.com/oauth2/token?client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer&grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer",
       "scopes": {
-        "vso.graph_manage": "Grants the ability to read user, group, scope and group membership information, and to add users, groups and manage group memberships",
-        "vso.graph": "Grants the ability to read user, group, scope and group membership information"
+        "vso.graph": "Grants the ability to read user, group, scope and group membership information",
+        "vso.graph_manage": "Grants the ability to read user, group, scope and group membership information, and to add users, groups and manage group memberships"
       }
     }
   },
