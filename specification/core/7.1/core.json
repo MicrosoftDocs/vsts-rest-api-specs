@@ -23,6 +23,10 @@
       "name": "Avatar"
     },
     {
+      "name": "Categorized Teams",
+      "description": "Manage teams in Azure DevOps Services.\nA DevOps account has one or more team projects.\nEach team project has one or more teams that contribute to that project."
+    },
+    {
       "name": "Processes",
       "description": "Controller for processes."
     },
@@ -594,6 +598,80 @@
           {
             "oauth2": [
               "vso.project_manage"
+            ]
+          }
+        ]
+      }
+    },
+    "/{organization}/_apis/projects/{projectId}/categorizedteams/": {
+      "get": {
+        "tags": [
+          "Categorized Teams"
+        ],
+        "x-ms-docs-override-version": "7.1-preview.1",
+        "x-ms-vss-resource": "categorizedTeams",
+        "x-ms-vss-method": "GetProjectTeamsByCategory",
+        "x-ms-preview": true,
+        "description": "Gets list of user readable teams in a project and teams user is member of (excluded from readable list).",
+        "operationId": "Categorized Teams_Get",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "projectId",
+            "description": "The name or ID (GUID) of the team project containing the teams to retrieve.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "$expandIdentity",
+            "description": "A value indicating whether or not to expand Identity information in the result WebApiTeam object.",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "$top",
+            "description": "Maximum number of teams to return.",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "$skip",
+            "description": "Number of teams to skip.",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/CategorizedWebApiTeams"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.profile",
+              "vso.project"
             ]
           }
         ]
@@ -1241,6 +1319,26 @@
     }
   },
   "definitions": {
+    "CategorizedWebApiTeams": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "myTeams": {
+          "description": "Teams that the user is a member of.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/WebApiTeam"
+          }
+        },
+        "otherReadableTeams": {
+          "description": "Teams that the user can read but is not member of.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/WebApiTeam"
+          }
+        }
+      }
+    },
     "GraphSubjectBase": {
       "description": "",
       "type": "object",
