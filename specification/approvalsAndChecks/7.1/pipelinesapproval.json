@@ -59,7 +59,7 @@
           {
             "in": "query",
             "name": "approvalIds",
-            "description": "",
+            "description": "List of approval Ids to get.",
             "required": false,
             "type": "string",
             "format": "array (uuid)"
@@ -67,7 +67,7 @@
           {
             "in": "query",
             "name": "$expand",
-            "description": "",
+            "description": "Include these additional details in the returned objects.",
             "required": false,
             "type": "string",
             "enum": [
@@ -80,18 +80,103 @@
               "values": [
                 {
                   "value": "none",
-                  "description": ""
+                  "description": "No additional properties."
                 },
                 {
                   "value": "steps",
-                  "description": ""
+                  "description": "Include approval steps associated with the approval."
                 },
                 {
                   "value": "permissions",
+                  "description": "Include current user permissions for approval object."
+                }
+              ]
+            }
+          },
+          {
+            "in": "query",
+            "name": "userIds",
+            "description": "List of user Ids approvals assigned to. Accepts either user Ids or user descriptors.",
+            "required": false,
+            "type": "string",
+            "format": "array (string)"
+          },
+          {
+            "in": "query",
+            "name": "state",
+            "description": "Approval status. Returns approvals of any status if not provided",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "undefined",
+              "uninitiated",
+              "pending",
+              "approved",
+              "rejected",
+              "skipped",
+              "canceled",
+              "timedOut",
+              "failed",
+              "completed",
+              "all"
+            ],
+            "x-ms-enum": {
+              "name": "ApprovalStatus",
+              "values": [
+                {
+                  "value": "undefined",
+                  "description": ""
+                },
+                {
+                  "value": "uninitiated",
+                  "description": "Indicates the approval is Uninitiated. Used in case of in sequence order of execution where given approver is not yet actionable."
+                },
+                {
+                  "value": "pending",
+                  "description": "Indicates the approval is Pending."
+                },
+                {
+                  "value": "approved",
+                  "description": "Indicates the approval is Approved."
+                },
+                {
+                  "value": "rejected",
+                  "description": "Indicates the approval is Rejected."
+                },
+                {
+                  "value": "skipped",
+                  "description": "Indicates the approval is Skipped."
+                },
+                {
+                  "value": "canceled",
+                  "description": "Indicates the approval is Canceled."
+                },
+                {
+                  "value": "timedOut",
+                  "description": "Indicates the approval is Timed out."
+                },
+                {
+                  "value": "failed",
+                  "description": ""
+                },
+                {
+                  "value": "completed",
+                  "description": ""
+                },
+                {
+                  "value": "all",
                   "description": ""
                 }
               ]
             }
+          },
+          {
+            "in": "query",
+            "name": "top",
+            "description": "Maximum number of approvals to get.",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
           },
           {
             "$ref": "#/parameters/api-Version-preview.1"
@@ -247,15 +332,15 @@
               "values": [
                 {
                   "value": "none",
-                  "description": ""
+                  "description": "No additional properties."
                 },
                 {
                   "value": "steps",
-                  "description": ""
+                  "description": "Include approval steps associated with the approval."
                 },
                 {
                   "value": "permissions",
-                  "description": ""
+                  "description": "Include current user permissions for approval object."
                 }
               ]
             }
@@ -569,6 +654,84 @@
       "properties": {
         "approvalIds": {
           "description": "Query approvals based on list of approval IDs.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "approverStatus": {
+          "description": "Query approvals based on approval status",
+          "enum": [
+            "undefined",
+            "uninitiated",
+            "pending",
+            "approved",
+            "rejected",
+            "skipped",
+            "canceled",
+            "timedOut",
+            "failed",
+            "completed",
+            "all"
+          ],
+          "x-ms-enum": {
+            "name": "ApprovalStatus",
+            "values": [
+              {
+                "value": "undefined",
+                "description": ""
+              },
+              {
+                "value": "uninitiated",
+                "description": "Indicates the approval is Uninitiated. Used in case of in sequence order of execution where given approver is not yet actionable."
+              },
+              {
+                "value": "pending",
+                "description": "Indicates the approval is Pending."
+              },
+              {
+                "value": "approved",
+                "description": "Indicates the approval is Approved."
+              },
+              {
+                "value": "rejected",
+                "description": "Indicates the approval is Rejected."
+              },
+              {
+                "value": "skipped",
+                "description": "Indicates the approval is Skipped."
+              },
+              {
+                "value": "canceled",
+                "description": "Indicates the approval is Canceled."
+              },
+              {
+                "value": "timedOut",
+                "description": "Indicates the approval is Timed out."
+              },
+              {
+                "value": "failed",
+                "description": ""
+              },
+              {
+                "value": "completed",
+                "description": ""
+              },
+              {
+                "value": "all",
+                "description": ""
+              }
+            ]
+          }
+        },
+        "top": {
+          "description": "Query approvals based on how many approvals to return.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "userIds": {
+          "description": "Query approvals based on list of approver IDs.",
           "type": "array",
           "items": {
             "type": "string",
