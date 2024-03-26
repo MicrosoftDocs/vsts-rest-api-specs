@@ -1,0 +1,1193 @@
+﻿{
+  "swagger": "2.0",
+  "info": {
+    "title": "Identity",
+    "description": "",
+    "termsOfService": "https://go.microsoft.com/fwlink/?LinkId=329770",
+    "contact": {
+      "name": "nugetvss",
+      "email": "nugetvss@microsoft.com"
+    },
+    "license": {
+      "name": "MICROSOFT SOFTWARE LICENSE TERMS",
+      "url": "https://go.microsoft.com/fwlink/?LinkId=329770"
+    },
+    "version": "7.2-preview"
+  },
+  "host": "vssps.dev.azure.com",
+  "x-ms-vss-area": "Identities",
+  "x-ms-vss-resource-area-id": "8a3d49b8-91f0-46ef-b33d-dda338c25db3",
+  "basePath": "/",
+  "tags": [
+    {
+      "name": "Identities"
+    }
+  ],
+  "schemes": [
+    "https"
+  ],
+  "paths": {
+    "/{organization}/_apis/identities": {
+      "get": {
+        "tags": [
+          "Identities"
+        ],
+        "x-ms-docs-override-version": "7.2-preview.1",
+        "x-ms-vss-resource": "identities",
+        "x-ms-vss-method": "ReadIdentities",
+        "x-ms-preview": true,
+        "description": "Resolve legacy identity information for use with older APIs such as the Security APIs",
+        "operationId": "Identities_Read Identities",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "x-ms-required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "descriptors",
+            "description": "A comma separated list of identity descriptors to resolve",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "identityIds",
+            "description": "A comma seperated list of storage keys to resolve",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "subjectDescriptors",
+            "description": "A comma seperated list of subject descriptors to resolve",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "searchFilter",
+            "description": "The type of search to perform. Values can be AccountName (domain\\alias), DisplayName, MailAddress, General (display name, account name, or unique name), or LocalGroupName (only search Azure Devops groups).",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "filterValue",
+            "description": "The search value, as specified by the searchFilter.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "queryMembership",
+            "description": "The membership information to include with the identities. Values can be None for no membership data or Direct to include the groups that the identity is a member of and the identities that are a member of this identity (groups only)",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "none",
+              "direct",
+              "expanded",
+              "expandedUp",
+              "expandedDown"
+            ],
+            "x-ms-enum": {
+              "name": "QueryMembership",
+              "values": [
+                {
+                  "value": "none",
+                  "description": "Query will not return any membership data"
+                },
+                {
+                  "value": "direct",
+                  "description": "Query will return only direct membership data"
+                },
+                {
+                  "value": "expanded",
+                  "description": "Query will return expanded membership data"
+                },
+                {
+                  "value": "expandedUp",
+                  "description": "Query will return expanded up membership data (parents only)"
+                },
+                {
+                  "value": "expandedDown",
+                  "description": "Query will return expanded down membership data (children only)"
+                }
+              ]
+            }
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Identity"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.identity"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "By Name": {
+            "$ref": "./httpExamples/Identities/SearchPCVUByName.json"
+          },
+          "By Email": {
+            "$ref": "./httpExamples/Identities/SearchIdentityByEmail.json"
+          },
+          "By Ids": {
+            "$ref": "./httpExamples/Identities/SearchByIds.json"
+          },
+          "By IdentityDescriptors": {
+            "$ref": "./httpExamples/Identities/SearchByIdentityDescriptors.json"
+          },
+          "By Subject Descriptors": {
+            "$ref": "./httpExamples/Identities/SearchBySubjectDescriptors.json"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "AccessTokenResult": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "accessToken": {
+          "$ref": "#/definitions/JsonWebToken"
+        },
+        "accessTokenError": {
+          "enum": [
+            "none",
+            "grantTypeRequired",
+            "authorizationGrantRequired",
+            "clientSecretRequired",
+            "redirectUriRequired",
+            "invalidAuthorizationGrant",
+            "invalidAuthorizationScopes",
+            "invalidRefreshToken",
+            "authorizationNotFound",
+            "authorizationGrantExpired",
+            "accessAlreadyIssued",
+            "invalidRedirectUri",
+            "accessTokenNotFound",
+            "invalidAccessToken",
+            "accessTokenAlreadyRefreshed",
+            "invalidClientSecret",
+            "clientSecretExpired",
+            "serverError",
+            "accessDenied",
+            "accessTokenKeyRequired",
+            "invalidAccessTokenKey",
+            "failedToGetAccessToken",
+            "invalidClientId",
+            "invalidClient",
+            "invalidValidTo",
+            "invalidUserId",
+            "failedToIssueAccessToken",
+            "authorizationGrantScopeMissing",
+            "invalidPublicAccessTokenKey",
+            "invalidPublicAccessToken",
+            "publicFeatureFlagNotEnabled",
+            "sshPolicyDisabled",
+            "hostAuthorizationNotFound",
+            "hostAuthorizationIsNotValid",
+            "invalidScope"
+          ],
+          "x-ms-enum": {
+            "name": "TokenError",
+            "values": [
+              {
+                "value": "none",
+                "description": ""
+              },
+              {
+                "value": "grantTypeRequired",
+                "description": ""
+              },
+              {
+                "value": "authorizationGrantRequired",
+                "description": ""
+              },
+              {
+                "value": "clientSecretRequired",
+                "description": ""
+              },
+              {
+                "value": "redirectUriRequired",
+                "description": ""
+              },
+              {
+                "value": "invalidAuthorizationGrant",
+                "description": ""
+              },
+              {
+                "value": "invalidAuthorizationScopes",
+                "description": ""
+              },
+              {
+                "value": "invalidRefreshToken",
+                "description": ""
+              },
+              {
+                "value": "authorizationNotFound",
+                "description": ""
+              },
+              {
+                "value": "authorizationGrantExpired",
+                "description": ""
+              },
+              {
+                "value": "accessAlreadyIssued",
+                "description": ""
+              },
+              {
+                "value": "invalidRedirectUri",
+                "description": ""
+              },
+              {
+                "value": "accessTokenNotFound",
+                "description": ""
+              },
+              {
+                "value": "invalidAccessToken",
+                "description": ""
+              },
+              {
+                "value": "accessTokenAlreadyRefreshed",
+                "description": ""
+              },
+              {
+                "value": "invalidClientSecret",
+                "description": ""
+              },
+              {
+                "value": "clientSecretExpired",
+                "description": ""
+              },
+              {
+                "value": "serverError",
+                "description": ""
+              },
+              {
+                "value": "accessDenied",
+                "description": ""
+              },
+              {
+                "value": "accessTokenKeyRequired",
+                "description": ""
+              },
+              {
+                "value": "invalidAccessTokenKey",
+                "description": ""
+              },
+              {
+                "value": "failedToGetAccessToken",
+                "description": ""
+              },
+              {
+                "value": "invalidClientId",
+                "description": ""
+              },
+              {
+                "value": "invalidClient",
+                "description": ""
+              },
+              {
+                "value": "invalidValidTo",
+                "description": ""
+              },
+              {
+                "value": "invalidUserId",
+                "description": ""
+              },
+              {
+                "value": "failedToIssueAccessToken",
+                "description": ""
+              },
+              {
+                "value": "authorizationGrantScopeMissing",
+                "description": ""
+              },
+              {
+                "value": "invalidPublicAccessTokenKey",
+                "description": ""
+              },
+              {
+                "value": "invalidPublicAccessToken",
+                "description": ""
+              },
+              {
+                "value": "publicFeatureFlagNotEnabled",
+                "description": ""
+              },
+              {
+                "value": "sshPolicyDisabled",
+                "description": ""
+              },
+              {
+                "value": "hostAuthorizationNotFound",
+                "description": ""
+              },
+              {
+                "value": "hostAuthorizationIsNotValid",
+                "description": ""
+              },
+              {
+                "value": "invalidScope",
+                "description": ""
+              }
+            ]
+          }
+        },
+        "authorizationId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "errorDescription": {
+          "type": "string"
+        },
+        "hasError": {
+          "type": "boolean"
+        },
+        "isFirstPartyClient": {
+          "type": "boolean"
+        },
+        "refreshToken": {
+          "$ref": "#/definitions/RefreshTokenGrant"
+        },
+        "scope": {
+          "type": "string"
+        },
+        "tokenType": {
+          "type": "string"
+        },
+        "validTo": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "AuthorizationGrant": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "grantType": {
+          "enum": [
+            "none",
+            "jwtBearer",
+            "refreshToken",
+            "implicit",
+            "clientCredentials"
+          ],
+          "x-ms-enum": {
+            "name": "GrantType",
+            "values": [
+              {
+                "value": "none",
+                "description": ""
+              },
+              {
+                "value": "jwtBearer",
+                "description": ""
+              },
+              {
+                "value": "refreshToken",
+                "description": ""
+              },
+              {
+                "value": "implicit",
+                "description": ""
+              },
+              {
+                "value": "clientCredentials",
+                "description": ""
+              }
+            ]
+          }
+        }
+      }
+    },
+    "ChangedIdentities": {
+      "description": "Container class for changed identities",
+      "type": "object",
+      "properties": {
+        "identities": {
+          "description": "Changed Identities",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Identity"
+          }
+        },
+        "moreData": {
+          "description": "More data available, set to true if pagesize is specified.",
+          "type": "boolean"
+        },
+        "sequenceContext": {
+          "description": "Last Identity SequenceId",
+          "$ref": "#/definitions/ChangedIdentitiesContext"
+        }
+      }
+    },
+    "ChangedIdentitiesContext": {
+      "description": "Context class for changed identities",
+      "type": "object",
+      "properties": {
+        "groupSequenceId": {
+          "description": "Last Group SequenceId",
+          "type": "integer",
+          "format": "int32"
+        },
+        "identitySequenceId": {
+          "description": "Last Identity SequenceId",
+          "type": "integer",
+          "format": "int32"
+        },
+        "organizationIdentitySequenceId": {
+          "description": "Last Group OrganizationIdentitySequenceId",
+          "type": "integer",
+          "format": "int32"
+        },
+        "pageSize": {
+          "description": "Page size",
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "CreateScopeInfo": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "adminGroupDescription": {
+          "type": "string"
+        },
+        "adminGroupName": {
+          "type": "string"
+        },
+        "creatorId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "parentScopeId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "scopeName": {
+          "type": "string"
+        },
+        "scopeType": {
+          "enum": [
+            "generic",
+            "serviceHost",
+            "teamProject"
+          ],
+          "x-ms-enum": {
+            "name": "GroupScopeType",
+            "values": [
+              {
+                "value": "generic",
+                "description": ""
+              },
+              {
+                "value": "serviceHost",
+                "description": ""
+              },
+              {
+                "value": "teamProject",
+                "description": ""
+              }
+            ]
+          }
+        }
+      }
+    },
+    "FrameworkIdentityInfo": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "displayName": {
+          "type": "string"
+        },
+        "identifier": {
+          "type": "string"
+        },
+        "identityType": {
+          "enum": [
+            "none",
+            "serviceIdentity",
+            "aggregateIdentity",
+            "importedIdentity"
+          ],
+          "x-ms-enum": {
+            "name": "FrameworkIdentityType",
+            "values": [
+              {
+                "value": "none",
+                "description": ""
+              },
+              {
+                "value": "serviceIdentity",
+                "description": ""
+              },
+              {
+                "value": "aggregateIdentity",
+                "description": ""
+              },
+              {
+                "value": "importedIdentity",
+                "description": ""
+              }
+            ]
+          }
+        },
+        "role": {
+          "type": "string"
+        }
+      }
+    },
+    "GroupMembership": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "active": {
+          "type": "boolean"
+        },
+        "descriptor": {
+          "$ref": "#/definitions/IdentityDescriptor"
+        },
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "queriedId": {
+          "type": "string",
+          "format": "uuid"
+        }
+      }
+    },
+    "Identity": {
+      "description": "",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/IdentityBase"
+        }
+      ],
+      "properties": {}
+    },
+    "IdentityBase": {
+      "description": "Base Identity class to allow \"trimmed\" identity class in the GetConnectionData API Makes sure that on-the-wire representations of the derived classes are compatible with each other (e.g. Server responds with PublicIdentity object while client deserializes it as Identity object) Derived classes should not have additional [DataMember] properties",
+      "type": "object",
+      "properties": {
+        "customDisplayName": {
+          "description": "The custom display name for the identity (if any). Setting this property to an empty string will clear the existing custom display name. Setting this property to null will not affect the existing persisted value (since null values do not get sent over the wire or to the database)",
+          "type": "string"
+        },
+        "descriptor": {
+          "$ref": "#/definitions/IdentityDescriptor"
+        },
+        "id": {
+          "description": "Identity Identifier. Also called Storage Key, or VSID",
+          "type": "string",
+          "format": "uuid"
+        },
+        "isActive": {
+          "description": "True if the identity has a membership in any Azure Devops group in the organization.",
+          "type": "boolean"
+        },
+        "isContainer": {
+          "description": "True if the identity is a group.",
+          "type": "boolean"
+        },
+        "masterId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "memberIds": {
+          "description": "Id of the members of the identity (groups only).",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "memberOf": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/IdentityDescriptor"
+          }
+        },
+        "members": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/IdentityDescriptor"
+          }
+        },
+        "metaTypeId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "properties": {
+          "$ref": "#/definitions/PropertiesCollection"
+        },
+        "providerDisplayName": {
+          "description": "The display name for the identity as specified by the source identity provider.",
+          "type": "string"
+        },
+        "resourceVersion": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "socialDescriptor": {
+          "type": "string"
+        },
+        "subjectDescriptor": {
+          "description": "Subject descriptor of a Graph entity.",
+          "type": "string"
+        },
+        "uniqueUserId": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "IdentityBatchInfo": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "descriptors": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/IdentityDescriptor"
+          }
+        },
+        "identityIds": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "includeRestrictedVisibility": {
+          "type": "boolean"
+        },
+        "propertyNames": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "queryMembership": {
+          "enum": [
+            "none",
+            "direct",
+            "expanded",
+            "expandedUp",
+            "expandedDown"
+          ],
+          "x-ms-enum": {
+            "name": "QueryMembership",
+            "values": [
+              {
+                "value": "none",
+                "description": "Query will not return any membership data"
+              },
+              {
+                "value": "direct",
+                "description": "Query will return only direct membership data"
+              },
+              {
+                "value": "expanded",
+                "description": "Query will return expanded membership data"
+              },
+              {
+                "value": "expandedUp",
+                "description": "Query will return expanded up membership data (parents only)"
+              },
+              {
+                "value": "expandedDown",
+                "description": "Query will return expanded down membership data (children only)"
+              }
+            ]
+          }
+        },
+        "socialDescriptors": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "subjectDescriptors": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "IdentityDescriptor": {
+      "description": "An Identity descriptor is a wrapper for the identity type (Windows SID, Passport) along with a unique identifier such as the SID or PUID.",
+      "type": "object",
+      "properties": {
+        "identifier": {
+          "description": "The unique identifier for this identity, not exceeding 256 chars, which will be persisted.",
+          "type": "string"
+        },
+        "identityType": {
+          "description": "Type of descriptor (for example, Windows, Passport, etc.).",
+          "type": "string"
+        }
+      }
+    },
+    "IdentityRightsTransferData": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "userPrincipalNameMappings": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "IdentityScope": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "administrators": {
+          "$ref": "#/definitions/IdentityDescriptor"
+        },
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "isActive": {
+          "type": "boolean"
+        },
+        "isGlobal": {
+          "type": "boolean"
+        },
+        "localScopeId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "name": {
+          "type": "string"
+        },
+        "parentId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "scopeType": {
+          "enum": [
+            "generic",
+            "serviceHost",
+            "teamProject"
+          ],
+          "x-ms-enum": {
+            "name": "GroupScopeType",
+            "values": [
+              {
+                "value": "generic",
+                "description": ""
+              },
+              {
+                "value": "serviceHost",
+                "description": ""
+              },
+              {
+                "value": "teamProject",
+                "description": ""
+              }
+            ]
+          }
+        },
+        "securingHostId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "subjectDescriptor": {
+          "type": "string"
+        }
+      }
+    },
+    "IdentitySelf": {
+      "description": "Identity information.",
+      "type": "object",
+      "properties": {
+        "accountName": {
+          "description": "The UserPrincipalName (UPN) of the account. This value comes from the source provider.",
+          "type": "string"
+        },
+        "displayName": {
+          "description": "The display name. For AAD accounts with multiple tenants this is the display name of the profile in the home tenant.",
+          "type": "string"
+        },
+        "domain": {
+          "description": "This represents the name of the container of origin. For AAD accounts this is the tenantID of the home tenant. For MSA accounts this is the string \"Windows Live ID\".",
+          "type": "string"
+        },
+        "id": {
+          "description": "This is the VSID of the home tenant profile. If the profile is signed into the home tenant or if the profile has no tenants then this Id is the same as the Id returned by the profile/profiles/me endpoint. Going forward it is recommended that you use the combined values of Origin, OriginId and Domain to uniquely identify a user rather than this Id.",
+          "type": "string",
+          "format": "uuid"
+        },
+        "origin": {
+          "description": "The type of source provider for the origin identifier. For MSA accounts this is \"msa\". For AAD accounts this is \"aad\".",
+          "type": "string"
+        },
+        "originId": {
+          "description": "The unique identifier from the system of origin. If there are multiple tenants this is the unique identifier of the account in the home tenant. (For MSA this is the PUID in hex notation, for AAD this is the object id.)",
+          "type": "string"
+        },
+        "tenants": {
+          "description": "For AAD accounts this is all of the tenants that this account is a member of.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TenantInfo"
+          }
+        }
+      }
+    },
+    "IdentitySnapshot": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "groups": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Identity"
+          }
+        },
+        "identityIds": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "memberships": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/GroupMembership"
+          }
+        },
+        "scopeId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "scopes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/IdentityScope"
+          }
+        }
+      }
+    },
+    "IdentityUpdateData": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "index": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "updated": {
+          "type": "boolean"
+        }
+      }
+    },
+    "IssuedToken": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "isAuthenticated": {
+          "type": "boolean"
+        },
+        "properties": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "JObject": {
+      "description": "Represents a JSON object.",
+      "type": "object",
+      "properties": {
+        "item": {
+          "type": "string",
+          "format": "JToken"
+        },
+        "type": {
+          "description": "Gets the node type for this JToken.",
+          "type": "string",
+          "format": "JTokenType"
+        }
+      }
+    },
+    "JsonPatchDocument": {
+      "description": "The JSON model for JSON Patch Operations",
+      "type": "object",
+      "allOf": [
+        {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/JsonPatchOperation"
+          }
+        }
+      ],
+      "properties": {}
+    },
+    "JsonPatchOperation": {
+      "description": "The JSON model for a JSON Patch operation",
+      "type": "object",
+      "properties": {
+        "from": {
+          "description": "The path to copy from for the Move/Copy operation.",
+          "type": "string"
+        },
+        "op": {
+          "description": "The patch operation",
+          "enum": [
+            "add",
+            "remove",
+            "replace",
+            "move",
+            "copy",
+            "test"
+          ],
+          "x-ms-enum": {
+            "name": "Operation",
+            "values": [
+              {
+                "value": "add",
+                "description": ""
+              },
+              {
+                "value": "remove",
+                "description": ""
+              },
+              {
+                "value": "replace",
+                "description": ""
+              },
+              {
+                "value": "move",
+                "description": ""
+              },
+              {
+                "value": "copy",
+                "description": ""
+              },
+              {
+                "value": "test",
+                "description": ""
+              }
+            ]
+          }
+        },
+        "path": {
+          "description": "The path for the operation. In the case of an array, a zero based index can be used to specify the position in the array (e.g. /biscuits/0/name). The \"-\" character can be used instead of an index to insert at the end of the array (e.g. /biscuits/-).",
+          "type": "string"
+        },
+        "value": {
+          "description": "The value for the operation. This is either a primitive or a JToken.",
+          "type": "object"
+        }
+      }
+    },
+    "JsonWebToken": {
+      "description": "",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/IssuedToken"
+        }
+      ],
+      "properties": {}
+    },
+    "PagedIdentities": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "continuationToken": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "identities": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Identity"
+          }
+        }
+      }
+    },
+    "PropertiesCollection": {
+      "description": "The class represents a property bag as a collection of key-value pairs. Values of all primitive types (any type with a `TypeCode != TypeCode.Object`) except for `DBNull` are accepted. Values of type Byte[], Int32, Double, DateType and String preserve their type, other primitives are retuned as a String. Byte[] expected as base64 encoded string.",
+      "type": "object",
+      "properties": {
+        "count": {
+          "description": "The count of properties in the collection.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "item": {
+          "type": "object"
+        },
+        "keys": {
+          "description": "The set of keys in the collection.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "values": {
+          "description": "The set of values in the collection.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "RefreshTokenGrant": {
+      "description": "",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/AuthorizationGrant"
+        }
+      ],
+      "properties": {
+        "jwt": {
+          "$ref": "#/definitions/JsonWebToken"
+        }
+      }
+    },
+    "SwapIdentityInfo": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "id1": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "id2": {
+          "type": "string",
+          "format": "uuid"
+        }
+      }
+    },
+    "TenantInfo": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "homeTenant": {
+          "type": "boolean"
+        },
+        "tenantId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "tenantName": {
+          "type": "string"
+        },
+        "verifiedDomains": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "VssJsonCollectionWrapper": {
+      "description": "This class is used to serialize collections as a single JSON object on the wire.",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/VssJsonCollectionWrapperBase"
+        }
+      ],
+      "properties": {
+        "value": {
+          "description": "The serialized item.",
+          "type": "string",
+          "format": "T"
+        }
+      }
+    },
+    "VssJsonCollectionWrapperBase": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "count": {
+          "description": "The number of serialized items.",
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    }
+  },
+  "parameters": {
+    "api-Version-preview.1": {
+      "name": "api-version",
+      "in": "query",
+      "description": "Version of the API to use.  This should be set to '7.2-preview.1' to use this version of the api.",
+      "required": true,
+      "type": "string"
+    }
+  },
+  "securityDefinitions": {
+    "accessToken": {
+      "type": "basic",
+      "description": "Personal access token. Use any value for the user name and the token as the password."
+    },
+    "oauth2": {
+      "type": "oauth2",
+      "flow": "accessCode",
+      "authorizationUrl": "https://app.vssps.visualstudio.com/oauth2/authorize&response_type=Assertion",
+      "tokenUrl": "https://app.vssps.visualstudio.com/oauth2/token?client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer&grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer",
+      "scopes": {
+        "vso.identity_manage": "Grants the ability to read, write, and manage identities and groups.",
+        "vso.identity": "Grants the ability to read identities and groups."
+      }
+    }
+  },
+  "security": [
+    {
+      "accessToken": []
+    }
+  ],
+  "externalDocs": {
+    "description": "Azure DevOps REST APIs",
+    "url": "https://aka.ms/azure-devops-rest-apis"
+  }
+}

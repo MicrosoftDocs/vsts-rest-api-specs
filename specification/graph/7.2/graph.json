@@ -1,0 +1,2935 @@
+﻿{
+  "swagger": "2.0",
+  "info": {
+    "title": "Graph",
+    "description": "",
+    "termsOfService": "https://go.microsoft.com/fwlink/?LinkId=329770",
+    "contact": {
+      "name": "nugetvss",
+      "email": "nugetvss@microsoft.com"
+    },
+    "license": {
+      "name": "MICROSOFT SOFTWARE LICENSE TERMS",
+      "url": "https://go.microsoft.com/fwlink/?LinkId=329770"
+    },
+    "version": "7.2-preview"
+  },
+  "host": "vssps.dev.azure.com",
+  "x-ms-vss-area": "Graph",
+  "x-ms-vss-resource-area-id": "bb1e7ec9-e901-4b68-999a-de7012b920f8",
+  "basePath": "/",
+  "tags": [
+    {
+      "name": "Avatars"
+    },
+    {
+      "name": "Descriptors"
+    },
+    {
+      "name": "Groups"
+    },
+    {
+      "name": "Memberships"
+    },
+    {
+      "name": "Membership States"
+    },
+    {
+      "name": "Provider Info"
+    },
+    {
+      "name": "Request Access"
+    },
+    {
+      "name": "Service Principals"
+    },
+    {
+      "name": "Storage Keys"
+    },
+    {
+      "name": "Subject Lookup"
+    },
+    {
+      "name": "Subject Query"
+    },
+    {
+      "name": "Users"
+    }
+  ],
+  "schemes": [
+    "https"
+  ],
+  "paths": {
+    "/{organization}/_apis/graph/descriptors/{storageKey}": {
+      "get": {
+        "tags": [
+          "Descriptors"
+        ],
+        "x-ms-docs-override-version": "7.2-preview.1",
+        "x-ms-vss-resource": "descriptors",
+        "x-ms-vss-method": "GetDescriptor",
+        "x-ms-preview": true,
+        "description": "Resolve a storage key to a descriptor",
+        "operationId": "Descriptors_Get",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "storageKey",
+            "description": "Storage key of the subject (user, group, scope, etc.) to resolve",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "x-ms-required": false,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/GraphDescriptorResult"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.graph"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "": {
+            "$ref": "./httpExamples/Descriptors/GetDescriptorById.json"
+          }
+        }
+      }
+    },
+    "/{organization}/_apis/graph/groups": {
+      "post": {
+        "tags": [
+          "Groups"
+        ],
+        "x-ms-docs-override-version": "7.2-preview.1",
+        "x-ms-vss-resource": "groups",
+        "x-ms-vss-method": "CreateGroup",
+        "x-ms-preview": true,
+        "description": "Create a new Azure DevOps group or materialize an existing AAD group.\n\nThe body of the request must be a derived type of GraphGroupCreationContext:\n  * GraphGroupVstsCreationContext - Create a new Azure DevOps group that is not backed by an external provider.\n  * GraphGroupMailAddressCreationContext - Create a new group using the mail address as a reference to an existing group from an external AD or AAD backed provider.\n  * GraphGroupOriginIdCreationContext - Create a new group using the OriginID as a reference to a group from an external AD or AAD backed provider.\n\n Optionally, you can add the newly created group as a member of an existing Azure DevOps group and/or specify a custom storage key for the group.",
+        "operationId": "Groups_Create",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "The subset of the full graph group used to uniquely find the graph subject in an external provider.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/GraphGroupCreationContext"
+            }
+          },
+          {
+            "in": "query",
+            "name": "scopeDescriptor",
+            "description": "A descriptor referencing the scope (collection, project) in which the group should be created. If omitted, will be created in the scope of the enclosing account or organization. Valid only for VSTS groups.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "groupDescriptors",
+            "description": "A comma separated list of descriptors referencing groups you want the graph group to join",
+            "required": false,
+            "type": "string",
+            "format": "array (string)"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/GraphGroup"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.graph_manage"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "Create a Group at the account level": {
+            "$ref": "./httpExamples/Groups/CreateGroup.json"
+          },
+          "Create a Group at the project level": {
+            "$ref": "./httpExamples/Groups/CreateGroupInProject.json"
+          },
+          "Add an AAD Group by OID": {
+            "$ref": "./httpExamples/Groups/MaterializeAADGroupByOID.json"
+          },
+          "Add an AAD Group as member of a group": {
+            "$ref": "./httpExamples/Groups/MaterializeAADGroupByOIDAsMember.json"
+          },
+          "Add an AAD Group with a custom storage key": {
+            "$ref": "./httpExamples/Groups/MaterializeAADGroupByOIDWithStorageKey.json"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Groups"
+        ],
+        "x-ms-docs-override-version": "7.2-preview.1",
+        "x-ms-vss-resource": "groups",
+        "x-ms-vss-method": "ListGroups",
+        "x-ms-preview": true,
+        "description": "Gets a list of all groups in the current scope (usually organization or account).\n\nThe optional parameters are used to filter down the returned results. Returned results are in no guaranteed order.\n\n Since the list of groups may be large, results are returned in pages of groups.  If there are more results\n than can be returned in a single page, the result set will contain a continuation token for retrieval of the\n next set of results.",
+        "operationId": "Groups_List",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "scopeDescriptor",
+            "description": "Specify a non-default scope (collection, project) to search for groups.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "subjectTypes",
+            "description": "A comma separated list of user subject subtypes to reduce the retrieved results, e.g. Microsoft.IdentityModel.Claims.ClaimsIdentity",
+            "required": false,
+            "type": "string",
+            "format": "array (string)"
+          },
+          {
+            "in": "query",
+            "name": "continuationToken",
+            "description": "An opaque data blob that allows the next page of data to resume immediately after where the previous page ended. The only reliable way to know if there is more data left is the presence of a continuation token.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/GraphGroup"
+              }
+            },
+            "headers": {
+              "X-MS-ContinuationToken": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.graph"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "": {
+            "$ref": "./httpExamples/Groups/GetAllGroups.json"
+          }
+        }
+      }
+    },
+    "/{organization}/_apis/graph/groups/{groupDescriptor}": {
+      "delete": {
+        "tags": [
+          "Groups"
+        ],
+        "x-ms-docs-override-version": "7.2-preview.1",
+        "x-ms-vss-resource": "groups",
+        "x-ms-vss-method": "DeleteGroup",
+        "x-ms-preview": true,
+        "description": "Removes an Azure DevOps group from all of its parent groups.\n\nThe group will still be visible, but membership\n checks for the group, and all descendants which derive membership through it, will return false.”",
+        "operationId": "Groups_Delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "groupDescriptor",
+            "description": "The descriptor of the group to delete.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.graph_manage"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "": {
+            "$ref": "./httpExamples/Groups/DeleteGroup.json"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Groups"
+        ],
+        "x-ms-docs-override-version": "7.2-preview.1",
+        "x-ms-vss-resource": "groups",
+        "x-ms-vss-method": "GetGroup",
+        "x-ms-preview": true,
+        "description": "Get a group by its descriptor.\n\nThe group will be returned even if it has been deleted from the account or has had all its memberships\ndeleted.",
+        "operationId": "Groups_Get",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "groupDescriptor",
+            "description": "The descriptor of the desired graph group.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/GraphGroup"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.graph"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "": {
+            "$ref": "./httpExamples/Groups/GetGroup-AddRemoveAADGroupByOID.json"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Groups"
+        ],
+        "x-ms-docs-override-version": "7.2-preview.1",
+        "x-ms-vss-resource": "groups",
+        "x-ms-vss-method": "UpdateGroup",
+        "x-ms-preview": true,
+        "description": "Update the properties of an Azure DevOps group.\n\nCurrently limited to only changing the description and account name.",
+        "operationId": "Groups_Update",
+        "consumes": [
+          "application/json-patch+json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "groupDescriptor",
+            "description": "The descriptor of the group to modify.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "The JSON+Patch document containing the fields to alter.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/JsonPatchDocument"
+            }
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/GraphGroup"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.graph_manage"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "": {
+            "$ref": "./httpExamples/Groups/UpdateGroup.json"
+          }
+        }
+      }
+    },
+    "/{organization}/_apis/graph/Memberships/{subjectDescriptor}": {
+      "get": {
+        "tags": [
+          "Memberships"
+        ],
+        "x-ms-docs-override-version": "7.2-preview.1",
+        "x-ms-vss-resource": "membershipsBatch",
+        "x-ms-vss-method": "ListMemberships",
+        "x-ms-preview": true,
+        "description": "Get all the memberships where this descriptor is a member in the relationship.\n\nThe default value for direction is 'up' meaning return all memberships where the subject is a member (e.g. all groups the subject is a member of).\n Alternatively, passing the direction as 'down' will return all memberships where the subject is a container (e.g. all members of the subject group).",
+        "operationId": "Memberships_List",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "subjectDescriptor",
+            "description": "Fetch all direct memberships of this descriptor.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "direction",
+            "description": "Defaults to Up.",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "unknown",
+              "down",
+              "up"
+            ],
+            "x-ms-enum": {
+              "name": "GraphTraversalDirection",
+              "values": [
+                {
+                  "value": "unknown",
+                  "description": ""
+                },
+                {
+                  "value": "down",
+                  "description": ""
+                },
+                {
+                  "value": "up",
+                  "description": ""
+                }
+              ]
+            }
+          },
+          {
+            "in": "query",
+            "name": "depth",
+            "description": "The maximum number of edges to traverse up or down the membership tree. Currently the only supported value is '1'.",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/GraphMembership"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.graph"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "All members of a group": {
+            "$ref": "./httpExamples/MembershipsBatch/BatchGetMembershipsGroupDown.json"
+          },
+          "All groups for a user": {
+            "$ref": "./httpExamples/MembershipsBatch/BatchGetMembershipsUserUp.json"
+          },
+          "All groups for a group": {
+            "$ref": "./httpExamples/MembershipsBatch/BatchGetMembershipsVSTSGroupUp.json"
+          }
+        }
+      }
+    },
+    "/{organization}/_apis/graph/memberships/{subjectDescriptor}/{containerDescriptor}": {
+      "put": {
+        "tags": [
+          "Memberships"
+        ],
+        "x-ms-docs-override-version": "7.2-preview.1",
+        "x-ms-vss-resource": "memberships",
+        "x-ms-vss-method": "AddMembership",
+        "x-ms-preview": true,
+        "description": "Create a new membership between a container and subject.",
+        "operationId": "Memberships_Add",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "subjectDescriptor",
+            "description": "A descriptor to a group or user that can be the child subject in the relationship.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "containerDescriptor",
+            "description": "A descriptor to a group that can be the container in the relationship.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/GraphMembership"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.graph_manage"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "": {
+            "$ref": "./httpExamples/Memberships/CreateMembershipVSTSGroup.json"
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "Memberships"
+        ],
+        "x-ms-docs-override-version": "7.2-preview.1",
+        "x-ms-vss-resource": "memberships",
+        "x-ms-vss-method": "CheckMembershipExistence",
+        "x-ms-preview": true,
+        "description": "Check to see if a membership relationship between a container and subject exists.",
+        "operationId": "Memberships_Check Membership Existence",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "subjectDescriptor",
+            "description": "The group or user that is a child subject of the relationship.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "containerDescriptor",
+            "description": "The group that is the container in the relationship.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The operation succeeded. Membership exists."
+          },
+          "404": {
+            "description": "Membership does not exist."
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.graph"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "": {
+            "$ref": "./httpExamples/Memberships/CheckMembershipExistenceUser.json"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Memberships"
+        ],
+        "x-ms-docs-override-version": "7.2-preview.1",
+        "x-ms-vss-resource": "memberships",
+        "x-ms-vss-method": "GetMembership",
+        "x-ms-preview": true,
+        "description": "Get a membership relationship between a container and subject.",
+        "operationId": "Memberships_Get",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "subjectDescriptor",
+            "description": "A descriptor to the child subject in the relationship.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "containerDescriptor",
+            "description": "A descriptor to the container in the relationship.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/GraphMembership"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.graph"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "For a User": {
+            "$ref": "./httpExamples/Memberships/GetMembershipUser.json"
+          },
+          "For a Group": {
+            "$ref": "./httpExamples/Memberships/GetMembershipVSTSGroup.json"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Memberships"
+        ],
+        "x-ms-docs-override-version": "7.2-preview.1",
+        "x-ms-vss-resource": "memberships",
+        "x-ms-vss-method": "RemoveMembership",
+        "x-ms-preview": true,
+        "description": "Deletes a membership between a container and subject.",
+        "operationId": "Memberships_Remove Membership",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "subjectDescriptor",
+            "description": "A descriptor to a group or user that is the child subject in the relationship.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "containerDescriptor",
+            "description": "A descriptor to a group that is the container in the relationship.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.graph_manage"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "": {
+            "$ref": "./httpExamples/Memberships/DeleteMembershipUser.json"
+          }
+        }
+      }
+    },
+    "/{organization}/_apis/graph/membershipstates/{subjectDescriptor}": {
+      "get": {
+        "tags": [
+          "Membership States"
+        ],
+        "x-ms-docs-override-version": "7.2-preview.1",
+        "x-ms-vss-resource": "membershipStates",
+        "x-ms-vss-method": "GetMembershipState",
+        "x-ms-preview": true,
+        "description": "Check whether a subject is active or inactive.",
+        "operationId": "Membership States_Get",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "subjectDescriptor",
+            "description": "Descriptor of the subject (user, group, scope, etc.) to check state of",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/GraphMembershipState"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.graph"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "": {
+            "$ref": "./httpExamples/MembershipStates/GetMembershipStateBySubjectDescriptor.json"
+          }
+        }
+      }
+    },
+    "/{organization}/_apis/graph/requestaccess": {
+      "post": {
+        "tags": [
+          "Request Access"
+        ],
+        "x-ms-docs-override-version": "7.2-preview.1",
+        "x-ms-vss-resource": "requestAccess",
+        "x-ms-vss-method": "RequestAccess",
+        "x-ms-preview": true,
+        "description": "",
+        "operationId": "Request Access_Request Access",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/JToken"
+            }
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.graph"
+            ]
+          }
+        ]
+      }
+    },
+    "/{organization}/_apis/graph/serviceprincipals": {
+      "post": {
+        "tags": [
+          "Service Principals"
+        ],
+        "x-ms-docs-override-version": "7.2-preview.1",
+        "x-ms-vss-resource": "servicePrincipals",
+        "x-ms-vss-method": "CreateServicePrincipal",
+        "x-ms-preview": true,
+        "description": "Materialize an existing AAD service principal into the ADO account.\n\nNOTE: Created service principals are not active in an account.\n\n Adding a service principal to an account is required before the service principal can be added to ADO groups or assigned an asset.\n\n The body of the request must be a derived type of GraphServicePrincipalCreationContext:\n  * GraphServicePrincipalOriginIdCreationContext - Create a new service principal using the OriginID as a reference to an existing service principal from AAD backed provider.\n\n If the service principal to be added corresponds to a service principal that was previously deleted, then that service principal will be restored.\n\n Optionally, you can add the newly created service principal as a member of an existing ADO group and/or specify a custom storage key for the service principal.",
+        "operationId": "Service Principals_Create",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "The subset of the full graph service principal used to uniquely find the graph subject in an external provider.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/GraphServicePrincipalCreationContext"
+            }
+          },
+          {
+            "in": "query",
+            "name": "groupDescriptors",
+            "description": "A comma separated list of descriptors of groups you want the graph service principal to join",
+            "required": false,
+            "type": "string",
+            "format": "array (string)"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/GraphServicePrincipal"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.graph_manage"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "": {
+            "$ref": "./httpExamples/ServicePrincipals/CreateServicePrincipal.json"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Service Principals"
+        ],
+        "x-ms-docs-override-version": "7.2-preview.1",
+        "x-ms-vss-resource": "servicePrincipals",
+        "x-ms-vss-method": "ListServicePrincipals",
+        "x-ms-preview": true,
+        "description": "Get a list of all service principals in a given scope.\n\nSince the list of service principals may be large, results are returned in pages of service principals. If there are more results\n than can be returned in a single page, the result set will contain a continuation token for retrieval of the\n next set of results. The only reliable way to know if there is no more service principals left is the lack of a continuation token.",
+        "operationId": "Service Principals_List",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "continuationToken",
+            "description": "An opaque data blob that allows the next page of data to resume immediately after where the previous page ended. The only reliable way to know if there is more data left is the presence of a continuation token.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "scopeDescriptor",
+            "description": "Specify a non-default scope (collection, project) to search for service principals.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/GraphServicePrincipal"
+              }
+            },
+            "headers": {
+              "X-MS-ContinuationToken": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.graph"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "": {
+            "$ref": "./httpExamples/ServicePrincipals/GetAllServicePrincipals.json"
+          }
+        }
+      }
+    },
+    "/{organization}/_apis/graph/serviceprincipals/{servicePrincipalDescriptor}": {
+      "delete": {
+        "tags": [
+          "Service Principals"
+        ],
+        "x-ms-docs-override-version": "7.2-preview.1",
+        "x-ms-vss-resource": "servicePrincipals",
+        "x-ms-vss-method": "DeleteServicePrincipal",
+        "x-ms-preview": true,
+        "description": "Disables a service principal.\n\nThe service principal will still be visible, but membership checks for the service principal will return false.",
+        "operationId": "Service Principals_Delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "servicePrincipalDescriptor",
+            "description": "The descriptor of the service principal to delete.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.graph_manage"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "": {
+            "$ref": "./httpExamples/ServicePrincipals/DeleteServicePrincipal.json"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Service Principals"
+        ],
+        "x-ms-docs-override-version": "7.2-preview.1",
+        "x-ms-vss-resource": "servicePrincipals",
+        "x-ms-vss-method": "GetServicePrincipal",
+        "x-ms-preview": true,
+        "description": "Get a service principal by its descriptor.",
+        "operationId": "Service Principals_Get",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "servicePrincipalDescriptor",
+            "description": "The descriptor of the desired service principal.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/GraphServicePrincipal"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.graph"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "": {
+            "$ref": "./httpExamples/ServicePrincipals/GetServicePrincipal.json"
+          }
+        }
+      }
+    },
+    "/{organization}/_apis/graph/storagekeys/{subjectDescriptor}": {
+      "get": {
+        "tags": [
+          "Storage Keys"
+        ],
+        "x-ms-docs-override-version": "7.2-preview.1",
+        "x-ms-vss-resource": "storageKeys",
+        "x-ms-vss-method": "GetStorageKey",
+        "x-ms-preview": true,
+        "description": "Resolve a descriptor to a storage key.",
+        "operationId": "Storage Keys_Get",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "subjectDescriptor",
+            "description": "",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "x-ms-required": false,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/GraphStorageKeyResult"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.graph"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "": {
+            "$ref": "./httpExamples/StorageKeys/GetStorageKeyBySubjectDescriptor.json"
+          }
+        }
+      }
+    },
+    "/{organization}/_apis/graph/subjectlookup": {
+      "post": {
+        "tags": [
+          "Subject Lookup"
+        ],
+        "x-ms-docs-override-version": "7.2-preview.1",
+        "x-ms-vss-resource": "subjectLookup",
+        "x-ms-vss-method": "LookupSubjects",
+        "x-ms-preview": true,
+        "description": "Resolve descriptors to users, groups or scopes (Subjects) in a batch.",
+        "operationId": "Subject Lookup_Lookup Subjects",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "A list of descriptors that specifies a subset of subjects to retrieve. Each descriptor uniquely identifies the subject across all instance scopes, but only at a single point in time.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/GraphSubjectLookup"
+            }
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "$ref": "#/definitions/GraphSubject"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.graph"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "": {
+            "$ref": "./httpExamples/SubjectLookup/LookupSubjects.json"
+          }
+        }
+      }
+    },
+    "/{organization}/_apis/graph/subjectquery": {
+      "post": {
+        "tags": [
+          "Subject Query"
+        ],
+        "x-ms-docs-override-version": "7.2-preview.1",
+        "x-ms-vss-resource": "subjectQuery",
+        "x-ms-vss-method": "QuerySubjects",
+        "x-ms-preview": true,
+        "description": "Search for Azure Devops users, or/and groups. Results will be returned in a batch with no more than 100 graph subjects.",
+        "operationId": "Subject Query_Query",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "The query that we'll be using to search includes the following: Query: the search term. The search will be prefix matching only. SubjectKind: \"User\" or \"Group\" can be specified, both or either ScopeDescriptor: Non-default scope can be specified, i.e. project scope descriptor",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/GraphSubjectQuery"
+            }
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/GraphSubject"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.graph"
+            ]
+          }
+        ]
+      }
+    },
+    "/{organization}/_apis/graph/Subjects/{subjectDescriptor}/avatars": {
+      "delete": {
+        "tags": [
+          "Avatars"
+        ],
+        "x-ms-docs-override-version": "7.2-preview.1",
+        "x-ms-vss-resource": "avatars",
+        "x-ms-vss-method": "DeleteAvatar",
+        "x-ms-preview": true,
+        "description": "",
+        "operationId": "Avatars_Delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "subjectDescriptor",
+            "description": "",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "x-ms-required": false,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.graph_manage"
+            ]
+          }
+        ]
+      },
+      "get": {
+        "tags": [
+          "Avatars"
+        ],
+        "x-ms-docs-override-version": "7.2-preview.1",
+        "x-ms-vss-resource": "avatars",
+        "x-ms-vss-method": "GetAvatar",
+        "x-ms-preview": true,
+        "description": "",
+        "operationId": "Avatars_Get",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "subjectDescriptor",
+            "description": "",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "x-ms-required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "size",
+            "description": "",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "small",
+              "medium",
+              "large"
+            ],
+            "x-ms-enum": {
+              "name": "AvatarSize",
+              "values": [
+                {
+                  "value": "small",
+                  "description": ""
+                },
+                {
+                  "value": "medium",
+                  "description": ""
+                },
+                {
+                  "value": "large",
+                  "description": ""
+                }
+              ]
+            }
+          },
+          {
+            "in": "query",
+            "name": "format",
+            "description": "",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/Avatar"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.graph"
+            ]
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "Avatars"
+        ],
+        "x-ms-docs-override-version": "7.2-preview.1",
+        "x-ms-vss-resource": "avatars",
+        "x-ms-vss-method": "SetAvatar",
+        "x-ms-preview": true,
+        "description": "",
+        "operationId": "Avatars_Set Avatar",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Avatar"
+            }
+          },
+          {
+            "in": "path",
+            "name": "subjectDescriptor",
+            "description": "",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "x-ms-required": false,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.graph_manage"
+            ]
+          }
+        ]
+      }
+    },
+    "/{organization}/_apis/graph/users": {
+      "post": {
+        "tags": [
+          "Users"
+        ],
+        "x-ms-docs-override-version": "7.2-preview.1",
+        "x-ms-vss-resource": "users",
+        "x-ms-vss-method": "CreateUser",
+        "x-ms-preview": true,
+        "description": "Materialize an existing AAD or MSA user into the ADO account.\n\nNOTE: Created users are not active in an account unless they have been explicitly assigned a parent group at creation time or have signed in\n  and been autolicensed through AAD group memberships.\n\n Adding a user to an account is required before the user can be added to ADO groups or assigned an asset.\n\n The body of the request must be a derived type of GraphUserCreationContext:\n  * GraphUserMailAddressCreationContext - Create a new user using the mail address as a reference to an existing user from an external AD or AAD backed provider.\n  * GraphUserOriginIdCreationContext - Create a new user using the OriginID as a reference to an existing user from an external AD or AAD backed provider.\n  * GraphUserPrincipalNameCreationContext - Create a new user using the principal name as a reference to an existing user from an external AD or AAD backed provider.\n\n If the user to be added corresponds to a user that was previously deleted, then that user will be restored.\n\n Optionally, you can add the newly created user as a member of an existing ADO group and/or specify a custom storage key for the user.",
+        "operationId": "Users_Create",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "The subset of the full graph user used to uniquely find the graph subject in an external provider.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/GraphUserCreationContext"
+            }
+          },
+          {
+            "in": "query",
+            "name": "groupDescriptors",
+            "description": "A comma separated list of descriptors of groups you want the graph user to join",
+            "required": false,
+            "type": "string",
+            "format": "array (string)"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/GraphUser"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.graph_manage"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "Add an AAD user by UPN": {
+            "$ref": "./httpExamples/Users/CreateUserAAD.json"
+          },
+          "Add a MSA user by UPN": {
+            "$ref": "./httpExamples/Users/CreateUserMSA.json"
+          },
+          "Add an AAD user by OID": {
+            "$ref": "./httpExamples/Users/MaterializeAADUserByOID.json"
+          },
+          "Add an AAD user as member of a group": {
+            "$ref": "./httpExamples/Users/MaterializeAADUserByOIDAsMember.json"
+          },
+          "Add an AAD user with a custom storage key": {
+            "$ref": "./httpExamples/Users/MaterializeAADUserByOIDWithStorageKey.json"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Users"
+        ],
+        "x-ms-docs-override-version": "7.2-preview.1",
+        "x-ms-vss-resource": "users",
+        "x-ms-vss-method": "ListUsers",
+        "x-ms-preview": true,
+        "description": "Get a list of all users in a given scope.\n\nSince the list of users may be large, results are returned in pages of users.  If there are more results\n than can be returned in a single page, the result set will contain a continuation token for retrieval of the\n next set of results.",
+        "operationId": "Users_List",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "subjectTypes",
+            "description": "A comma separated list of user subject subtypes to reduce the retrieved results, e.g. msa’, ‘aad’, ‘svc’ (service identity), ‘imp’ (imported identity), etc.",
+            "required": false,
+            "type": "string",
+            "format": "array (string)"
+          },
+          {
+            "in": "query",
+            "name": "continuationToken",
+            "description": "An opaque data blob that allows the next page of data to resume immediately after where the previous page ended. The only reliable way to know if there is more data left is the presence of a continuation token.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "scopeDescriptor",
+            "description": "Specify a non-default scope (collection, project) to search for users.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/GraphUser"
+              }
+            },
+            "headers": {
+              "X-MS-ContinuationToken": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.graph"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "": {
+            "$ref": "./httpExamples/Users/GetAllUsers.json"
+          }
+        }
+      }
+    },
+    "/{organization}/_apis/graph/users/{userDescriptor}": {
+      "delete": {
+        "tags": [
+          "Users"
+        ],
+        "x-ms-docs-override-version": "7.2-preview.1",
+        "x-ms-vss-resource": "users",
+        "x-ms-vss-method": "DeleteUser",
+        "x-ms-preview": true,
+        "description": "Disables a user.\n\nThe user will still be visible, but membership checks for the user will return false.",
+        "operationId": "Users_Delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "userDescriptor",
+            "description": "The descriptor of the user to delete.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.graph_manage"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "": {
+            "$ref": "./httpExamples/Users/DeleteUserAAD.json"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Users"
+        ],
+        "x-ms-docs-override-version": "7.2-preview.1",
+        "x-ms-vss-resource": "users",
+        "x-ms-vss-method": "GetUser",
+        "x-ms-preview": true,
+        "description": "Get a user by its descriptor.",
+        "operationId": "Users_Get",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "userDescriptor",
+            "description": "The descriptor of the desired user.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/GraphUser"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.graph"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "": {
+            "$ref": "./httpExamples/Users/GetUserAAD.json"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Users"
+        ],
+        "x-ms-docs-override-version": "7.2-preview.1",
+        "x-ms-vss-resource": "users",
+        "x-ms-vss-method": "UpdateUser",
+        "x-ms-preview": true,
+        "description": "Map an existing user to a different user.\n\nThe body of the request must be a derived type of GraphUserUpdateContext:\n * GraphUserOriginIdUpdateContext - Map an existing user in an account, to an existing user from an external AD or AAD backed provider using the OriginId as a reference.",
+        "operationId": "Users_Update",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "The subset of the full graph user used to uniquely find the graph subject in an external provider.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/GraphUserUpdateContext"
+            }
+          },
+          {
+            "in": "path",
+            "name": "userDescriptor",
+            "description": "The descriptor of the user to update",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/GraphUser"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.graph_manage"
+            ]
+          }
+        ]
+      }
+    },
+    "/{organization}/_apis/graph/Users/{userDescriptor}/providerinfo": {
+      "get": {
+        "tags": [
+          "Provider Info"
+        ],
+        "x-ms-docs-override-version": "7.2-preview.1",
+        "x-ms-vss-resource": "providerInfo",
+        "x-ms-vss-method": "GetProviderInfo",
+        "x-ms-preview": true,
+        "description": "",
+        "operationId": "Provider Info_Get",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "userDescriptor",
+            "description": "",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "x-ms-required": false,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/GraphProviderInfo"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.graph"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "AadGraphMember": {
+      "description": "",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/GraphMember"
+        }
+      ],
+      "properties": {
+        "directoryAlias": {
+          "description": "The short, generally unique name for the user in the backing directory. For AAD users, this corresponds to the mail nickname, which is often but not necessarily similar to the part of the user's mail address before the @ sign. For GitHub users, this corresponds to the GitHub user handle.",
+          "type": "string"
+        },
+        "isDeletedInOrigin": {
+          "description": "When true, the group has been deleted in the identity provider",
+          "type": "boolean"
+        },
+        "metaType": {
+          "description": "The meta type of the user in the origin, such as \"member\", \"guest\", etc. See UserMetaType for the set of possible values.",
+          "type": "string"
+        }
+      }
+    },
+    "Avatar": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "isAutoGenerated": {
+          "type": "boolean"
+        },
+        "size": {
+          "enum": [
+            "small",
+            "medium",
+            "large"
+          ],
+          "x-ms-enum": {
+            "name": "AvatarSize",
+            "values": [
+              {
+                "value": "small",
+                "description": ""
+              },
+              {
+                "value": "medium",
+                "description": ""
+              },
+              {
+                "value": "large",
+                "description": ""
+              }
+            ]
+          }
+        },
+        "timeStamp": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "value": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "byte"
+          }
+        }
+      }
+    },
+    "GraphCachePolicies": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "cacheSize": {
+          "description": "Size of the cache",
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "GraphDescriptorResult": {
+      "description": "Subject descriptor of a Graph entity",
+      "type": "object",
+      "properties": {
+        "_links": {
+          "description": "This field contains zero or more interesting links about the graph descriptor. These links may be invoked to obtain additional relationships or more detailed information about this graph descriptor.",
+          "$ref": "#/definitions/ReferenceLinks"
+        },
+        "value": {
+          "type": "string"
+        }
+      }
+    },
+    "GraphFederatedProviderData": {
+      "description": "Represents a set of data used to communicate with a federated provider on behalf of a particular user.",
+      "type": "object",
+      "properties": {
+        "accessToken": {
+          "description": "The access token that can be used to communicated with the federated provider on behalf on the target identity, if we were able to successfully acquire one, otherwise <code>null</code>, if we were not.",
+          "type": "string"
+        },
+        "providerName": {
+          "description": "The name of the federated provider, e.g. \"github.com\".",
+          "type": "string"
+        },
+        "subjectDescriptor": {
+          "description": "The descriptor of the graph subject to which this federated provider data corresponds.",
+          "type": "string"
+        },
+        "version": {
+          "description": "The version number of this federated provider data, which corresponds to when it was last updated. Can be used to prevent returning stale provider data from the cache when the caller is aware of a newer version, such as to prevent local cache poisoning from a remote cache or store. This is the app layer equivalent of the data layer sequence ID.",
+          "type": "integer",
+          "format": "int64"
+        }
+      }
+    },
+    "GraphGlobalExtendedPropertyBatch": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "propertyNameFilters": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "subjectDescriptors": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "GraphGroup": {
+      "description": "Graph group entity",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/GraphMember"
+        }
+      ],
+      "properties": {
+        "description": {
+          "description": "A short phrase to help human readers disambiguate groups with similar names",
+          "type": "string"
+        }
+      }
+    },
+    "GraphGroupCreationContext": {
+      "description": "Do not attempt to use this type to create a new group. This type does not contain sufficient fields to create a new group.",
+      "type": "object",
+      "properties": {
+        "storageKey": {
+          "description": "Optional: If provided, we will use this identifier for the storage key of the created group",
+          "type": "string",
+          "format": "uuid"
+        }
+      }
+    },
+    "GraphGroupMailAddressCreationContext": {
+      "description": "Use this type to create a new group using the mail address as a reference to an existing group from an external AD or AAD backed provider. This is the subset of GraphGroup fields required for creation of a group for the AAD and AD use case.",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/GraphGroupCreationContext"
+        }
+      ],
+      "properties": {
+        "mailAddress": {
+          "description": "This should be the mail address or the group in the source AD or AAD provider. Example: jamal@contoso.com Team Services will communicate with the source provider to fill all other fields on creation.",
+          "type": "string"
+        }
+      }
+    },
+    "GraphGroupOriginIdCreationContext": {
+      "description": "Use this type to create a new group using the OriginID as a reference to an existing group from an external AD or AAD backed provider. This is the subset of GraphGroup fields required for creation of a group for the AD and AAD use case.",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/GraphGroupCreationContext"
+        }
+      ],
+      "properties": {
+        "originId": {
+          "description": "This should be the object id or sid of the group from the source AD or AAD provider. Example: d47d025a-ce2f-4a79-8618-e8862ade30dd Team Services will communicate with the source provider to fill all other fields on creation.",
+          "type": "string"
+        }
+      }
+    },
+    "GraphGroupVstsCreationContext": {
+      "description": "Use this type to create a new Vsts group that is not backed by an external provider.",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/GraphGroupCreationContext"
+        }
+      ],
+      "properties": {
+        "crossProject": {
+          "description": "For internal use only in back compat scenarios.",
+          "type": "boolean"
+        },
+        "description": {
+          "description": "Used by VSTS groups; if set this will be the group description, otherwise ignored",
+          "type": "string"
+        },
+        "descriptor": {
+          "type": "string"
+        },
+        "displayName": {
+          "description": "Used by VSTS groups; if set this will be the group DisplayName, otherwise ignored",
+          "type": "string"
+        },
+        "restrictedVisibility": {
+          "description": "For internal use only in back compat scenarios.",
+          "type": "boolean"
+        },
+        "specialGroupType": {
+          "description": "For internal use only in back compat scenarios.",
+          "type": "string"
+        }
+      }
+    },
+    "GraphMember": {
+      "description": "",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/GraphSubject"
+        }
+      ],
+      "properties": {
+        "domain": {
+          "description": "This represents the name of the container of origin for a graph member. (For MSA this is \"Windows Live ID\", for AD the name of the domain, for AAD the tenantID of the directory, for VSTS groups the ScopeId, etc)",
+          "type": "string"
+        },
+        "mailAddress": {
+          "description": "The email address of record for a given graph member. This may be different than the principal name.",
+          "type": "string"
+        },
+        "principalName": {
+          "description": "This is the PrincipalName of this graph member from the source provider. The source provider may change this field over time and it is not guaranteed to be immutable for the life of the graph member by VSTS.",
+          "type": "string"
+        }
+      }
+    },
+    "GraphMembership": {
+      "description": "Relationship between a container and a member",
+      "type": "object",
+      "properties": {
+        "_links": {
+          "description": "This field contains zero or more interesting links about the graph membership. These links may be invoked to obtain additional relationships or more detailed information about this graph membership.",
+          "$ref": "#/definitions/ReferenceLinks"
+        },
+        "containerDescriptor": {
+          "type": "string"
+        },
+        "memberDescriptor": {
+          "type": "string"
+        }
+      }
+    },
+    "GraphMembershipState": {
+      "description": "Status of a Graph membership (active/inactive)",
+      "type": "object",
+      "properties": {
+        "_links": {
+          "description": "This field contains zero or more interesting links about the graph membership state. These links may be invoked to obtain additional relationships or more detailed information about this graph membership state.",
+          "$ref": "#/definitions/ReferenceLinks"
+        },
+        "active": {
+          "description": "When true, the membership is active",
+          "type": "boolean"
+        }
+      }
+    },
+    "GraphMembershipTraversal": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "incompletenessReason": {
+          "description": "Reason why the subject could not be traversed completely",
+          "type": "string"
+        },
+        "isComplete": {
+          "description": "When true, the subject is traversed completely",
+          "type": "boolean"
+        },
+        "subjectDescriptor": {
+          "description": "The traversed subject descriptor",
+          "type": "string"
+        },
+        "traversedSubjectIds": {
+          "description": "Subject descriptor ids of the traversed members",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "traversedSubjects": {
+          "description": "Subject descriptors of the traversed members",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "GraphProviderInfo": {
+      "description": "Who is the provider for this user and what is the identifier and domain that is used to uniquely identify the user.",
+      "type": "object",
+      "properties": {
+        "descriptor": {
+          "description": "The descriptor is the primary way to reference the graph subject while the system is running. This field will uniquely identify the same graph subject across both Accounts and Organizations.",
+          "type": "string"
+        },
+        "domain": {
+          "description": "This represents the name of the container of origin for a graph member. (For MSA this is \"Windows Live ID\", for AAD the tenantID of the directory.)",
+          "type": "string"
+        },
+        "origin": {
+          "description": "The type of source provider for the origin identifier (ex: \"aad\", \"msa\")",
+          "type": "string"
+        },
+        "originId": {
+          "description": "The unique identifier from the system of origin. (For MSA this is the PUID in hex notation, for AAD this is the object id.)",
+          "type": "string"
+        }
+      }
+    },
+    "GraphScope": {
+      "description": "Container where a graph entity is defined (organization, project, team)",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/GraphSubject"
+        }
+      ],
+      "properties": {
+        "administratorDescriptor": {
+          "description": "The subject descriptor that references the administrators group for this scope. Only members of this group can change the contents of this scope or assign other users permissions to access this scope.",
+          "type": "string"
+        },
+        "isGlobal": {
+          "description": "When true, this scope is also a securing host for one or more scopes.",
+          "type": "boolean"
+        },
+        "parentDescriptor": {
+          "description": "The subject descriptor for the closest account or organization in the ancestor tree of this scope.",
+          "type": "string"
+        },
+        "scopeType": {
+          "description": "The type of this scope. Typically ServiceHost or TeamProject.",
+          "enum": [
+            "generic",
+            "serviceHost",
+            "teamProject"
+          ],
+          "x-ms-enum": {
+            "name": "GroupScopeType",
+            "values": [
+              {
+                "value": "generic",
+                "description": ""
+              },
+              {
+                "value": "serviceHost",
+                "description": ""
+              },
+              {
+                "value": "teamProject",
+                "description": ""
+              }
+            ]
+          }
+        },
+        "securingHostDescriptor": {
+          "description": "The subject descriptor for the containing organization in the ancestor tree of this scope.",
+          "type": "string"
+        }
+      }
+    },
+    "GraphScopeCreationContext": {
+      "description": "This type is the subset of fields that can be provided by the user to create a Vsts scope. Scope creation is currently limited to internal back-compat scenarios. End users that attempt to create a scope with this API will fail.",
+      "type": "object",
+      "properties": {
+        "adminGroupDescription": {
+          "description": "Set this field to override the default description of this scope's admin group.",
+          "type": "string"
+        },
+        "adminGroupName": {
+          "description": "All scopes have an Administrator Group that controls access to the contents of the scope. Set this field to use a non-default group name for that administrators group.",
+          "type": "string"
+        },
+        "creatorId": {
+          "description": "Set this optional field if this scope is created on behalf of a user other than the user making the request. This should be the Id of the user that is not the requester.",
+          "type": "string",
+          "format": "uuid"
+        },
+        "name": {
+          "description": "The scope must be provided with a unique name within the parent scope. This means the created scope can have a parent or child with the same name, but no siblings with the same name.",
+          "type": "string"
+        },
+        "scopeType": {
+          "description": "The type of scope being created.",
+          "enum": [
+            "generic",
+            "serviceHost",
+            "teamProject"
+          ],
+          "x-ms-enum": {
+            "name": "GroupScopeType",
+            "values": [
+              {
+                "value": "generic",
+                "description": ""
+              },
+              {
+                "value": "serviceHost",
+                "description": ""
+              },
+              {
+                "value": "teamProject",
+                "description": ""
+              }
+            ]
+          }
+        },
+        "storageKey": {
+          "description": "An optional ID that uniquely represents the scope within it's parent scope. If this parameter is not provided, Vsts will generate on automatically.",
+          "type": "string",
+          "format": "uuid"
+        }
+      }
+    },
+    "GraphServicePrincipal": {
+      "description": "",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/AadGraphMember"
+        }
+      ],
+      "properties": {
+        "applicationId": {
+          "type": "string"
+        }
+      }
+    },
+    "GraphServicePrincipalCreationContext": {
+      "description": "Do not attempt to use this type to create a new service principal. Use one of the subclasses instead. This type does not contain sufficient fields to create a new service principal.",
+      "type": "object",
+      "properties": {
+        "storageKey": {
+          "description": "Optional: If provided, we will use this identifier for the storage key of the created service principal",
+          "type": "string",
+          "format": "uuid"
+        }
+      }
+    },
+    "GraphServicePrincipalOriginIdCreationContext": {
+      "description": "Use this type to create a new service principal using the OriginID as a reference to an existing service principal from an external AAD backed provider. This is the subset of GraphServicePrincipal fields required for creation of a GraphServicePrincipal for the AAD use case when looking up the service principal by its unique ID in the backing provider.",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/GraphServicePrincipalCreationContext"
+        }
+      ],
+      "properties": {
+        "originId": {
+          "description": "This should be the object id of the service principal from the AAD provider. Example: d47d025a-ce2f-4a79-8618-e8862ade30dd Team Services will communicate with the source provider to fill all other fields on creation.",
+          "type": "string"
+        }
+      }
+    },
+    "GraphServicePrincipalOriginIdUpdateContext": {
+      "description": "Use this type to update an existing service principal using the OriginID as a reference to an existing service principal from an external AAD backed provider. This is the subset of GraphServicePrincipal fields required for creation of a GraphServicePrincipal for AAD use case when looking up the service principal by its unique ID in the backing provider.",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/GraphServicePrincipalUpdateContext"
+        }
+      ],
+      "properties": {
+        "originId": {
+          "description": "This should be the object id or sid of the service principal from the source AAD provider. Example: d47d025a-ce2f-4a79-8618-e8862ade30dd Azure Devops will communicate with the source provider to fill all other fields on creation.",
+          "type": "string"
+        }
+      }
+    },
+    "GraphServicePrincipalUpdateContext": {
+      "description": "Do not attempt to use this type to update service principal. Use one of the subclasses instead. This type does not contain sufficient fields to create a new service principal.",
+      "type": "object",
+      "properties": {}
+    },
+    "GraphStorageKeyResult": {
+      "description": "Storage key of a Graph entity",
+      "type": "object",
+      "properties": {
+        "_links": {
+          "description": "This field contains zero or more interesting links about the graph storage key. These links may be invoked to obtain additional relationships or more detailed information about this graph storage key.",
+          "$ref": "#/definitions/ReferenceLinks"
+        },
+        "value": {
+          "type": "string",
+          "format": "uuid"
+        }
+      }
+    },
+    "GraphSubject": {
+      "description": "Top-level graph entity",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/GraphSubjectBase"
+        }
+      ],
+      "properties": {
+        "legacyDescriptor": {
+          "description": "[Internal Use Only] The legacy descriptor is here in case you need to access old version IMS using identity descriptor.",
+          "type": "string"
+        },
+        "origin": {
+          "description": "The type of source provider for the origin identifier (ex:AD, AAD, MSA)",
+          "type": "string"
+        },
+        "originId": {
+          "description": "The unique identifier from the system of origin. Typically a sid, object id or Guid. Linking and unlinking operations can cause this value to change for a user because the user is not backed by a different provider and has a different unique id in the new provider.",
+          "type": "string"
+        },
+        "subjectKind": {
+          "description": "This field identifies the type of the graph subject (ex: Group, Scope, User).",
+          "type": "string"
+        }
+      }
+    },
+    "GraphSubjectBase": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "_links": {
+          "description": "This field contains zero or more interesting links about the graph subject. These links may be invoked to obtain additional relationships or more detailed information about this graph subject.",
+          "$ref": "#/definitions/ReferenceLinks"
+        },
+        "descriptor": {
+          "description": "The descriptor is the primary way to reference the graph subject while the system is running. This field will uniquely identify the same graph subject across both Accounts and Organizations.",
+          "type": "string"
+        },
+        "displayName": {
+          "description": "This is the non-unique display name of the graph subject. To change this field, you must alter its value in the source provider.",
+          "type": "string"
+        },
+        "url": {
+          "description": "This url is the full route to the source resource of this graph subject.",
+          "type": "string"
+        }
+      }
+    },
+    "GraphSubjectLookup": {
+      "description": "Batching of subjects to lookup using the Graph API",
+      "type": "object",
+      "properties": {
+        "lookupKeys": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/GraphSubjectLookupKey"
+          }
+        }
+      }
+    },
+    "GraphSubjectLookupKey": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "descriptor": {
+          "type": "string"
+        }
+      }
+    },
+    "GraphSubjectQuery": {
+      "description": "Subject to search using the Graph API",
+      "type": "object",
+      "properties": {
+        "query": {
+          "description": "Search term to search for Azure Devops users or/and groups",
+          "type": "string"
+        },
+        "scopeDescriptor": {
+          "description": "Optional parameter. Specify a non-default scope (collection, project) to search for users or groups within the scope.",
+          "type": "string"
+        },
+        "subjectKind": {
+          "description": "\"User\" or \"Group\" can be specified, both or either",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "GraphSystemSubject": {
+      "description": "",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/GraphSubject"
+        }
+      ],
+      "properties": {}
+    },
+    "GraphUser": {
+      "description": "",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/AadGraphMember"
+        }
+      ],
+      "properties": {}
+    },
+    "GraphUserCreationContext": {
+      "description": "Do not attempt to use this type to create a new user. Use one of the subclasses instead. This type does not contain sufficient fields to create a new user.",
+      "type": "object",
+      "properties": {
+        "storageKey": {
+          "description": "Optional: If provided, we will use this identifier for the storage key of the created user",
+          "type": "string",
+          "format": "uuid"
+        }
+      }
+    },
+    "GraphUserMailAddressCreationContext": {
+      "description": "Use this type to create a new user using the mail address as a reference to an existing user from an external AD or AAD backed provider. This is the subset of GraphUser fields required for creation of a GraphUser for the AD and AAD use case when looking up the user by its mail address in the backing provider.",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/GraphUserCreationContext"
+        }
+      ],
+      "properties": {
+        "mailAddress": {
+          "description": "This should be the mail address of the user in the source AD or AAD provider. Example: Jamal.Hartnett@contoso.com Team Services will communicate with the source provider to fill all other fields on creation.",
+          "type": "string"
+        }
+      }
+    },
+    "GraphUserOriginIdCreationContext": {
+      "description": "Use this type to create a new user using the OriginID as a reference to an existing user from an external AD or AAD backed provider. This is the subset of GraphUser fields required for creation of a GraphUser for the AD and AAD use case when looking up the user by its unique ID in the backing provider.",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/GraphUserCreationContext"
+        }
+      ],
+      "properties": {
+        "origin": {
+          "description": "This should be the name of the origin provider. Example: github.com",
+          "type": "string"
+        },
+        "originId": {
+          "description": "This should be the object id or sid of the user from the source AD or AAD provider. Example: d47d025a-ce2f-4a79-8618-e8862ade30dd Team Services will communicate with the source provider to fill all other fields on creation.",
+          "type": "string"
+        }
+      }
+    },
+    "GraphUserOriginIdUpdateContext": {
+      "description": "Use this type to update an existing user using the OriginID as a reference to an existing user from an external AD or AAD backed provider. This is the subset of GraphUser fields required for creation of a GraphUser for the AD and AAD use case when looking up the user by its unique ID in the backing provider.",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/GraphUserUpdateContext"
+        }
+      ],
+      "properties": {
+        "originId": {
+          "description": "This should be the object id or sid of the user from the source AD or AAD provider. Example: d47d025a-ce2f-4a79-8618-e8862ade30dd Azure Devops will communicate with the source provider to fill all other fields on creation.",
+          "type": "string"
+        }
+      }
+    },
+    "GraphUserPrincipalNameCreationContext": {
+      "description": "Use this type to create a new user using the principal name as a reference to an existing user from an external AD or AAD backed provider. This is the subset of GraphUser fields required for creation of a GraphUser for the AD and AAD use case when looking up the user by its principal name in the backing provider.",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/GraphUserCreationContext"
+        }
+      ],
+      "properties": {
+        "principalName": {
+          "description": "This should be the principal name or upn of the user in the source AD or AAD provider. Example: jamal@contoso.com Team Services will communicate with the source provider to fill all other fields on creation.",
+          "type": "string"
+        }
+      }
+    },
+    "GraphUserPrincipalNameUpdateContext": {
+      "description": "Use this type for transfering identity rights, for instance after performing a Tenant switch.",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/GraphUserUpdateContext"
+        }
+      ],
+      "properties": {
+        "principalName": {
+          "description": "This should be Principal Name (UPN) to which we want to transfer rights. Example: destination@email.com",
+          "type": "string"
+        }
+      }
+    },
+    "GraphUserUpdateContext": {
+      "description": "Do not attempt to use this type to update user. Use one of the subclasses instead. This type does not contain sufficient fields to create a new user.",
+      "type": "object",
+      "properties": {}
+    },
+    "IdentityMapping": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "source": {
+          "$ref": "#/definitions/UserPrincipalName"
+        },
+        "target": {
+          "$ref": "#/definitions/UserPrincipalName"
+        }
+      }
+    },
+    "IdentityMappings": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "mappings": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/IdentityMapping"
+          }
+        }
+      }
+    },
+    "JsonPatchDocument": {
+      "description": "The JSON model for JSON Patch Operations",
+      "type": "object",
+      "allOf": [
+        {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/JsonPatchOperation"
+          }
+        }
+      ],
+      "properties": {}
+    },
+    "JsonPatchOperation": {
+      "description": "The JSON model for a JSON Patch operation",
+      "type": "object",
+      "properties": {
+        "from": {
+          "description": "The path to copy from for the Move/Copy operation.",
+          "type": "string"
+        },
+        "op": {
+          "description": "The patch operation",
+          "enum": [
+            "add",
+            "remove",
+            "replace",
+            "move",
+            "copy",
+            "test"
+          ],
+          "x-ms-enum": {
+            "name": "Operation",
+            "values": [
+              {
+                "value": "add",
+                "description": ""
+              },
+              {
+                "value": "remove",
+                "description": ""
+              },
+              {
+                "value": "replace",
+                "description": ""
+              },
+              {
+                "value": "move",
+                "description": ""
+              },
+              {
+                "value": "copy",
+                "description": ""
+              },
+              {
+                "value": "test",
+                "description": ""
+              }
+            ]
+          }
+        },
+        "path": {
+          "description": "The path for the operation. In the case of an array, a zero based index can be used to specify the position in the array (e.g. /biscuits/0/name). The \"-\" character can be used instead of an index to insert at the end of the array (e.g. /biscuits/-).",
+          "type": "string"
+        },
+        "value": {
+          "description": "The value for the operation. This is either a primitive or a JToken.",
+          "type": "object"
+        }
+      }
+    },
+    "JToken": {
+      "description": "Represents an abstract JSON token.",
+      "type": "object",
+      "properties": {
+        "first": {
+          "description": "Get the first child token of this token.",
+          "$ref": "#/definitions/JToken"
+        },
+        "hasValues": {
+          "description": "Gets a value indicating whether this token has child tokens.",
+          "type": "boolean"
+        },
+        "item": {
+          "$ref": "#/definitions/JToken"
+        },
+        "last": {
+          "description": "Get the last child token of this token.",
+          "$ref": "#/definitions/JToken"
+        },
+        "next": {
+          "description": "Gets the next sibling token of this node.",
+          "$ref": "#/definitions/JToken"
+        },
+        "parent": {
+          "description": "Gets or sets the parent.",
+          "type": "string",
+          "format": "JContainer"
+        },
+        "path": {
+          "description": "Gets the path of the JSON token.",
+          "type": "string"
+        },
+        "previous": {
+          "description": "Gets the previous sibling token of this node.",
+          "$ref": "#/definitions/JToken"
+        },
+        "root": {
+          "description": "Gets the root JToken of this JToken.",
+          "$ref": "#/definitions/JToken"
+        },
+        "type": {
+          "description": "Gets the node type for this JToken.",
+          "type": "string",
+          "format": "JTokenType"
+        }
+      }
+    },
+    "MappingResult": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "string"
+        },
+        "errorMessage": {
+          "type": "string"
+        }
+      }
+    },
+    "PagedGraphGroups": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "continuationToken": {
+          "description": "This will be non-null if there is another page of data. There will never be more than one continuation token returned by a request.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "graphGroups": {
+          "description": "The enumerable list of groups found within a page.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/GraphGroup"
+          }
+        }
+      }
+    },
+    "PagedGraphMembers": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "continuationToken": {
+          "description": "This will be non-null if there is another page of data. There will never be more than one continuation token returned by a request.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "graphMembers": {
+          "description": "The enumerable list of members found within a page.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/GraphMember"
+          }
+        }
+      }
+    },
+    "PagedGraphServicePrincipals": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "continuationToken": {
+          "description": "This will be non-null if there is another page of data. There will never be more than one continuation token returned by a request.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "graphServicePrincipals": {
+          "description": "The enumerable list of service principals found within a page.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/GraphServicePrincipal"
+          }
+        }
+      }
+    },
+    "PagedGraphUsers": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "continuationToken": {
+          "description": "This will be non-null if there is another page of data. There will never be more than one continuation token returned by a request.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "graphUsers": {
+          "description": "The enumerable set of users found within a page.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/GraphUser"
+          }
+        }
+      }
+    },
+    "ReferenceLinks": {
+      "description": "The class to represent a collection of REST reference links.",
+      "type": "object",
+      "properties": {
+        "links": {
+          "description": "The readonly view of the links.  Because Reference links are readonly, we only want to expose them as read only.",
+          "type": "object",
+          "additionalProperties": {
+            "type": "object"
+          }
+        }
+      }
+    },
+    "RequestAccessPayLoad": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string"
+        },
+        "projectUri": {
+          "type": "string"
+        },
+        "urlRequested": {
+          "type": "string"
+        }
+      }
+    },
+    "ResolveDisconnectedUsersResponse": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "string"
+        },
+        "errorMessage": {
+          "type": "string"
+        },
+        "mappingResults": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/MappingResult"
+          }
+        }
+      }
+    },
+    "UserPrincipalName": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "principalName": {
+          "type": "string"
+        }
+      }
+    },
+    "VssJsonCollectionWrapper": {
+      "description": "This class is used to serialize collections as a single JSON object on the wire.",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/VssJsonCollectionWrapperBase"
+        }
+      ],
+      "properties": {
+        "value": {
+          "description": "The serialized item.",
+          "type": "string",
+          "format": "T"
+        }
+      }
+    },
+    "VssJsonCollectionWrapperBase": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "count": {
+          "description": "The number of serialized items.",
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    }
+  },
+  "parameters": {
+    "api-Version-preview.1": {
+      "name": "api-version",
+      "in": "query",
+      "description": "Version of the API to use.  This should be set to '7.2-preview.1' to use this version of the api.",
+      "required": true,
+      "type": "string"
+    },
+    "api-Version-preview.2": {
+      "name": "api-version",
+      "in": "query",
+      "description": "Version of the API to use.  This should be set to '7.2-preview.2' to use this version of the api.",
+      "required": true,
+      "type": "string"
+    }
+  },
+  "securityDefinitions": {
+    "accessToken": {
+      "type": "basic",
+      "description": "Personal access token. Use any value for the user name and the token as the password."
+    },
+    "oauth2": {
+      "type": "oauth2",
+      "flow": "accessCode",
+      "authorizationUrl": "https://app.vssps.visualstudio.com/oauth2/authorize&response_type=Assertion",
+      "tokenUrl": "https://app.vssps.visualstudio.com/oauth2/token?client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer&grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer",
+      "scopes": {
+        "vso.graph": "Grants the ability to read user, group, scope and group membership information",
+        "vso.graph_manage": "Grants the ability to read user, group, scope and group membership information, and to add users, groups and manage group memberships"
+      }
+    }
+  },
+  "security": [
+    {
+      "accessToken": []
+    }
+  ],
+  "externalDocs": {
+    "description": "Azure DevOps REST APIs",
+    "url": "https://aka.ms/azure-devops-rest-apis"
+  }
+}

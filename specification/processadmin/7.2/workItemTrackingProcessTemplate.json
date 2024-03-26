@@ -1,0 +1,608 @@
+﻿{
+  "swagger": "2.0",
+  "info": {
+    "title": "WorkItemTrackingProcessTemplate",
+    "description": "",
+    "termsOfService": "https://go.microsoft.com/fwlink/?LinkId=329770",
+    "contact": {
+      "name": "nugetvss",
+      "email": "nugetvss@microsoft.com"
+    },
+    "license": {
+      "name": "MICROSOFT SOFTWARE LICENSE TERMS",
+      "url": "https://go.microsoft.com/fwlink/?LinkId=329770"
+    },
+    "version": "7.2-preview"
+  },
+  "host": "dev.azure.com",
+  "x-ms-vss-area": "WorkItemTrackingProcessTemplate",
+  "x-ms-vss-resource-area-id": "5264459e-e5e0-4bd8-b118-0985e68a4ec5",
+  "basePath": "/",
+  "tags": [
+    {
+      "name": "Behaviors"
+    },
+    {
+      "name": "Processes",
+      "description": "Exposes APIs for ProcessTemplate imports and exports"
+    }
+  ],
+  "schemes": [
+    "https"
+  ],
+  "paths": {
+    "/{organization}/_apis/work/processadmin/{processId}/behaviors": {
+      "get": {
+        "tags": [
+          "Behaviors"
+        ],
+        "x-ms-docs-override-version": "7.2-preview.1",
+        "x-ms-vss-resource": "behaviors",
+        "x-ms-vss-method": "GetBehaviors",
+        "x-ms-preview": true,
+        "description": "Returns a list of behaviors for the process.",
+        "operationId": "Behaviors_List",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "processId",
+            "description": "The ID of the process",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/AdminBehavior"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.work"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "": {
+            "$ref": "./httpExamples/behaviors/GET__admin_behaviors_list.json"
+          }
+        }
+      }
+    },
+    "/{organization}/_apis/work/processadmin/processes/export/{id}": {
+      "get": {
+        "tags": [
+          "Processes"
+        ],
+        "x-ms-docs-override-version": "7.2-preview.1",
+        "x-ms-vss-resource": "processes",
+        "x-ms-vss-method": "Export",
+        "x-ms-preview": true,
+        "description": "Returns requested process template.",
+        "operationId": "Processes_Export Process Template",
+        "produces": [
+          "application/zip"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "id",
+            "description": "The ID of the process",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "string",
+              "format": "Stream"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.work"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "": {
+            "$ref": "./httpExamples/processes/GET__export_template.json"
+          }
+        }
+      }
+    },
+    "/{organization}/_apis/work/processadmin/processes/import": {
+      "post": {
+        "tags": [
+          "Processes"
+        ],
+        "x-ms-docs-override-version": "7.2-preview.1",
+        "x-ms-vss-resource": "processes",
+        "x-ms-vss-method": "Import",
+        "x-ms-preview": true,
+        "description": "Imports a process from zip file.",
+        "operationId": "Processes_Import Process Template",
+        "consumes": [
+          "application/octet-stream"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Stream to upload",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "Stream"
+            }
+          },
+          {
+            "in": "query",
+            "name": "ignoreWarnings",
+            "description": "Ignores validation warnings. Default value is false.",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "replaceExistingTemplate",
+            "description": "Replaces the existing template. Default value is true.",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ProcessImportResult"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.work_write"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "": {
+            "$ref": "./httpExamples/processes/POST__import_process.json"
+          }
+        }
+      }
+    },
+    "/{organization}/_apis/work/processadmin/processes/status/{id}": {
+      "get": {
+        "tags": [
+          "Processes"
+        ],
+        "x-ms-docs-override-version": "7.2-preview.1",
+        "x-ms-vss-resource": "processes",
+        "x-ms-vss-method": "Status",
+        "x-ms-preview": true,
+        "description": "Tells whether promote has completed for the specified promote job ID.",
+        "operationId": "Processes_Import Process Template Status",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "id",
+            "description": "The ID of the promote job operation",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ProcessPromoteStatus"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.work"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "": {
+            "$ref": "./httpExamples/processes/GET__import_process_status_template.json"
+          }
+        }
+      }
+    }
+  },
+  "x-ms-paths": {
+    "/{organization}/_apis/work/processadmin/{processId}/behaviors?behaviorRefName={behaviorRefName}": {
+      "get": {
+        "tags": [
+          "Behaviors"
+        ],
+        "x-ms-docs-override-version": "7.2-preview.1",
+        "x-ms-vss-resource": "behaviors",
+        "x-ms-vss-method": "GetBehavior",
+        "x-ms-preview": true,
+        "description": "Returns a behavior for the process.",
+        "operationId": "Behaviors_Get",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "processId",
+            "description": "The ID of the process",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "query",
+            "name": "behaviorRefName",
+            "description": "The reference name of the behavior",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/AdminBehavior"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.work"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "": {
+            "$ref": "./httpExamples/behaviors/GET__admin_behavior.json"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "AdminBehavior": {
+      "description": "Describes an admin behavior for a process.",
+      "type": "object",
+      "properties": {
+        "abstract": {
+          "description": "Is the behavior abstract (i.e. can not be associated with any work item type).",
+          "type": "boolean"
+        },
+        "color": {
+          "description": "The color associated with the behavior.",
+          "type": "string"
+        },
+        "custom": {
+          "description": "Indicates if the behavior is custom.",
+          "type": "boolean"
+        },
+        "description": {
+          "description": "The description of the behavior.",
+          "type": "string"
+        },
+        "fields": {
+          "description": "List of behavior fields.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AdminBehaviorField"
+          }
+        },
+        "id": {
+          "description": "Behavior ID.",
+          "type": "string"
+        },
+        "inherits": {
+          "description": "Parent behavior reference.",
+          "type": "string"
+        },
+        "name": {
+          "description": "The behavior name.",
+          "type": "string"
+        },
+        "overriden": {
+          "description": "Is the behavior overrides a behavior from system process.",
+          "type": "boolean"
+        },
+        "rank": {
+          "description": "The rank.",
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "AdminBehaviorField": {
+      "description": "Describes an admin behavior field.",
+      "type": "object",
+      "properties": {
+        "behaviorFieldId": {
+          "description": "The behavior field identifier.",
+          "type": "string"
+        },
+        "id": {
+          "description": "The behavior ID.",
+          "type": "string"
+        },
+        "name": {
+          "description": "The behavior name.",
+          "type": "string"
+        }
+      }
+    },
+    "CheckTemplateExistenceResult": {
+      "description": "Describes result of a check template existence request.",
+      "type": "object",
+      "properties": {
+        "doesTemplateExist": {
+          "description": "Indicates whether a template exists.",
+          "type": "boolean"
+        },
+        "existingTemplateName": {
+          "description": "The name of the existing template.",
+          "type": "string"
+        },
+        "existingTemplateTypeId": {
+          "description": "The existing template type identifier.",
+          "type": "string",
+          "format": "uuid"
+        },
+        "requestedTemplateName": {
+          "description": "The name of the requested template.",
+          "type": "string"
+        }
+      }
+    },
+    "ProcessImportResult": {
+      "description": "Describes the result of a Process Import request.",
+      "type": "object",
+      "properties": {
+        "checkExistenceResult": {
+          "description": "Check template existence result.",
+          "$ref": "#/definitions/CheckTemplateExistenceResult"
+        },
+        "helpUrl": {
+          "description": "Help URL.",
+          "type": "string"
+        },
+        "id": {
+          "description": "ID of the import operation.",
+          "type": "string",
+          "format": "uuid"
+        },
+        "isNew": {
+          "description": "Whether this imported process is new.",
+          "type": "boolean"
+        },
+        "promoteJobId": {
+          "description": "The promote job identifier.",
+          "type": "string",
+          "format": "uuid"
+        },
+        "validationResults": {
+          "description": "The list of validation results.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ValidationIssue"
+          }
+        }
+      }
+    },
+    "ProcessPromoteStatus": {
+      "description": "Describes result of process operation promote.",
+      "type": "object",
+      "properties": {
+        "complete": {
+          "description": "Number of projects for which promote is complete.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "id": {
+          "description": "ID of the promote operation.",
+          "type": "string",
+          "format": "uuid"
+        },
+        "message": {
+          "description": "The error message associated with the promote operation. The string will be empty if there are no errors.",
+          "type": "string"
+        },
+        "pending": {
+          "description": "Number of projects for which promote is pending.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "remainingRetries": {
+          "description": "The remaining retries.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "successful": {
+          "description": "True if promote finished all the projects successfully. False if still in progress or any project promote failed.",
+          "type": "boolean"
+        }
+      }
+    },
+    "ValidationIssue": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "file": {
+          "type": "string"
+        },
+        "helpLink": {
+          "type": "string"
+        },
+        "issueType": {
+          "enum": [
+            "warning",
+            "error"
+          ],
+          "x-ms-enum": {
+            "name": "ValidationIssueType",
+            "values": [
+              {
+                "value": "warning",
+                "description": ""
+              },
+              {
+                "value": "error",
+                "description": ""
+              }
+            ]
+          }
+        },
+        "line": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "VssJsonCollectionWrapper": {
+      "description": "This class is used to serialize collections as a single JSON object on the wire.",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/VssJsonCollectionWrapperBase"
+        }
+      ],
+      "properties": {
+        "value": {
+          "description": "The serialized item.",
+          "type": "string",
+          "format": "T"
+        }
+      }
+    },
+    "VssJsonCollectionWrapperBase": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "count": {
+          "description": "The number of serialized items.",
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    }
+  },
+  "parameters": {
+    "api-Version-preview.1": {
+      "name": "api-version",
+      "in": "query",
+      "description": "Version of the API to use.  This should be set to '7.2-preview.1' to use this version of the api.",
+      "required": true,
+      "type": "string"
+    }
+  },
+  "securityDefinitions": {
+    "accessToken": {
+      "type": "basic",
+      "description": "Personal access token. Use any value for the user name and the token as the password."
+    },
+    "oauth2": {
+      "type": "oauth2",
+      "flow": "accessCode",
+      "authorizationUrl": "https://app.vssps.visualstudio.com/oauth2/authorize&response_type=Assertion",
+      "tokenUrl": "https://app.vssps.visualstudio.com/oauth2/token?client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer&grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer",
+      "scopes": {
+        "vso.work": "Grants the ability to read work items, queries, boards, area and iterations paths, and other work item tracking related metadata. Also grants the ability to execute queries, search work items and to receive notifications about work item events via service hooks.",
+        "vso.work_write": "Grants the ability to read, create, and update work items and queries, update board metadata, read area and iterations paths other work item tracking related metadata, execute queries, and to receive notifications about work item events via service hooks."
+      }
+    }
+  },
+  "security": [
+    {
+      "accessToken": []
+    }
+  ],
+  "externalDocs": {
+    "description": "Azure DevOps REST APIs",
+    "url": "https://aka.ms/azure-devops-rest-apis"
+  }
+}

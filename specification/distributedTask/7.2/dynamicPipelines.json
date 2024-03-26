@@ -1,0 +1,408 @@
+﻿{
+  "swagger": "2.0",
+  "info": {
+    "title": "DynamicPipelines",
+    "description": "",
+    "termsOfService": "https://go.microsoft.com/fwlink/?LinkId=329770",
+    "contact": {
+      "name": "nugetvss",
+      "email": "nugetvss@microsoft.com"
+    },
+    "license": {
+      "name": "MICROSOFT SOFTWARE LICENSE TERMS",
+      "url": "https://go.microsoft.com/fwlink/?LinkId=329770"
+    },
+    "version": "7.2-preview"
+  },
+  "host": "dev.azure.com",
+  "x-ms-vss-area": "DynamicPipelines",
+  "basePath": "/",
+  "tags": [],
+  "schemes": [
+    "https"
+  ],
+  "paths": {},
+  "definitions": {
+    "DynamicPipelinesData": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "artifactId": {
+          "type": "string"
+        },
+        "repoName": {
+          "type": "string"
+        },
+        "yaml": {
+          "type": "string"
+        }
+      }
+    },
+    "JobOption": {
+      "description": "Represents an option that may affect the way an agent runs the job.",
+      "type": "object",
+      "properties": {
+        "data": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "id": {
+          "description": "Gets the id of the option.",
+          "type": "string",
+          "format": "uuid"
+        }
+      }
+    },
+    "MaskHint": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "type": {
+          "enum": [
+            "variable",
+            "regex"
+          ],
+          "x-ms-enum": {
+            "name": "MaskType",
+            "values": [
+              {
+                "value": "variable",
+                "description": ""
+              },
+              {
+                "value": "regex",
+                "description": ""
+              }
+            ]
+          }
+        },
+        "value": {
+          "type": "string"
+        }
+      }
+    },
+    "PlanEnvironment": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "mask": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/MaskHint"
+          }
+        },
+        "options": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/JobOption"
+          }
+        },
+        "variables": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "ReferenceLinks": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "links": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object"
+          }
+        }
+      }
+    },
+    "TaskLogReference": {
+      "description": "A reference to a task log. This class contains information about the output printed to the timeline record's logs console during pipeline run.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "The ID of the task log.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "location": {
+          "description": "The REST URL of the task log.",
+          "type": "string"
+        }
+      }
+    },
+    "TaskOrchestrationContainer": {
+      "description": "",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/TaskOrchestrationItem"
+        }
+      ],
+      "properties": {
+        "children": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TaskOrchestrationItem"
+          }
+        },
+        "continueOnError": {
+          "type": "boolean"
+        },
+        "data": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "maxConcurrency": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "parallel": {
+          "type": "boolean"
+        },
+        "rollback": {
+          "$ref": "#/definitions/TaskOrchestrationContainer"
+        }
+      }
+    },
+    "TaskOrchestrationItem": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "itemType": {
+          "enum": [
+            "container",
+            "job"
+          ],
+          "x-ms-enum": {
+            "name": "TaskOrchestrationItemType",
+            "values": [
+              {
+                "value": "container",
+                "description": ""
+              },
+              {
+                "value": "job",
+                "description": ""
+              }
+            ]
+          }
+        }
+      }
+    },
+    "TaskOrchestrationOwner": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "_links": {
+          "$ref": "#/definitions/ReferenceLinks"
+        },
+        "id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "TaskOrchestrationPlan": {
+      "description": "",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/TaskOrchestrationPlanReference"
+        }
+      ],
+      "properties": {
+        "environment": {
+          "$ref": "#/definitions/PlanEnvironment"
+        },
+        "expandedYaml": {
+          "$ref": "#/definitions/TaskLogReference"
+        },
+        "finishTime": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "implementation": {
+          "$ref": "#/definitions/TaskOrchestrationContainer"
+        },
+        "initializationLog": {
+          "$ref": "#/definitions/TaskLogReference"
+        },
+        "requestedById": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "requestedForId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "result": {
+          "enum": [
+            "succeeded",
+            "succeededWithIssues",
+            "failed",
+            "canceled",
+            "skipped",
+            "abandoned"
+          ],
+          "x-ms-enum": {
+            "name": "TaskResult",
+            "values": [
+              {
+                "value": "succeeded",
+                "description": ""
+              },
+              {
+                "value": "succeededWithIssues",
+                "description": ""
+              },
+              {
+                "value": "failed",
+                "description": ""
+              },
+              {
+                "value": "canceled",
+                "description": ""
+              },
+              {
+                "value": "skipped",
+                "description": ""
+              },
+              {
+                "value": "abandoned",
+                "description": ""
+              }
+            ]
+          }
+        },
+        "resultCode": {
+          "type": "string"
+        },
+        "startTime": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "state": {
+          "enum": [
+            "inProgress",
+            "queued",
+            "completed",
+            "throttled"
+          ],
+          "x-ms-enum": {
+            "name": "TaskOrchestrationPlanState",
+            "values": [
+              {
+                "value": "inProgress",
+                "description": ""
+              },
+              {
+                "value": "queued",
+                "description": ""
+              },
+              {
+                "value": "completed",
+                "description": ""
+              },
+              {
+                "value": "throttled",
+                "description": ""
+              }
+            ]
+          }
+        },
+        "timeline": {
+          "$ref": "#/definitions/TimelineReference"
+        }
+      }
+    },
+    "TaskOrchestrationPlanReference": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "artifactLocation": {
+          "type": "string"
+        },
+        "artifactUri": {
+          "type": "string"
+        },
+        "definition": {
+          "$ref": "#/definitions/TaskOrchestrationOwner"
+        },
+        "owner": {
+          "$ref": "#/definitions/TaskOrchestrationOwner"
+        },
+        "planGroup": {
+          "type": "string"
+        },
+        "planId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "planType": {
+          "type": "string"
+        },
+        "scopeIdentifier": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "version": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "TimelineReference": {
+      "description": "A reference to a timeline.",
+      "type": "object",
+      "properties": {
+        "changeId": {
+          "description": "The change ID.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "id": {
+          "description": "The ID of the timeline.",
+          "type": "string",
+          "format": "uuid"
+        },
+        "location": {
+          "description": "The REST URL of the timeline.",
+          "type": "string"
+        }
+      }
+    }
+  },
+  "parameters": {
+    "api-Version-preview.1": {
+      "name": "api-version",
+      "in": "query",
+      "description": "Version of the API to use.  This should be set to '7.2-preview.1' to use this version of the api.",
+      "required": true,
+      "type": "string"
+    }
+  },
+  "securityDefinitions": {
+    "accessToken": {
+      "type": "basic",
+      "description": "Personal access token. Use any value for the user name and the token as the password."
+    }
+  },
+  "security": [
+    {
+      "accessToken": []
+    }
+  ],
+  "externalDocs": {
+    "description": "Azure DevOps REST APIs",
+    "url": "https://aka.ms/azure-devops-rest-apis"
+  }
+}

@@ -1,0 +1,2303 @@
+﻿{
+  "swagger": "2.0",
+  "info": {
+    "title": "Alert",
+    "description": "",
+    "termsOfService": "https://go.microsoft.com/fwlink/?LinkId=329770",
+    "contact": {
+      "name": "nugetvss",
+      "email": "nugetvss@microsoft.com"
+    },
+    "license": {
+      "name": "MICROSOFT SOFTWARE LICENSE TERMS",
+      "url": "https://go.microsoft.com/fwlink/?LinkId=329770"
+    },
+    "version": "7.2-preview"
+  },
+  "host": "advsec.dev.azure.com",
+  "x-ms-vss-area": "Alert",
+  "basePath": "/",
+  "tags": [
+    {
+      "name": "Alerts"
+    },
+    {
+      "name": "Instances"
+    }
+  ],
+  "schemes": [
+    "https"
+  ],
+  "paths": {
+    "/{organization}/{project}/_apis/alert/repositories/{repository}/alerts": {
+      "get": {
+        "tags": [
+          "Alerts"
+        ],
+        "x-ms-docs-override-version": "7.2-preview.1",
+        "x-ms-vss-resource": "alerts",
+        "x-ms-vss-method": "GetAlertsAsync",
+        "x-ms-preview": true,
+        "description": "Get alerts for a repository",
+        "operationId": "Alerts_List",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "repository",
+            "description": "The name or ID of the repository",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "top",
+            "description": "The maximum number of alerts to return",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "orderBy",
+            "description": "Must be \"id\" \"firstSeen\" \"lastSeen\" \"fixedOn\" or \"severity\"  Defaults to \"id\"",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "criteria.alertIds",
+            "description": "If provided, only return alerts with the ids specified. <br />Otherwise, return any alert.",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "in": "query",
+            "name": "criteria.alertType",
+            "description": "If provided, only return alerts of this type. Otherwise, return alerts of all types.",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "unknown",
+              "dependency",
+              "secret",
+              "code"
+            ],
+            "x-ms-enum": {
+              "name": "AlertType",
+              "values": [
+                {
+                  "value": "unknown",
+                  "description": "The code has an unspecified vulnerability type"
+                },
+                {
+                  "value": "dependency",
+                  "description": "The code uses a dependency with a known vulnerability."
+                },
+                {
+                  "value": "secret",
+                  "description": "The code contains a secret that has now been compromised and must be revoked."
+                },
+                {
+                  "value": "code",
+                  "description": "The code contains a weakness determined by static analysis."
+                }
+              ]
+            }
+          },
+          {
+            "in": "query",
+            "name": "criteria.confidenceLevels",
+            "description": "If provided, only return alerts at these confidence levels. <br />Otherwise, return alerts at any confidence level.",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "Confidence"
+            }
+          },
+          {
+            "in": "query",
+            "name": "criteria.dependencyName",
+            "description": "If provided, only alerts for this dependency are returned. <br />Otherwise, return alerts for all dependencies. <br />In a sarif submission, a dependency (or a vulnerable component) is specified in result.RelatedLocations[].logicalLocation.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "criteria.fromDate",
+            "description": "If provided, only return alerts last seen after this date. <br />Otherwise return all alerts.",
+            "required": false,
+            "type": "string",
+            "format": "date-time"
+          },
+          {
+            "in": "query",
+            "name": "criteria.keywords",
+            "description": "If provided, only return alerts whose titles match this pattern.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "criteria.modifiedSince",
+            "description": "If provided, only return alerts that were modified since this date. <br />Otherwise return all alerts.",
+            "required": false,
+            "type": "string",
+            "format": "date-time"
+          },
+          {
+            "in": "query",
+            "name": "criteria.onlyDefaultBranchAlerts",
+            "description": "If true, only return alerts found on the default branch of the repository. <br />If there have been no runs completed on the default branch, the last run is used instead regardless of the branch used for that run. <br />This option is ignored if ref is provided.",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "criteria.phaseId",
+            "description": "If provided with pipelineName, only return alerts detected in this pipeline phase <br />Otherwise, return alerts detected in all phases.",
+            "required": false,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "query",
+            "name": "criteria.phaseName",
+            "description": "If provided with pipelineName, only return alerts detected in this pipeline phase <br />Otherwise, return alerts detected in all phases.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "criteria.pipelineName",
+            "description": "If provided, only return alerts detected in this pipeline. <br />Otherwise, return alerts detected in all pipelines.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "criteria.ref",
+            "description": "If provided, only include alerts for this ref. <br />If not provided and OnlyDefaultBranch is true, only include alerts found on the default branch or last run branch if there is no analysis configuration for the default branch. <br />Otherwise, include alerts from all branches.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "criteria.ruleId",
+            "description": "If provided, only return alerts for this rule. <br />Otherwise, return alerts of all rules.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "criteria.ruleName",
+            "description": "If provided, only return alerts for this rule. <br />Otherwise, return alerts for all rules.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "criteria.severities",
+            "description": "If provided, only return alerts at these severities. <br />Otherwise, return alerts at any serverity.",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "Severity"
+            }
+          },
+          {
+            "in": "query",
+            "name": "criteria.states",
+            "description": "If provided, only return alerts in these states. <br />Otherwise, return alerts in any state.",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "State"
+            }
+          },
+          {
+            "in": "query",
+            "name": "criteria.toDate",
+            "description": "If provided, only return alerts last seen before this date. <br />Otherwise return all alerts.",
+            "required": false,
+            "type": "string",
+            "format": "date-time"
+          },
+          {
+            "in": "query",
+            "name": "criteria.toolName",
+            "description": "If provided with toolName, only return alerts detected by this tool. <br />Otherwise, return alerts detected by all tools.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "continuationToken",
+            "description": "If there are more alerts than can be returned, a continuation token is placed in the \"x-ms-continuationtoken\" header.  Use that token here to get the next page of alerts",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Alert"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.advsec"
+            ]
+          }
+        ]
+      }
+    },
+    "/{organization}/{project}/_apis/alert/repositories/{repository}/alerts/{alertId}": {
+      "get": {
+        "tags": [
+          "Alerts"
+        ],
+        "x-ms-docs-override-version": "7.2-preview.1",
+        "x-ms-vss-resource": "alerts",
+        "x-ms-vss-method": "GetAlertAsync",
+        "x-ms-preview": true,
+        "description": "Get an alert.",
+        "operationId": "Alerts_Get",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "alertId",
+            "description": "ID of alert to retrieve",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "in": "path",
+            "name": "repository",
+            "description": "Name or id  of a repository that alert is part of",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "ref",
+            "description": "",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "expand",
+            "description": "Expand alert attributes. Possible options are {ValidationFingerprint, None}",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "none",
+              "validationFingerprint"
+            ],
+            "x-ms-enum": {
+              "name": "ExpandOption",
+              "values": [
+                {
+                  "value": "none",
+                  "description": "No Expands."
+                },
+                {
+                  "value": "validationFingerprint",
+                  "description": "Return validationFingerprints in Alert."
+                }
+              ]
+            }
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/Alert"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.advsec"
+            ]
+          }
+        ]
+      },
+      "patch": {
+        "tags": [
+          "Alerts"
+        ],
+        "x-ms-docs-override-version": "7.2-preview.1",
+        "x-ms-vss-resource": "alerts",
+        "x-ms-vss-method": "UpdateAlertAsync",
+        "x-ms-preview": true,
+        "description": "Update the status of an alert",
+        "operationId": "Alerts_Update",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "The new status of the alert",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/AlertStateUpdate"
+            }
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "alertId",
+            "description": "The ID of the alert",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "in": "path",
+            "name": "repository",
+            "description": "The name or ID of the repository",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/Alert"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.advsec_write"
+            ]
+          }
+        ]
+      }
+    },
+    "/{organization}/{project}/_apis/alert/repositories/{repository}/alerts/{alertId}/instances": {
+      "get": {
+        "tags": [
+          "Instances"
+        ],
+        "x-ms-docs-override-version": "7.2-preview.1",
+        "x-ms-vss-resource": "instances",
+        "x-ms-vss-method": "GetAlertInstancesAsync",
+        "x-ms-preview": true,
+        "description": "Get instances of an alert.",
+        "operationId": "Instances_List",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "alertId",
+            "description": "ID of alert to retrieve",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "in": "path",
+            "name": "repository",
+            "description": "Name or id of a repository that alert is part of",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "ref",
+            "description": "",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/AlertAnalysisInstance"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.advsec"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "Alert": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "alertId": {
+          "description": "Identifier for the alert. It is unqiue within Azure DevOps organization.",
+          "type": "integer",
+          "format": "int64"
+        },
+        "alertType": {
+          "description": "Type of the alert. E.g. secret, code, etc.",
+          "enum": [
+            "unknown",
+            "dependency",
+            "secret",
+            "code"
+          ],
+          "x-ms-enum": {
+            "name": "AlertType",
+            "values": [
+              {
+                "value": "unknown",
+                "description": "The code has an unspecified vulnerability type"
+              },
+              {
+                "value": "dependency",
+                "description": "The code uses a dependency with a known vulnerability."
+              },
+              {
+                "value": "secret",
+                "description": "The code contains a secret that has now been compromised and must be revoked."
+              },
+              {
+                "value": "code",
+                "description": "The code contains a weakness determined by static analysis."
+              }
+            ]
+          }
+        },
+        "confidence": {
+          "description": "Confidence level of the alert.",
+          "enum": [
+            "high",
+            "other"
+          ],
+          "x-ms-enum": {
+            "name": "Confidence",
+            "values": [
+              {
+                "value": "high",
+                "description": "High confidence level for alert"
+              },
+              {
+                "value": "other",
+                "description": "Other confidence level for alert"
+              }
+            ]
+          }
+        },
+        "dismissal": {
+          "description": "Contains information for the dismissal of the alert if the alert has been dismissed.",
+          "$ref": "#/definitions/Dismissal"
+        },
+        "firstSeenDate": {
+          "description": "This value is computed and returned by the service. This value represents the first time the service has seen this issue reported in an analysis instance.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "fixedDate": {
+          "description": "This value is computed and returned by the service. If the issue is fixed, this value represents the time the service has seen this issue fixed in an analysis instance.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "gitRef": {
+          "description": "Reference to a git object, e.g. branch ref.",
+          "type": "string"
+        },
+        "introducedDate": {
+          "description": "This value is computed and returned by the service. This value represents the first time the vulnerability was introduced.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "lastSeenDate": {
+          "description": "This value is computed and returned by the service. This value represents the last time the service has seen this issue reported in an analysis instance.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "logicalLocations": {
+          "description": "Logical locations for the alert. This value is computed and returned by the service. It is a value based on the results from all analysis configurations. An example of a logical location is a component.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/LogicalLocation"
+          }
+        },
+        "physicalLocations": {
+          "description": "This value is computed and returned by the service. It is a value based on the results from all analysis configurations. An example of a physical location is a file location.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PhysicalLocation"
+          }
+        },
+        "repositoryUrl": {
+          "description": "Repository URL where the alert was detected.",
+          "type": "string"
+        },
+        "severity": {
+          "description": "Severity of the alert.",
+          "enum": [
+            "low",
+            "medium",
+            "high",
+            "critical",
+            "note",
+            "warning",
+            "error"
+          ],
+          "x-ms-enum": {
+            "name": "Severity",
+            "values": [
+              {
+                "value": "low",
+                "description": ""
+              },
+              {
+                "value": "medium",
+                "description": ""
+              },
+              {
+                "value": "high",
+                "description": ""
+              },
+              {
+                "value": "critical",
+                "description": ""
+              },
+              {
+                "value": "note",
+                "description": ""
+              },
+              {
+                "value": "warning",
+                "description": ""
+              },
+              {
+                "value": "error",
+                "description": ""
+              }
+            ]
+          }
+        },
+        "state": {
+          "description": "This value is computed and returned by the service. It is a value based on the results from all analysis configurations.",
+          "enum": [
+            "unknown",
+            "active",
+            "dismissed",
+            "fixed",
+            "autoDismissed"
+          ],
+          "x-ms-enum": {
+            "name": "State",
+            "values": [
+              {
+                "value": "unknown",
+                "description": "Alert is in an indeterminate state"
+              },
+              {
+                "value": "active",
+                "description": "Alert has been detected in the code"
+              },
+              {
+                "value": "dismissed",
+                "description": "Alert was dismissed by a user"
+              },
+              {
+                "value": "fixed",
+                "description": "The issue is no longer detected in the code"
+              },
+              {
+                "value": "autoDismissed",
+                "description": "The tool has determined that the issue is no longer a risk"
+              }
+            ]
+          }
+        },
+        "title": {
+          "description": "Title will only be rendered as text and does not support markdown formatting. There is a maximum character limit of 256.",
+          "type": "string"
+        },
+        "tools": {
+          "description": "Tools that have detected this issue.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Tool"
+          }
+        },
+        "truncatedSecret": {
+          "description": "A truncated/obfuscated version of the secret pertaining to the alert (if applicable).",
+          "type": "string"
+        },
+        "validationFingerprints": {
+          "description": "ValidationFingerprints for the secret liveness check. Only returned on demand in Get API with Expand parameter set to be ValidationFingerprint (not returned in List API)",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ValidationFingerprint"
+          }
+        }
+      }
+    },
+    "AlertAnalysisInstance": {
+      "description": "Summary of the state of the alert for a given analysis configuration.",
+      "type": "object",
+      "properties": {
+        "analysisConfiguration": {
+          "description": "Analysis configuration.",
+          "$ref": "#/definitions/AnalysisConfiguration"
+        },
+        "firstSeen": {
+          "description": "Analysis instance where the issue was first detected for a given analysis configuration.",
+          "$ref": "#/definitions/AnalysisInstance"
+        },
+        "fixedIn": {
+          "description": "Analysis instance where the issue was fixed for a given analysis configuration.",
+          "$ref": "#/definitions/AnalysisInstance"
+        },
+        "lastSeen": {
+          "description": "Analysis instance where the issue was last detected for a given analysis configuration.",
+          "$ref": "#/definitions/AnalysisInstance"
+        },
+        "recentAnalysisInstance": {
+          "description": "The most recent instatnce of the analysis.",
+          "$ref": "#/definitions/AnalysisInstance"
+        },
+        "state": {
+          "description": "Result state for a given analysis configuration.",
+          "enum": [
+            "unknown",
+            "active",
+            "dismissed",
+            "fixed",
+            "autoDismissed"
+          ],
+          "x-ms-enum": {
+            "name": "State",
+            "values": [
+              {
+                "value": "unknown",
+                "description": "Alert is in an indeterminate state"
+              },
+              {
+                "value": "active",
+                "description": "Alert has been detected in the code"
+              },
+              {
+                "value": "dismissed",
+                "description": "Alert was dismissed by a user"
+              },
+              {
+                "value": "fixed",
+                "description": "The issue is no longer detected in the code"
+              },
+              {
+                "value": "autoDismissed",
+                "description": "The tool has determined that the issue is no longer a risk"
+              }
+            ]
+          }
+        }
+      }
+    },
+    "AlertMetadata": {
+      "description": "Alert metadata.",
+      "type": "object",
+      "properties": {
+        "alertId": {
+          "description": "The ID of the alert.",
+          "type": "integer",
+          "format": "int64"
+        },
+        "metadata": {
+          "description": "A list of metadata to be associated with the alert.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Metadata"
+          }
+        }
+      }
+    },
+    "AlertMetadataChange": {
+      "description": "Used to represent an update in a relationship between an alert and an artifact.",
+      "type": "object",
+      "properties": {
+        "alertId": {
+          "description": "The ID of the alert.",
+          "type": "integer",
+          "format": "int64"
+        },
+        "metadataChange": {
+          "description": "The change that occurred to the metadata.",
+          "$ref": "#/definitions/MetadataChange"
+        }
+      }
+    },
+    "AlertStateUpdate": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "dismissedComment": {
+          "type": "string"
+        },
+        "dismissedReason": {
+          "enum": [
+            "unknown",
+            "fixed",
+            "acceptedRisk",
+            "falsePositive"
+          ],
+          "x-ms-enum": {
+            "name": "DismissalType",
+            "values": [
+              {
+                "value": "unknown",
+                "description": "Dismissal type unknown"
+              },
+              {
+                "value": "fixed",
+                "description": "Dismissal indicating alert has been fixed"
+              },
+              {
+                "value": "acceptedRisk",
+                "description": "Dismissal indicating user is accepting a risk for the alert"
+              },
+              {
+                "value": "falsePositive",
+                "description": "Dismissal indicating alert is a false positive and will likely not be fixed."
+              }
+            ]
+          }
+        },
+        "state": {
+          "enum": [
+            "unknown",
+            "active",
+            "dismissed",
+            "fixed",
+            "autoDismissed"
+          ],
+          "x-ms-enum": {
+            "name": "State",
+            "values": [
+              {
+                "value": "unknown",
+                "description": "Alert is in an indeterminate state"
+              },
+              {
+                "value": "active",
+                "description": "Alert has been detected in the code"
+              },
+              {
+                "value": "dismissed",
+                "description": "Alert was dismissed by a user"
+              },
+              {
+                "value": "fixed",
+                "description": "The issue is no longer detected in the code"
+              },
+              {
+                "value": "autoDismissed",
+                "description": "The tool has determined that the issue is no longer a risk"
+              }
+            ]
+          }
+        }
+      }
+    },
+    "AnalysisConfiguration": {
+      "description": "AnalysisConfiguration class models a build definition.",
+      "type": "object",
+      "properties": {
+        "analysisConfigurationDetails": {
+          "description": "Details for the configuration. Populated values depend on the type of configuration.",
+          "$ref": "#/definitions/AnalysisConfigurationDetails"
+        },
+        "analysisConfigurationId": {
+          "description": "Identifier for the analysis configuration.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "analysisConfigurationType": {
+          "description": "Type of the configuration.",
+          "enum": [
+            "default",
+            "adoPipeline"
+          ],
+          "x-ms-enum": {
+            "name": "AnalysisConfigurationType",
+            "values": [
+              {
+                "value": "default",
+                "description": "Default analysis configuration that is not attached to any other configuration data"
+              },
+              {
+                "value": "adoPipeline",
+                "description": "Ado Pipeline, contains branch, pipeline, phase, and ADOPipelineId"
+              }
+            ]
+          }
+        },
+        "toolName": {
+          "description": "Name of the tool that ran on this configuration.",
+          "type": "string"
+        },
+        "toolVersion": {
+          "description": "The latest version of the tool that ran on this configuration.",
+          "type": "string"
+        }
+      }
+    },
+    "AnalysisConfigurationDetails": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "gitRef": {
+          "description": "Reference to a git object, e.g. branch ref.",
+          "type": "string"
+        },
+        "isDefaultBranch": {
+          "description": "Is this the default branch?",
+          "type": "boolean"
+        },
+        "phaseId": {
+          "description": "Phase ID of the pipeline.",
+          "type": "string",
+          "format": "uuid"
+        },
+        "phaseName": {
+          "description": "Phase name.",
+          "type": "string"
+        },
+        "pipelineId": {
+          "description": "AzureDevOps pipeline id.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "pipelineName": {
+          "description": "Name of the pipeline.",
+          "type": "string"
+        }
+      }
+    },
+    "AnalysisInstance": {
+      "description": "AnalysisInstance class models a build.",
+      "type": "object",
+      "properties": {
+        "commitId": {
+          "description": "CommitId is a commit id for that instance",
+          "type": "string"
+        },
+        "configuration": {
+          "description": "Analysis configuration.",
+          "$ref": "#/definitions/AnalysisConfiguration"
+        },
+        "createdDate": {
+          "description": "Date when the analysis was created.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "instanceIdentifier": {
+          "description": "InstanceIdentifier is a key that uniquely establishes this instance",
+          "type": "string"
+        },
+        "results": {
+          "description": "Results that were reported by the analysis.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AnalysisResult"
+          }
+        },
+        "url": {
+          "description": "Url is the permalink to the build.",
+          "type": "string"
+        }
+      }
+    },
+    "AnalysisResult": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "analysisResultId": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "firstIntroducedInstanceId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "fixedInstanceId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "introducedInstanceId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "lastSeenInstanceId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "result": {
+          "$ref": "#/definitions/Result"
+        },
+        "state": {
+          "enum": [
+            "unknown",
+            "active",
+            "dismissed",
+            "fixed",
+            "autoDismissed"
+          ],
+          "x-ms-enum": {
+            "name": "State",
+            "values": [
+              {
+                "value": "unknown",
+                "description": "Alert is in an indeterminate state"
+              },
+              {
+                "value": "active",
+                "description": "Alert has been detected in the code"
+              },
+              {
+                "value": "dismissed",
+                "description": "Alert was dismissed by a user"
+              },
+              {
+                "value": "fixed",
+                "description": "The issue is no longer detected in the code"
+              },
+              {
+                "value": "autoDismissed",
+                "description": "The tool has determined that the issue is no longer a risk"
+              }
+            ]
+          }
+        }
+      }
+    },
+    "Branch": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "branchId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "deletedDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "Dependency": {
+      "description": "Information about a vulnerable dependency",
+      "type": "object",
+      "properties": {
+        "componentName": {
+          "description": "Dependency name",
+          "type": "string"
+        },
+        "componentType": {
+          "description": "Source of the dependency",
+          "enum": [
+            "unknown",
+            "nuGet",
+            "npm",
+            "maven",
+            "git",
+            "other",
+            "rubyGems",
+            "cargo",
+            "pip",
+            "file",
+            "go",
+            "dockerImage",
+            "pod",
+            "linux",
+            "conda",
+            "dockerReference",
+            "vcpkg"
+          ],
+          "x-ms-enum": {
+            "name": "ComponentType",
+            "values": [
+              {
+                "value": "unknown",
+                "description": ""
+              },
+              {
+                "value": "nuGet",
+                "description": ""
+              },
+              {
+                "value": "npm",
+                "description": "Indicates the component is an Npm package."
+              },
+              {
+                "value": "maven",
+                "description": "Indicates the component is a Maven artifact."
+              },
+              {
+                "value": "git",
+                "description": "Indicates the component is a Git repository."
+              },
+              {
+                "value": "other",
+                "description": "Indicates the component is not any of the supported component types by Governance."
+              },
+              {
+                "value": "rubyGems",
+                "description": "Indicates the component is a Ruby gem."
+              },
+              {
+                "value": "cargo",
+                "description": "Indicates the component is a Cargo package."
+              },
+              {
+                "value": "pip",
+                "description": "Indicates the component is a Pip package."
+              },
+              {
+                "value": "file",
+                "description": "Indicates the component is a loose file. Not a package as understood by different package managers."
+              },
+              {
+                "value": "go",
+                "description": "Indicates the component is a Go package."
+              },
+              {
+                "value": "dockerImage",
+                "description": "Indicates the component is a Docker Image"
+              },
+              {
+                "value": "pod",
+                "description": "Indicates the component is a CocoaPods pod."
+              },
+              {
+                "value": "linux",
+                "description": "Indicates the component is found in a linux environment. A package understood by linux based package managers like apt and rpm."
+              },
+              {
+                "value": "conda",
+                "description": "Indicates the component is a Conda package."
+              },
+              {
+                "value": "dockerReference",
+                "description": "Indicates the component is a Docker Reference."
+              },
+              {
+                "value": "vcpkg",
+                "description": "Indicates the component is a Vcpkg Package."
+              }
+            ]
+          }
+        },
+        "componentVersion": {
+          "description": "Version information",
+          "type": "string"
+        },
+        "dependencyId": {
+          "description": "Unique ID for the dependency",
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "DependencyResult": {
+      "description": "An instance of a vulnerable dependency that was detected",
+      "type": "object",
+      "properties": {
+        "dependency": {
+          "description": "Information about the vulnerable dependency that was found",
+          "$ref": "#/definitions/Dependency"
+        },
+        "dependencyResultId": {
+          "description": "Unique ID for this dependency",
+          "type": "integer",
+          "format": "int32"
+        },
+        "resultId": {
+          "description": "ID for the Result that this instance belongs to",
+          "type": "integer",
+          "format": "int32"
+        },
+        "rootDependencyId": {
+          "description": "Heirarchal information when multiple instances are found",
+          "type": "integer",
+          "format": "int32"
+        },
+        "versionControlFilePath": {
+          "description": "Information about where the dependency was found",
+          "$ref": "#/definitions/VersionControlFilePath"
+        }
+      }
+    },
+    "Dismissal": {
+      "description": "Information about an alert dismissal",
+      "type": "object",
+      "properties": {
+        "dismissalId": {
+          "description": "Unique ID for this dismissal",
+          "type": "integer",
+          "format": "int64"
+        },
+        "dismissalType": {
+          "description": "Reason for the dismissal",
+          "enum": [
+            "unknown",
+            "fixed",
+            "acceptedRisk",
+            "falsePositive"
+          ],
+          "x-ms-enum": {
+            "name": "DismissalType",
+            "values": [
+              {
+                "value": "unknown",
+                "description": "Dismissal type unknown"
+              },
+              {
+                "value": "fixed",
+                "description": "Dismissal indicating alert has been fixed"
+              },
+              {
+                "value": "acceptedRisk",
+                "description": "Dismissal indicating user is accepting a risk for the alert"
+              },
+              {
+                "value": "falsePositive",
+                "description": "Dismissal indicating alert is a false positive and will likely not be fixed."
+              }
+            ]
+          }
+        },
+        "message": {
+          "description": "Informational message attached to the dismissal",
+          "type": "string"
+        },
+        "stateChangedBy": {
+          "description": "Identity that dismissed the alert",
+          "type": "string",
+          "format": "uuid"
+        },
+        "stateChangedByIdentity": {
+          "description": "Identity that dismissed the alert",
+          "$ref": "#/definitions/IdentityRef"
+        }
+      }
+    },
+    "GraphSubjectBase": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "_links": {
+          "description": "This field contains zero or more interesting links about the graph subject. These links may be invoked to obtain additional relationships or more detailed information about this graph subject.",
+          "$ref": "#/definitions/ReferenceLinks"
+        },
+        "descriptor": {
+          "description": "The descriptor is the primary way to reference the graph subject while the system is running. This field will uniquely identify the same graph subject across both Accounts and Organizations.",
+          "type": "string"
+        },
+        "displayName": {
+          "description": "This is the non-unique display name of the graph subject. To change this field, you must alter its value in the source provider.",
+          "type": "string"
+        },
+        "url": {
+          "description": "This url is the full route to the source resource of this graph subject.",
+          "type": "string"
+        }
+      }
+    },
+    "IdentityRef": {
+      "description": "",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/GraphSubjectBase"
+        }
+      ],
+      "properties": {
+        "directoryAlias": {
+          "description": "Deprecated - Can be retrieved by querying the Graph user referenced in the \"self\" entry of the IdentityRef \"_links\" dictionary",
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "imageUrl": {
+          "description": "Deprecated - Available in the \"avatar\" entry of the IdentityRef \"_links\" dictionary",
+          "type": "string"
+        },
+        "inactive": {
+          "description": "Deprecated - Can be retrieved by querying the Graph membership state referenced in the \"membershipState\" entry of the GraphUser \"_links\" dictionary",
+          "type": "boolean"
+        },
+        "isAadIdentity": {
+          "description": "Deprecated - Can be inferred from the subject type of the descriptor (Descriptor.IsAadUserType/Descriptor.IsAadGroupType)",
+          "type": "boolean"
+        },
+        "isContainer": {
+          "description": "Deprecated - Can be inferred from the subject type of the descriptor (Descriptor.IsGroupType)",
+          "type": "boolean"
+        },
+        "isDeletedInOrigin": {
+          "type": "boolean"
+        },
+        "profileUrl": {
+          "description": "Deprecated - not in use in most preexisting implementations of ToIdentityRef",
+          "type": "string"
+        },
+        "uniqueName": {
+          "description": "Deprecated - use Domain+PrincipalName instead",
+          "type": "string"
+        }
+      }
+    },
+    "LogicalLocation": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "fullyQualifiedName": {
+          "type": "string"
+        },
+        "kind": {
+          "description": "Possible values: \"unknown\" \"rootDependency\" and \"vulnerableDependency\"",
+          "type": "string"
+        }
+      }
+    },
+    "Metadata": {
+      "description": "The metadata operation to be performed on the alert.",
+      "type": "object",
+      "properties": {
+        "op": {
+          "description": "The type of operation to be performed.",
+          "enum": [
+            "add",
+            "remove"
+          ],
+          "x-ms-enum": {
+            "name": "MetadataOperation",
+            "values": [
+              {
+                "value": "add",
+                "description": ""
+              },
+              {
+                "value": "remove",
+                "description": ""
+              }
+            ]
+          }
+        },
+        "value": {
+          "description": "The metadata value",
+          "$ref": "#/definitions/RelationMetadata"
+        }
+      }
+    },
+    "MetadataChange": {
+      "description": "The change that has been made to the metadata.",
+      "type": "object",
+      "properties": {
+        "changeType": {
+          "description": "The type of change on the metadata.",
+          "enum": [
+            "none",
+            "created",
+            "updated",
+            "deleted"
+          ],
+          "x-ms-enum": {
+            "name": "MetadataChangeType",
+            "values": [
+              {
+                "value": "none",
+                "description": ""
+              },
+              {
+                "value": "created",
+                "description": ""
+              },
+              {
+                "value": "updated",
+                "description": ""
+              },
+              {
+                "value": "deleted",
+                "description": ""
+              }
+            ]
+          }
+        },
+        "value": {
+          "description": "Represents a metadata association to an alert.",
+          "$ref": "#/definitions/RelationMetadata"
+        }
+      }
+    },
+    "PhysicalLocation": {
+      "description": "Location in the source control system where the issue was found",
+      "type": "object",
+      "properties": {
+        "filePath": {
+          "description": "Path of the file where the issue was found",
+          "type": "string"
+        },
+        "region": {
+          "description": "Details about the location where the issue was found including a snippet",
+          "$ref": "#/definitions/Region"
+        },
+        "versionControl": {
+          "description": "Source control system-specific information about the location",
+          "$ref": "#/definitions/VersionControlDetails"
+        }
+      }
+    },
+    "Pipeline": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "adoPipelineId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "name": {
+          "type": "string"
+        },
+        "phase": {
+          "type": "string"
+        },
+        "phaseId": {
+          "type": "string",
+          "format": "uuid"
+        }
+      }
+    },
+    "ReferenceLinks": {
+      "description": "The class to represent a collection of REST reference links.",
+      "type": "object",
+      "properties": {
+        "links": {
+          "description": "The readonly view of the links.  Because Reference links are readonly, we only want to expose them as read only.",
+          "type": "object",
+          "additionalProperties": {
+            "type": "object"
+          }
+        }
+      }
+    },
+    "Region": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "columnEnd": {
+          "description": "The column where the code snippet ends",
+          "type": "integer",
+          "format": "int32"
+        },
+        "columnStart": {
+          "description": "The column where the code snippet starts",
+          "type": "integer",
+          "format": "int32"
+        },
+        "lineEnd": {
+          "description": "The line number where the code snippet ends",
+          "type": "integer",
+          "format": "int32"
+        },
+        "lineStart": {
+          "description": "The line number where the code snippet starts",
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "RelationMetadata": {
+      "description": "The metadata to be associated with the alert.",
+      "type": "object",
+      "properties": {
+        "attributes": {
+          "description": "Any additional attributes of the metadata.",
+          "type": "object",
+          "additionalProperties": {
+            "type": "object"
+          }
+        },
+        "rel": {
+          "description": "The type of the metadata.",
+          "type": "string"
+        },
+        "url": {
+          "description": "The URL of the metadata.",
+          "type": "string"
+        }
+      }
+    },
+    "Result": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "dependencyResult": {
+          "description": "Additional information about the alert.  Valid when ResultType is Dependency",
+          "$ref": "#/definitions/DependencyResult"
+        },
+        "fingerprint": {
+          "description": "Full fingerprint of the Result.  This is used to detect duplicate instances of the same alert",
+          "type": "string"
+        },
+        "fingerprintId": {
+          "description": "Unique ID of the fingerprint of the Result",
+          "type": "integer",
+          "format": "int64"
+        },
+        "resultId": {
+          "description": "Unique ID of the Result",
+          "type": "integer",
+          "format": "int32"
+        },
+        "resultMessage": {
+          "description": "Detailed description of the rule that triggered the alert",
+          "type": "string"
+        },
+        "resultType": {
+          "description": "The type of rule that triggered the alert",
+          "enum": [
+            "unknown",
+            "dependency",
+            "versionControl"
+          ],
+          "x-ms-enum": {
+            "name": "ResultType",
+            "values": [
+              {
+                "value": "unknown",
+                "description": "The result was found from an unspecified analysis type"
+              },
+              {
+                "value": "dependency",
+                "description": "The result was found from dependency analysis"
+              },
+              {
+                "value": "versionControl",
+                "description": "The result was found from static code analysis"
+              }
+            ]
+          }
+        },
+        "ruleId": {
+          "description": "ID of the rule that the triggered the alert",
+          "type": "integer",
+          "format": "int32"
+        },
+        "ruleShortDescription": {
+          "description": "Short description of the rule that triggered the alert",
+          "type": "string"
+        },
+        "severity": {
+          "description": "The severity of the alert",
+          "enum": [
+            "low",
+            "medium",
+            "high",
+            "critical",
+            "note",
+            "warning",
+            "error"
+          ],
+          "x-ms-enum": {
+            "name": "Severity",
+            "values": [
+              {
+                "value": "low",
+                "description": ""
+              },
+              {
+                "value": "medium",
+                "description": ""
+              },
+              {
+                "value": "high",
+                "description": ""
+              },
+              {
+                "value": "critical",
+                "description": ""
+              },
+              {
+                "value": "note",
+                "description": ""
+              },
+              {
+                "value": "warning",
+                "description": ""
+              },
+              {
+                "value": "error",
+                "description": ""
+              }
+            ]
+          }
+        },
+        "versionControlResult": {
+          "description": "Additional information about the alert.  Valid when ResultType is VersionControl",
+          "$ref": "#/definitions/VersionControlResult"
+        }
+      }
+    },
+    "Rule": {
+      "description": "The analysis rule that caused the alert.",
+      "type": "object",
+      "properties": {
+        "additionalProperties": {
+          "description": "Additional properties of this rule dependent on the rule type.  For example, dependency rules may include the CVE ID if it is available.",
+          "type": "object",
+          "additionalProperties": {
+            "type": "object"
+          }
+        },
+        "description": {
+          "description": "Description of what this rule detects",
+          "type": "string"
+        },
+        "friendlyName": {
+          "description": "Plain-text rule identifier",
+          "type": "string"
+        },
+        "helpMessage": {
+          "description": "Additional information about this rule",
+          "type": "string"
+        },
+        "opaqueId": {
+          "description": "Tool-specific rule identifier",
+          "type": "string"
+        },
+        "resources": {
+          "description": "Markdown-formatted list of resources to learn more about the Rule. In some cases, RuleInfo.AdditionalProperties.advisoryUrls is used instead.",
+          "type": "string"
+        },
+        "tags": {
+          "description": "Classification tags for this rule",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "SarifUploadStatus": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "errors": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SarifValidationError"
+          }
+        },
+        "processingStatus": {
+          "enum": [
+            "new",
+            "queued",
+            "completed",
+            "failed"
+          ],
+          "x-ms-enum": {
+            "name": "SarifJobStatus",
+            "values": [
+              {
+                "value": "new",
+                "description": "The job type when it is new"
+              },
+              {
+                "value": "queued",
+                "description": "The job type when it is queued"
+              },
+              {
+                "value": "completed",
+                "description": "The job type when it is completed"
+              },
+              {
+                "value": "failed",
+                "description": "The job type when it fails"
+              }
+            ]
+          }
+        }
+      }
+    },
+    "SarifValidationError": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "nodePointer": {
+          "type": "string"
+        },
+        "validationError": {
+          "type": "string"
+        }
+      }
+    },
+    "SearchCriteria": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "alertIds": {
+          "description": "If provided, only return alerts with the ids specified. <br />Otherwise, return any alert.",
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "format": "int64"
+          }
+        },
+        "alertType": {
+          "description": "If provided, only return alerts of this type. Otherwise, return alerts of all types.",
+          "enum": [
+            "unknown",
+            "dependency",
+            "secret",
+            "code"
+          ],
+          "x-ms-enum": {
+            "name": "AlertType",
+            "values": [
+              {
+                "value": "unknown",
+                "description": "The code has an unspecified vulnerability type"
+              },
+              {
+                "value": "dependency",
+                "description": "The code uses a dependency with a known vulnerability."
+              },
+              {
+                "value": "secret",
+                "description": "The code contains a secret that has now been compromised and must be revoked."
+              },
+              {
+                "value": "code",
+                "description": "The code contains a weakness determined by static analysis."
+              }
+            ]
+          }
+        },
+        "confidenceLevels": {
+          "description": "If provided, only return alerts at these confidence levels. <br />Otherwise, return alerts at any confidence level.",
+          "type": "array",
+          "items": {
+            "enum": [
+              "high",
+              "other"
+            ],
+            "x-ms-enum": {
+              "name": "Confidence",
+              "values": [
+                {
+                  "value": "high",
+                  "description": "High confidence level for alert"
+                },
+                {
+                  "value": "other",
+                  "description": "Other confidence level for alert"
+                }
+              ]
+            }
+          }
+        },
+        "dependencyName": {
+          "description": "If provided, only alerts for this dependency are returned. <br />Otherwise, return alerts for all dependencies. <br />In a sarif submission, a dependency (or a vulnerable component) is specified in result.RelatedLocations[].logicalLocation.",
+          "type": "string"
+        },
+        "fromDate": {
+          "description": "If provided, only return alerts last seen after this date. <br />Otherwise return all alerts.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "keywords": {
+          "description": "If provided, only return alerts whose titles match this pattern.",
+          "type": "string"
+        },
+        "modifiedSince": {
+          "description": "If provided, only return alerts that were modified since this date. <br />Otherwise return all alerts.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "onlyDefaultBranchAlerts": {
+          "description": "If true, only return alerts found on the default branch of the repository. <br />If there have been no runs completed on the default branch, the last run is used instead regardless of the branch used for that run. <br />This option is ignored if ref is provided.",
+          "type": "boolean"
+        },
+        "phaseId": {
+          "description": "If provided with pipelineName, only return alerts detected in this pipeline phase <br />Otherwise, return alerts detected in all phases.",
+          "type": "string",
+          "format": "uuid"
+        },
+        "phaseName": {
+          "description": "If provided with pipelineName, only return alerts detected in this pipeline phase <br />Otherwise, return alerts detected in all phases.",
+          "type": "string"
+        },
+        "pipelineName": {
+          "description": "If provided, only return alerts detected in this pipeline. <br />Otherwise, return alerts detected in all pipelines.",
+          "type": "string"
+        },
+        "ref": {
+          "description": "If provided, only include alerts for this ref. <br />If not provided and OnlyDefaultBranch is true, only include alerts found on the default branch or last run branch if there is no analysis configuration for the default branch. <br />Otherwise, include alerts from all branches.",
+          "type": "string"
+        },
+        "ruleId": {
+          "description": "If provided, only return alerts for this rule. <br />Otherwise, return alerts of all rules.",
+          "type": "string"
+        },
+        "ruleName": {
+          "description": "If provided, only return alerts for this rule. <br />Otherwise, return alerts for all rules.",
+          "type": "string"
+        },
+        "severities": {
+          "description": "If provided, only return alerts at these severities. <br />Otherwise, return alerts at any serverity.",
+          "type": "array",
+          "items": {
+            "enum": [
+              "low",
+              "medium",
+              "high",
+              "critical",
+              "note",
+              "warning",
+              "error"
+            ],
+            "x-ms-enum": {
+              "name": "Severity",
+              "values": [
+                {
+                  "value": "low",
+                  "description": ""
+                },
+                {
+                  "value": "medium",
+                  "description": ""
+                },
+                {
+                  "value": "high",
+                  "description": ""
+                },
+                {
+                  "value": "critical",
+                  "description": ""
+                },
+                {
+                  "value": "note",
+                  "description": ""
+                },
+                {
+                  "value": "warning",
+                  "description": ""
+                },
+                {
+                  "value": "error",
+                  "description": ""
+                }
+              ]
+            }
+          }
+        },
+        "states": {
+          "description": "If provided, only return alerts in these states. <br />Otherwise, return alerts in any state.",
+          "type": "array",
+          "items": {
+            "enum": [
+              "unknown",
+              "active",
+              "dismissed",
+              "fixed",
+              "autoDismissed"
+            ],
+            "x-ms-enum": {
+              "name": "State",
+              "values": [
+                {
+                  "value": "unknown",
+                  "description": "Alert is in an indeterminate state"
+                },
+                {
+                  "value": "active",
+                  "description": "Alert has been detected in the code"
+                },
+                {
+                  "value": "dismissed",
+                  "description": "Alert was dismissed by a user"
+                },
+                {
+                  "value": "fixed",
+                  "description": "The issue is no longer detected in the code"
+                },
+                {
+                  "value": "autoDismissed",
+                  "description": "The tool has determined that the issue is no longer a risk"
+                }
+              ]
+            }
+          }
+        },
+        "toDate": {
+          "description": "If provided, only return alerts last seen before this date. <br />Otherwise return all alerts.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "toolName": {
+          "description": "If provided with toolName, only return alerts detected by this tool. <br />Otherwise, return alerts detected by all tools.",
+          "type": "string"
+        }
+      }
+    },
+    "Tool": {
+      "description": "An Analysis tool that can generate security alerts",
+      "type": "object",
+      "properties": {
+        "name": {
+          "description": "Name of the tool",
+          "type": "string"
+        },
+        "rules": {
+          "description": "The rules that the tool defines",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Rule"
+          }
+        }
+      }
+    },
+    "UxFilters": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "branches": {
+          "description": "Branches to display alerts for.  If empty, show alerts from all branches",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Branch"
+          }
+        },
+        "confidenceLevels": {
+          "description": "Confidence levels to show, only valid when AlertType is Secret.",
+          "type": "array",
+          "items": {
+            "enum": [
+              "high",
+              "other"
+            ],
+            "x-ms-enum": {
+              "name": "Confidence",
+              "values": [
+                {
+                  "value": "high",
+                  "description": "High confidence level for alert"
+                },
+                {
+                  "value": "other",
+                  "description": "Other confidence level for alert"
+                }
+              ]
+            }
+          }
+        },
+        "packages": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Dependency"
+          }
+        },
+        "pipelines": {
+          "description": "Pipelines to show alerts for.  If empty, show alerts for all pipelines",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Pipeline"
+          }
+        },
+        "progressPercentage": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "rules": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Rule"
+          }
+        },
+        "secretTypes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "severities": {
+          "description": "Alert severities to show.  If empty show all alert servities",
+          "type": "array",
+          "items": {
+            "enum": [
+              "low",
+              "medium",
+              "high",
+              "critical",
+              "note",
+              "warning",
+              "error"
+            ],
+            "x-ms-enum": {
+              "name": "Severity",
+              "values": [
+                {
+                  "value": "low",
+                  "description": ""
+                },
+                {
+                  "value": "medium",
+                  "description": ""
+                },
+                {
+                  "value": "high",
+                  "description": ""
+                },
+                {
+                  "value": "critical",
+                  "description": ""
+                },
+                {
+                  "value": "note",
+                  "description": ""
+                },
+                {
+                  "value": "warning",
+                  "description": ""
+                },
+                {
+                  "value": "error",
+                  "description": ""
+                }
+              ]
+            }
+          }
+        },
+        "states": {
+          "description": "Alert states to show.  If empty show all alert states",
+          "type": "array",
+          "items": {
+            "enum": [
+              "unknown",
+              "active",
+              "dismissed",
+              "fixed",
+              "autoDismissed"
+            ],
+            "x-ms-enum": {
+              "name": "State",
+              "values": [
+                {
+                  "value": "unknown",
+                  "description": "Alert is in an indeterminate state"
+                },
+                {
+                  "value": "active",
+                  "description": "Alert has been detected in the code"
+                },
+                {
+                  "value": "dismissed",
+                  "description": "Alert was dismissed by a user"
+                },
+                {
+                  "value": "fixed",
+                  "description": "The issue is no longer detected in the code"
+                },
+                {
+                  "value": "autoDismissed",
+                  "description": "The tool has determined that the issue is no longer a risk"
+                }
+              ]
+            }
+          }
+        },
+        "tools": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Tool"
+          }
+        }
+      }
+    },
+    "ValidationFingerprint": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "validationFingerprintHash": {
+          "type": "string"
+        },
+        "validationFingerprintJson": {
+          "type": "string"
+        }
+      }
+    },
+    "VersionControlDetails": {
+      "description": "Information for locating files in a source control system",
+      "type": "object",
+      "properties": {
+        "commitHash": {
+          "type": "string"
+        },
+        "itemUrl": {
+          "type": "string"
+        }
+      }
+    },
+    "VersionControlFilePath": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "filePath": {
+          "description": "Path of the file in the version control system",
+          "type": "string"
+        },
+        "filePathHash": {
+          "description": "Hash of the file in the version control system",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "byte"
+          }
+        },
+        "versionControlFilePathId": {
+          "description": "Unique ID for the file in the version control system",
+          "type": "integer",
+          "format": "int64"
+        }
+      }
+    },
+    "VersionControlResult": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "resultId": {
+          "description": "The ID to associate this structure with the cooresponding Result",
+          "type": "integer",
+          "format": "int32"
+        },
+        "versionControlSnippet": {
+          "description": "Information about the snippet where the Result was found",
+          "$ref": "#/definitions/VersionControlSnippet"
+        }
+      }
+    },
+    "VersionControlSnippet": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "endColumn": {
+          "description": "column in the code file where the snippet ends",
+          "type": "integer",
+          "format": "int32"
+        },
+        "endLine": {
+          "description": "line in the code file where the snippet ends",
+          "type": "integer",
+          "format": "int32"
+        },
+        "startColumn": {
+          "description": "column in the code file where the snippet starts",
+          "type": "integer",
+          "format": "int32"
+        },
+        "startLine": {
+          "description": "line in the code file where the snippet starts",
+          "type": "integer",
+          "format": "int32"
+        },
+        "versionControlFilePath": {
+          "description": "path of the code file in the version control system",
+          "$ref": "#/definitions/VersionControlFilePath"
+        },
+        "versionControlFilePathId": {
+          "description": "Unique Id number for the file path",
+          "type": "integer",
+          "format": "int64"
+        },
+        "versionControlSnippetId": {
+          "description": "Unique Id number for this snippet",
+          "type": "integer",
+          "format": "int64"
+        }
+      }
+    },
+    "VssJsonCollectionWrapper": {
+      "description": "This class is used to serialize collections as a single JSON object on the wire.",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/VssJsonCollectionWrapperBase"
+        }
+      ],
+      "properties": {
+        "value": {
+          "description": "The serialized item.",
+          "type": "string",
+          "format": "T"
+        }
+      }
+    },
+    "VssJsonCollectionWrapperBase": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "count": {
+          "description": "The number of serialized items.",
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    }
+  },
+  "parameters": {
+    "api-Version-preview.1": {
+      "name": "api-version",
+      "in": "query",
+      "description": "Version of the API to use.  This should be set to '7.2-preview.1' to use this version of the api.",
+      "required": true,
+      "type": "string"
+    },
+    "api-Version-preview.2": {
+      "name": "api-version",
+      "in": "query",
+      "description": "Version of the API to use.  This should be set to '7.2-preview.2' to use this version of the api.",
+      "required": true,
+      "type": "string"
+    }
+  },
+  "securityDefinitions": {
+    "accessToken": {
+      "type": "basic",
+      "description": "Personal access token. Use any value for the user name and the token as the password."
+    },
+    "oauth2": {
+      "type": "oauth2",
+      "flow": "accessCode",
+      "authorizationUrl": "https://app.vssps.visualstudio.com/oauth2/authorize&response_type=Assertion",
+      "tokenUrl": "https://app.vssps.visualstudio.com/oauth2/token?client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer&grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer",
+      "scopes": {
+        "vso.advsec": "Grants the ability to read alerts, result instances, analysis result instances",
+        "vso.advsec_write": "Grants the ability to upload analyses in sarif",
+        "vso.advsec_manage": "Grants the ability to access sarif upload information, delete analysis, and update alerts"
+      }
+    }
+  },
+  "security": [
+    {
+      "accessToken": []
+    }
+  ],
+  "externalDocs": {
+    "description": "Azure DevOps REST APIs",
+    "url": "https://aka.ms/azure-devops-rest-apis"
+  }
+}

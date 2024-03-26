@@ -1,0 +1,1145 @@
+﻿{
+  "swagger": "2.0",
+  "info": {
+    "title": "Audit",
+    "description": "",
+    "termsOfService": "https://go.microsoft.com/fwlink/?LinkId=329770",
+    "contact": {
+      "name": "nugetvss",
+      "email": "nugetvss@microsoft.com"
+    },
+    "license": {
+      "name": "MICROSOFT SOFTWARE LICENSE TERMS",
+      "url": "https://go.microsoft.com/fwlink/?LinkId=329770"
+    },
+    "version": "7.2-preview"
+  },
+  "host": "auditservice.dev.azure.com",
+  "x-ms-vss-area": "Audit",
+  "x-ms-vss-resource-area-id": "94ff054d-5ee1-413d-9341-3f4a7827de2e",
+  "basePath": "/",
+  "tags": [
+    {
+      "name": "Actions"
+    },
+    {
+      "name": "Audit Log"
+    },
+    {
+      "name": "Download Log"
+    },
+    {
+      "name": "Streams"
+    }
+  ],
+  "schemes": [
+    "https"
+  ],
+  "paths": {
+    "/{organization}/_apis/audit/actions": {
+      "get": {
+        "tags": [
+          "Actions"
+        ],
+        "x-ms-docs-override-version": "7.2-preview.1",
+        "x-ms-vss-resource": "actions",
+        "x-ms-vss-method": "GetActions",
+        "x-ms-preview": true,
+        "description": "Get all auditable actions filterable by area.",
+        "operationId": "Actions_List",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "areaName",
+            "description": "Optional. Get actions scoped to area",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/AuditActionInfo"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.auditlog"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "By areaName": {
+            "$ref": "./httpExamples/actions/GET__AuditLog_GetActions_by_areaName.json"
+          }
+        }
+      }
+    },
+    "/{organization}/_apis/audit/auditlog": {
+      "get": {
+        "tags": [
+          "Audit Log"
+        ],
+        "x-ms-docs-override-version": "7.2-preview.1",
+        "x-ms-vss-resource": "auditLog",
+        "x-ms-vss-method": "QueryLog",
+        "x-ms-preview": true,
+        "description": "Queries audit log entries",
+        "operationId": "Audit Log_Query",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "x-ms-required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "startTime",
+            "description": "Start time of download window. Optional",
+            "required": false,
+            "type": "string",
+            "format": "date-time"
+          },
+          {
+            "in": "query",
+            "name": "endTime",
+            "description": "End time of download window. Optional",
+            "required": false,
+            "type": "string",
+            "format": "date-time"
+          },
+          {
+            "in": "query",
+            "name": "batchSize",
+            "description": "Max number of results to return. Optional",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "continuationToken",
+            "description": "Token used for returning next set of results from previous query. Optional",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "skipAggregation",
+            "description": "Skips aggregating events and leaves them as individual entries instead. By default events are aggregated. Event types that are aggregated: AuditLog.AccessLog.",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/AuditLogQueryResult"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.auditlog"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "By date": {
+            "$ref": "./httpExamples/auditLog/GET__AuditLog_QueryLog_by_date.json"
+          }
+        }
+      }
+    },
+    "/{organization}/_apis/audit/downloadlog": {
+      "get": {
+        "tags": [
+          "Download Log"
+        ],
+        "x-ms-docs-override-version": "7.2-preview.1",
+        "x-ms-vss-resource": "downloadLog",
+        "x-ms-vss-method": "DownloadLog",
+        "x-ms-preview": true,
+        "description": "Downloads audit log entries.",
+        "operationId": "Download Log_Download Log",
+        "produces": [
+          "application/octet-stream"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "format",
+            "description": "File format for download. Can be \"json\" or \"csv\".",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "startTime",
+            "description": "Start time of download window. Optional",
+            "required": false,
+            "type": "string",
+            "format": "date-time"
+          },
+          {
+            "in": "query",
+            "name": "endTime",
+            "description": "End time of download window. Optional",
+            "required": false,
+            "type": "string",
+            "format": "date-time"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "string",
+              "format": "Stream"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.auditlog"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "Download log as JSON": {
+            "$ref": "./httpExamples/downloadLog/GET__AuditLog_DownloadLog_json.json"
+          }
+        }
+      }
+    },
+    "/{organization}/_apis/audit/streams": {
+      "post": {
+        "tags": [
+          "Streams"
+        ],
+        "x-ms-docs-override-version": "7.2-preview.1",
+        "x-ms-vss-resource": "streams",
+        "x-ms-vss-method": "CreateStream",
+        "x-ms-preview": true,
+        "description": "Create new Audit Stream",
+        "operationId": "Streams_Create",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Stream entry",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/AuditStream"
+            }
+          },
+          {
+            "in": "query",
+            "name": "daysToBackfill",
+            "description": "The number of days of previously recorded audit data that will be replayed into the stream. A value of zero will result in only new events being streamed.",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/AuditStream"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.auditstreams_manage"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "Create a stream": {
+            "$ref": "./httpExamples/streams/POST__AuditLog_streams_create.json"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Streams"
+        ],
+        "x-ms-docs-override-version": "7.2-preview.1",
+        "x-ms-vss-resource": "streams",
+        "x-ms-vss-method": "QueryAllStreams",
+        "x-ms-preview": true,
+        "description": "Return all Audit Streams scoped to an organization",
+        "operationId": "Streams_Query All Streams",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/AuditStream"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.auditlog"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "Query all streams in the organization": {
+            "$ref": "./httpExamples/streams/GET__AuditLog_streams_query_all.json"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Streams"
+        ],
+        "x-ms-docs-override-version": "7.2-preview.1",
+        "x-ms-vss-resource": "streams",
+        "x-ms-vss-method": "UpdateStream",
+        "x-ms-preview": true,
+        "description": "Update existing Audit Stream",
+        "operationId": "Streams_Update Stream",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Stream entry",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/AuditStream"
+            }
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/AuditStream"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.auditstreams_manage"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "Update a stream": {
+            "$ref": "./httpExamples/streams/PUT__AuditLog_streams_update.json"
+          }
+        }
+      }
+    },
+    "/{organization}/_apis/audit/streams/{streamId}": {
+      "delete": {
+        "tags": [
+          "Streams"
+        ],
+        "x-ms-docs-override-version": "7.2-preview.1",
+        "x-ms-vss-resource": "streams",
+        "x-ms-vss-method": "DeleteStream",
+        "x-ms-preview": true,
+        "description": "Delete Audit Stream",
+        "operationId": "Streams_Delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "streamId",
+            "description": "Id of stream entry to delete",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.auditstreams_manage"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "Delete a stream by its id": {
+            "$ref": "./httpExamples/streams/DELETE__AuditLog_streams.json"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Streams"
+        ],
+        "x-ms-docs-override-version": "7.2-preview.1",
+        "x-ms-vss-resource": "streams",
+        "x-ms-vss-method": "QueryStreamById",
+        "x-ms-preview": true,
+        "description": "Return Audit Stream with id of streamId if one exists otherwise throw",
+        "operationId": "Streams_Query Stream By Id",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "streamId",
+            "description": "Id of stream entry to retrieve",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/AuditStream"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.auditlog"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "Query a stream by its id": {
+            "$ref": "./httpExamples/streams/GET__AuditLog_streams_query_by_id.json"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Streams"
+        ],
+        "x-ms-docs-override-version": "7.2-preview.1",
+        "x-ms-vss-resource": "streams",
+        "x-ms-vss-method": "UpdateStatus",
+        "x-ms-preview": true,
+        "description": "Update existing Audit Stream status",
+        "operationId": "Streams_Update Status",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "streamId",
+            "description": "Id of stream entry to be updated",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "status",
+            "description": "Status of the stream",
+            "required": true,
+            "type": "string",
+            "enum": [
+              "unknown",
+              "enabled",
+              "disabledByUser",
+              "disabledBySystem",
+              "deleted",
+              "backfilling"
+            ],
+            "x-ms-enum": {
+              "name": "AuditStreamStatus",
+              "values": [
+                {
+                  "value": "unknown",
+                  "description": "The state has not been set, The stream is new"
+                },
+                {
+                  "value": "enabled",
+                  "description": "The stream is enabled and can deliver events"
+                },
+                {
+                  "value": "disabledByUser",
+                  "description": "The stream has been disabled by a user"
+                },
+                {
+                  "value": "disabledBySystem",
+                  "description": "The stream has been disabled by the system"
+                },
+                {
+                  "value": "deleted",
+                  "description": "The stream has been marked for deletion"
+                },
+                {
+                  "value": "backfilling",
+                  "description": "The stream is delivering old events"
+                }
+              ]
+            }
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/AuditStream"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.auditstreams_manage"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "Update a stream status": {
+            "$ref": "./httpExamples/streams/PUT__AuditLog_streams_update_status.json"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "AuditActionInfo": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "actionId": {
+          "description": "The action id for the event, i.e Git.CreateRepo, Project.RenameProject",
+          "type": "string"
+        },
+        "area": {
+          "description": "Area of Azure DevOps the action occurred",
+          "type": "string"
+        },
+        "category": {
+          "description": "Type of action executed",
+          "enum": [
+            "unknown",
+            "modify",
+            "remove",
+            "create",
+            "access",
+            "execute"
+          ],
+          "x-ms-enum": {
+            "name": "AuditActionCategory",
+            "values": [
+              {
+                "value": "unknown",
+                "description": "The category is not known"
+              },
+              {
+                "value": "modify",
+                "description": "An artifact has been Modified"
+              },
+              {
+                "value": "remove",
+                "description": "An artifact has been Removed"
+              },
+              {
+                "value": "create",
+                "description": "An artifact has been Created"
+              },
+              {
+                "value": "access",
+                "description": "An artifact has been Accessed"
+              },
+              {
+                "value": "execute",
+                "description": "An artifact has been Executed"
+              }
+            ]
+          }
+        }
+      }
+    },
+    "AuditLogEntry": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "actionId": {
+          "description": "The action if for the event, i.e Git.CreateRepo, Project.RenameProject",
+          "type": "string"
+        },
+        "activityId": {
+          "description": "ActivityId",
+          "type": "string",
+          "format": "uuid"
+        },
+        "actorClientId": {
+          "description": "The Actor's Client Id (if actor is a service principal)",
+          "type": "string",
+          "format": "uuid"
+        },
+        "actorCUID": {
+          "description": "The Actor's CUID",
+          "type": "string",
+          "format": "uuid"
+        },
+        "actorUPN": {
+          "description": "The Actor's UPN",
+          "type": "string"
+        },
+        "actorUserId": {
+          "description": "The Actor's User Id (if actor is a user)",
+          "type": "string",
+          "format": "uuid"
+        },
+        "authenticationMechanism": {
+          "description": "Type of authentication used by the author",
+          "type": "string"
+        },
+        "correlationId": {
+          "description": "This allows us to group things together, like one user action that caused a cascade of event entries (project creation).",
+          "type": "string",
+          "format": "uuid"
+        },
+        "data": {
+          "description": "External data such as CUIDs, item names, etc.",
+          "type": "object",
+          "additionalProperties": {
+            "type": "object"
+          }
+        },
+        "id": {
+          "description": "EventId, should be unique",
+          "type": "string",
+          "format": "uuid"
+        },
+        "ipAddress": {
+          "description": "IP Address where the event was originated",
+          "type": "string"
+        },
+        "projectId": {
+          "description": "When specified, the id of the project this event is associated to",
+          "type": "string",
+          "format": "uuid"
+        },
+        "scopeId": {
+          "description": "The organization Id (Organization is the only scope currently supported)",
+          "type": "string",
+          "format": "uuid"
+        },
+        "scopeType": {
+          "description": "The type of the scope (Organization is only scope currently supported)",
+          "enum": [
+            "unknown",
+            "deployment",
+            "enterprise",
+            "organization",
+            "project"
+          ],
+          "x-ms-enum": {
+            "name": "AuditScopeType",
+            "values": [
+              {
+                "value": "unknown",
+                "description": "The scope is not known or has not been set"
+              },
+              {
+                "value": "deployment",
+                "description": "Deployment"
+              },
+              {
+                "value": "enterprise",
+                "description": "Enterprise"
+              },
+              {
+                "value": "organization",
+                "description": "Organization"
+              },
+              {
+                "value": "project",
+                "description": "Project"
+              }
+            ]
+          }
+        },
+        "timestamp": {
+          "description": "The time when the event occurred in UTC",
+          "type": "string",
+          "format": "date-time"
+        },
+        "userAgent": {
+          "description": "The user agent from the request",
+          "type": "string"
+        }
+      }
+    },
+    "AuditLogQueryResult": {
+      "description": "The object returned when the audit log is queried. It contains the log and the information needed to query more audit entries.",
+      "type": "object",
+      "properties": {
+        "continuationToken": {
+          "description": "The continuation token to pass to get the next set of results",
+          "type": "string"
+        },
+        "decoratedAuditLogEntries": {
+          "description": "The list of audit log entries",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/DecoratedAuditLogEntry"
+          }
+        },
+        "hasMore": {
+          "description": "True when there are more matching results to be fetched, false otherwise.",
+          "type": "boolean"
+        }
+      }
+    },
+    "AuditStream": {
+      "description": "This class represents an audit stream",
+      "type": "object",
+      "properties": {
+        "consumerInputs": {
+          "description": "Inputs used to communicate with external service. Inputs could be url, a connection string, a token, etc.",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "consumerType": {
+          "description": "Type of the consumer, i.e. splunk, azureEventHub, etc.",
+          "type": "string"
+        },
+        "createdTime": {
+          "description": "The time when the stream was created",
+          "type": "string",
+          "format": "date-time"
+        },
+        "displayName": {
+          "description": "Used to identify individual streams",
+          "type": "string"
+        },
+        "id": {
+          "description": "Unique stream identifier",
+          "type": "integer",
+          "format": "int32"
+        },
+        "status": {
+          "description": "Status of the stream, Enabled, Disabled",
+          "enum": [
+            "unknown",
+            "enabled",
+            "disabledByUser",
+            "disabledBySystem",
+            "deleted",
+            "backfilling"
+          ],
+          "x-ms-enum": {
+            "name": "AuditStreamStatus",
+            "values": [
+              {
+                "value": "unknown",
+                "description": "The state has not been set, The stream is new"
+              },
+              {
+                "value": "enabled",
+                "description": "The stream is enabled and can deliver events"
+              },
+              {
+                "value": "disabledByUser",
+                "description": "The stream has been disabled by a user"
+              },
+              {
+                "value": "disabledBySystem",
+                "description": "The stream has been disabled by the system"
+              },
+              {
+                "value": "deleted",
+                "description": "The stream has been marked for deletion"
+              },
+              {
+                "value": "backfilling",
+                "description": "The stream is delivering old events"
+              }
+            ]
+          }
+        },
+        "statusReason": {
+          "description": "Reason for the current stream status, i.e. Disabled by the system, Invalid credentials, etc.",
+          "type": "string"
+        },
+        "updatedTime": {
+          "description": "The time when the stream was last updated",
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "DecoratedAuditLogEntry": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "actionId": {
+          "description": "The action id for the event, i.e Git.CreateRepo, Project.RenameProject",
+          "type": "string"
+        },
+        "activityId": {
+          "description": "ActivityId",
+          "type": "string",
+          "format": "uuid"
+        },
+        "actorClientId": {
+          "description": "The Actor's Client Id (if actor is a service principal)",
+          "type": "string",
+          "format": "uuid"
+        },
+        "actorCUID": {
+          "description": "The Actor's CUID",
+          "type": "string",
+          "format": "uuid"
+        },
+        "actorDisplayName": {
+          "description": "DisplayName of the user who initiated the action",
+          "type": "string"
+        },
+        "actorImageUrl": {
+          "description": "URL of Actor's Profile image",
+          "type": "string"
+        },
+        "actorUPN": {
+          "description": "The Actor's UPN",
+          "type": "string"
+        },
+        "actorUserId": {
+          "description": "The Actor's User Id (if actor is a user)",
+          "type": "string",
+          "format": "uuid"
+        },
+        "area": {
+          "description": "Area of Azure DevOps the action occurred",
+          "type": "string"
+        },
+        "authenticationMechanism": {
+          "description": "Type of authentication used by the actor",
+          "type": "string"
+        },
+        "category": {
+          "description": "Type of action executed",
+          "enum": [
+            "unknown",
+            "modify",
+            "remove",
+            "create",
+            "access",
+            "execute"
+          ],
+          "x-ms-enum": {
+            "name": "AuditActionCategory",
+            "values": [
+              {
+                "value": "unknown",
+                "description": "The category is not known"
+              },
+              {
+                "value": "modify",
+                "description": "An artifact has been Modified"
+              },
+              {
+                "value": "remove",
+                "description": "An artifact has been Removed"
+              },
+              {
+                "value": "create",
+                "description": "An artifact has been Created"
+              },
+              {
+                "value": "access",
+                "description": "An artifact has been Accessed"
+              },
+              {
+                "value": "execute",
+                "description": "An artifact has been Executed"
+              }
+            ]
+          }
+        },
+        "categoryDisplayName": {
+          "description": "DisplayName of the category",
+          "type": "string"
+        },
+        "correlationId": {
+          "description": "This allows related audit entries to be grouped together. Generally this occurs when a single action causes a cascade of audit entries. For example, project creation.",
+          "type": "string",
+          "format": "uuid"
+        },
+        "data": {
+          "description": "External data such as CUIDs, item names, etc.",
+          "type": "object",
+          "additionalProperties": {
+            "type": "object"
+          }
+        },
+        "details": {
+          "description": "Decorated details",
+          "type": "string"
+        },
+        "id": {
+          "description": "EventId - Needs to be unique per service",
+          "type": "string"
+        },
+        "ipAddress": {
+          "description": "IP Address where the event was originated",
+          "type": "string"
+        },
+        "projectId": {
+          "description": "When specified, the id of the project this event is associated to",
+          "type": "string",
+          "format": "uuid"
+        },
+        "projectName": {
+          "description": "When specified, the name of the project this event is associated to",
+          "type": "string"
+        },
+        "scopeDisplayName": {
+          "description": "DisplayName of the scope",
+          "type": "string"
+        },
+        "scopeId": {
+          "description": "The organization Id (Organization is the only scope currently supported)",
+          "type": "string",
+          "format": "uuid"
+        },
+        "scopeType": {
+          "description": "The type of the scope (Organization is only scope currently supported)",
+          "enum": [
+            "unknown",
+            "deployment",
+            "enterprise",
+            "organization",
+            "project"
+          ],
+          "x-ms-enum": {
+            "name": "AuditScopeType",
+            "values": [
+              {
+                "value": "unknown",
+                "description": "The scope is not known or has not been set"
+              },
+              {
+                "value": "deployment",
+                "description": "Deployment"
+              },
+              {
+                "value": "enterprise",
+                "description": "Enterprise"
+              },
+              {
+                "value": "organization",
+                "description": "Organization"
+              },
+              {
+                "value": "project",
+                "description": "Project"
+              }
+            ]
+          }
+        },
+        "timestamp": {
+          "description": "The time when the event occurred in UTC",
+          "type": "string",
+          "format": "date-time"
+        },
+        "userAgent": {
+          "description": "The user agent from the request",
+          "type": "string"
+        }
+      }
+    },
+    "VssJsonCollectionWrapper": {
+      "description": "This class is used to serialize collections as a single JSON object on the wire.",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/VssJsonCollectionWrapperBase"
+        }
+      ],
+      "properties": {
+        "value": {
+          "description": "The serialized item.",
+          "type": "string",
+          "format": "T"
+        }
+      }
+    },
+    "VssJsonCollectionWrapperBase": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "count": {
+          "description": "The number of serialized items.",
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    }
+  },
+  "parameters": {
+    "api-Version-preview.1": {
+      "name": "api-version",
+      "in": "query",
+      "description": "Version of the API to use.  This should be set to '7.2-preview.1' to use this version of the api.",
+      "required": true,
+      "type": "string"
+    }
+  },
+  "securityDefinitions": {
+    "accessToken": {
+      "type": "basic",
+      "description": "Personal access token. Use any value for the user name and the token as the password."
+    },
+    "oauth2": {
+      "type": "oauth2",
+      "flow": "accessCode",
+      "authorizationUrl": "https://app.vssps.visualstudio.com/oauth2/authorize&response_type=Assertion",
+      "tokenUrl": "https://app.vssps.visualstudio.com/oauth2/token?client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer&grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer",
+      "scopes": {
+        "vso.auditlog": "Grants the ability to read the auditing log and audit streams to users",
+        "vso.auditstreams_manage": "Grants the ability to manage auditing streams to users"
+      }
+    }
+  },
+  "security": [
+    {
+      "accessToken": []
+    }
+  ],
+  "externalDocs": {
+    "description": "Azure DevOps REST APIs",
+    "url": "https://aka.ms/azure-devops-rest-apis"
+  }
+}

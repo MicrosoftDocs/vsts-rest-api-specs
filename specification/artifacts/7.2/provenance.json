@@ -1,0 +1,171 @@
+﻿{
+  "swagger": "2.0",
+  "info": {
+    "title": "Provenance",
+    "description": "",
+    "termsOfService": "https://go.microsoft.com/fwlink/?LinkId=329770",
+    "contact": {
+      "name": "nugetvss",
+      "email": "nugetvss@microsoft.com"
+    },
+    "license": {
+      "name": "MICROSOFT SOFTWARE LICENSE TERMS",
+      "url": "https://go.microsoft.com/fwlink/?LinkId=329770"
+    },
+    "version": "7.2-preview"
+  },
+  "host": "pkgs.dev.azure.com",
+  "x-ms-vss-area": "Provenance",
+  "x-ms-vss-resource-area-id": "b40c1171-807a-493a-8f3f-5c26d5e2f5aa",
+  "basePath": "/",
+  "tags": [
+    {
+      "name": "Provenance"
+    }
+  ],
+  "schemes": [
+    "https"
+  ],
+  "paths": {
+    "/{organization}/{project}/_apis/provenance/session/{protocol}": {
+      "post": {
+        "tags": [
+          "Provenance"
+        ],
+        "x-ms-docs-override-version": "7.2-preview.1",
+        "x-ms-vss-resource": "session",
+        "x-ms-vss-method": "CreateSession",
+        "x-ms-preview": true,
+        "description": "Creates a session, a wrapper around a feed that can store additional metadata on the packages published to it.",
+        "operationId": "Provenance_CreateSession",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "The feed and metadata for the session",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/SessionRequest"
+            }
+          },
+          {
+            "in": "path",
+            "name": "protocol",
+            "description": "The protocol that the session will target",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "x-ms-required": false,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/SessionResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.packaging_write"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "SessionRequest": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "data": {
+          "description": "Generic property bag to store data about the session",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "feed": {
+          "description": "The feed name or id for the session",
+          "type": "string"
+        },
+        "source": {
+          "description": "The type of session If a known value is provided, the Data dictionary will be validated for the presence of properties required by that type",
+          "type": "string"
+        }
+      }
+    },
+    "SessionResponse": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "sessionId": {
+          "description": "The unique identifier for the session",
+          "type": "string"
+        },
+        "sessionName": {
+          "description": "The name for the session",
+          "type": "string"
+        }
+      }
+    }
+  },
+  "parameters": {
+    "api-Version-preview.1": {
+      "name": "api-version",
+      "in": "query",
+      "description": "Version of the API to use.  This should be set to '7.2-preview.1' to use this version of the api.",
+      "required": true,
+      "type": "string"
+    }
+  },
+  "securityDefinitions": {
+    "accessToken": {
+      "type": "basic",
+      "description": "Personal access token. Use any value for the user name and the token as the password."
+    },
+    "oauth2": {
+      "type": "oauth2",
+      "flow": "accessCode",
+      "authorizationUrl": "https://app.vssps.visualstudio.com/oauth2/authorize&response_type=Assertion",
+      "tokenUrl": "https://app.vssps.visualstudio.com/oauth2/token?client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer&grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer",
+      "scopes": {
+        "vso.packaging_write": "Grants the ability to create and read feeds and packages."
+      }
+    }
+  },
+  "security": [
+    {
+      "accessToken": []
+    }
+  ],
+  "externalDocs": {
+    "description": "Azure DevOps REST APIs",
+    "url": "https://aka.ms/azure-devops-rest-apis"
+  }
+}

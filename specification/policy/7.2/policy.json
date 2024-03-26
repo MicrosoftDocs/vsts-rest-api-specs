@@ -1,0 +1,1208 @@
+﻿{
+  "swagger": "2.0",
+  "info": {
+    "title": "Policy",
+    "description": "",
+    "termsOfService": "https://go.microsoft.com/fwlink/?LinkId=329770",
+    "contact": {
+      "name": "nugetvss",
+      "email": "nugetvss@microsoft.com"
+    },
+    "license": {
+      "name": "MICROSOFT SOFTWARE LICENSE TERMS",
+      "url": "https://go.microsoft.com/fwlink/?LinkId=329770"
+    },
+    "version": "7.2-preview"
+  },
+  "host": "dev.azure.com",
+  "x-ms-vss-area": "Policy",
+  "x-ms-vss-resource-area-id": "fb13a388-40dd-4a04-b530-013a739c72ef",
+  "basePath": "/",
+  "tags": [
+    {
+      "name": "Configurations",
+      "description": "This API provides a way to create, list, update, and delete code policy configurations.  For more information, see \n[Improve code quality with branch policies](https://go.microsoft.com/fwlink/?linkid=859025)"
+    },
+    {
+      "name": "Evaluations"
+    },
+    {
+      "name": "Revisions",
+      "description": "This API provides a way to get policy configuration revisions."
+    },
+    {
+      "name": "Types",
+      "description": "This API provides a way to list the available policy types."
+    }
+  ],
+  "schemes": [
+    "https"
+  ],
+  "paths": {
+    "/{organization}/{project}/_apis/policy/configurations": {
+      "post": {
+        "tags": [
+          "Configurations"
+        ],
+        "x-ms-docs-override-version": "7.2-preview.1",
+        "x-ms-vss-resource": "configurations",
+        "x-ms-vss-method": "CreatePolicyConfiguration",
+        "x-ms-preview": true,
+        "description": "Create a policy configuration of a given policy type.",
+        "operationId": "Configurations_Create",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "The policy configuration to create.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/PolicyConfiguration"
+            }
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/PolicyConfiguration"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.code_write"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "Example policy": {
+            "$ref": "./httpExamples/Configurations/POST__policy_configurations.json"
+          },
+          "Approval count policy": {
+            "$ref": "./httpExamples/Configurations/POST__policy_configurations2.json"
+          },
+          "Build policy": {
+            "$ref": "./httpExamples/Configurations/POST__policy_configurations3.json"
+          },
+          "Work item policy": {
+            "$ref": "./httpExamples/Configurations/POST__policy_configurations4.json"
+          },
+          "Merge strategy policy": {
+            "$ref": "./httpExamples/Configurations/POST__policy_configurations5.json"
+          },
+          "Git case enforcement policy": {
+            "$ref": "./httpExamples/Configurations/POST__policy_configurations6.json"
+          },
+          "Git maximum blob size policy": {
+            "$ref": "./httpExamples/Configurations/POST__policy_configurations7.json"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Configurations"
+        ],
+        "x-ms-docs-override-version": "7.2-preview.1",
+        "x-ms-vss-resource": "configurations",
+        "x-ms-vss-method": "GetPolicyConfigurations",
+        "x-ms-preview": true,
+        "description": "Get a list of policy configurations in a project.\n\nThe 'scope' parameter for this API should not be used, except for legacy compatability reasons. It returns specifically\nscoped policies and does not support heirarchical nesting. Instead, use the /_apis/git/policy/configurations API, which provides\nfirst class scope filtering support.\n\nThe optional `policyType` parameter can be used to filter the set of policies returned from this method.",
+        "operationId": "Configurations_List",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "scope",
+            "description": "[Provided for legacy reasons] The scope on which a subset of policies is defined.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "$top",
+            "description": "Maximum number of policies to return.",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "continuationToken",
+            "description": "The continuation token used for pagination.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "policyType",
+            "description": "Filter returned policies to only this type",
+            "required": false,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/PolicyConfiguration"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.code"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "": {
+            "$ref": "./httpExamples/Configurations/GET__policy_configurations.json"
+          }
+        }
+      }
+    },
+    "/{organization}/{project}/_apis/policy/configurations/{configurationId}": {
+      "delete": {
+        "tags": [
+          "Configurations"
+        ],
+        "x-ms-docs-override-version": "7.2-preview.1",
+        "x-ms-vss-resource": "configurations",
+        "x-ms-vss-method": "DeletePolicyConfiguration",
+        "x-ms-preview": true,
+        "description": "Delete a policy configuration by its ID.",
+        "operationId": "Configurations_Delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "configurationId",
+            "description": "ID of the policy configuration to delete.",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "NoContent"
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.code_write"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "": {
+            "$ref": "./httpExamples/Configurations/DELETE__policy_configurations__configurationId_.json"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Configurations"
+        ],
+        "x-ms-docs-override-version": "7.2-preview.1",
+        "x-ms-vss-resource": "configurations",
+        "x-ms-vss-method": "GetPolicyConfiguration",
+        "x-ms-preview": true,
+        "description": "Get a policy configuration by its ID.",
+        "operationId": "Configurations_Get",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "configurationId",
+            "description": "ID of the policy configuration",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/PolicyConfiguration"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.code"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "": {
+            "$ref": "./httpExamples/Configurations/GET__policy_configurations__configurationId_.json"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Configurations"
+        ],
+        "x-ms-docs-override-version": "7.2-preview.1",
+        "x-ms-vss-resource": "configurations",
+        "x-ms-vss-method": "UpdatePolicyConfiguration",
+        "x-ms-preview": true,
+        "description": "Update a policy configuration by its ID.",
+        "operationId": "Configurations_Update",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "The policy configuration to update.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/PolicyConfiguration"
+            }
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "configurationId",
+            "description": "ID of the existing policy configuration to be updated.",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/PolicyConfiguration"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.code_write"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "": {
+            "$ref": "./httpExamples/Configurations/PUT__policy_configurations__configurationId_.json"
+          }
+        }
+      }
+    },
+    "/{organization}/{project}/_apis/policy/configurations/{configurationId}/revisions": {
+      "get": {
+        "tags": [
+          "Revisions"
+        ],
+        "x-ms-docs-override-version": "7.2-preview.1",
+        "x-ms-vss-resource": "revisions",
+        "x-ms-vss-method": "GetPolicyConfigurationRevisions",
+        "x-ms-preview": true,
+        "description": "Retrieve all revisions for a given policy.",
+        "operationId": "Revisions_List",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "configurationId",
+            "description": "The policy configuration ID.",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "$top",
+            "description": "The number of revisions to retrieve.",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "$skip",
+            "description": "The number of revisions to ignore. For example, to retrieve results 101-150, set top to 50 and skip to 100.",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/PolicyConfiguration"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.code"
+            ]
+          }
+        ]
+      }
+    },
+    "/{organization}/{project}/_apis/policy/configurations/{configurationId}/revisions/{revisionId}": {
+      "get": {
+        "tags": [
+          "Revisions"
+        ],
+        "x-ms-docs-override-version": "7.2-preview.1",
+        "x-ms-vss-resource": "revisions",
+        "x-ms-vss-method": "GetPolicyConfigurationRevision",
+        "x-ms-preview": true,
+        "description": "Retrieve a specific revision of a given policy by ID.",
+        "operationId": "Revisions_Get",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "configurationId",
+            "description": "The policy configuration ID.",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "path",
+            "name": "revisionId",
+            "description": "The revision ID.",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/PolicyConfiguration"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.code"
+            ]
+          }
+        ]
+      }
+    },
+    "/{organization}/{project}/_apis/policy/evaluations": {
+      "get": {
+        "tags": [
+          "Evaluations"
+        ],
+        "x-ms-docs-override-version": "7.2-preview.1",
+        "x-ms-vss-resource": "evaluations",
+        "x-ms-vss-method": "GetPolicyEvaluations",
+        "x-ms-preview": true,
+        "description": "Retrieves a list of all the policy evaluation statuses for a specific pull request.\n\nEvaluations are retrieved using an artifact ID which uniquely identifies the pull request.\nTo generate an artifact ID for a pull request, use this template:\n```\nvstfs:///CodeReview/CodeReviewId/{projectId}/{pullRequestId}\n```",
+        "operationId": "Evaluations_List",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "artifactId",
+            "description": "A string which uniquely identifies the target of a policy evaluation.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "includeNotApplicable",
+            "description": "Some policies might determine that they do not apply to a specific pull request. Setting this parameter to true will return evaluation records even for policies which don't apply to this pull request.",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "$top",
+            "description": "The number of policy evaluation records to retrieve.",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "$skip",
+            "description": "The number of policy evaluation records to ignore. For example, to retrieve results 101-150, set top to 50 and skip to 100.",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/PolicyEvaluationRecord"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.code"
+            ]
+          }
+        ]
+      }
+    },
+    "/{organization}/{project}/_apis/policy/evaluations/{evaluationId}": {
+      "get": {
+        "tags": [
+          "Evaluations"
+        ],
+        "x-ms-docs-override-version": "7.2-preview.1",
+        "x-ms-vss-resource": "evaluations",
+        "x-ms-vss-method": "GetPolicyEvaluation",
+        "x-ms-preview": true,
+        "description": "Gets the present evaluation state of a policy.\n\nEach policy which applies to a pull request will have an evaluation state which is specific to that policy running\nin the context of that pull request. Each evaluation is uniquely identified via a Guid. You can find all the policy\nevaluations for a specific pull request using the List operation of this controller.",
+        "operationId": "Evaluations_Get",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "evaluationId",
+            "description": "ID of the policy evaluation to be retrieved.",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/PolicyEvaluationRecord"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.code"
+            ]
+          }
+        ]
+      },
+      "patch": {
+        "tags": [
+          "Evaluations"
+        ],
+        "x-ms-docs-override-version": "7.2-preview.1",
+        "x-ms-vss-resource": "evaluations",
+        "x-ms-vss-method": "RequeuePolicyEvaluation",
+        "x-ms-preview": true,
+        "description": "Requeue the policy evaluation.\n\nSome policies define a \"requeue\" action which performs some policy-specific operation.\nYou can trigger this operation by updating an existing policy evaluation and setting the\nPolicyEvaluationRecord.Status field to Queued.\nAlthough any policy evaluation can be requeued, at present only build policies perform any action\nin response. Requeueing a build policy will queue a new build to run (cancelling any existing build which\nis running).",
+        "operationId": "Evaluations_Requeue Policy Evaluation",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "evaluationId",
+            "description": "ID of the policy evaluation to be retrieved.",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/PolicyEvaluationRecord"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.code_write"
+            ]
+          }
+        ]
+      }
+    },
+    "/{organization}/{project}/_apis/policy/types": {
+      "get": {
+        "tags": [
+          "Types"
+        ],
+        "x-ms-docs-override-version": "7.2-preview.1",
+        "x-ms-vss-resource": "types",
+        "x-ms-vss-method": "GetPolicyTypes",
+        "x-ms-preview": true,
+        "description": "Retrieve all available policy types.",
+        "operationId": "Types_List",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/PolicyType"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.code"
+            ]
+          }
+        ]
+      }
+    },
+    "/{organization}/{project}/_apis/policy/types/{typeId}": {
+      "get": {
+        "tags": [
+          "Types"
+        ],
+        "x-ms-docs-override-version": "7.2-preview.1",
+        "x-ms-vss-resource": "types",
+        "x-ms-vss-method": "GetPolicyType",
+        "x-ms-preview": true,
+        "description": "Retrieve a specific policy type by ID.",
+        "operationId": "Types_Get",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "typeId",
+            "description": "The policy ID.",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/PolicyType"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.code"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "GraphSubjectBase": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "_links": {
+          "description": "This field contains zero or more interesting links about the graph subject. These links may be invoked to obtain additional relationships or more detailed information about this graph subject.",
+          "$ref": "#/definitions/ReferenceLinks"
+        },
+        "descriptor": {
+          "description": "The descriptor is the primary way to reference the graph subject while the system is running. This field will uniquely identify the same graph subject across both Accounts and Organizations.",
+          "type": "string"
+        },
+        "displayName": {
+          "description": "This is the non-unique display name of the graph subject. To change this field, you must alter its value in the source provider.",
+          "type": "string"
+        },
+        "url": {
+          "description": "This url is the full route to the source resource of this graph subject.",
+          "type": "string"
+        }
+      }
+    },
+    "IdentityRef": {
+      "description": "",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/GraphSubjectBase"
+        }
+      ],
+      "properties": {
+        "directoryAlias": {
+          "description": "Deprecated - Can be retrieved by querying the Graph user referenced in the \"self\" entry of the IdentityRef \"_links\" dictionary",
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "imageUrl": {
+          "description": "Deprecated - Available in the \"avatar\" entry of the IdentityRef \"_links\" dictionary",
+          "type": "string"
+        },
+        "inactive": {
+          "description": "Deprecated - Can be retrieved by querying the Graph membership state referenced in the \"membershipState\" entry of the GraphUser \"_links\" dictionary",
+          "type": "boolean"
+        },
+        "isAadIdentity": {
+          "description": "Deprecated - Can be inferred from the subject type of the descriptor (Descriptor.IsAadUserType/Descriptor.IsAadGroupType)",
+          "type": "boolean"
+        },
+        "isContainer": {
+          "description": "Deprecated - Can be inferred from the subject type of the descriptor (Descriptor.IsGroupType)",
+          "type": "boolean"
+        },
+        "isDeletedInOrigin": {
+          "type": "boolean"
+        },
+        "profileUrl": {
+          "description": "Deprecated - not in use in most preexisting implementations of ToIdentityRef",
+          "type": "string"
+        },
+        "uniqueName": {
+          "description": "Deprecated - use Domain+PrincipalName instead",
+          "type": "string"
+        }
+      }
+    },
+    "JObject": {
+      "description": "Represents a JSON object.",
+      "type": "object",
+      "properties": {
+        "item": {
+          "type": "string",
+          "format": "JToken"
+        },
+        "type": {
+          "description": "Gets the node type for this JToken.",
+          "type": "string",
+          "format": "JTokenType"
+        }
+      }
+    },
+    "PolicyConfiguration": {
+      "description": "The full policy configuration with settings.",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/VersionedPolicyConfigurationRef"
+        }
+      ],
+      "properties": {
+        "_links": {
+          "description": "The links to other objects related to this object.",
+          "$ref": "#/definitions/ReferenceLinks"
+        },
+        "createdBy": {
+          "description": "A reference to the identity that created the policy.",
+          "$ref": "#/definitions/IdentityRef"
+        },
+        "createdDate": {
+          "description": "The date and time when the policy was created.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "isBlocking": {
+          "description": "Indicates whether the policy is blocking.",
+          "type": "boolean"
+        },
+        "isDeleted": {
+          "description": "Indicates whether the policy has been (soft) deleted.",
+          "type": "boolean"
+        },
+        "isEnabled": {
+          "description": "Indicates whether the policy is enabled.",
+          "type": "boolean"
+        },
+        "isEnterpriseManaged": {
+          "description": "If set, this policy requires \"Manage Enterprise Policies\" permission to create, edit, or delete.",
+          "type": "boolean"
+        },
+        "settings": {
+          "description": "The policy configuration settings.",
+          "$ref": "#/definitions/JObject"
+        }
+      }
+    },
+    "PolicyConfigurationRef": {
+      "description": "Policy configuration reference.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "The policy configuration ID.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "type": {
+          "description": "The policy configuration type.",
+          "$ref": "#/definitions/PolicyTypeRef"
+        },
+        "url": {
+          "description": "The URL where the policy configuration can be retrieved.",
+          "type": "string"
+        }
+      }
+    },
+    "PolicyEvaluationRecord": {
+      "description": "This record encapsulates the current state of a policy as it applies to one specific pull request. Each pull request has a unique PolicyEvaluationRecord for each pull request which the policy applies to.",
+      "type": "object",
+      "properties": {
+        "_links": {
+          "description": "Links to other related objects",
+          "$ref": "#/definitions/ReferenceLinks"
+        },
+        "artifactId": {
+          "description": "A string which uniquely identifies the target of a policy evaluation.",
+          "type": "string"
+        },
+        "completedDate": {
+          "description": "Time when this policy finished evaluating on this pull request.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "configuration": {
+          "description": "Contains all configuration data for the policy which is being evaluated.",
+          "$ref": "#/definitions/PolicyConfiguration"
+        },
+        "context": {
+          "description": "Internal context data of this policy evaluation.",
+          "$ref": "#/definitions/JObject"
+        },
+        "evaluationId": {
+          "description": "Guid which uniquely identifies this evaluation record (one policy running on one pull request).",
+          "type": "string",
+          "format": "uuid"
+        },
+        "startedDate": {
+          "description": "Time when this policy was first evaluated on this pull request.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "status": {
+          "description": "Status of the policy (Running, Approved, Failed, etc.)",
+          "enum": [
+            "queued",
+            "running",
+            "approved",
+            "rejected",
+            "notApplicable",
+            "broken"
+          ],
+          "x-ms-enum": {
+            "name": "PolicyEvaluationStatus",
+            "values": [
+              {
+                "value": "queued",
+                "description": "The policy is either queued to run, or is waiting for some event before progressing."
+              },
+              {
+                "value": "running",
+                "description": "The policy is currently running."
+              },
+              {
+                "value": "approved",
+                "description": "The policy has been fulfilled for this pull request."
+              },
+              {
+                "value": "rejected",
+                "description": "The policy has rejected this pull request."
+              },
+              {
+                "value": "notApplicable",
+                "description": "The policy does not apply to this pull request."
+              },
+              {
+                "value": "broken",
+                "description": "The policy has encountered an unexpected error."
+              }
+            ]
+          }
+        }
+      }
+    },
+    "PolicyType": {
+      "description": "User-friendly policy type with description (used for querying policy types).",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/PolicyTypeRef"
+        }
+      ],
+      "properties": {
+        "_links": {
+          "description": "The links to other objects related to this object.",
+          "$ref": "#/definitions/ReferenceLinks"
+        },
+        "description": {
+          "description": "Detailed description of the policy type.",
+          "type": "string"
+        }
+      }
+    },
+    "PolicyTypeRef": {
+      "description": "Policy type reference.",
+      "type": "object",
+      "properties": {
+        "displayName": {
+          "description": "Display name of the policy type.",
+          "type": "string"
+        },
+        "id": {
+          "description": "The policy type ID.",
+          "type": "string",
+          "format": "uuid"
+        },
+        "url": {
+          "description": "The URL where the policy type can be retrieved.",
+          "type": "string"
+        }
+      }
+    },
+    "ReferenceLinks": {
+      "description": "The class to represent a collection of REST reference links.",
+      "type": "object",
+      "properties": {
+        "links": {
+          "description": "The readonly view of the links.  Because Reference links are readonly, we only want to expose them as read only.",
+          "type": "object",
+          "additionalProperties": {
+            "type": "object"
+          }
+        }
+      }
+    },
+    "VersionedPolicyConfigurationRef": {
+      "description": "A particular revision for a policy configuration.",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/PolicyConfigurationRef"
+        }
+      ],
+      "properties": {
+        "revision": {
+          "description": "The policy configuration revision ID.",
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "VssJsonCollectionWrapper": {
+      "description": "This class is used to serialize collections as a single JSON object on the wire.",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/VssJsonCollectionWrapperBase"
+        }
+      ],
+      "properties": {
+        "value": {
+          "description": "The serialized item.",
+          "type": "string",
+          "format": "T"
+        }
+      }
+    },
+    "VssJsonCollectionWrapperBase": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "count": {
+          "description": "The number of serialized items.",
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    }
+  },
+  "parameters": {
+    "api-Version-preview.1": {
+      "name": "api-version",
+      "in": "query",
+      "description": "Version of the API to use.  This should be set to '7.2-preview.1' to use this version of the api.",
+      "required": true,
+      "type": "string"
+    }
+  },
+  "securityDefinitions": {
+    "accessToken": {
+      "type": "basic",
+      "description": "Personal access token. Use any value for the user name and the token as the password."
+    },
+    "oauth2": {
+      "type": "oauth2",
+      "flow": "accessCode",
+      "authorizationUrl": "https://app.vssps.visualstudio.com/oauth2/authorize&response_type=Assertion",
+      "tokenUrl": "https://app.vssps.visualstudio.com/oauth2/token?client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer&grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer",
+      "scopes": {
+        "vso.code": "Grants the ability to read source code and metadata about commits, changesets, branches, and other version control artifacts. Also grants the ability to search code and get notified about version control events via service hooks.",
+        "vso.code_write": "Grants the ability to read, update, and delete source code, access metadata about commits, changesets, branches, and other version control artifacts. Also grants the ability to create and manage pull requests and code reviews and to receive notifications about version control events via service hooks."
+      }
+    }
+  },
+  "security": [
+    {
+      "accessToken": []
+    }
+  ],
+  "externalDocs": {
+    "description": "Azure DevOps REST APIs",
+    "url": "https://aka.ms/azure-devops-rest-apis"
+  }
+}

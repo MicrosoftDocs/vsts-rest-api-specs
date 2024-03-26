@@ -1,0 +1,1221 @@
+﻿{
+  "swagger": "2.0",
+  "info": {
+    "title": "Approval",
+    "description": "",
+    "termsOfService": "https://go.microsoft.com/fwlink/?LinkId=329770",
+    "contact": {
+      "name": "nugetvss",
+      "email": "nugetvss@microsoft.com"
+    },
+    "license": {
+      "name": "MICROSOFT SOFTWARE LICENSE TERMS",
+      "url": "https://go.microsoft.com/fwlink/?LinkId=329770"
+    },
+    "version": "7.2-preview"
+  },
+  "host": "dev.azure.com",
+  "x-ms-vss-area": "approval",
+  "x-ms-vss-resource-area-id": "5b55a9b6-2e0f-40d7-829d-3741d2b8c4e4",
+  "basePath": "/",
+  "tags": [
+    {
+      "name": "Approvals"
+    }
+  ],
+  "schemes": [
+    "https"
+  ],
+  "paths": {
+    "/{organization}/{project}/_apis/pipelines/approvals": {
+      "get": {
+        "tags": [
+          "Approvals"
+        ],
+        "x-ms-docs-override-version": "7.2-preview.2",
+        "x-ms-vss-resource": "approvals",
+        "x-ms-vss-method": "QueryApprovals",
+        "x-ms-preview": true,
+        "description": "List Approvals. This can be used to get a set of pending approvals in a pipeline, on an user or for a resource..",
+        "operationId": "Approvals_Query",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "approvalIds",
+            "description": "List of approval Ids to get.",
+            "required": false,
+            "type": "string",
+            "format": "array (uuid)"
+          },
+          {
+            "in": "query",
+            "name": "$expand",
+            "description": "Include these additional details in the returned objects.",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "none",
+              "steps",
+              "permissions"
+            ],
+            "x-ms-enum": {
+              "name": "ApprovalDetailsExpandParameter",
+              "values": [
+                {
+                  "value": "none",
+                  "description": "No additional properties."
+                },
+                {
+                  "value": "steps",
+                  "description": "Include approval steps associated with the approval."
+                },
+                {
+                  "value": "permissions",
+                  "description": "Include current user permissions for approval object."
+                }
+              ]
+            }
+          },
+          {
+            "in": "query",
+            "name": "assignedTo",
+            "description": "List of user Ids approvals assigned to. Accepts user Ids, user descriptors or user emails.",
+            "required": false,
+            "type": "string",
+            "format": "array (string)"
+          },
+          {
+            "in": "query",
+            "name": "state",
+            "description": "Approval status. Returns approvals of any status if not provided",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "undefined",
+              "uninitiated",
+              "pending",
+              "approved",
+              "rejected",
+              "skipped",
+              "canceled",
+              "timedOut",
+              "deferred",
+              "failed",
+              "completed",
+              "all"
+            ],
+            "x-ms-enum": {
+              "name": "ApprovalStatus",
+              "values": [
+                {
+                  "value": "undefined",
+                  "description": ""
+                },
+                {
+                  "value": "uninitiated",
+                  "description": "Indicates the approval is Uninitiated. Used in case of in sequence order of execution where given approver is not yet actionable."
+                },
+                {
+                  "value": "pending",
+                  "description": "Indicates the approval is Pending."
+                },
+                {
+                  "value": "approved",
+                  "description": "Indicates the approval is Approved."
+                },
+                {
+                  "value": "rejected",
+                  "description": "Indicates the approval is Rejected."
+                },
+                {
+                  "value": "skipped",
+                  "description": "Indicates the approval is Skipped."
+                },
+                {
+                  "value": "canceled",
+                  "description": "Indicates the approval is Canceled."
+                },
+                {
+                  "value": "timedOut",
+                  "description": "Indicates the approval is Timed out."
+                },
+                {
+                  "value": "deferred",
+                  "description": "Indicates the approval is Deferred."
+                },
+                {
+                  "value": "failed",
+                  "description": ""
+                },
+                {
+                  "value": "completed",
+                  "description": ""
+                },
+                {
+                  "value": "all",
+                  "description": ""
+                }
+              ]
+            }
+          },
+          {
+            "in": "query",
+            "name": "top",
+            "description": "Maximum number of approvals to get.",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.2"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Approval"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.build"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "": {
+            "$ref": "./httpExamples/approvals/GET__QueryApproval.json"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "Approvals"
+        ],
+        "x-ms-docs-override-version": "7.2-preview.2",
+        "x-ms-vss-resource": "approvals",
+        "x-ms-vss-method": "UpdateApprovals",
+        "x-ms-preview": true,
+        "description": "Update approvals.",
+        "operationId": "Approvals_Update",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/ApprovalUpdateParameters"
+              }
+            }
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.2"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Approval"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.build_execute",
+              "vso.pipelineresources_use"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "": {
+            "$ref": "./httpExamples/approvals/PATCH__UpdateApproval.json"
+          }
+        }
+      }
+    },
+    "/{organization}/{project}/_apis/pipelines/approvals/{approvalId}": {
+      "get": {
+        "tags": [
+          "Approvals"
+        ],
+        "x-ms-docs-override-version": "7.2-preview.2",
+        "x-ms-vss-resource": "approvals",
+        "x-ms-vss-method": "GetApproval",
+        "x-ms-preview": true,
+        "description": "Get an approval.",
+        "operationId": "Approvals_Get",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "approvalId",
+            "description": "Id of the approval.",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "query",
+            "name": "$expand",
+            "description": "",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "none",
+              "steps",
+              "permissions"
+            ],
+            "x-ms-enum": {
+              "name": "ApprovalDetailsExpandParameter",
+              "values": [
+                {
+                  "value": "none",
+                  "description": "No additional properties."
+                },
+                {
+                  "value": "steps",
+                  "description": "Include approval steps associated with the approval."
+                },
+                {
+                  "value": "permissions",
+                  "description": "Include current user permissions for approval object."
+                }
+              ]
+            }
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.2"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/Approval"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.build"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "": {
+            "$ref": "./httpExamples/approvals/GET__Approval.json"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "Approval": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "_links": {
+          "description": "/// Gets the links to access the approval object.",
+          "$ref": "#/definitions/ReferenceLinks"
+        },
+        "blockedApprovers": {
+          "description": "Identities which are not allowed to approve.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/IdentityRef"
+          }
+        },
+        "createdOn": {
+          "description": "Date on which approval got created.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "executionOrder": {
+          "description": "Order in which approvers will be actionable.",
+          "enum": [
+            "anyOrder",
+            "inSequence"
+          ],
+          "x-ms-enum": {
+            "name": "ApprovalExecutionOrder",
+            "values": [
+              {
+                "value": "anyOrder",
+                "description": "Indicates that the approvers can approve in any order."
+              },
+              {
+                "value": "inSequence",
+                "description": "Indicates that the approvers can only approve in a sequential order(Order in which they were assigned)."
+              }
+            ]
+          }
+        },
+        "id": {
+          "description": "Unique identifier of the approval.",
+          "type": "string",
+          "format": "uuid"
+        },
+        "instructions": {
+          "description": "Instructions for the approvers.",
+          "type": "string"
+        },
+        "lastModifiedOn": {
+          "description": "Date on which approval was last modified.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "minRequiredApprovers": {
+          "description": "Minimum number of approvers that should approve for the entire approval to be considered approved.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "permissions": {
+          "description": "Current user permissions for approval object.",
+          "enum": [
+            "none",
+            "view",
+            "update",
+            "reassign",
+            "resourceAdmin",
+            "queueBuild"
+          ],
+          "x-ms-enum": {
+            "name": "ApprovalPermissions",
+            "values": [
+              {
+                "value": "none",
+                "description": ""
+              },
+              {
+                "value": "view",
+                "description": ""
+              },
+              {
+                "value": "update",
+                "description": ""
+              },
+              {
+                "value": "reassign",
+                "description": ""
+              },
+              {
+                "value": "resourceAdmin",
+                "description": ""
+              },
+              {
+                "value": "queueBuild",
+                "description": ""
+              }
+            ]
+          }
+        },
+        "pipeline": {
+          "description": "/// Manages any pipeline context that is useful to the client using approvals",
+          "$ref": "#/definitions/JObject"
+        },
+        "status": {
+          "description": "Overall status of the approval.",
+          "enum": [
+            "undefined",
+            "uninitiated",
+            "pending",
+            "approved",
+            "rejected",
+            "skipped",
+            "canceled",
+            "timedOut",
+            "deferred",
+            "failed",
+            "completed",
+            "all"
+          ],
+          "x-ms-enum": {
+            "name": "ApprovalStatus",
+            "values": [
+              {
+                "value": "undefined",
+                "description": ""
+              },
+              {
+                "value": "uninitiated",
+                "description": "Indicates the approval is Uninitiated. Used in case of in sequence order of execution where given approver is not yet actionable."
+              },
+              {
+                "value": "pending",
+                "description": "Indicates the approval is Pending."
+              },
+              {
+                "value": "approved",
+                "description": "Indicates the approval is Approved."
+              },
+              {
+                "value": "rejected",
+                "description": "Indicates the approval is Rejected."
+              },
+              {
+                "value": "skipped",
+                "description": "Indicates the approval is Skipped."
+              },
+              {
+                "value": "canceled",
+                "description": "Indicates the approval is Canceled."
+              },
+              {
+                "value": "timedOut",
+                "description": "Indicates the approval is Timed out."
+              },
+              {
+                "value": "deferred",
+                "description": "Indicates the approval is Deferred."
+              },
+              {
+                "value": "failed",
+                "description": ""
+              },
+              {
+                "value": "completed",
+                "description": ""
+              },
+              {
+                "value": "all",
+                "description": ""
+              }
+            ]
+          }
+        },
+        "steps": {
+          "description": "List of steps associated with the approval.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ApprovalStep"
+          }
+        }
+      }
+    },
+    "ApprovalCheckDefinitionReference": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        }
+      }
+    },
+    "ApprovalCompletedNotificationEvent": {
+      "description": "",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/ApprovalNotificationEventBase"
+        }
+      ],
+      "properties": {}
+    },
+    "ApprovalConfig": {
+      "description": "Config to create a new approval.",
+      "type": "object",
+      "properties": {
+        "approvers": {
+          "description": "Ordered list of approvers.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/IdentityRef"
+          }
+        },
+        "blockedApprovers": {
+          "description": "Identities which are not allowed to approve.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/IdentityRef"
+          }
+        },
+        "definitionRef": {
+          "description": "Determines approval check type and its settings.",
+          "$ref": "#/definitions/ApprovalCheckDefinitionReference"
+        },
+        "executionOrder": {
+          "description": "Order in which approvers will be actionable.",
+          "enum": [
+            "anyOrder",
+            "inSequence"
+          ],
+          "x-ms-enum": {
+            "name": "ApprovalExecutionOrder",
+            "values": [
+              {
+                "value": "anyOrder",
+                "description": "Indicates that the approvers can approve in any order."
+              },
+              {
+                "value": "inSequence",
+                "description": "Indicates that the approvers can only approve in a sequential order(Order in which they were assigned)."
+              }
+            ]
+          }
+        },
+        "instructions": {
+          "description": "Instructions for the approver.",
+          "type": "string"
+        },
+        "minRequiredApprovers": {
+          "description": "Minimum number of approvers that should approve for the entire approval to be considered approved. Defaults to all.",
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "ApprovalConfigSettings": {
+      "description": "Config to create a new approval.",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/ApprovalConfig"
+        }
+      ],
+      "properties": {
+        "requesterCannotBeApprover": {
+          "description": "Determines whether check requester can approve the check.",
+          "type": "boolean"
+        }
+      }
+    },
+    "ApprovalNotificationEventBase": {
+      "description": "Data for notification base class for approval events.",
+      "type": "object",
+      "properties": {
+        "approval": {
+          "$ref": "#/definitions/Approval"
+        },
+        "projectId": {
+          "type": "string",
+          "format": "uuid"
+        }
+      }
+    },
+    "ApprovalRequest": {
+      "description": "Request to create a new approval.",
+      "type": "object",
+      "properties": {
+        "approvalId": {
+          "description": "Unique identifier with which the approval is to be registered.",
+          "type": "string",
+          "format": "uuid"
+        },
+        "config": {
+          "description": "Configuration of the approval request.",
+          "$ref": "#/definitions/ApprovalConfig"
+        }
+      }
+    },
+    "ApprovalsQueryParameters": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "approvalIds": {
+          "description": "Query approvals based on list of approval IDs.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "approverStatus": {
+          "description": "Query approvals based on approval status",
+          "enum": [
+            "undefined",
+            "uninitiated",
+            "pending",
+            "approved",
+            "rejected",
+            "skipped",
+            "canceled",
+            "timedOut",
+            "deferred",
+            "failed",
+            "completed",
+            "all"
+          ],
+          "x-ms-enum": {
+            "name": "ApprovalStatus",
+            "values": [
+              {
+                "value": "undefined",
+                "description": ""
+              },
+              {
+                "value": "uninitiated",
+                "description": "Indicates the approval is Uninitiated. Used in case of in sequence order of execution where given approver is not yet actionable."
+              },
+              {
+                "value": "pending",
+                "description": "Indicates the approval is Pending."
+              },
+              {
+                "value": "approved",
+                "description": "Indicates the approval is Approved."
+              },
+              {
+                "value": "rejected",
+                "description": "Indicates the approval is Rejected."
+              },
+              {
+                "value": "skipped",
+                "description": "Indicates the approval is Skipped."
+              },
+              {
+                "value": "canceled",
+                "description": "Indicates the approval is Canceled."
+              },
+              {
+                "value": "timedOut",
+                "description": "Indicates the approval is Timed out."
+              },
+              {
+                "value": "deferred",
+                "description": "Indicates the approval is Deferred."
+              },
+              {
+                "value": "failed",
+                "description": ""
+              },
+              {
+                "value": "completed",
+                "description": ""
+              },
+              {
+                "value": "all",
+                "description": ""
+              }
+            ]
+          }
+        },
+        "assignedTo": {
+          "description": "Query approvals based on list of IDs approvals assigned to",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "top": {
+          "description": "Query approvals based on how many approvals to return.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "userIds": {
+          "description": "Query approvals based on list of approver IDs.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      }
+    },
+    "ApprovalStep": {
+      "description": "Data for a single approval step.",
+      "type": "object",
+      "properties": {
+        "actualApprover": {
+          "description": "Identity who approved.",
+          "$ref": "#/definitions/IdentityRef"
+        },
+        "assignedApprover": {
+          "description": "Identity who should approve.",
+          "$ref": "#/definitions/IdentityRef"
+        },
+        "comment": {
+          "description": "Comment associated with this step.",
+          "type": "string"
+        },
+        "deferredTo": {
+          "description": "Date to which approval got deferred.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "history": {
+          "description": "History of the approval step",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ApprovalStepHistory"
+          }
+        },
+        "initiatedOn": {
+          "description": "Timestamp at which this step was initiated.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "lastModifiedBy": {
+          "description": "Identity by which this step was last modified.",
+          "$ref": "#/definitions/IdentityRef"
+        },
+        "lastModifiedOn": {
+          "description": "Timestamp at which this step was last modified.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "order": {
+          "description": "Order in which the approvers are allowed to approve.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "permissions": {
+          "description": "Current user permissions for step.",
+          "enum": [
+            "none",
+            "view",
+            "update",
+            "reassign",
+            "resourceAdmin",
+            "queueBuild"
+          ],
+          "x-ms-enum": {
+            "name": "ApprovalPermissions",
+            "values": [
+              {
+                "value": "none",
+                "description": ""
+              },
+              {
+                "value": "view",
+                "description": ""
+              },
+              {
+                "value": "update",
+                "description": ""
+              },
+              {
+                "value": "reassign",
+                "description": ""
+              },
+              {
+                "value": "resourceAdmin",
+                "description": ""
+              },
+              {
+                "value": "queueBuild",
+                "description": ""
+              }
+            ]
+          }
+        },
+        "status": {
+          "description": "Current status of this step.",
+          "enum": [
+            "undefined",
+            "uninitiated",
+            "pending",
+            "approved",
+            "rejected",
+            "skipped",
+            "canceled",
+            "timedOut",
+            "deferred",
+            "failed",
+            "completed",
+            "all"
+          ],
+          "x-ms-enum": {
+            "name": "ApprovalStatus",
+            "values": [
+              {
+                "value": "undefined",
+                "description": ""
+              },
+              {
+                "value": "uninitiated",
+                "description": "Indicates the approval is Uninitiated. Used in case of in sequence order of execution where given approver is not yet actionable."
+              },
+              {
+                "value": "pending",
+                "description": "Indicates the approval is Pending."
+              },
+              {
+                "value": "approved",
+                "description": "Indicates the approval is Approved."
+              },
+              {
+                "value": "rejected",
+                "description": "Indicates the approval is Rejected."
+              },
+              {
+                "value": "skipped",
+                "description": "Indicates the approval is Skipped."
+              },
+              {
+                "value": "canceled",
+                "description": "Indicates the approval is Canceled."
+              },
+              {
+                "value": "timedOut",
+                "description": "Indicates the approval is Timed out."
+              },
+              {
+                "value": "deferred",
+                "description": "Indicates the approval is Deferred."
+              },
+              {
+                "value": "failed",
+                "description": ""
+              },
+              {
+                "value": "completed",
+                "description": ""
+              },
+              {
+                "value": "all",
+                "description": ""
+              }
+            ]
+          }
+        }
+      }
+    },
+    "ApprovalStepHistory": {
+      "description": "Data for a single approval step history.",
+      "type": "object",
+      "properties": {
+        "assignedTo": {
+          "description": "Identity who was assigned this approval",
+          "$ref": "#/definitions/IdentityRef"
+        },
+        "comment": {
+          "description": "Comment associated with this step history.",
+          "type": "string"
+        },
+        "createdBy": {
+          "description": "Identity by which this step history was created.",
+          "$ref": "#/definitions/IdentityRef"
+        },
+        "createdOn": {
+          "description": "Timestamp at which this step history was created.",
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "ApprovalUpdateParameters": {
+      "description": "Data to update an approval object or its individual step.",
+      "type": "object",
+      "properties": {
+        "approvalId": {
+          "description": "ID of the approval to be updated.",
+          "type": "string",
+          "format": "uuid"
+        },
+        "assignedApprover": {
+          "description": "Current approver.",
+          "$ref": "#/definitions/IdentityRef"
+        },
+        "comment": {
+          "description": "Gets or sets comment.",
+          "type": "string"
+        },
+        "deferredTo": {
+          "description": "Date (UTC) to which approval got deferred.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "reassignTo": {
+          "description": "Reassigned Approver.",
+          "$ref": "#/definitions/IdentityRef"
+        },
+        "status": {
+          "description": "Gets or sets status.",
+          "enum": [
+            "undefined",
+            "uninitiated",
+            "pending",
+            "approved",
+            "rejected",
+            "skipped",
+            "canceled",
+            "timedOut",
+            "deferred",
+            "failed",
+            "completed",
+            "all"
+          ],
+          "x-ms-enum": {
+            "name": "ApprovalStatus",
+            "values": [
+              {
+                "value": "undefined",
+                "description": ""
+              },
+              {
+                "value": "uninitiated",
+                "description": "Indicates the approval is Uninitiated. Used in case of in sequence order of execution where given approver is not yet actionable."
+              },
+              {
+                "value": "pending",
+                "description": "Indicates the approval is Pending."
+              },
+              {
+                "value": "approved",
+                "description": "Indicates the approval is Approved."
+              },
+              {
+                "value": "rejected",
+                "description": "Indicates the approval is Rejected."
+              },
+              {
+                "value": "skipped",
+                "description": "Indicates the approval is Skipped."
+              },
+              {
+                "value": "canceled",
+                "description": "Indicates the approval is Canceled."
+              },
+              {
+                "value": "timedOut",
+                "description": "Indicates the approval is Timed out."
+              },
+              {
+                "value": "deferred",
+                "description": "Indicates the approval is Deferred."
+              },
+              {
+                "value": "failed",
+                "description": ""
+              },
+              {
+                "value": "completed",
+                "description": ""
+              },
+              {
+                "value": "all",
+                "description": ""
+              }
+            ]
+          }
+        }
+      }
+    },
+    "GraphSubjectBase": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "_links": {
+          "description": "This field contains zero or more interesting links about the graph subject. These links may be invoked to obtain additional relationships or more detailed information about this graph subject.",
+          "$ref": "#/definitions/ReferenceLinks"
+        },
+        "descriptor": {
+          "description": "The descriptor is the primary way to reference the graph subject while the system is running. This field will uniquely identify the same graph subject across both Accounts and Organizations.",
+          "type": "string"
+        },
+        "displayName": {
+          "description": "This is the non-unique display name of the graph subject. To change this field, you must alter its value in the source provider.",
+          "type": "string"
+        },
+        "url": {
+          "description": "This url is the full route to the source resource of this graph subject.",
+          "type": "string"
+        }
+      }
+    },
+    "IdentityRef": {
+      "description": "",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/GraphSubjectBase"
+        }
+      ],
+      "properties": {
+        "directoryAlias": {
+          "description": "Deprecated - Can be retrieved by querying the Graph user referenced in the \"self\" entry of the IdentityRef \"_links\" dictionary",
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "imageUrl": {
+          "description": "Deprecated - Available in the \"avatar\" entry of the IdentityRef \"_links\" dictionary",
+          "type": "string"
+        },
+        "inactive": {
+          "description": "Deprecated - Can be retrieved by querying the Graph membership state referenced in the \"membershipState\" entry of the GraphUser \"_links\" dictionary",
+          "type": "boolean"
+        },
+        "isAadIdentity": {
+          "description": "Deprecated - Can be inferred from the subject type of the descriptor (Descriptor.IsAadUserType/Descriptor.IsAadGroupType)",
+          "type": "boolean"
+        },
+        "isContainer": {
+          "description": "Deprecated - Can be inferred from the subject type of the descriptor (Descriptor.IsGroupType)",
+          "type": "boolean"
+        },
+        "isDeletedInOrigin": {
+          "type": "boolean"
+        },
+        "profileUrl": {
+          "description": "Deprecated - not in use in most preexisting implementations of ToIdentityRef",
+          "type": "string"
+        },
+        "uniqueName": {
+          "description": "Deprecated - use Domain+PrincipalName instead",
+          "type": "string"
+        }
+      }
+    },
+    "JObject": {
+      "description": "Represents a JSON object.",
+      "type": "object",
+      "properties": {
+        "item": {
+          "type": "string",
+          "format": "JToken"
+        },
+        "type": {
+          "description": "Gets the node type for this JToken.",
+          "type": "string",
+          "format": "JTokenType"
+        }
+      }
+    },
+    "ReferenceLinks": {
+      "description": "The class to represent a collection of REST reference links.",
+      "type": "object",
+      "properties": {
+        "links": {
+          "description": "The readonly view of the links.  Because Reference links are readonly, we only want to expose them as read only.",
+          "type": "object",
+          "additionalProperties": {
+            "type": "object"
+          }
+        }
+      }
+    },
+    "VssJsonCollectionWrapper": {
+      "description": "This class is used to serialize collections as a single JSON object on the wire.",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/VssJsonCollectionWrapperBase"
+        }
+      ],
+      "properties": {
+        "value": {
+          "description": "The serialized item.",
+          "type": "string",
+          "format": "T"
+        }
+      }
+    },
+    "VssJsonCollectionWrapperBase": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "count": {
+          "description": "The number of serialized items.",
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    }
+  },
+  "parameters": {
+    "api-Version-preview.2": {
+      "name": "api-version",
+      "in": "query",
+      "description": "Version of the API to use.  This should be set to '7.2-preview.2' to use this version of the api.",
+      "required": true,
+      "type": "string"
+    }
+  },
+  "securityDefinitions": {
+    "accessToken": {
+      "type": "basic",
+      "description": "Personal access token. Use any value for the user name and the token as the password."
+    },
+    "oauth2": {
+      "type": "oauth2",
+      "flow": "accessCode",
+      "authorizationUrl": "https://app.vssps.visualstudio.com/oauth2/authorize&response_type=Assertion",
+      "tokenUrl": "https://app.vssps.visualstudio.com/oauth2/token?client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer&grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer",
+      "scopes": {
+        "vso.build": "Grants the ability to access build artifacts, including build results, definitions, and requests, and the ability to receive notifications about build events via service hooks.",
+        "vso.build_execute": "Grants the ability to access build artifacts, including build results, definitions, and requests, and the ability to queue a build, update build properties, and the ability to receive notifications about build events via service hooks.",
+        "vso.pipelineresources_use": "Grants the ability to approve a pipeline's request to use a protected resource: agent pool, environment, queue, repository, secure files, service connection, and variable group"
+      }
+    }
+  },
+  "security": [
+    {
+      "accessToken": []
+    }
+  ],
+  "externalDocs": {
+    "description": "Azure DevOps REST APIs",
+    "url": "https://aka.ms/azure-devops-rest-apis"
+  }
+}

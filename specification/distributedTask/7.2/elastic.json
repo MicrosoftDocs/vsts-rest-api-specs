@@ -1,0 +1,1706 @@
+﻿{
+  "swagger": "2.0",
+  "info": {
+    "title": "Elastic",
+    "description": "",
+    "termsOfService": "https://go.microsoft.com/fwlink/?LinkId=329770",
+    "contact": {
+      "name": "nugetvss",
+      "email": "nugetvss@microsoft.com"
+    },
+    "license": {
+      "name": "MICROSOFT SOFTWARE LICENSE TERMS",
+      "url": "https://go.microsoft.com/fwlink/?LinkId=329770"
+    },
+    "version": "7.2-preview"
+  },
+  "host": "dev.azure.com",
+  "x-ms-vss-area": "Elastic",
+  "basePath": "/",
+  "tags": [
+    {
+      "name": "Elasticpoollogs",
+      "description": "Controller to handle organization/collection level elastic pool logs operations"
+    },
+    {
+      "name": "Elasticpools",
+      "description": "Controller to handle organization/collection level elastic pool operations"
+    },
+    {
+      "name": "Nodes",
+      "description": "Controller to handle organization/collection level elastic node operations"
+    }
+  ],
+  "schemes": [
+    "https"
+  ],
+  "paths": {
+    "/{organization}/_apis/distributedtask/elasticpools": {
+      "post": {
+        "tags": [
+          "Elasticpools"
+        ],
+        "x-ms-docs-override-version": "7.2-preview.1",
+        "x-ms-vss-resource": "elasticpools",
+        "x-ms-vss-method": "CreateElasticPool",
+        "x-ms-preview": true,
+        "description": "Create a new elastic pool. This will create a new TaskAgentPool at the organization level. If a project id is provided, this will create a new TaskAgentQueue in the specified project.",
+        "operationId": "Elasticpools_Create",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Elastic pool to create. Contains the properties necessary for configuring a new ElasticPool.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ElasticPool"
+            }
+          },
+          {
+            "in": "query",
+            "name": "poolName",
+            "description": "Name to use for the new TaskAgentPool",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "authorizeAllPipelines",
+            "description": "Setting to determine if all pipelines are authorized to use this TaskAgentPool by default.",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "autoProvisionProjectPools",
+            "description": "Setting to automatically provision TaskAgentQueues in every project for the new pool.",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "projectId",
+            "description": "Optional: If provided, a new TaskAgentQueue will be created in the specified project.",
+            "required": false,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ElasticPoolCreationResult"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.agentpools_manage"
+            ]
+          }
+        ]
+      },
+      "get": {
+        "tags": [
+          "Elasticpools"
+        ],
+        "x-ms-docs-override-version": "7.2-preview.1",
+        "x-ms-vss-resource": "elasticpools",
+        "x-ms-vss-method": "GetElasticPools",
+        "x-ms-preview": true,
+        "description": "Get a list of all Elastic Pools.",
+        "operationId": "Elasticpools_List",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/ElasticPool"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.agentpools"
+            ]
+          }
+        ]
+      }
+    },
+    "/{organization}/_apis/distributedtask/elasticpools/{poolId}": {
+      "get": {
+        "tags": [
+          "Elasticpools"
+        ],
+        "x-ms-docs-override-version": "7.2-preview.1",
+        "x-ms-vss-resource": "elasticpools",
+        "x-ms-vss-method": "GetElasticPool",
+        "x-ms-preview": true,
+        "description": "Returns the Elastic Pool with the specified Pool Id.",
+        "operationId": "Elasticpools_Get",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "poolId",
+            "description": "Pool Id of the associated TaskAgentPool",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ElasticPool"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.agentpools"
+            ]
+          }
+        ]
+      },
+      "patch": {
+        "tags": [
+          "Elasticpools"
+        ],
+        "x-ms-docs-override-version": "7.2-preview.1",
+        "x-ms-vss-resource": "elasticpools",
+        "x-ms-vss-method": "UpdateElasticPool",
+        "x-ms-preview": true,
+        "description": "Update settings on a specified Elastic Pool.",
+        "operationId": "Elasticpools_Update",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "New Elastic Pool settings data",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ElasticPoolSettings"
+            }
+          },
+          {
+            "in": "path",
+            "name": "poolId",
+            "description": "",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ElasticPool"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.agentpools_manage"
+            ]
+          }
+        ]
+      }
+    },
+    "/{organization}/_apis/distributedtask/elasticpools/{poolId}/logs": {
+      "get": {
+        "tags": [
+          "Elasticpoollogs"
+        ],
+        "x-ms-docs-override-version": "7.2-preview.1",
+        "x-ms-vss-resource": "elasticpoollogs",
+        "x-ms-vss-method": "GetElasticPoolLogs",
+        "x-ms-preview": true,
+        "description": "Get elastic pool diagnostics logs for a specified Elastic Pool.",
+        "operationId": "Elasticpoollogs_List",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "poolId",
+            "description": "Pool Id of the Elastic Pool",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "$top",
+            "description": "Number of elastic pool logs to retrieve",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/ElasticPoolLog"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.agentpools"
+            ]
+          }
+        ]
+      }
+    },
+    "/{organization}/_apis/distributedtask/elasticpools/{poolId}/nodes": {
+      "get": {
+        "tags": [
+          "Nodes"
+        ],
+        "x-ms-docs-override-version": "7.2-preview.1",
+        "x-ms-vss-resource": "nodes",
+        "x-ms-vss-method": "GetElasticNodes",
+        "x-ms-preview": true,
+        "description": "Get a list of ElasticNodes currently in the ElasticPool",
+        "operationId": "Nodes_List",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "poolId",
+            "description": "Pool id of the ElasticPool",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "$state",
+            "description": "Optional: Filter to only retrieve ElasticNodes in the given ElasticNodeState",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "none",
+              "new",
+              "creatingCompute",
+              "startingAgent",
+              "idle",
+              "assigned",
+              "offline",
+              "pendingReimage",
+              "pendingDelete",
+              "saved",
+              "deletingCompute",
+              "deleted",
+              "lost",
+              "reimagingCompute",
+              "restartingAgent",
+              "failedToStartPendingDelete",
+              "failedToRestartPendingDelete",
+              "failedVMPendingDelete",
+              "assignedPendingDelete",
+              "retryDelete",
+              "unhealthyVm",
+              "unhealthyVmPendingDelete"
+            ],
+            "x-ms-enum": {
+              "name": "ElasticNodeState",
+              "values": [
+                {
+                  "value": "none",
+                  "description": ""
+                },
+                {
+                  "value": "new",
+                  "description": ""
+                },
+                {
+                  "value": "creatingCompute",
+                  "description": ""
+                },
+                {
+                  "value": "startingAgent",
+                  "description": ""
+                },
+                {
+                  "value": "idle",
+                  "description": ""
+                },
+                {
+                  "value": "assigned",
+                  "description": ""
+                },
+                {
+                  "value": "offline",
+                  "description": ""
+                },
+                {
+                  "value": "pendingReimage",
+                  "description": ""
+                },
+                {
+                  "value": "pendingDelete",
+                  "description": ""
+                },
+                {
+                  "value": "saved",
+                  "description": ""
+                },
+                {
+                  "value": "deletingCompute",
+                  "description": ""
+                },
+                {
+                  "value": "deleted",
+                  "description": ""
+                },
+                {
+                  "value": "lost",
+                  "description": ""
+                },
+                {
+                  "value": "reimagingCompute",
+                  "description": ""
+                },
+                {
+                  "value": "restartingAgent",
+                  "description": ""
+                },
+                {
+                  "value": "failedToStartPendingDelete",
+                  "description": ""
+                },
+                {
+                  "value": "failedToRestartPendingDelete",
+                  "description": ""
+                },
+                {
+                  "value": "failedVMPendingDelete",
+                  "description": ""
+                },
+                {
+                  "value": "assignedPendingDelete",
+                  "description": ""
+                },
+                {
+                  "value": "retryDelete",
+                  "description": ""
+                },
+                {
+                  "value": "unhealthyVm",
+                  "description": ""
+                },
+                {
+                  "value": "unhealthyVmPendingDelete",
+                  "description": ""
+                }
+              ]
+            }
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/ElasticNode"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.agentpools"
+            ]
+          }
+        ]
+      }
+    },
+    "/{organization}/_apis/distributedtask/elasticpools/{poolId}/nodes/{elasticNodeId}": {
+      "patch": {
+        "tags": [
+          "Nodes"
+        ],
+        "x-ms-docs-override-version": "7.2-preview.1",
+        "x-ms-vss-resource": "nodes",
+        "x-ms-vss-method": "UpdateElasticNode",
+        "x-ms-preview": true,
+        "description": "Update properties on a specified ElasticNode",
+        "operationId": "Nodes_Update",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ElasticNodeSettings"
+            }
+          },
+          {
+            "in": "path",
+            "name": "poolId",
+            "description": "",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "path",
+            "name": "elasticNodeId",
+            "description": "",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ElasticNode"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.agentpools_manage"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "ElasticNode": {
+      "description": "Data and settings for an elastic node",
+      "type": "object",
+      "properties": {
+        "agentId": {
+          "description": "Distributed Task's Agent Id",
+          "type": "integer",
+          "format": "int32"
+        },
+        "agentState": {
+          "description": "Summary of the state of the agent",
+          "enum": [
+            "none",
+            "enabled",
+            "online",
+            "assigned"
+          ],
+          "x-ms-enum": {
+            "name": "ElasticAgentState",
+            "values": [
+              {
+                "value": "none",
+                "description": ""
+              },
+              {
+                "value": "enabled",
+                "description": ""
+              },
+              {
+                "value": "online",
+                "description": ""
+              },
+              {
+                "value": "assigned",
+                "description": ""
+              }
+            ]
+          }
+        },
+        "computeId": {
+          "description": "Compute Id.  VMSS's InstanceId",
+          "type": "string"
+        },
+        "computeState": {
+          "description": "State of the compute host",
+          "enum": [
+            "none",
+            "healthy",
+            "creating",
+            "deleting",
+            "failed",
+            "stopped",
+            "reimaging",
+            "unhealthyVm",
+            "unhealthyVmssVm"
+          ],
+          "x-ms-enum": {
+            "name": "ElasticComputeState",
+            "values": [
+              {
+                "value": "none",
+                "description": ""
+              },
+              {
+                "value": "healthy",
+                "description": ""
+              },
+              {
+                "value": "creating",
+                "description": ""
+              },
+              {
+                "value": "deleting",
+                "description": ""
+              },
+              {
+                "value": "failed",
+                "description": ""
+              },
+              {
+                "value": "stopped",
+                "description": ""
+              },
+              {
+                "value": "reimaging",
+                "description": ""
+              },
+              {
+                "value": "unhealthyVm",
+                "description": ""
+              },
+              {
+                "value": "unhealthyVmssVm",
+                "description": ""
+              }
+            ]
+          }
+        },
+        "desiredState": {
+          "description": "Users can force state changes to specific states (ToReimage, ToDelete, Save)",
+          "enum": [
+            "none",
+            "new",
+            "creatingCompute",
+            "startingAgent",
+            "idle",
+            "assigned",
+            "offline",
+            "pendingReimage",
+            "pendingDelete",
+            "saved",
+            "deletingCompute",
+            "deleted",
+            "lost",
+            "reimagingCompute",
+            "restartingAgent",
+            "failedToStartPendingDelete",
+            "failedToRestartPendingDelete",
+            "failedVMPendingDelete",
+            "assignedPendingDelete",
+            "retryDelete",
+            "unhealthyVm",
+            "unhealthyVmPendingDelete"
+          ],
+          "x-ms-enum": {
+            "name": "ElasticNodeState",
+            "values": [
+              {
+                "value": "none",
+                "description": ""
+              },
+              {
+                "value": "new",
+                "description": ""
+              },
+              {
+                "value": "creatingCompute",
+                "description": ""
+              },
+              {
+                "value": "startingAgent",
+                "description": ""
+              },
+              {
+                "value": "idle",
+                "description": ""
+              },
+              {
+                "value": "assigned",
+                "description": ""
+              },
+              {
+                "value": "offline",
+                "description": ""
+              },
+              {
+                "value": "pendingReimage",
+                "description": ""
+              },
+              {
+                "value": "pendingDelete",
+                "description": ""
+              },
+              {
+                "value": "saved",
+                "description": ""
+              },
+              {
+                "value": "deletingCompute",
+                "description": ""
+              },
+              {
+                "value": "deleted",
+                "description": ""
+              },
+              {
+                "value": "lost",
+                "description": ""
+              },
+              {
+                "value": "reimagingCompute",
+                "description": ""
+              },
+              {
+                "value": "restartingAgent",
+                "description": ""
+              },
+              {
+                "value": "failedToStartPendingDelete",
+                "description": ""
+              },
+              {
+                "value": "failedToRestartPendingDelete",
+                "description": ""
+              },
+              {
+                "value": "failedVMPendingDelete",
+                "description": ""
+              },
+              {
+                "value": "assignedPendingDelete",
+                "description": ""
+              },
+              {
+                "value": "retryDelete",
+                "description": ""
+              },
+              {
+                "value": "unhealthyVm",
+                "description": ""
+              },
+              {
+                "value": "unhealthyVmPendingDelete",
+                "description": ""
+              }
+            ]
+          }
+        },
+        "id": {
+          "description": "Unique identifier since the agent and/or VM may be null",
+          "type": "integer",
+          "format": "int32"
+        },
+        "name": {
+          "description": "Computer name. Used to match a scaleset VM with an agent",
+          "type": "string"
+        },
+        "poolId": {
+          "description": "Pool Id that this node belongs to",
+          "type": "integer",
+          "format": "int32"
+        },
+        "requestId": {
+          "description": "Last job RequestId assigned to this agent",
+          "type": "integer",
+          "format": "int64"
+        },
+        "state": {
+          "description": "State of the ElasticNode",
+          "enum": [
+            "none",
+            "new",
+            "creatingCompute",
+            "startingAgent",
+            "idle",
+            "assigned",
+            "offline",
+            "pendingReimage",
+            "pendingDelete",
+            "saved",
+            "deletingCompute",
+            "deleted",
+            "lost",
+            "reimagingCompute",
+            "restartingAgent",
+            "failedToStartPendingDelete",
+            "failedToRestartPendingDelete",
+            "failedVMPendingDelete",
+            "assignedPendingDelete",
+            "retryDelete",
+            "unhealthyVm",
+            "unhealthyVmPendingDelete"
+          ],
+          "x-ms-enum": {
+            "name": "ElasticNodeState",
+            "values": [
+              {
+                "value": "none",
+                "description": ""
+              },
+              {
+                "value": "new",
+                "description": ""
+              },
+              {
+                "value": "creatingCompute",
+                "description": ""
+              },
+              {
+                "value": "startingAgent",
+                "description": ""
+              },
+              {
+                "value": "idle",
+                "description": ""
+              },
+              {
+                "value": "assigned",
+                "description": ""
+              },
+              {
+                "value": "offline",
+                "description": ""
+              },
+              {
+                "value": "pendingReimage",
+                "description": ""
+              },
+              {
+                "value": "pendingDelete",
+                "description": ""
+              },
+              {
+                "value": "saved",
+                "description": ""
+              },
+              {
+                "value": "deletingCompute",
+                "description": ""
+              },
+              {
+                "value": "deleted",
+                "description": ""
+              },
+              {
+                "value": "lost",
+                "description": ""
+              },
+              {
+                "value": "reimagingCompute",
+                "description": ""
+              },
+              {
+                "value": "restartingAgent",
+                "description": ""
+              },
+              {
+                "value": "failedToStartPendingDelete",
+                "description": ""
+              },
+              {
+                "value": "failedToRestartPendingDelete",
+                "description": ""
+              },
+              {
+                "value": "failedVMPendingDelete",
+                "description": ""
+              },
+              {
+                "value": "assignedPendingDelete",
+                "description": ""
+              },
+              {
+                "value": "retryDelete",
+                "description": ""
+              },
+              {
+                "value": "unhealthyVm",
+                "description": ""
+              },
+              {
+                "value": "unhealthyVmPendingDelete",
+                "description": ""
+              }
+            ]
+          }
+        },
+        "stateChangedOn": {
+          "description": "Last state change. Only updated by SQL.",
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "ElasticNodeSettings": {
+      "description": "Class used for updating an elastic node where only certain members are populated",
+      "type": "object",
+      "properties": {
+        "state": {
+          "description": "State of the ElasticNode",
+          "enum": [
+            "none",
+            "new",
+            "creatingCompute",
+            "startingAgent",
+            "idle",
+            "assigned",
+            "offline",
+            "pendingReimage",
+            "pendingDelete",
+            "saved",
+            "deletingCompute",
+            "deleted",
+            "lost",
+            "reimagingCompute",
+            "restartingAgent",
+            "failedToStartPendingDelete",
+            "failedToRestartPendingDelete",
+            "failedVMPendingDelete",
+            "assignedPendingDelete",
+            "retryDelete",
+            "unhealthyVm",
+            "unhealthyVmPendingDelete"
+          ],
+          "x-ms-enum": {
+            "name": "ElasticNodeState",
+            "values": [
+              {
+                "value": "none",
+                "description": ""
+              },
+              {
+                "value": "new",
+                "description": ""
+              },
+              {
+                "value": "creatingCompute",
+                "description": ""
+              },
+              {
+                "value": "startingAgent",
+                "description": ""
+              },
+              {
+                "value": "idle",
+                "description": ""
+              },
+              {
+                "value": "assigned",
+                "description": ""
+              },
+              {
+                "value": "offline",
+                "description": ""
+              },
+              {
+                "value": "pendingReimage",
+                "description": ""
+              },
+              {
+                "value": "pendingDelete",
+                "description": ""
+              },
+              {
+                "value": "saved",
+                "description": ""
+              },
+              {
+                "value": "deletingCompute",
+                "description": ""
+              },
+              {
+                "value": "deleted",
+                "description": ""
+              },
+              {
+                "value": "lost",
+                "description": ""
+              },
+              {
+                "value": "reimagingCompute",
+                "description": ""
+              },
+              {
+                "value": "restartingAgent",
+                "description": ""
+              },
+              {
+                "value": "failedToStartPendingDelete",
+                "description": ""
+              },
+              {
+                "value": "failedToRestartPendingDelete",
+                "description": ""
+              },
+              {
+                "value": "failedVMPendingDelete",
+                "description": ""
+              },
+              {
+                "value": "assignedPendingDelete",
+                "description": ""
+              },
+              {
+                "value": "retryDelete",
+                "description": ""
+              },
+              {
+                "value": "unhealthyVm",
+                "description": ""
+              },
+              {
+                "value": "unhealthyVmPendingDelete",
+                "description": ""
+              }
+            ]
+          }
+        }
+      }
+    },
+    "ElasticPool": {
+      "description": "Data and settings for an elastic pool",
+      "type": "object",
+      "properties": {
+        "agentInteractiveUI": {
+          "description": "Set whether agents should be configured to run with interactive UI",
+          "type": "boolean"
+        },
+        "azureId": {
+          "description": "Azure string representing to location of the resource",
+          "type": "string"
+        },
+        "desiredIdle": {
+          "description": "Number of agents to have ready waiting for jobs",
+          "type": "integer",
+          "format": "int32"
+        },
+        "desiredSize": {
+          "description": "The desired size of the pool",
+          "type": "integer",
+          "format": "int32"
+        },
+        "maxCapacity": {
+          "description": "Maximum number of nodes that will exist in the elastic pool",
+          "type": "integer",
+          "format": "int32"
+        },
+        "maxSavedNodeCount": {
+          "description": "Keep nodes in the pool on failure for investigation",
+          "type": "integer",
+          "format": "int32"
+        },
+        "offlineSince": {
+          "description": "Timestamp the pool was first detected to be offline",
+          "type": "string",
+          "format": "date-time"
+        },
+        "orchestrationType": {
+          "description": "Operating system type of the nodes in the pool",
+          "enum": [
+            "uniform",
+            "flexible"
+          ],
+          "x-ms-enum": {
+            "name": "OrchestrationType",
+            "values": [
+              {
+                "value": "uniform",
+                "description": ""
+              },
+              {
+                "value": "flexible",
+                "description": ""
+              }
+            ]
+          }
+        },
+        "osType": {
+          "description": "Operating system type of the nodes in the pool",
+          "enum": [
+            "windows",
+            "linux"
+          ],
+          "x-ms-enum": {
+            "name": "OperatingSystemType",
+            "values": [
+              {
+                "value": "windows",
+                "description": ""
+              },
+              {
+                "value": "linux",
+                "description": ""
+              }
+            ]
+          }
+        },
+        "poolId": {
+          "description": "Id of the associated TaskAgentPool",
+          "type": "integer",
+          "format": "int32"
+        },
+        "recycleAfterEachUse": {
+          "description": "Discard node after each job completes",
+          "type": "boolean"
+        },
+        "serviceEndpointId": {
+          "description": "Id of the Service Endpoint used to connect to Azure",
+          "type": "string",
+          "format": "uuid"
+        },
+        "serviceEndpointScope": {
+          "description": "Scope the Service Endpoint belongs to",
+          "type": "string",
+          "format": "uuid"
+        },
+        "sizingAttempts": {
+          "description": "The number of sizing attempts executed while trying to achieve a desired size",
+          "type": "integer",
+          "format": "int32"
+        },
+        "state": {
+          "description": "State of the pool",
+          "enum": [
+            "online",
+            "offline",
+            "unhealthy",
+            "new"
+          ],
+          "x-ms-enum": {
+            "name": "ElasticPoolState",
+            "values": [
+              {
+                "value": "online",
+                "description": "Online and healthy"
+              },
+              {
+                "value": "offline",
+                "description": ""
+              },
+              {
+                "value": "unhealthy",
+                "description": ""
+              },
+              {
+                "value": "new",
+                "description": ""
+              }
+            ]
+          }
+        },
+        "timeToLiveMinutes": {
+          "description": "The minimum time in minutes to keep idle agents alive",
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "ElasticPoolCreationResult": {
+      "description": "Returned result from creating a new elastic pool",
+      "type": "object",
+      "properties": {
+        "agentPool": {
+          "description": "Created agent pool",
+          "$ref": "#/definitions/TaskAgentPool"
+        },
+        "agentQueue": {
+          "description": "Created agent queue",
+          "$ref": "#/definitions/TaskAgentQueue"
+        },
+        "elasticPool": {
+          "description": "Created elastic pool",
+          "$ref": "#/definitions/ElasticPool"
+        }
+      }
+    },
+    "ElasticPoolLog": {
+      "description": "Log data for an Elastic Pool",
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "Log Id",
+          "type": "integer",
+          "format": "int64"
+        },
+        "level": {
+          "description": "E.g. error, warning, info",
+          "enum": [
+            "error",
+            "warning",
+            "info"
+          ],
+          "x-ms-enum": {
+            "name": "LogLevel",
+            "values": [
+              {
+                "value": "error",
+                "description": ""
+              },
+              {
+                "value": "warning",
+                "description": ""
+              },
+              {
+                "value": "info",
+                "description": ""
+              }
+            ]
+          }
+        },
+        "message": {
+          "description": "Log contents",
+          "type": "string"
+        },
+        "operation": {
+          "description": "Operation that triggered the message being logged",
+          "enum": [
+            "configurationJob",
+            "sizingJob",
+            "increaseCapacity",
+            "reimage",
+            "deleteVMs"
+          ],
+          "x-ms-enum": {
+            "name": "OperationType",
+            "values": [
+              {
+                "value": "configurationJob",
+                "description": ""
+              },
+              {
+                "value": "sizingJob",
+                "description": ""
+              },
+              {
+                "value": "increaseCapacity",
+                "description": ""
+              },
+              {
+                "value": "reimage",
+                "description": ""
+              },
+              {
+                "value": "deleteVMs",
+                "description": ""
+              }
+            ]
+          }
+        },
+        "poolId": {
+          "description": "Id of the associated TaskAgentPool",
+          "type": "integer",
+          "format": "int32"
+        },
+        "timestamp": {
+          "description": "Datetime that the log occurred",
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "ElasticPoolSettings": {
+      "description": "Class used for updating an elastic pool where only certain members are populated",
+      "type": "object",
+      "properties": {
+        "agentInteractiveUI": {
+          "description": "Set whether agents should be configured to run with interactive UI",
+          "type": "boolean"
+        },
+        "azureId": {
+          "description": "Azure string representing to location of the resource",
+          "type": "string"
+        },
+        "desiredIdle": {
+          "description": "Number of machines to have ready waiting for jobs",
+          "type": "integer",
+          "format": "int32"
+        },
+        "maxCapacity": {
+          "description": "Maximum number of machines that will exist in the elastic pool",
+          "type": "integer",
+          "format": "int32"
+        },
+        "maxSavedNodeCount": {
+          "description": "Keep machines in the pool on failure for investigation",
+          "type": "integer",
+          "format": "int32"
+        },
+        "orchestrationType": {
+          "description": "Operating system type of the machines in the pool",
+          "enum": [
+            "uniform",
+            "flexible"
+          ],
+          "x-ms-enum": {
+            "name": "OrchestrationType",
+            "values": [
+              {
+                "value": "uniform",
+                "description": ""
+              },
+              {
+                "value": "flexible",
+                "description": ""
+              }
+            ]
+          }
+        },
+        "osType": {
+          "description": "Operating system type of the machines in the pool",
+          "enum": [
+            "windows",
+            "linux"
+          ],
+          "x-ms-enum": {
+            "name": "OperatingSystemType",
+            "values": [
+              {
+                "value": "windows",
+                "description": ""
+              },
+              {
+                "value": "linux",
+                "description": ""
+              }
+            ]
+          }
+        },
+        "recycleAfterEachUse": {
+          "description": "Discard machines after each job completes",
+          "type": "boolean"
+        },
+        "serviceEndpointId": {
+          "description": "Id of the Service Endpoint used to connect to Azure",
+          "type": "string",
+          "format": "uuid"
+        },
+        "serviceEndpointScope": {
+          "description": "Scope the Service Endpoint belongs to",
+          "type": "string",
+          "format": "uuid"
+        },
+        "timeToLiveMinutes": {
+          "description": "The minimum time in minutes to keep idle agents alive",
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "GraphSubjectBase": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "_links": {
+          "description": "This field contains zero or more interesting links about the graph subject. These links may be invoked to obtain additional relationships or more detailed information about this graph subject.",
+          "$ref": "#/definitions/ReferenceLinks"
+        },
+        "descriptor": {
+          "description": "The descriptor is the primary way to reference the graph subject while the system is running. This field will uniquely identify the same graph subject across both Accounts and Organizations.",
+          "type": "string"
+        },
+        "displayName": {
+          "description": "This is the non-unique display name of the graph subject. To change this field, you must alter its value in the source provider.",
+          "type": "string"
+        },
+        "url": {
+          "description": "This url is the full route to the source resource of this graph subject.",
+          "type": "string"
+        }
+      }
+    },
+    "IdentityRef": {
+      "description": "",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/GraphSubjectBase"
+        }
+      ],
+      "properties": {
+        "directoryAlias": {
+          "description": "Deprecated - Can be retrieved by querying the Graph user referenced in the \"self\" entry of the IdentityRef \"_links\" dictionary",
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "imageUrl": {
+          "description": "Deprecated - Available in the \"avatar\" entry of the IdentityRef \"_links\" dictionary",
+          "type": "string"
+        },
+        "inactive": {
+          "description": "Deprecated - Can be retrieved by querying the Graph membership state referenced in the \"membershipState\" entry of the GraphUser \"_links\" dictionary",
+          "type": "boolean"
+        },
+        "isAadIdentity": {
+          "description": "Deprecated - Can be inferred from the subject type of the descriptor (Descriptor.IsAadUserType/Descriptor.IsAadGroupType)",
+          "type": "boolean"
+        },
+        "isContainer": {
+          "description": "Deprecated - Can be inferred from the subject type of the descriptor (Descriptor.IsGroupType)",
+          "type": "boolean"
+        },
+        "isDeletedInOrigin": {
+          "type": "boolean"
+        },
+        "profileUrl": {
+          "description": "Deprecated - not in use in most preexisting implementations of ToIdentityRef",
+          "type": "string"
+        },
+        "uniqueName": {
+          "description": "Deprecated - use Domain+PrincipalName instead",
+          "type": "string"
+        }
+      }
+    },
+    "PropertiesCollection": {
+      "description": "The class represents a property bag as a collection of key-value pairs. Values of all primitive types (any type with a `TypeCode != TypeCode.Object`) except for `DBNull` are accepted. Values of type Byte[], Int32, Double, DateType and String preserve their type, other primitives are retuned as a String. Byte[] expected as base64 encoded string.",
+      "type": "object",
+      "properties": {
+        "count": {
+          "description": "The count of properties in the collection.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "item": {
+          "type": "object"
+        },
+        "keys": {
+          "description": "The set of keys in the collection.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "values": {
+          "description": "The set of values in the collection.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "ReferenceLinks": {
+      "description": "The class to represent a collection of REST reference links.",
+      "type": "object",
+      "properties": {
+        "links": {
+          "description": "The readonly view of the links.  Because Reference links are readonly, we only want to expose them as read only.",
+          "type": "object",
+          "additionalProperties": {
+            "type": "object"
+          }
+        }
+      }
+    },
+    "TaskAgentPool": {
+      "description": "An organization-level grouping of agents.",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/TaskAgentPoolReference"
+        }
+      ],
+      "properties": {
+        "agentCloudId": {
+          "description": "The ID of the associated agent cloud.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "autoProvision": {
+          "description": "Whether or not a queue should be automatically provisioned for each project collection.",
+          "type": "boolean"
+        },
+        "autoSize": {
+          "description": "Whether or not the pool should autosize itself based on the Agent Cloud Provider settings.",
+          "type": "boolean"
+        },
+        "autoUpdate": {
+          "description": "Whether or not agents in this pool are allowed to automatically update",
+          "type": "boolean"
+        },
+        "createdBy": {
+          "description": "Creator of the pool. The creator of the pool is automatically added into the administrators group for the pool on creation.",
+          "$ref": "#/definitions/IdentityRef"
+        },
+        "createdOn": {
+          "description": "The date/time of the pool creation.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "owner": {
+          "description": "Owner or administrator of the pool.",
+          "$ref": "#/definitions/IdentityRef"
+        },
+        "properties": {
+          "$ref": "#/definitions/PropertiesCollection"
+        },
+        "targetSize": {
+          "description": "Target parallelism - Only applies to agent pools that are backed by pool providers. It will be null for regular pools.",
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "TaskAgentPoolReference": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "isHosted": {
+          "description": "Gets or sets a value indicating whether or not this pool is managed by the service.",
+          "type": "boolean"
+        },
+        "isLegacy": {
+          "description": "Determines whether the pool is legacy.",
+          "type": "boolean"
+        },
+        "name": {
+          "type": "string"
+        },
+        "options": {
+          "description": "Additional pool settings and details",
+          "enum": [
+            "none",
+            "elasticPool",
+            "singleUseAgents",
+            "preserveAgentOnJobFailure"
+          ],
+          "x-ms-enum": {
+            "name": "TaskAgentPoolOptions",
+            "values": [
+              {
+                "value": "none",
+                "description": ""
+              },
+              {
+                "value": "elasticPool",
+                "description": "TaskAgentPool backed by the Elastic pool service"
+              },
+              {
+                "value": "singleUseAgents",
+                "description": "Set to true if agents are re-imaged after each TaskAgentJobRequest"
+              },
+              {
+                "value": "preserveAgentOnJobFailure",
+                "description": "Set to true if agents are held for investigation after a TaskAgentJobRequest failure"
+              }
+            ]
+          }
+        },
+        "poolType": {
+          "description": "Gets or sets the type of the pool",
+          "enum": [
+            "automation",
+            "deployment"
+          ],
+          "x-ms-enum": {
+            "name": "TaskAgentPoolType",
+            "values": [
+              {
+                "value": "automation",
+                "description": "A typical pool of task agents"
+              },
+              {
+                "value": "deployment",
+                "description": "A deployment pool"
+              }
+            ]
+          }
+        },
+        "scope": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "size": {
+          "description": "Gets the current size of the pool.",
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "TaskAgentQueue": {
+      "description": "An agent queue.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "ID of the queue",
+          "type": "integer",
+          "format": "int32"
+        },
+        "name": {
+          "description": "Name of the queue",
+          "type": "string"
+        },
+        "pool": {
+          "description": "Pool reference for this queue",
+          "$ref": "#/definitions/TaskAgentPoolReference"
+        },
+        "projectId": {
+          "description": "Project ID",
+          "type": "string",
+          "format": "uuid"
+        }
+      }
+    }
+  },
+  "parameters": {
+    "api-Version-preview.1": {
+      "name": "api-version",
+      "in": "query",
+      "description": "Version of the API to use.  This should be set to '7.2-preview.1' to use this version of the api.",
+      "required": true,
+      "type": "string"
+    }
+  },
+  "securityDefinitions": {
+    "accessToken": {
+      "type": "basic",
+      "description": "Personal access token. Use any value for the user name and the token as the password."
+    },
+    "oauth2": {
+      "type": "oauth2",
+      "flow": "accessCode",
+      "authorizationUrl": "https://app.vssps.visualstudio.com/oauth2/authorize&response_type=Assertion",
+      "tokenUrl": "https://app.vssps.visualstudio.com/oauth2/token?client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer&grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer",
+      "scopes": {
+        "vso.agentpools_manage": "Grants the ability to manage pools, queues, and agents",
+        "vso.agentpools": "Grants the ability to view tasks, pools, queues, agents, and currently running or recently completed jobs for agents"
+      }
+    }
+  },
+  "security": [
+    {
+      "accessToken": []
+    }
+  ],
+  "externalDocs": {
+    "description": "Azure DevOps REST APIs",
+    "url": "https://aka.ms/azure-devops-rest-apis"
+  }
+}

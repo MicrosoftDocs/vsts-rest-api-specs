@@ -1,0 +1,360 @@
+﻿{
+  "swagger": "2.0",
+  "info": {
+    "title": "Account",
+    "description": "",
+    "termsOfService": "https://go.microsoft.com/fwlink/?LinkId=329770",
+    "contact": {
+      "name": "nugetvss",
+      "email": "nugetvss@microsoft.com"
+    },
+    "license": {
+      "name": "MICROSOFT SOFTWARE LICENSE TERMS",
+      "url": "https://go.microsoft.com/fwlink/?LinkId=329770"
+    },
+    "version": "7.2-preview"
+  },
+  "host": "app.vssps.visualstudio.com",
+  "x-ms-vss-area": "Accounts",
+  "x-ms-vss-resource-area-id": "0d55247a-1c47-4462-9b1f-5e2125590ee6",
+  "basePath": "/",
+  "tags": [
+    {
+      "name": "Accounts"
+    }
+  ],
+  "schemes": [
+    "https"
+  ],
+  "paths": {
+    "/_apis/accounts": {
+      "get": {
+        "tags": [
+          "Accounts"
+        ],
+        "x-ms-docs-override-version": "7.2-preview.1",
+        "x-ms-vss-resource": "accounts",
+        "x-ms-vss-method": "GetAccounts",
+        "x-ms-preview": true,
+        "description": "Get a list of accounts for a specific owner or a specific member. One of the following parameters is required: ownerId, memberId.",
+        "operationId": "Accounts_List",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "ownerId",
+            "description": "ID for the owner of the accounts.",
+            "required": false,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "query",
+            "name": "memberId",
+            "description": "ID for a member of the accounts.",
+            "required": false,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "query",
+            "name": "properties",
+            "description": "",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Account"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.profile"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "By owner": {
+            "$ref": "./httpExamples/Accounts/GET__Accounts_ownerId-_userId_.json"
+          },
+          "By member": {
+            "$ref": "./httpExamples/Accounts/GET__Accounts_memberId-_userId_.json"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "Account": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "accountId": {
+          "description": "Identifier for an Account",
+          "type": "string",
+          "format": "uuid"
+        },
+        "accountName": {
+          "description": "Name for an account",
+          "type": "string"
+        },
+        "accountOwner": {
+          "description": "Owner of account",
+          "type": "string",
+          "format": "uuid"
+        },
+        "accountStatus": {
+          "description": "Current account status",
+          "enum": [
+            "none",
+            "enabled",
+            "disabled",
+            "deleted",
+            "moved"
+          ],
+          "x-ms-enum": {
+            "name": "AccountStatus",
+            "values": [
+              {
+                "value": "none",
+                "description": ""
+              },
+              {
+                "value": "enabled",
+                "description": "This hosting account is active and assigned to a customer."
+              },
+              {
+                "value": "disabled",
+                "description": "This hosting account is disabled."
+              },
+              {
+                "value": "deleted",
+                "description": "This account is part of deletion batch and scheduled for deletion."
+              },
+              {
+                "value": "moved",
+                "description": "This account is not mastered locally and has physically moved."
+              }
+            ]
+          }
+        },
+        "accountType": {
+          "description": "Type of account: Personal, Organization",
+          "enum": [
+            "personal",
+            "organization"
+          ],
+          "x-ms-enum": {
+            "name": "AccountType",
+            "values": [
+              {
+                "value": "personal",
+                "description": ""
+              },
+              {
+                "value": "organization",
+                "description": ""
+              }
+            ]
+          }
+        },
+        "accountUri": {
+          "description": "Uri for an account",
+          "type": "string"
+        },
+        "createdBy": {
+          "description": "Who created the account",
+          "type": "string",
+          "format": "uuid"
+        },
+        "createdDate": {
+          "description": "Date account was created",
+          "type": "string",
+          "format": "date-time"
+        },
+        "hasMoved": {
+          "type": "boolean"
+        },
+        "lastUpdatedBy": {
+          "description": "Identity of last person to update the account",
+          "type": "string",
+          "format": "uuid"
+        },
+        "lastUpdatedDate": {
+          "description": "Date account was last updated",
+          "type": "string",
+          "format": "date-time"
+        },
+        "namespaceId": {
+          "description": "Namespace for an account",
+          "type": "string",
+          "format": "uuid"
+        },
+        "newCollectionId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "organizationName": {
+          "description": "Organization that created the account",
+          "type": "string"
+        },
+        "properties": {
+          "description": "Extended properties",
+          "$ref": "#/definitions/PropertiesCollection"
+        },
+        "statusReason": {
+          "description": "Reason for current status",
+          "type": "string"
+        }
+      }
+    },
+    "AccountCreateInfoInternal": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "accountName": {
+          "type": "string"
+        },
+        "creator": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "organization": {
+          "type": "string"
+        },
+        "preferences": {
+          "$ref": "#/definitions/AccountPreferencesInternal"
+        },
+        "properties": {
+          "$ref": "#/definitions/PropertiesCollection"
+        },
+        "serviceDefinitions": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        }
+      }
+    },
+    "AccountPreferencesInternal": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "culture": {
+          "type": "string",
+          "format": "CultureInfo"
+        },
+        "language": {
+          "type": "string",
+          "format": "CultureInfo"
+        },
+        "timeZone": {
+          "type": "string",
+          "format": "TimeZoneInfo"
+        }
+      }
+    },
+    "PropertiesCollection": {
+      "description": "The class represents a property bag as a collection of key-value pairs. Values of all primitive types (any type with a `TypeCode != TypeCode.Object`) except for `DBNull` are accepted. Values of type Byte[], Int32, Double, DateType and String preserve their type, other primitives are retuned as a String. Byte[] expected as base64 encoded string.",
+      "type": "object",
+      "properties": {
+        "count": {
+          "description": "The count of properties in the collection.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "item": {
+          "type": "object"
+        },
+        "keys": {
+          "description": "The set of keys in the collection.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "values": {
+          "description": "The set of values in the collection.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "VssJsonCollectionWrapper": {
+      "description": "This class is used to serialize collections as a single JSON object on the wire.",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/VssJsonCollectionWrapperBase"
+        }
+      ],
+      "properties": {
+        "value": {
+          "description": "The serialized item.",
+          "type": "string",
+          "format": "T"
+        }
+      }
+    },
+    "VssJsonCollectionWrapperBase": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "count": {
+          "description": "The number of serialized items.",
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    }
+  },
+  "parameters": {
+    "api-Version-preview.1": {
+      "name": "api-version",
+      "in": "query",
+      "description": "Version of the API to use.  This should be set to '7.2-preview.1' to use this version of the api.",
+      "required": true,
+      "type": "string"
+    }
+  },
+  "securityDefinitions": {
+    "accessToken": {
+      "type": "basic",
+      "description": "Personal access token. Use any value for the user name and the token as the password."
+    },
+    "oauth2": {
+      "type": "oauth2",
+      "flow": "accessCode",
+      "authorizationUrl": "https://app.vssps.visualstudio.com/oauth2/authorize&response_type=Assertion",
+      "tokenUrl": "https://app.vssps.visualstudio.com/oauth2/token?client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer&grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer",
+      "scopes": {
+        "vso.profile": "Grants the ability to read your profile, accounts, collections, projects, teams, and other top-level organizational artifacts."
+      }
+    }
+  },
+  "security": [
+    {
+      "accessToken": []
+    }
+  ],
+  "externalDocs": {
+    "description": "Azure DevOps REST APIs",
+    "url": "https://aka.ms/azure-devops-rest-apis"
+  }
+}

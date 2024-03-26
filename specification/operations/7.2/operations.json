@@ -1,0 +1,220 @@
+﻿{
+  "swagger": "2.0",
+  "info": {
+    "title": "Operations",
+    "description": "",
+    "termsOfService": "https://go.microsoft.com/fwlink/?LinkId=329770",
+    "contact": {
+      "name": "nugetvss",
+      "email": "nugetvss@microsoft.com"
+    },
+    "license": {
+      "name": "MICROSOFT SOFTWARE LICENSE TERMS",
+      "url": "https://go.microsoft.com/fwlink/?LinkId=329770"
+    },
+    "version": "7.2-preview"
+  },
+  "host": "dev.azure.com",
+  "x-ms-vss-area": "Operations",
+  "basePath": "/",
+  "tags": [
+    {
+      "name": "Operations",
+      "description": "Operations provide a way to monitor the process of an async task."
+    }
+  ],
+  "schemes": [
+    "https"
+  ],
+  "paths": {
+    "/{organization}/_apis/operations/{operationId}": {
+      "get": {
+        "tags": [
+          "Operations"
+        ],
+        "x-ms-docs-override-version": "7.2-preview.1",
+        "x-ms-vss-resource": "operations",
+        "x-ms-vss-method": "GetOperation",
+        "x-ms-preview": true,
+        "description": "Gets an operation from the operationId using the given pluginId.\n\nSome scenarios don’t require a pluginId. If a pluginId is not included in the call then just the operationId will be used to find an operation.",
+        "operationId": "Operations_Get",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "operationId",
+            "description": "The ID for the operation.",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "x-ms-required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "pluginId",
+            "description": "The ID for the plugin.",
+            "required": false,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/Operation"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "Operation": {
+      "description": "Contains information about the progress or result of an async operation.",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/OperationReference"
+        }
+      ],
+      "properties": {
+        "_links": {
+          "description": "Links to other related objects.",
+          "$ref": "#/definitions/ReferenceLinks"
+        },
+        "detailedMessage": {
+          "description": "Detailed messaged about the status of an operation.",
+          "type": "string"
+        },
+        "resultMessage": {
+          "description": "Result message for an operation.",
+          "type": "string"
+        },
+        "resultUrl": {
+          "description": "URL to the operation result.",
+          "$ref": "#/definitions/OperationResultReference"
+        }
+      }
+    },
+    "OperationReference": {
+      "description": "Reference for an async operation.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "Unique identifier for the operation.",
+          "type": "string",
+          "format": "uuid"
+        },
+        "pluginId": {
+          "description": "Unique identifier for the plugin.",
+          "type": "string",
+          "format": "uuid"
+        },
+        "status": {
+          "description": "The current status of the operation.",
+          "enum": [
+            "notSet",
+            "queued",
+            "inProgress",
+            "cancelled",
+            "succeeded",
+            "failed"
+          ],
+          "x-ms-enum": {
+            "name": "OperationStatus",
+            "values": [
+              {
+                "value": "notSet",
+                "description": "The operation does not have a status set."
+              },
+              {
+                "value": "queued",
+                "description": "The operation has been queued."
+              },
+              {
+                "value": "inProgress",
+                "description": "The operation is in progress."
+              },
+              {
+                "value": "cancelled",
+                "description": "The operation was cancelled by the user."
+              },
+              {
+                "value": "succeeded",
+                "description": "The operation completed successfully."
+              },
+              {
+                "value": "failed",
+                "description": "The operation completed with a failure."
+              }
+            ]
+          }
+        },
+        "url": {
+          "description": "URL to get the full operation object.",
+          "type": "string"
+        }
+      }
+    },
+    "OperationResultReference": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "resultUrl": {
+          "description": "URL to the operation result.",
+          "type": "string"
+        }
+      }
+    },
+    "ReferenceLinks": {
+      "description": "The class to represent a collection of REST reference links.",
+      "type": "object",
+      "properties": {
+        "links": {
+          "description": "The readonly view of the links.  Because Reference links are readonly, we only want to expose them as read only.",
+          "type": "object",
+          "additionalProperties": {
+            "type": "object"
+          }
+        }
+      }
+    }
+  },
+  "parameters": {
+    "api-Version-preview.1": {
+      "name": "api-version",
+      "in": "query",
+      "description": "Version of the API to use.  This should be set to '7.2-preview.1' to use this version of the api.",
+      "required": true,
+      "type": "string"
+    }
+  },
+  "securityDefinitions": {
+    "accessToken": {
+      "type": "basic",
+      "description": "Personal access token. Use any value for the user name and the token as the password."
+    }
+  },
+  "security": [
+    {
+      "accessToken": []
+    }
+  ],
+  "externalDocs": {
+    "description": "Azure DevOps REST APIs",
+    "url": "https://aka.ms/azure-devops-rest-apis"
+  }
+}
