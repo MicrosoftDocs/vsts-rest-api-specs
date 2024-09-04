@@ -477,7 +477,7 @@
         "x-ms-vss-resource": "extensionfields",
         "x-ms-vss-method": "AddCustomFields",
         "x-ms-preview": true,
-        "description": "",
+        "description": "Creates custom test fields based on the data provided.",
         "operationId": "Extensionfields_Add",
         "consumes": [
           "application/json"
@@ -496,7 +496,7 @@
           {
             "in": "body",
             "name": "body",
-            "description": "",
+            "description": "NewFields is an array of type CustomTestFieldDefinition.",
             "required": true,
             "schema": {
               "type": "array",
@@ -543,7 +543,7 @@
         "x-ms-vss-resource": "extensionfields",
         "x-ms-vss-method": "QueryCustomFields",
         "x-ms-preview": true,
-        "description": "",
+        "description": "Returns List of custom test fields for the given custom test field scope.",
         "operationId": "Extensionfields_Query",
         "produces": [
           "application/json"
@@ -566,13 +566,14 @@
           {
             "in": "query",
             "name": "scopeFilter",
-            "description": "",
+            "description": "Scope of custom test fields which are to be returned.",
             "required": true,
             "type": "string",
             "enum": [
               "none",
               "testRun",
               "testResult",
+              "testRunAndTestResult",
               "system",
               "all"
             ],
@@ -585,15 +586,19 @@
                 },
                 {
                   "value": "testRun",
-                  "description": ""
+                  "description": "Custom field can be used with TestRun artifact."
                 },
                 {
                   "value": "testResult",
-                  "description": ""
+                  "description": "Custom field can be used with TestResult artifact."
+                },
+                {
+                  "value": "testRunAndTestResult",
+                  "description": "Custom test field can be used with either TestRun or TestResult artifact."
                 },
                 {
                   "value": "system",
-                  "description": ""
+                  "description": "Reserved for internal Azure DevOps functionality. Not to be used."
                 },
                 {
                   "value": "all",
@@ -621,6 +626,118 @@
           {
             "oauth2": [
               "vso.test"
+            ]
+          }
+        ]
+      },
+      "patch": {
+        "tags": [
+          "Extensionfields"
+        ],
+        "x-ms-docs-override-version": "7.2-preview.1",
+        "x-ms-vss-resource": "extensionfields",
+        "x-ms-vss-method": "UpdateCustomField",
+        "x-ms-preview": true,
+        "description": "Returns details of the custom test field which is updated.",
+        "operationId": "Extensionfields_Update",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Custom test field which has to be updated.",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CustomTestFieldUpdateDefinition"
+            }
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/CustomTestFieldDefinition"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.test_write"
+            ]
+          }
+        ]
+      }
+    },
+    "/{organization}/{project}/_apis/testresults/extensionfields/{testExtensionFieldId}": {
+      "delete": {
+        "tags": [
+          "Extensionfields"
+        ],
+        "x-ms-docs-override-version": "7.2-preview.1",
+        "x-ms-vss-resource": "extensionfields",
+        "x-ms-vss-method": "DeleteCustomFieldById",
+        "x-ms-preview": true,
+        "description": "Returns details of the custom test field for the specified testExtensionFieldId.",
+        "operationId": "Extensionfields_Delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "testExtensionFieldId",
+            "description": "Custom test field id which has to be deleted.",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.test_write"
             ]
           }
         ]
@@ -8081,6 +8198,19 @@
         }
       }
     },
+    "AnalysisFailureGroupReturn": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "analysisFailureGroupId": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "failureGroupUid": {
+          "type": "string"
+        }
+      }
+    },
     "Attachment": {
       "description": "",
       "type": "object",
@@ -8498,27 +8628,30 @@
       "type": "object",
       "properties": {
         "fieldName": {
-          "description": "Field Name.",
+          "description": "Name of the Custom Test Field",
           "type": "string"
         },
         "value": {
-          "description": "Field value.",
+          "description": "1. If the CustomTestField is registered as Bit data type, value should be sent as case insensitive string - either \"true\" or \"false\". 2. If the CustomTestField is registered as Datetime data type, value should be sent as string in the format of \"YYYY-MM-DD hh:mm:ss\" 3. If the CustomTestField is registered as Int data type, value should be sent as string representation of 32 bit signed integer. Ex: \"5\". 4. If the CustomTestField is registered as Float data type, value should be sent as string for example \"4.237\" 5. If the CustomTestField is registered as String data type, Any string up to 1kB is accepted. 6. If the CustomTestField is registered as Guid, value should be sent as case insensitive string representation of GUID in usual format \"XXXXXXXX-XXXX-XXXX-XXXXXXXXXXXX\" where X can be either number 0-9 or letter A-F. For example \"f88d6b84-3549-4af0-a4f4-58139cd0a14f\".",
           "type": "object"
         }
       }
     },
     "CustomTestFieldDefinition": {
-      "description": "",
+      "description": "Data structure which stores details for the customTestFields to be updated",
       "type": "object",
       "properties": {
         "fieldId": {
+          "description": "ID assigned to the custom test field upon creation, should be left empty when creating.",
           "type": "integer",
           "format": "int32"
         },
         "fieldName": {
+          "description": "The name of custom field cannot be longer than 50 characters (spaces, numbers, and special characters are not allowed) and must be unique in the project. The names are case insensitive.",
           "type": "string"
         },
         "fieldType": {
+          "description": "Data type of the customTestField.",
           "enum": [
             "bit",
             "dateTime",
@@ -8532,36 +8665,38 @@
             "values": [
               {
                 "value": "bit",
-                "description": ""
+                "description": "Boolean data type."
               },
               {
                 "value": "dateTime",
-                "description": ""
+                "description": "Datetime data type."
               },
               {
                 "value": "int",
-                "description": ""
+                "description": "Integer data type."
               },
               {
                 "value": "float",
-                "description": ""
+                "description": "Floating integer data type."
               },
               {
                 "value": "string",
-                "description": ""
+                "description": "String data type."
               },
               {
                 "value": "guid",
-                "description": ""
+                "description": "Unique identifier data type."
               }
             ]
           }
         },
         "scope": {
+          "description": "Artifact to which customTestField will be set.",
           "enum": [
             "none",
             "testRun",
             "testResult",
+            "testRunAndTestResult",
             "system",
             "all"
           ],
@@ -8574,15 +8709,19 @@
               },
               {
                 "value": "testRun",
-                "description": ""
+                "description": "Custom field can be used with TestRun artifact."
               },
               {
                 "value": "testResult",
-                "description": ""
+                "description": "Custom field can be used with TestResult artifact."
+              },
+              {
+                "value": "testRunAndTestResult",
+                "description": "Custom test field can be used with either TestRun or TestResult artifact."
               },
               {
                 "value": "system",
-                "description": ""
+                "description": "Reserved for internal Azure DevOps functionality. Not to be used."
               },
               {
                 "value": "all",
@@ -8590,6 +8729,21 @@
               }
             ]
           }
+        }
+      }
+    },
+    "CustomTestFieldUpdateDefinition": {
+      "description": "Data structure which stores details for the customTestField to be updated.",
+      "type": "object",
+      "properties": {
+        "fieldId": {
+          "description": "Custom test field id which is to be updated.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "fieldName": {
+          "description": "The name of custom field cannot be longer than 50 characters(spaces, numbers, and special characters are not allowed) and must be unique in the project.CustomTestField name is case insensitive.",
+          "type": "string"
         }
       }
     },
@@ -8928,6 +9082,33 @@
         "url": {
           "description": "Link url",
           "type": "string"
+        }
+      }
+    },
+    "Machine": {
+      "description": "Computer which ran tests in the session",
+      "type": "object",
+      "properties": {
+        "environmentUid": {
+          "description": "GUID identifier for the environment the machine was configured with",
+          "type": "string",
+          "format": "uuid"
+        },
+        "instanceId": {
+          "description": "Machine instance id",
+          "type": "integer",
+          "format": "int64"
+        },
+        "name": {
+          "description": "Name of the machine",
+          "type": "string"
+        },
+        "timeline": {
+          "description": "Session Machine timeline Valid values for \"type\" property = (Requested, Ready, Released)",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Timeline"
+          }
         }
       }
     },
@@ -9312,7 +9493,7 @@
           "type": "string"
         },
         "customTestFields": {
-          "description": "Additional properties of test Run. Value of the CustomField cannot be more than 1KB.",
+          "description": "List of custom data for additional categorization of the test run. Value of the CustomTestField cannot be more than 1KB.",
           "type": "array",
           "items": {
             "$ref": "#/definitions/CustomTestField"
@@ -9658,7 +9839,7 @@
           "type": "string"
         },
         "customTestFields": {
-          "description": "Additional properties of test Run. Value of the CustomField cannot be more than 1KB.",
+          "description": "List of custom data for additional categorization of the test run. Value of the CustomTestField cannot be more than 1KB.",
           "type": "array",
           "items": {
             "$ref": "#/definitions/CustomTestField"
@@ -9798,6 +9979,26 @@
         "testSettings": {
           "description": "An abstracted reference to test setting resource.",
           "$ref": "#/definitions/ShallowReference"
+        }
+      }
+    },
+    "SessionEnvironmentAndMachine": {
+      "description": "Container class for TestSessionEnvironment and Machine objects related to a test session",
+      "type": "object",
+      "properties": {
+        "environments": {
+          "description": "Session Environments",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TestSessionEnvironment"
+          }
+        },
+        "machines": {
+          "description": "Session Machines",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Machine"
+          }
         }
       }
     },
@@ -10088,6 +10289,40 @@
         }
       }
     },
+    "TestAnalysisFailureGroup": {
+      "description": "Test analysis failure group object",
+      "type": "object",
+      "properties": {
+        "classificationCategory": {
+          "description": "classification category of the group Allowable values: 'Critical', 'System', 'Discounted'",
+          "type": "string"
+        },
+        "dimensions": {
+          "description": "analysis group dimensions",
+          "type": "object",
+          "additionalProperties": {
+            "type": "object"
+          }
+        },
+        "displayReason": {
+          "description": "reason for the analysis category",
+          "type": "string"
+        },
+        "displayTitle": {
+          "description": "title of the analysis category display",
+          "type": "string"
+        },
+        "failureGroupId": {
+          "description": "analysis failure group id",
+          "type": "integer",
+          "format": "int64"
+        },
+        "uid": {
+          "description": "unique id across the object",
+          "type": "string"
+        }
+      }
+    },
     "TestAttachment": {
       "description": "",
       "type": "object",
@@ -10254,7 +10489,7 @@
           "format": "date-time"
         },
         "customFields": {
-          "description": "Additional properties of test result.",
+          "description": "Array of custom data for additional categorization of the test result. Value of the CustomTestField cannot be more than 1KB.",
           "type": "array",
           "items": {
             "$ref": "#/definitions/CustomTestField"
@@ -11000,6 +11235,9 @@
         },
         "name": {
           "type": "string"
+        },
+        "testResult": {
+          "$ref": "#/definitions/TestCaseResult"
         }
       }
     },
@@ -11146,6 +11384,62 @@
           "type": "array",
           "items": {
             "$ref": "#/definitions/TestCaseResult"
+          }
+        }
+      }
+    },
+    "TestResultLog": {
+      "description": "Class to capture logs associated with a TestResultMachine",
+      "type": "object",
+      "properties": {
+        "fileType": {
+          "description": "FileType of the log being attached to a TestResultMachine Valid values : AutomationLogFile, Screenshot, LogFolder, Other",
+          "type": "string"
+        },
+        "path": {
+          "description": "Path to the log file. Max length: 300 characters",
+          "type": "string"
+        },
+        "type": {
+          "description": "Type of the path for the log Valid values : AzureBlobStorage, UNC, URI",
+          "type": "string"
+        }
+      }
+    },
+    "TestResultMachine": {
+      "description": "Class to map TestCaseResult to Machine objects the test ran on",
+      "type": "object",
+      "properties": {
+        "configurationName": {
+          "type": "string"
+        },
+        "isReportingMachine": {
+          "type": "boolean"
+        },
+        "machineName": {
+          "type": "string"
+        },
+        "processorArchitecture": {
+          "type": "string"
+        },
+        "properties": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object"
+          }
+        },
+        "sessionMachineInstanceId": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "testResultId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "testResultLogs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TestResultLog"
           }
         }
       }
@@ -11490,7 +11784,7 @@
           }
         },
         "timeline": {
-          "description": "TestResultsSession timeline",
+          "description": "TestResultsSession timeline Valid values for \"type\" property = (Queued, Completed, Started)",
           "type": "array",
           "items": {
             "$ref": "#/definitions/Timeline"
@@ -11899,8 +12193,29 @@
         }
       }
     },
+    "TestSessionAnalysis": {
+      "description": "Test session anaylsis",
+      "type": "object",
+      "properties": {
+        "analysisEngine": {
+          "description": "session analysis engine",
+          "type": "string"
+        },
+        "analysisFailureGroups": {
+          "description": "analysis failure groups",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TestAnalysisFailureGroup"
+          }
+        },
+        "analysisType": {
+          "description": "session analysis type",
+          "type": "string"
+        }
+      }
+    },
     "TestSessionEnvironment": {
-      "description": "",
+      "description": "Test session environment",
       "type": "object",
       "properties": {
         "displayName": {
@@ -11910,6 +12225,11 @@
         "processorArchitecture": {
           "description": "Processor architecture",
           "type": "string"
+        },
+        "uid": {
+          "description": "Uid of environment",
+          "type": "string",
+          "format": "uuid"
         }
       }
     },
@@ -12158,44 +12478,21 @@
       }
     },
     "Timeline": {
-      "description": "",
+      "description": "Timeline",
       "type": "object",
       "properties": {
         "display": {
+          "description": "Timeline display name",
           "type": "string"
         },
         "timestampUTC": {
+          "description": "Timeline timestamp",
           "type": "string",
           "format": "date-time"
         },
         "type": {
-          "enum": [
-            "none",
-            "queued",
-            "completed",
-            "started"
-          ],
-          "x-ms-enum": {
-            "name": "SessionTimelineType",
-            "values": [
-              {
-                "value": "none",
-                "description": "Default"
-              },
-              {
-                "value": "queued",
-                "description": "Timeline type for Queued status"
-              },
-              {
-                "value": "completed",
-                "description": "Timeline type for Completed status"
-              },
-              {
-                "value": "started",
-                "description": "Timeline type for Started status"
-              }
-            ]
-          }
+          "description": "Timeline type",
+          "type": "string"
         }
       }
     },

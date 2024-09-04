@@ -1,0 +1,189 @@
+﻿{
+  "swagger": "2.0",
+  "info": {
+    "title": "ResourceUsage",
+    "description": "",
+    "termsOfService": "https://go.microsoft.com/fwlink/?LinkId=329770",
+    "contact": {
+      "name": "nugetvss",
+      "email": "nugetvss@microsoft.com"
+    },
+    "license": {
+      "name": "MICROSOFT SOFTWARE LICENSE TERMS",
+      "url": "https://go.microsoft.com/fwlink/?LinkId=329770"
+    },
+    "version": "7.1-preview"
+  },
+  "host": "dev.azure.com",
+  "x-ms-vss-area": "ResourceUsage",
+  "x-ms-vss-resource-area-id": "240a9b11-3dc7-4aa0-b3fe-2b7dc8a4e7ea",
+  "basePath": "/",
+  "tags": [
+    {
+      "name": "Project",
+      "description": "API for viewing Project Limits."
+    },
+    {
+      "name": "Team Project Collection"
+    }
+  ],
+  "schemes": [
+    "https"
+  ],
+  "paths": {
+    "/{organization}/_apis/resourceusage": {
+      "get": {
+        "tags": [
+          "Team Project Collection"
+        ],
+        "x-ms-docs-override-version": "7.1-preview.1",
+        "x-ms-vss-resource": "teamProjectCollection",
+        "x-ms-vss-method": "GetLimits",
+        "x-ms-preview": true,
+        "description": "",
+        "operationId": "Team Project Collection_List",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "$ref": "#/definitions/Usage"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/{organization}/{project}/_apis/resourceusage": {
+      "get": {
+        "tags": [
+          "Project"
+        ],
+        "x-ms-docs-override-version": "7.1-preview.1",
+        "x-ms-vss-resource": "project",
+        "x-ms-vss-method": "GetProjectLimit",
+        "x-ms-preview": true,
+        "description": "Gets the Project Level limits and Usage for a project.",
+        "operationId": "Project_List",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "$ref": "#/definitions/Usage"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "Usage": {
+      "description": "Represents usage data that includes a count and a limit for a specific aspect.",
+      "type": "object",
+      "properties": {
+        "count": {
+          "description": "Gets the current count or usage.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "limit": {
+          "description": "Gets the maximum limit or capacity.",
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "VssJsonCollectionWrapper": {
+      "description": "This class is used to serialize collections as a single JSON object on the wire.",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/VssJsonCollectionWrapperBase"
+        }
+      ],
+      "properties": {
+        "value": {
+          "description": "The serialized item.",
+          "type": "string",
+          "format": "T"
+        }
+      }
+    },
+    "VssJsonCollectionWrapperBase": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "count": {
+          "description": "The number of serialized items.",
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    }
+  },
+  "parameters": {
+    "api-Version-preview.1": {
+      "name": "api-version",
+      "in": "query",
+      "description": "Version of the API to use.  This should be set to '7.1-preview.1' to use this version of the api.",
+      "required": true,
+      "type": "string"
+    }
+  },
+  "securityDefinitions": {
+    "accessToken": {
+      "type": "basic",
+      "description": "Personal access token. Use any value for the user name and the token as the password."
+    }
+  },
+  "security": [
+    {
+      "accessToken": []
+    }
+  ],
+  "externalDocs": {
+    "description": "Azure DevOps REST APIs",
+    "url": "https://aka.ms/azure-devops-rest-apis"
+  }
+}

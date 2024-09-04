@@ -30,7 +30,7 @@
     },
     {
       "name": "Attachments",
-      "description": "Project specific Work Item attachments API"
+      "description": "Create, get and permanently delete attachments associated with work items"
     },
     {
       "name": "Classification Nodes"
@@ -49,6 +49,9 @@
     },
     {
       "name": "Fields"
+    },
+    {
+      "name": "Github Connections"
     },
     {
       "name": "Project Process Migration"
@@ -527,6 +530,211 @@
         ]
       }
     },
+    "/{organization}/{project}/_apis/githubconnections": {
+      "get": {
+        "tags": [
+          "Github Connections"
+        ],
+        "x-ms-docs-override-version": "7.2-preview.1",
+        "x-ms-vss-resource": "githubConnections",
+        "x-ms-vss-method": "GetGithubConnections",
+        "x-ms-preview": true,
+        "description": "Gets a list of github connections",
+        "operationId": "Github Connections_Get Github Connections",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/GitHubConnectionModel"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.githubconnections"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "Get github connections list": {
+            "$ref": "./httpExamples/githubConnections/GET_githubConnections.json"
+          }
+        }
+      }
+    },
+    "/{organization}/{project}/_apis/githubconnections/{connectionId}/repos": {
+      "get": {
+        "tags": [
+          "Github Connections"
+        ],
+        "x-ms-docs-override-version": "7.2-preview.1",
+        "x-ms-vss-resource": "githubConnections",
+        "x-ms-vss-method": "GetGithubConnectionRepositories",
+        "x-ms-preview": true,
+        "description": "Gets a list of repos within specified github connection.",
+        "operationId": "Github Connections_Get Github Connection Repositories",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "connectionId",
+            "description": "",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/GitHubConnectionRepoModel"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.githubconnections"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "Get github connection repos list": {
+            "$ref": "./httpExamples/githubConnections/GET_githubConnections_repos.json"
+          }
+        }
+      }
+    },
+    "/{organization}/{project}/_apis/githubconnections/{connectionId}/reposBatch": {
+      "post": {
+        "tags": [
+          "Github Connections"
+        ],
+        "x-ms-docs-override-version": "7.2-preview.1",
+        "x-ms-vss-resource": "githubConnections",
+        "x-ms-vss-method": "UpdateGithubConnectionRepos",
+        "x-ms-preview": true,
+        "description": "Add/remove list of repos within specified github connection.",
+        "operationId": "Github Connections_Update",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/GitHubConnectionReposBatchRequest"
+            }
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "connectionId",
+            "description": "",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/GitHubConnectionRepoModel"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.githubconnections_manage"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "Add list of repos to the specified github connection": {
+            "$ref": "./httpExamples/githubConnections/POST_githubConnections_reposBatch_add.json"
+          },
+          "Remove list of repos from the specified github connection": {
+            "$ref": "./httpExamples/githubConnections/POST_githubConnections_reposBatch_remove.json"
+          }
+        }
+      }
+    },
     "/{organization}/{project}/_apis/wit/artifacturiquery": {
       "post": {
         "tags": [
@@ -600,7 +808,7 @@
         "tags": [
           "Attachments"
         ],
-        "x-ms-docs-override-version": "7.2-preview.3",
+        "x-ms-docs-override-version": "7.2-preview.4",
         "x-ms-vss-resource": "attachments",
         "x-ms-vss-method": "CreateAttachment",
         "x-ms-preview": true,
@@ -660,7 +868,7 @@
             "type": "string"
           },
           {
-            "$ref": "#/parameters/api-Version-preview.3"
+            "$ref": "#/parameters/api-Version-preview.4"
           }
         ],
         "responses": {
@@ -692,11 +900,68 @@
       }
     },
     "/{organization}/{project}/_apis/wit/attachments/{id}": {
+      "delete": {
+        "tags": [
+          "Attachments"
+        ],
+        "x-ms-docs-override-version": "7.2-preview.4",
+        "x-ms-vss-resource": "attachments",
+        "x-ms-vss-method": "DeleteAttachment",
+        "x-ms-preview": true,
+        "description": "Permanently delete an attachment.",
+        "operationId": "Attachments_Delete",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "id",
+            "description": "Attachment ID",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "x-ms-required": false,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.4"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/DestroyedAttachment"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.work_full"
+            ]
+          }
+        ]
+      },
       "get": {
         "tags": [
           "Attachments"
         ],
-        "x-ms-docs-override-version": "7.2-preview.3",
+        "x-ms-docs-override-version": "7.2-preview.4",
         "x-ms-vss-resource": "attachments",
         "x-ms-vss-method": "GetAttachment",
         "x-ms-preview": true,
@@ -745,7 +1010,7 @@
             "type": "boolean"
           },
           {
-            "$ref": "#/parameters/api-Version-preview.3"
+            "$ref": "#/parameters/api-Version-preview.4"
           }
         ],
         "responses": {
@@ -780,7 +1045,7 @@
         "tags": [
           "Attachments"
         ],
-        "x-ms-docs-override-version": "7.2-preview.3",
+        "x-ms-docs-override-version": "7.2-preview.4",
         "x-ms-vss-resource": "attachments",
         "x-ms-vss-method": "UploadAttachment",
         "x-ms-preview": true,
@@ -841,7 +1106,7 @@
             "type": "string"
           },
           {
-            "$ref": "#/parameters/api-Version-preview.3"
+            "$ref": "#/parameters/api-Version-preview.4"
           }
         ],
         "responses": {
@@ -7986,6 +8251,23 @@
         }
       }
     },
+    "DestroyedAttachment": {
+      "description": "Describes permanently deleted attachment and work items that had links to this attachment.",
+      "type": "object",
+      "properties": {
+        "affectedWorkItems": {
+          "description": "Work items with attachment references that have been marked as deleted.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/WorkItemReference"
+          }
+        },
+        "attachment": {
+          "description": "Permanently deleted attachment.",
+          "$ref": "#/definitions/AttachmentReference"
+        }
+      }
+    },
     "EmailRecipients": {
       "description": "",
       "type": "object",
@@ -10532,8 +10814,11 @@
       "authorizationUrl": "https://app.vssps.visualstudio.com/oauth2/authorize&response_type=Assertion",
       "tokenUrl": "https://app.vssps.visualstudio.com/oauth2/token?client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer&grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer",
       "scopes": {
+        "vso.githubconnections_manage": "Grants the ability to read and manage github connections and github repositories data",
+        "vso.githubconnections": "Grants the ability to read github connections and github repositories data",
         "vso.work": "Grants the ability to read work items, queries, boards, area and iterations paths, and other work item tracking related metadata. Also grants the ability to execute queries, search work items and to receive notifications about work item events via service hooks.",
-        "vso.work_write": "Grants the ability to read, create, and update work items and queries, update board metadata, read area and iterations paths other work item tracking related metadata, execute queries, and to receive notifications about work item events via service hooks."
+        "vso.work_write": "Grants the ability to read, create, and update work items and queries, update board metadata, read area and iterations paths other work item tracking related metadata, execute queries, and to receive notifications about work item events via service hooks.",
+        "vso.work_full": "Grants full access to work items, queries, backlogs, plans, and work item tracking metadata. Also provides the ability to receive notifications about work item events via service hooks."
       }
     }
   },

@@ -17,11 +17,102 @@
   "host": "advsec.dev.azure.com",
   "x-ms-vss-area": "Reporting",
   "basePath": "/",
-  "tags": [],
+  "tags": [
+    {
+      "name": "Summary Dashboard"
+    }
+  ],
   "schemes": [
     "https"
   ],
-  "paths": {},
+  "paths": {
+    "/{organization}/_apis/reporting/summary/alerts": {
+      "get": {
+        "tags": [
+          "Summary Dashboard"
+        ],
+        "x-ms-docs-override-version": "7.2-preview.1",
+        "x-ms-vss-resource": "summaryDashboard",
+        "x-ms-vss-method": "getAlertSummaryForOrg",
+        "x-ms-preview": true,
+        "description": "Get Alert summary by severity for the org",
+        "operationId": "Summary Dashboard_Get Alert Summary For Org",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/OrgAlertSummary"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.advsec"
+            ]
+          }
+        ]
+      }
+    },
+    "/{organization}/_apis/reporting/summary/enablement": {
+      "get": {
+        "tags": [
+          "Summary Dashboard"
+        ],
+        "x-ms-docs-override-version": "7.2-preview.1",
+        "x-ms-vss-resource": "summaryDashboard",
+        "x-ms-vss-method": "getEnablementSummaryForOrg",
+        "x-ms-preview": true,
+        "description": "",
+        "operationId": "Summary Dashboard_Get Enablement Summary For Org",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/OrgEnablementSummary"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.advsec"
+            ]
+          }
+        ]
+      }
+    }
+  },
   "definitions": {
     "AlertSummaryBySeverity": {
       "description": "Alert Summary by severity.",
@@ -186,6 +277,15 @@
     "accessToken": {
       "type": "basic",
       "description": "Personal access token. Use any value for the user name and the token as the password."
+    },
+    "oauth2": {
+      "type": "oauth2",
+      "flow": "accessCode",
+      "authorizationUrl": "https://app.vssps.visualstudio.com/oauth2/authorize&response_type=Assertion",
+      "tokenUrl": "https://app.vssps.visualstudio.com/oauth2/token?client_assertion_type=urn:ietf:params:oauth:client-assertion-type:jwt-bearer&grant_type=urn:ietf:params:oauth:grant-type:jwt-bearer",
+      "scopes": {
+        "vso.advsec": "Grants the ability to read alerts, result instances, analysis result instances"
+      }
     }
   },
   "security": [

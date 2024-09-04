@@ -23,6 +23,9 @@
     },
     {
       "name": "Instances"
+    },
+    {
+      "name": "Repositories Ux"
     }
   ],
   "schemes": [
@@ -101,7 +104,8 @@
               "unknown",
               "dependency",
               "secret",
-              "code"
+              "code",
+              "license"
             ],
             "x-ms-enum": {
               "name": "AlertType",
@@ -121,6 +125,10 @@
                 {
                   "value": "code",
                   "description": "The code contains a weakness determined by static analysis."
+                },
+                {
+                  "value": "license",
+                  "description": "The code uses a dependency with potential license incompliance."
                 }
               ]
             }
@@ -139,7 +147,7 @@
           {
             "in": "query",
             "name": "criteria.dependencyName",
-            "description": "If provided, only alerts for this dependency are returned. <br />Otherwise, return alerts for all dependencies. <br />In a sarif submission, a dependency (or a vulnerable component) is specified in result.RelatedLocations[].logicalLocation.",
+            "description": "If provided, only alerts for this dependency are returned. <br />Otherwise, return alerts for all dependencies. <br />In a sarif submission, a dependency (or a component) is specified in result.RelatedLocations[].logicalLocation.",
             "required": false,
             "type": "string"
           },
@@ -160,6 +168,13 @@
           },
           {
             "in": "query",
+            "name": "criteria.licenseName",
+            "description": "If provided, only alerts created for dependency with this license are returned. <br />Otherwise, return alerts for all licenses. <br />In a sarif submission, license for a dependency (or a component) is specified in result.RelatedLocations[].logicalLocation.properties.license.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
             "name": "criteria.modifiedSince",
             "description": "If provided, only return alerts that were modified since this date. <br />Otherwise return all alerts.",
             "required": false,
@@ -168,8 +183,8 @@
           },
           {
             "in": "query",
-            "name": "criteria.onlyDefaultBranchAlerts",
-            "description": "If true, only return alerts found on the default branch of the repository. <br />If there have been no runs completed on the default branch, the last run is used instead regardless of the branch used for that run. <br />This option is ignored if ref is provided.",
+            "name": "criteria.onlyDefaultBranch",
+            "description": "If true or not set, only return alerts found on the default branch of the repository. <br />If there have been no runs completed on the default branch, the last run is used instead regardless of the branch used for that run. If false, return alerts from all branches. <br />This option is ignored if ref is provided.",
             "required": false,
             "type": "boolean"
           },
@@ -529,6 +544,134 @@
           }
         ]
       }
+    },
+    "/{organization}/{project}/_apis/alert/repositories/{repository}/filters/branches": {
+      "get": {
+        "tags": [
+          "Repositories Ux"
+        ],
+        "x-ms-docs-override-version": "7.2-preview.1",
+        "x-ms-vss-resource": "repositoriesUx",
+        "x-ms-vss-method": "GetBranchesAsync",
+        "x-ms-preview": true,
+        "description": "Returns the branches for which analysis results were submitted.",
+        "operationId": "Repositories Ux_List",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "repository",
+            "description": "",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "alertType",
+            "description": "The type of alert: Dependency Scanning (1), Secret (2), Code QL (3), etc.",
+            "required": true,
+            "type": "string",
+            "enum": [
+              "unknown",
+              "dependency",
+              "secret",
+              "code",
+              "license"
+            ],
+            "x-ms-enum": {
+              "name": "AlertType",
+              "values": [
+                {
+                  "value": "unknown",
+                  "description": "The code has an unspecified vulnerability type"
+                },
+                {
+                  "value": "dependency",
+                  "description": "The code uses a dependency with a known vulnerability."
+                },
+                {
+                  "value": "secret",
+                  "description": "The code contains a secret that has now been compromised and must be revoked."
+                },
+                {
+                  "value": "code",
+                  "description": "The code contains a weakness determined by static analysis."
+                },
+                {
+                  "value": "license",
+                  "description": "The code uses a dependency with potential license incompliance."
+                }
+              ]
+            }
+          },
+          {
+            "in": "query",
+            "name": "continuationToken",
+            "description": "A string variable that represents the branch name and is used to fetch branches that follow it in alphabetical order.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "branchNameContains",
+            "description": "A string variable used to fetch branches that contain this string anywhere in the branch name, case insensitive.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "top",
+            "description": "An int variable used to return the top k branches that satisfy the search criteria.",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "includePullRequestBranches",
+            "description": "A bool variable indicating whether or not to include pull request branches.",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Branch"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.advsec"
+            ]
+          }
+        ]
+      }
     }
   },
   "definitions": {
@@ -547,7 +690,8 @@
             "unknown",
             "dependency",
             "secret",
-            "code"
+            "code",
+            "license"
           ],
           "x-ms-enum": {
             "name": "AlertType",
@@ -567,6 +711,10 @@
               {
                 "value": "code",
                 "description": "The code contains a weakness determined by static analysis."
+              },
+              {
+                "value": "license",
+                "description": "The code uses a dependency with potential license incompliance."
               }
             ]
           }
@@ -633,6 +781,13 @@
             "$ref": "#/definitions/PhysicalLocation"
           }
         },
+        "relations": {
+          "description": "Relations between alerts and other artifacts.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/RelationMetadata"
+          }
+        },
         "repositoryUrl": {
           "description": "Repository URL where the alert was detected.",
           "type": "string"
@@ -646,7 +801,8 @@
             "critical",
             "note",
             "warning",
-            "error"
+            "error",
+            "undefined"
           ],
           "x-ms-enum": {
             "name": "Severity",
@@ -677,6 +833,10 @@
               },
               {
                 "value": "error",
+                "description": ""
+              },
+              {
+                "value": "undefined",
                 "description": ""
               }
             ]
@@ -847,7 +1007,8 @@
             "unknown",
             "fixed",
             "acceptedRisk",
-            "falsePositive"
+            "falsePositive",
+            "agreedToGuidance"
           ],
           "x-ms-enum": {
             "name": "DismissalType",
@@ -867,6 +1028,10 @@
               {
                 "value": "falsePositive",
                 "description": "Dismissal indicating alert is a false positive and will likely not be fixed."
+              },
+              {
+                "value": "agreedToGuidance",
+                "description": "Dismissal indicating user is agreeing to follow license guidance."
               }
             ]
           }
@@ -954,6 +1119,13 @@
       "description": "",
       "type": "object",
       "properties": {
+        "additionalProperties": {
+          "description": "Properties of the pipeline.",
+          "type": "object",
+          "additionalProperties": {
+            "type": "object"
+          }
+        },
         "gitRef": {
           "description": "Reference to a git object, e.g. branch ref.",
           "type": "string"
@@ -1254,7 +1426,8 @@
             "unknown",
             "fixed",
             "acceptedRisk",
-            "falsePositive"
+            "falsePositive",
+            "agreedToGuidance"
           ],
           "x-ms-enum": {
             "name": "DismissalType",
@@ -1274,6 +1447,10 @@
               {
                 "value": "falsePositive",
                 "description": "Dismissal indicating alert is a false positive and will likely not be fixed."
+              },
+              {
+                "value": "agreedToGuidance",
+                "description": "Dismissal indicating user is agreeing to follow license guidance."
               }
             ]
           }
@@ -1360,6 +1537,45 @@
         }
       }
     },
+    "License": {
+      "description": "License information for dependencies",
+      "type": "object",
+      "properties": {
+        "name": {
+          "description": "License name",
+          "type": "string"
+        },
+        "state": {
+          "description": "License state",
+          "enum": [
+            "unknown",
+            "notHarvested",
+            "harvested"
+          ],
+          "x-ms-enum": {
+            "name": "LicenseState",
+            "values": [
+              {
+                "value": "unknown",
+                "description": "Information of the license has not been harvested by ClearlyDefined"
+              },
+              {
+                "value": "notHarvested",
+                "description": "Information of the license has not been harvested by ClearlyDefined"
+              },
+              {
+                "value": "harvested",
+                "description": "Information of the license has been harvested by ClearlyDefined"
+              }
+            ]
+          }
+        },
+        "url": {
+          "description": "Url for license information",
+          "type": "string"
+        }
+      }
+    },
     "LogicalLocation": {
       "description": "",
       "type": "object",
@@ -1368,8 +1584,38 @@
           "type": "string"
         },
         "kind": {
-          "description": "Possible values: \"unknown\" \"rootDependency\" and \"vulnerableDependency\"",
-          "type": "string"
+          "description": "Dependency kind of this logical location.",
+          "enum": [
+            "unknown",
+            "rootDependency",
+            "component",
+            "vulnerableDependency"
+          ],
+          "x-ms-enum": {
+            "name": "DependencyKind",
+            "values": [
+              {
+                "value": "unknown",
+                "description": ""
+              },
+              {
+                "value": "rootDependency",
+                "description": "The root dependency introduced the component being alerted."
+              },
+              {
+                "value": "component",
+                "description": "The component being alerted."
+              },
+              {
+                "value": "vulnerableDependency",
+                "description": "Vulnerable Dependency. Deprecating this value. Use Component instead."
+              }
+            ]
+          }
+        },
+        "license": {
+          "description": "License information for Dependency Only applicable when Kind is \"Component\" and the alertType of the alert with this location is License",
+          "$ref": "#/definitions/License"
         }
       }
     },
@@ -1380,6 +1626,7 @@
         "op": {
           "description": "The type of operation to be performed.",
           "enum": [
+            "none",
             "add",
             "remove"
           ],
@@ -1387,12 +1634,16 @@
             "name": "MetadataOperation",
             "values": [
               {
+                "value": "none",
+                "description": "Represents the defualt value if the operation is not specified or not supported."
+              },
+              {
                 "value": "add",
-                "description": ""
+                "description": "Represents the addition of the metadata."
               },
               {
                 "value": "remove",
-                "description": ""
+                "description": "Represents the removal of the metadata."
               }
             ]
           }
@@ -1478,6 +1729,12 @@
         "phaseId": {
           "type": "string",
           "format": "uuid"
+        },
+        "properties": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object"
+          }
         }
       }
     },
@@ -1610,7 +1867,8 @@
             "critical",
             "note",
             "warning",
-            "error"
+            "error",
+            "undefined"
           ],
           "x-ms-enum": {
             "name": "Severity",
@@ -1641,6 +1899,10 @@
               },
               {
                 "value": "error",
+                "description": ""
+              },
+              {
+                "value": "undefined",
                 "description": ""
               }
             ]
@@ -1707,7 +1969,8 @@
             "new",
             "queued",
             "completed",
-            "failed"
+            "failed",
+            "requeued"
           ],
           "x-ms-enum": {
             "name": "SarifJobStatus",
@@ -1727,6 +1990,10 @@
               {
                 "value": "failed",
                 "description": "The job type when it fails"
+              },
+              {
+                "value": "requeued",
+                "description": "The job type when it is queued on exception"
               }
             ]
           }
@@ -1738,6 +2005,9 @@
       "type": "object",
       "properties": {
         "nodePointer": {
+          "type": "string"
+        },
+        "ruleId": {
           "type": "string"
         },
         "validationError": {
@@ -1763,7 +2033,8 @@
             "unknown",
             "dependency",
             "secret",
-            "code"
+            "code",
+            "license"
           ],
           "x-ms-enum": {
             "name": "AlertType",
@@ -1783,6 +2054,10 @@
               {
                 "value": "code",
                 "description": "The code contains a weakness determined by static analysis."
+              },
+              {
+                "value": "license",
+                "description": "The code uses a dependency with potential license incompliance."
               }
             ]
           }
@@ -1811,7 +2086,7 @@
           }
         },
         "dependencyName": {
-          "description": "If provided, only alerts for this dependency are returned. <br />Otherwise, return alerts for all dependencies. <br />In a sarif submission, a dependency (or a vulnerable component) is specified in result.RelatedLocations[].logicalLocation.",
+          "description": "If provided, only alerts for this dependency are returned. <br />Otherwise, return alerts for all dependencies. <br />In a sarif submission, a dependency (or a component) is specified in result.RelatedLocations[].logicalLocation.",
           "type": "string"
         },
         "fromDate": {
@@ -1823,13 +2098,17 @@
           "description": "If provided, only return alerts whose titles match this pattern.",
           "type": "string"
         },
+        "licenseName": {
+          "description": "If provided, only alerts created for dependency with this license are returned. <br />Otherwise, return alerts for all licenses. <br />In a sarif submission, license for a dependency (or a component) is specified in result.RelatedLocations[].logicalLocation.properties.license.",
+          "type": "string"
+        },
         "modifiedSince": {
           "description": "If provided, only return alerts that were modified since this date. <br />Otherwise return all alerts.",
           "type": "string",
           "format": "date-time"
         },
-        "onlyDefaultBranchAlerts": {
-          "description": "If true, only return alerts found on the default branch of the repository. <br />If there have been no runs completed on the default branch, the last run is used instead regardless of the branch used for that run. <br />This option is ignored if ref is provided.",
+        "onlyDefaultBranch": {
+          "description": "If true or not set, only return alerts found on the default branch of the repository. <br />If there have been no runs completed on the default branch, the last run is used instead regardless of the branch used for that run. If false, return alerts from all branches. <br />This option is ignored if ref is provided.",
           "type": "boolean"
         },
         "phaseId": {
@@ -1868,7 +2147,8 @@
               "critical",
               "note",
               "warning",
-              "error"
+              "error",
+              "undefined"
             ],
             "x-ms-enum": {
               "name": "Severity",
@@ -1899,6 +2179,10 @@
                 },
                 {
                   "value": "error",
+                  "description": ""
+                },
+                {
+                  "value": "undefined",
                   "description": ""
                 }
               ]
@@ -1976,14 +2260,14 @@
       "type": "object",
       "properties": {
         "branches": {
-          "description": "Branches to display alerts for.  If empty, show alerts from all branches",
+          "description": "Display alerts for specified branches. Show alerts for all branches if none are specified.",
           "type": "array",
           "items": {
             "$ref": "#/definitions/Branch"
           }
         },
         "confidenceLevels": {
-          "description": "Confidence levels to show, only valid when AlertType is Secret.",
+          "description": "Display alerts for specified confidence levels. Show alerts for all confidence levels. if none are specified.",
           "type": "array",
           "items": {
             "enum": [
@@ -2005,14 +2289,22 @@
             }
           }
         },
+        "licenses": {
+          "description": "Display alerts for specified licenses. Show alerts for all licenses if none are specified.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/License"
+          }
+        },
         "packages": {
+          "description": "Display alerts for specified packages. Show alerts for all packages if none are specified.",
           "type": "array",
           "items": {
             "$ref": "#/definitions/Dependency"
           }
         },
         "pipelines": {
-          "description": "Pipelines to show alerts for.  If empty, show alerts for all pipelines",
+          "description": "Display alerts for specified pipelines. Show alerts for all pipelines if none are specified.",
           "type": "array",
           "items": {
             "$ref": "#/definitions/Pipeline"
@@ -2023,19 +2315,21 @@
           "format": "int32"
         },
         "rules": {
+          "description": "Display alerts for specified rules. Show alerts for all rules if none are specified.",
           "type": "array",
           "items": {
             "$ref": "#/definitions/Rule"
           }
         },
         "secretTypes": {
+          "description": "Display alerts for specified secret types. Show alerts for all secret types if none are specified.",
           "type": "array",
           "items": {
             "type": "string"
           }
         },
         "severities": {
-          "description": "Alert severities to show.  If empty show all alert servities",
+          "description": "Display alerts for specified severities. Show alerts for all severities if none are specified.",
           "type": "array",
           "items": {
             "enum": [
@@ -2045,7 +2339,8 @@
               "critical",
               "note",
               "warning",
-              "error"
+              "error",
+              "undefined"
             ],
             "x-ms-enum": {
               "name": "Severity",
@@ -2077,13 +2372,17 @@
                 {
                   "value": "error",
                   "description": ""
+                },
+                {
+                  "value": "undefined",
+                  "description": ""
                 }
               ]
             }
           }
         },
         "states": {
-          "description": "Alert states to show.  If empty show all alert states",
+          "description": "Display alerts for specified states. Show alerts for all states if none are specified.",
           "type": "array",
           "items": {
             "enum": [
@@ -2121,6 +2420,7 @@
           }
         },
         "tools": {
+          "description": "Display alerts for specified tools. Show alerts for all tools if none are specified.",
           "type": "array",
           "items": {
             "$ref": "#/definitions/Tool"

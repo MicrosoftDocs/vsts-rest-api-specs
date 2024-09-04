@@ -825,6 +825,13 @@
             }
           },
           {
+            "in": "query",
+            "name": "loadConfidetantialData",
+            "description": "Flag to include confidential details of service endpoint. This is for internal use only.",
+            "required": false,
+            "type": "boolean"
+          },
+          {
             "$ref": "#/parameters/api-Version-preview.4"
           }
         ],
@@ -1169,6 +1176,21 @@
         }
       }
     },
+    "AzureManagedIdentity": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "clientId": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        }
+      }
+    },
     "AzureManagementGroup": {
       "description": "Azure Management Group",
       "type": "object",
@@ -1268,6 +1290,20 @@
       "description": "",
       "type": "object",
       "properties": {
+        "errorCode": {
+          "enum": [
+            "appRegistrationFailed"
+          ],
+          "x-ms-enum": {
+            "name": "SpnEndpointErrorCode",
+            "values": [
+              {
+                "value": "appRegistrationFailed",
+                "description": "Indicates whether user does not have required permissions to register the app in Entra or WIF is disabled."
+              }
+            ]
+          }
+        },
         "severity": {
           "type": "string"
         },
@@ -2211,6 +2247,11 @@
           "description": "Gets or sets the identity reference for the user who created the Service endpoint.",
           "$ref": "#/definitions/IdentityRef"
         },
+        "creationDate": {
+          "description": "Gets or sets the date, when the Service endpoint has been created.",
+          "type": "string",
+          "format": "date-time"
+        },
         "data": {
           "type": "object",
           "additionalProperties": {
@@ -2247,6 +2288,15 @@
           "description": "Indicates whether service endpoint is shared with other projects or not.",
           "type": "boolean"
         },
+        "modificationDate": {
+          "description": "Gets or sets the date, when the Service endpoint has been modified.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "modifiedBy": {
+          "description": "Gets or sets the identity reference for the user who did the latest modification of the Service endpoint.",
+          "$ref": "#/definitions/IdentityRef"
+        },
         "name": {
           "description": "Gets or sets the friendly name of the endpoint.",
           "type": "string"
@@ -2269,6 +2319,10 @@
           "items": {
             "$ref": "#/definitions/ServiceEndpointProjectReference"
           }
+        },
+        "serviceManagementReference": {
+          "description": "Service Tree ID",
+          "type": "string"
         },
         "type": {
           "description": "Gets or sets the type of the endpoint.",
@@ -2358,6 +2412,32 @@
         },
         "url": {
           "description": "Gets or sets the connection url of service endpoint.",
+          "type": "string"
+        }
+      }
+    },
+    "ServiceEndpointEvent": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "authorization": {
+          "$ref": "#/definitions/EndpointAuthorization"
+        },
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "name": {
+          "type": "string"
+        },
+        "projectIds": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "type": {
           "type": "string"
         }
       }
@@ -2814,6 +2894,16 @@
               }
             ]
           }
+        }
+      }
+    },
+    "ServiceEndpointTokenResult": {
+      "description": "Represents the details of service endpoint execution.",
+      "type": "object",
+      "properties": {
+        "accessToken": {
+          "description": "Gets the access token",
+          "type": "string"
         }
       }
     },

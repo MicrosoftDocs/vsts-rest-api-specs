@@ -3148,7 +3148,7 @@
           {
             "in": "query",
             "name": "loadSecrets",
-            "description": "",
+            "description": "Flag indicating if the secrets within variable groups should be loaded.",
             "required": false,
             "type": "boolean"
           },
@@ -3866,6 +3866,23 @@
         },
         "queue": {
           "$ref": "#/definitions/TaskAgentQueue"
+        }
+      }
+    },
+    "AgentQueueServiceHookEvent": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "projectId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "queueId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "queueName": {
+          "type": "string"
         }
       }
     },
@@ -5668,7 +5685,9 @@
             "failed",
             "canceled",
             "skipped",
-            "abandoned"
+            "abandoned",
+            "manuallyQueued",
+            "dependentOnManualQueue"
           ],
           "x-ms-enum": {
             "name": "TaskResult",
@@ -5695,6 +5714,14 @@
               },
               {
                 "value": "abandoned",
+                "description": ""
+              },
+              {
+                "value": "manuallyQueued",
+                "description": ""
+              },
+              {
+                "value": "dependentOnManualQueue",
                 "description": ""
               }
             ]
@@ -5899,7 +5926,9 @@
             "failed",
             "canceled",
             "skipped",
-            "abandoned"
+            "abandoned",
+            "manuallyQueued",
+            "dependentOnManualQueue"
           ],
           "x-ms-enum": {
             "name": "TaskResult",
@@ -5926,6 +5955,14 @@
               },
               {
                 "value": "abandoned",
+                "description": ""
+              },
+              {
+                "value": "manuallyQueued",
+                "description": ""
+              },
+              {
+                "value": "dependentOnManualQueue",
                 "description": ""
               }
             ]
@@ -6506,7 +6543,9 @@
             "failed",
             "canceled",
             "skipped",
-            "abandoned"
+            "abandoned",
+            "manuallyQueued",
+            "dependentOnManualQueue"
           ],
           "x-ms-enum": {
             "name": "TaskResult",
@@ -6533,6 +6572,14 @@
               },
               {
                 "value": "abandoned",
+                "description": ""
+              },
+              {
+                "value": "manuallyQueued",
+                "description": ""
+              },
+              {
+                "value": "dependentOnManualQueue",
                 "description": ""
               }
             ]
@@ -7557,6 +7604,11 @@
           "description": "Gets or sets the identity reference for the user who created the Service endpoint.",
           "$ref": "#/definitions/IdentityRef"
         },
+        "creationDate": {
+          "description": "Gets or sets the date, when the Service endpoint has been created.",
+          "type": "string",
+          "format": "date-time"
+        },
         "data": {
           "type": "object",
           "additionalProperties": {
@@ -7588,6 +7640,15 @@
           "description": "Indicates whether service endpoint is shared with other projects or not.",
           "type": "boolean"
         },
+        "modificationDate": {
+          "description": "Gets or sets the date, when the Service endpoint has been modified.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "modifiedBy": {
+          "description": "Gets or sets the identity reference for the user who did the latest modification of the Service endpoint.",
+          "$ref": "#/definitions/IdentityRef"
+        },
         "name": {
           "description": "Gets or sets the friendly name of the endpoint.",
           "type": "string"
@@ -7603,6 +7664,10 @@
         "readersGroup": {
           "description": "Gets or sets the identity reference for the readers group of the service endpoint.",
           "$ref": "#/definitions/IdentityRef"
+        },
+        "serviceManagementReference": {
+          "description": "Service Tree ID",
+          "type": "string"
         },
         "type": {
           "description": "Gets or sets the type of the endpoint.",
@@ -7704,7 +7769,9 @@
             "failed",
             "canceled",
             "skipped",
-            "abandoned"
+            "abandoned",
+            "manuallyQueued",
+            "dependentOnManualQueue"
           ],
           "x-ms-enum": {
             "name": "TaskResult",
@@ -7731,6 +7798,14 @@
               },
               {
                 "value": "abandoned",
+                "description": ""
+              },
+              {
+                "value": "manuallyQueued",
+                "description": ""
+              },
+              {
+                "value": "dependentOnManualQueue",
                 "description": ""
               }
             ]
@@ -8290,6 +8365,10 @@
         "requestId": {
           "type": "string",
           "format": "uuid"
+        },
+        "requestVersion": {
+          "type": "integer",
+          "format": "int32"
         }
       }
     },
@@ -8481,7 +8560,9 @@
             "failed",
             "canceled",
             "skipped",
-            "abandoned"
+            "abandoned",
+            "manuallyQueued",
+            "dependentOnManualQueue"
           ],
           "x-ms-enum": {
             "name": "TaskResult",
@@ -8508,6 +8589,14 @@
               },
               {
                 "value": "abandoned",
+                "description": ""
+              },
+              {
+                "value": "manuallyQueued",
+                "description": ""
+              },
+              {
+                "value": "dependentOnManualQueue",
                 "description": ""
               }
             ]
@@ -9496,7 +9585,9 @@
             "failed",
             "canceled",
             "skipped",
-            "abandoned"
+            "abandoned",
+            "manuallyQueued",
+            "dependentOnManualQueue"
           ],
           "x-ms-enum": {
             "name": "TaskResult",
@@ -9524,6 +9615,14 @@
               {
                 "value": "abandoned",
                 "description": ""
+              },
+              {
+                "value": "manuallyQueued",
+                "description": ""
+              },
+              {
+                "value": "dependentOnManualQueue",
+                "description": ""
               }
             ]
           }
@@ -9538,6 +9637,9 @@
           "$ref": "#/definitions/TaskExecution"
         },
         "author": {
+          "type": "string"
+        },
+        "buildConfig": {
           "type": "string"
         },
         "category": {
@@ -10577,7 +10679,9 @@
             "failed",
             "canceled",
             "skipped",
-            "abandoned"
+            "abandoned",
+            "manuallyQueued",
+            "dependentOnManualQueue"
           ],
           "x-ms-enum": {
             "name": "TaskResult",
@@ -10604,6 +10708,14 @@
               },
               {
                 "value": "abandoned",
+                "description": ""
+              },
+              {
+                "value": "manuallyQueued",
+                "description": ""
+              },
+              {
+                "value": "dependentOnManualQueue",
                 "description": ""
               }
             ]
@@ -10839,6 +10951,16 @@
       "description": "A reference to a task.",
       "type": "object",
       "properties": {
+        "buildConfig": {
+          "description": "The build config of the task definition. Corresponds to the version value of task.json file. <br />Example: CmdLineV2 { \"_buildConfigMapping\": { \"Default\": \"2.232.2\", \"Node20_229_7\": \"2.232.3\" } }",
+          "type": "string"
+        },
+        "contributionIdentifier": {
+          "type": "string"
+        },
+        "contributionVersion": {
+          "type": "string"
+        },
         "id": {
           "description": "The ID of the task definition. Corresponds to the id value of task.json file. <br />Example: CmdLineV2 { \"id\": \"D9BAFED4-0B18-4F58-968D-86655B4D2CE9\" }",
           "type": "string",
@@ -11105,7 +11227,9 @@
             "failed",
             "canceled",
             "skipped",
-            "abandoned"
+            "abandoned",
+            "manuallyQueued",
+            "dependentOnManualQueue"
           ],
           "x-ms-enum": {
             "name": "TaskResult",
@@ -11132,6 +11256,14 @@
               },
               {
                 "value": "abandoned",
+                "description": ""
+              },
+              {
+                "value": "manuallyQueued",
+                "description": ""
+              },
+              {
+                "value": "dependentOnManualQueue",
                 "description": ""
               }
             ]
@@ -11229,6 +11361,10 @@
       "description": "A reference to a timeline record.",
       "type": "object",
       "properties": {
+        "attempt": {
+          "type": "integer",
+          "format": "int32"
+        },
         "id": {
           "description": "The ID of the record.",
           "type": "string",
