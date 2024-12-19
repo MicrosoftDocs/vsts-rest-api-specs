@@ -22,10 +22,10 @@
       "name": "Alerts"
     },
     {
-      "name": "Instances"
+      "name": "Analysis"
     },
     {
-      "name": "Repositories Ux"
+      "name": "Instances"
     }
   ],
   "schemes": [
@@ -262,6 +262,35 @@
             "description": "If provided with toolName, only return alerts detected by this tool. <br />Otherwise, return alerts detected by all tools.",
             "required": false,
             "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "criteria.validity",
+            "description": "If provided, only return alerts with the validity specified here. If the validity status is Unknown, fetch alerts of all validity results. <br />Only applicable for secret alerts.",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "unknown",
+              "active",
+              "inactive"
+            ],
+            "x-ms-enum": {
+              "name": "AlertValidityStatus",
+              "values": [
+                {
+                  "value": "unknown",
+                  "description": ""
+                },
+                {
+                  "value": "active",
+                  "description": ""
+                },
+                {
+                  "value": "inactive",
+                  "description": ""
+                }
+              ]
+            }
           },
           {
             "in": "query",
@@ -567,14 +596,14 @@
     "/{organization}/{project}/_apis/alert/repositories/{repository}/filters/branches": {
       "get": {
         "tags": [
-          "Repositories Ux"
+          "Analysis"
         ],
         "x-ms-docs-override-version": "7.2-preview.1",
-        "x-ms-vss-resource": "repositoriesUx",
+        "x-ms-vss-resource": "analysis",
         "x-ms-vss-method": "GetBranchesAsync",
         "x-ms-preview": true,
         "description": "Returns the branches for which analysis results were submitted.",
-        "operationId": "Repositories Ux_List",
+        "operationId": "Analysis_List",
         "produces": [
           "application/json"
         ],
@@ -693,6 +722,13 @@
       "description": "",
       "type": "object",
       "properties": {
+        "additionalProperties": {
+          "description": "Additional properties of this alert.",
+          "type": "object",
+          "additionalProperties": {
+            "type": "object"
+          }
+        },
         "alertId": {
           "description": "Identifier for the alert. It is unique within Azure DevOps organization.",
           "type": "integer",
@@ -907,6 +943,10 @@
           "items": {
             "$ref": "#/definitions/ValidationFingerprint"
           }
+        },
+        "validityDetails": {
+          "description": "Validity details of an alert. Currently, this is only applicable to secret alerts. In case of secret alerts, the validity status and time is computed by looking at the liveness results for validation fingerprints associated to an alert.",
+          "$ref": "#/definitions/AlertValidityInfo"
         }
       }
     },
@@ -1075,6 +1115,40 @@
               {
                 "value": "autoDismissed",
                 "description": "The tool has determined that the issue is no longer a risk"
+              }
+            ]
+          }
+        }
+      }
+    },
+    "AlertValidityInfo": {
+      "description": "Validity data for an alert that will be part of Alerts APIs and UI.",
+      "type": "object",
+      "properties": {
+        "validityLastCheckedDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "validityStatus": {
+          "enum": [
+            "unknown",
+            "active",
+            "inactive"
+          ],
+          "x-ms-enum": {
+            "name": "AlertValidityStatus",
+            "values": [
+              {
+                "value": "unknown",
+                "description": ""
+              },
+              {
+                "value": "active",
+                "description": ""
+              },
+              {
+                "value": "inactive",
+                "description": ""
               }
             ]
           }
@@ -2235,6 +2309,31 @@
         "toolName": {
           "description": "If provided with toolName, only return alerts detected by this tool. <br />Otherwise, return alerts detected by all tools.",
           "type": "string"
+        },
+        "validity": {
+          "description": "If provided, only return alerts with the validity specified here. If the validity status is Unknown, fetch alerts of all validity results. <br />Only applicable for secret alerts.",
+          "enum": [
+            "unknown",
+            "active",
+            "inactive"
+          ],
+          "x-ms-enum": {
+            "name": "AlertValidityStatus",
+            "values": [
+              {
+                "value": "unknown",
+                "description": ""
+              },
+              {
+                "value": "active",
+                "description": ""
+              },
+              {
+                "value": "inactive",
+                "description": ""
+              }
+            ]
+          }
         }
       }
     },
@@ -2425,6 +2524,34 @@
           "items": {
             "$ref": "#/definitions/Tool"
           }
+        },
+        "validity": {
+          "description": "Display alerts for specified validity. Show alerts for all validities if none are specified.",
+          "type": "array",
+          "items": {
+            "enum": [
+              "unknown",
+              "active",
+              "inactive"
+            ],
+            "x-ms-enum": {
+              "name": "AlertValidityStatus",
+              "values": [
+                {
+                  "value": "unknown",
+                  "description": ""
+                },
+                {
+                  "value": "active",
+                  "description": ""
+                },
+                {
+                  "value": "inactive",
+                  "description": ""
+                }
+              ]
+            }
+          }
         }
       }
     },
@@ -2436,6 +2563,13 @@
           "type": "string"
         },
         "validationFingerprintJson": {
+          "type": "string"
+        },
+        "validityLastUpdatedDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "validityResult": {
           "type": "string"
         }
       }
