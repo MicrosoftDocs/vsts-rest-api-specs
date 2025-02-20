@@ -199,10 +199,82 @@
         }
       }
     },
+    "SbomFileValidationResult": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "errorType": {
+          "type": "string"
+        },
+        "path": {
+          "type": "string"
+        }
+      }
+    },
+    "SbomStorageResult": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "failureReason": {
+          "type": "string"
+        },
+        "result": {
+          "type": "string"
+        },
+        "sbomStorageApiUrl": {
+          "type": "string"
+        },
+        "sbomZipFileSizeInBytes": {
+          "type": "string"
+        }
+      }
+    },
+    "SbomTaskErrors": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "count": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "errors": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SbomFileValidationResult"
+          }
+        }
+      }
+    },
+    "SbomTaskTiming": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "eventName": {
+          "type": "string"
+        },
+        "timeSpan": {
+          "type": "string"
+        }
+      }
+    },
     "SBOMTelemetry": {
       "description": "The telemetry that is logged to a file/console for the given SBOM execution.",
       "type": "object",
       "properties": {
+        "additionalProperties": {
+          "description": "Additional SBOM task properties",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "additionalTimings": {
+          "description": "Timing data for additional operations performed in task",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SbomTaskTiming"
+          }
+        },
         "bsiData": {
           "description": "All available bsi data from the task build execution which includes build and system environment variables like repository and build information.",
           "type": "object",
@@ -218,9 +290,41 @@
           "description": "The end to end results of the extension task.",
           "type": "string"
         },
+        "errors": {
+          "description": "Errors thrown during task run",
+          "$ref": "#/definitions/SbomTaskErrors"
+        },
+        "esrpOperationIds": {
+          "description": "Operation IDs for ESRP signing operations",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "exceptions": {
+          "description": "Exceptions thrown during task run",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
         "parameters": {
           "description": "A list of ConfigurationSetting`1 representing each input parameter used in the validation.",
           "$ref": "#/definitions/Configuration"
+        },
+        "pipelineReleaseVariables": {
+          "description": "Pipeline release variables set during task run",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "pipelineVariables": {
+          "description": "Pipeline variables set during task run",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
         },
         "result": {
           "description": "The result of the execution",
@@ -231,6 +335,13 @@
           "type": "array",
           "items": {
             "$ref": "#/definitions/SBOMFile"
+          }
+        },
+        "sbomStorageResults": {
+          "description": "Results from SBOM storage service calls during task run",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SbomStorageResult"
           }
         },
         "switches": {
@@ -251,6 +362,18 @@
         "telemetryId": {
           "description": "The unique id for this telemetry",
           "type": "string"
+        },
+        "timeoutValueInMins": {
+          "description": "Task timeout value",
+          "type": "integer",
+          "format": "int32"
+        },
+        "timings": {
+          "description": "Timing data for SBOM generation operations",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SbomTaskTiming"
+          }
         },
         "toolExecutionResult": {
           "description": "The result of the tool as a numeric value.",

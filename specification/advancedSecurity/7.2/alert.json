@@ -265,6 +265,35 @@
           },
           {
             "in": "query",
+            "name": "criteria.validity",
+            "description": "If provided, only return alerts with the validity specified here. If the validity status is Unknown, fetch alerts of all validity results. <br />Only applicable for secret alerts.",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "unknown",
+              "active",
+              "inactive"
+            ],
+            "x-ms-enum": {
+              "name": "AlertValidityStatus",
+              "values": [
+                {
+                  "value": "unknown",
+                  "description": ""
+                },
+                {
+                  "value": "active",
+                  "description": ""
+                },
+                {
+                  "value": "inactive",
+                  "description": ""
+                }
+              ]
+            }
+          },
+          {
+            "in": "query",
             "name": "expand",
             "description": "",
             "required": false,
@@ -1591,6 +1620,25 @@
         }
       }
     },
+    "LegalReview": {
+      "description": "Details for a legal review for a given component",
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "The review id. This indicates the associated work item id for dev it's witness-dev and for prod it's ossmsft.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "state": {
+          "description": "The review state.",
+          "type": "string"
+        },
+        "webUrl": {
+          "description": "The review web url.",
+          "type": "string"
+        }
+      }
+    },
     "License": {
       "description": "License information for dependencies",
       "type": "object",
@@ -2280,6 +2328,31 @@
         "toolName": {
           "description": "If provided with toolName, only return alerts detected by this tool. <br />Otherwise, return alerts detected by all tools.",
           "type": "string"
+        },
+        "validity": {
+          "description": "If provided, only return alerts with the validity specified here. If the validity status is Unknown, fetch alerts of all validity results. <br />Only applicable for secret alerts.",
+          "enum": [
+            "unknown",
+            "active",
+            "inactive"
+          ],
+          "x-ms-enum": {
+            "name": "AlertValidityStatus",
+            "values": [
+              {
+                "value": "unknown",
+                "description": ""
+              },
+              {
+                "value": "active",
+                "description": ""
+              },
+              {
+                "value": "inactive",
+                "description": ""
+              }
+            ]
+          }
         }
       }
     },
@@ -2470,6 +2543,34 @@
           "items": {
             "$ref": "#/definitions/Tool"
           }
+        },
+        "validity": {
+          "description": "Display alerts for specified validity. Show alerts for all validities if none are specified.",
+          "type": "array",
+          "items": {
+            "enum": [
+              "unknown",
+              "active",
+              "inactive"
+            ],
+            "x-ms-enum": {
+              "name": "AlertValidityStatus",
+              "values": [
+                {
+                  "value": "unknown",
+                  "description": ""
+                },
+                {
+                  "value": "active",
+                  "description": ""
+                },
+                {
+                  "value": "inactive",
+                  "description": ""
+                }
+              ]
+            }
+          }
         }
       }
     },
@@ -2478,16 +2579,20 @@
       "type": "object",
       "properties": {
         "validationFingerprintHash": {
+          "description": "The hash associated to the secret.",
           "type": "string"
         },
         "validationFingerprintJson": {
+          "description": "The JSON representation of the secret.",
           "type": "string"
         },
         "validityLastUpdatedDate": {
+          "description": "The date when the validity was last updated.",
           "type": "string",
           "format": "date-time"
         },
         "validityResult": {
+          "description": "The result of the validation.",
           "type": "string"
         }
       }
