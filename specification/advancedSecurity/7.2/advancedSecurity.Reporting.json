@@ -49,6 +49,79 @@
             "type": "string"
           },
           {
+            "in": "query",
+            "name": "criteria.alertTypes",
+            "description": "If provided, only return alerts of this type. Otherwise, return alerts of all types.",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "AlertType"
+            }
+          },
+          {
+            "in": "query",
+            "name": "criteria.keywords",
+            "description": "If provided, only return repos whose titles match this pattern.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "criteria.period",
+            "description": "If provided, only return alerts from this time period. Otherwise, return all alerts.",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "undefined",
+              "last24Hours",
+              "last7Days",
+              "last14Days",
+              "last30Days",
+              "last90Days"
+            ],
+            "x-ms-enum": {
+              "name": "TimePeriod",
+              "values": [
+                {
+                  "value": "undefined",
+                  "description": ""
+                },
+                {
+                  "value": "last24Hours",
+                  "description": ""
+                },
+                {
+                  "value": "last7Days",
+                  "description": ""
+                },
+                {
+                  "value": "last14Days",
+                  "description": ""
+                },
+                {
+                  "value": "last30Days",
+                  "description": ""
+                },
+                {
+                  "value": "last90Days",
+                  "description": ""
+                }
+              ]
+            }
+          },
+          {
+            "in": "query",
+            "name": "criteria.severities",
+            "description": "If provided, only return alerts at these severities. <br />Otherwise, return alerts at any severity.",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "Severity"
+            }
+          },
+          {
             "$ref": "#/parameters/api-Version-preview.1"
           }
         ],
@@ -137,6 +210,168 @@
           "description": "Total Medium severity alerts.",
           "type": "integer",
           "format": "int32"
+        },
+        "note": {
+          "description": "Total Note severity alerts.",
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "AlertSummaryByState": {
+      "description": "Alert Summary by state.",
+      "type": "object",
+      "properties": {
+        "dismissed": {
+          "description": "Total Dismissed state alerts.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "fixed": {
+          "description": "Total Fixed state alerts.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "new": {
+          "description": "Total New state alerts.",
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "FilterCriteria": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "alertTypes": {
+          "description": "If provided, only return alerts of this type. Otherwise, return alerts of all types.",
+          "type": "array",
+          "items": {
+            "enum": [
+              "unknown",
+              "dependency",
+              "secret",
+              "code"
+            ],
+            "x-ms-enum": {
+              "name": "AlertType",
+              "values": [
+                {
+                  "value": "unknown",
+                  "description": "The code has an unspecified vulnerability type"
+                },
+                {
+                  "value": "dependency",
+                  "description": "The code uses a dependency with a known vulnerability."
+                },
+                {
+                  "value": "secret",
+                  "description": "The code contains a secret that has now been compromised and must be revoked."
+                },
+                {
+                  "value": "code",
+                  "description": "The code contains a weakness determined by static analysis."
+                }
+              ]
+            }
+          }
+        },
+        "keywords": {
+          "description": "If provided, only return repos whose titles match this pattern.",
+          "type": "string"
+        },
+        "period": {
+          "description": "If provided, only return alerts from this time period. Otherwise, return all alerts.",
+          "enum": [
+            "undefined",
+            "last24Hours",
+            "last7Days",
+            "last14Days",
+            "last30Days",
+            "last90Days"
+          ],
+          "x-ms-enum": {
+            "name": "TimePeriod",
+            "values": [
+              {
+                "value": "undefined",
+                "description": ""
+              },
+              {
+                "value": "last24Hours",
+                "description": ""
+              },
+              {
+                "value": "last7Days",
+                "description": ""
+              },
+              {
+                "value": "last14Days",
+                "description": ""
+              },
+              {
+                "value": "last30Days",
+                "description": ""
+              },
+              {
+                "value": "last90Days",
+                "description": ""
+              }
+            ]
+          }
+        },
+        "severities": {
+          "description": "If provided, only return alerts at these severities. <br />Otherwise, return alerts at any severity.",
+          "type": "array",
+          "items": {
+            "enum": [
+              "low",
+              "medium",
+              "high",
+              "critical",
+              "note",
+              "warning",
+              "error",
+              "undefined"
+            ],
+            "x-ms-enum": {
+              "name": "Severity",
+              "values": [
+                {
+                  "value": "low",
+                  "description": ""
+                },
+                {
+                  "value": "medium",
+                  "description": ""
+                },
+                {
+                  "value": "high",
+                  "description": ""
+                },
+                {
+                  "value": "critical",
+                  "description": ""
+                },
+                {
+                  "value": "note",
+                  "description": ""
+                },
+                {
+                  "value": "warning",
+                  "description": ""
+                },
+                {
+                  "value": "error",
+                  "description": ""
+                },
+                {
+                  "value": "undefined",
+                  "description": ""
+                }
+              ]
+            }
+          }
         }
       }
     },
@@ -227,6 +462,15 @@
         "alertsBySeverity": {
           "description": "Total alerts by severity.",
           "$ref": "#/definitions/AlertSummaryBySeverity"
+        },
+        "alertsByState": {
+          "description": "Total alerts by state.",
+          "$ref": "#/definitions/AlertSummaryByState"
+        },
+        "openAlerts": {
+          "description": "Total active alerts in the repo.",
+          "type": "integer",
+          "format": "int32"
         },
         "repoId": {
           "description": "RepoId.",

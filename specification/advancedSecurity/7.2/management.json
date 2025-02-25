@@ -922,6 +922,52 @@
         }
       }
     },
+    "BilledCommittersList": {
+      "description": "A list of billed committers",
+      "type": "object",
+      "properties": {
+        "billedUsers": {
+          "description": "A list of BilledCommitter objects that contain the identityRef of committers.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/BilledCommitter"
+          }
+        },
+        "uniqueCommitterCount": {
+          "description": "Count of billed committers in BilledUsers",
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "CodeScanningFeatures": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "codeQLEnabled": {
+          "description": "CodeQL enablement status set to False when disabled and True when enabled; Null is never explicitly set.",
+          "type": "boolean"
+        },
+        "dependencyScanningInjectionEnabled": {
+          "description": "Dependency Scanning Injection enablement status set to False when disabled and True when enabled; Null is never explicitly set. <br /> If Advanced Security is NOT already enabled, behavior will depend on if Advanced Security is to be enabled/disabled. DependencyScanningInjectionEnabled will not affect anything in this scenario. <br /> If Advanced Security is to be disabled, the value of DependencyScanningInjectionEnabled will have no effect. <br /> Setting Dependency Scanning enablement state is only supported for repo enablement and not org or project enablement at this time.",
+          "type": "boolean"
+        }
+      }
+    },
+    "CodeScanningMeterUsage": {
+      "description": "Information related to Code Scanning meter usage",
+      "type": "object",
+      "properties": {
+        "codeScanningBilledUsers": {
+          "description": "The identityRef of committers that contributed to repositories with Code Scanning enabled",
+          "$ref": "#/definitions/BilledCommittersList"
+        },
+        "isCodeScanningEnabled": {
+          "description": "True when Code Scanning plan is enabled in this organization",
+          "type": "boolean"
+        }
+      }
+    },
     "GraphSubjectBase": {
       "description": "",
       "type": "object",
@@ -1042,6 +1088,127 @@
         }
       }
     },
+    "MeterUsageEstimate": {
+      "description": "Information related to meter usage estimate for Code Scanning and Secret Scanning",
+      "type": "object",
+      "properties": {
+        "codeScanningMeterUsageEstimate": {
+          "description": "Meter usage estimate when enabling Code Scanning",
+          "$ref": "#/definitions/BilledCommittersList"
+        },
+        "secretScanningMeterUsageEstimate": {
+          "description": "Meter usage estimate when enabling Secret Scanning",
+          "$ref": "#/definitions/BilledCommittersList"
+        }
+      }
+    },
+    "MeterUsageSummary": {
+      "description": "Information related to billing for Advanced Security services",
+      "type": "object",
+      "properties": {
+        "accountId": {
+          "description": "The Azure DevOps account",
+          "type": "string",
+          "format": "uuid"
+        },
+        "azureSubscriptionId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "billingDate": {
+          "description": "The date this billing information pertains to",
+          "type": "string",
+          "format": "date-time"
+        },
+        "codeScanningMeterUsage": {
+          "description": "Billing Information of repositories where Code Scanning is enabled",
+          "$ref": "#/definitions/CodeScanningMeterUsage"
+        },
+        "secretScanningMeterUsage": {
+          "description": "Billing Information of repositories where Secret Scanning is enabled",
+          "$ref": "#/definitions/SecretScanningMeterUsage"
+        },
+        "tenantId": {
+          "description": "The Azure subscription",
+          "type": "string",
+          "format": "uuid"
+        }
+      }
+    },
+    "OrgEnablementSettings": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "codeScanningEnabled": {
+          "description": "Code Scan enablement status set to False when disabled and True when enabled; Null is never explicitly set.",
+          "type": "boolean"
+        },
+        "codeScanningFeatures": {
+          "description": "Includes code scanning features that can be enabled.",
+          "$ref": "#/definitions/CodeScanningFeatures"
+        },
+        "enableCodeScanningOnCreate": {
+          "description": "Automatically enable Code Scanning on newly created repositories.",
+          "type": "boolean"
+        },
+        "enableSecretScanningOnCreate": {
+          "description": "Automatically enable Secret Scanning on newly created repositories.",
+          "type": "boolean"
+        },
+        "reposEnablementStatus": {
+          "description": "A list of enablement statuses for repositories within the specified organization.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/RepoEnablementSettings"
+          }
+        },
+        "secretScanningEnabled": {
+          "description": "Secret Scan enablement status set to False when disabled and True when enabled; Null is never explicitly set.",
+          "type": "boolean"
+        },
+        "secretScanningFeatures": {
+          "description": "Includes secret scanning features that can be enabled.",
+          "$ref": "#/definitions/SecretScanningFeatures"
+        }
+      }
+    },
+    "ProjectEnablementSettings": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "codeScanningEnabled": {
+          "description": "Code Scan enablement status set to False when disabled and True when enabled; Null is never explicitly set.",
+          "type": "boolean"
+        },
+        "codeScanningFeatures": {
+          "description": "Includes code scanning features that can be enabled.",
+          "$ref": "#/definitions/CodeScanningFeatures"
+        },
+        "enableCodeScanningOnCreate": {
+          "description": "Automatically enable Code Scanning on newly created repositories.",
+          "type": "boolean"
+        },
+        "enableSecretScanningOnCreate": {
+          "description": "Automatically enable Secret Scanning on newly created repositories.",
+          "type": "boolean"
+        },
+        "reposEnablementStatus": {
+          "description": "A list of enablement statuses for repositories within the specified project.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/RepoEnablementSettings"
+          }
+        },
+        "secretScanningEnabled": {
+          "description": "Secret Scan enablement status set to False when disabled and True when enabled; Null is never explicitly set.",
+          "type": "boolean"
+        },
+        "secretScanningFeatures": {
+          "description": "Includes secret scanning features that can be enabled.",
+          "$ref": "#/definitions/SecretScanningFeatures"
+        }
+      }
+    },
     "ReferenceLinks": {
       "description": "The class to represent a collection of REST reference links.",
       "type": "object",
@@ -1052,6 +1219,72 @@
           "additionalProperties": {
             "type": "object"
           }
+        }
+      }
+    },
+    "RepoEnablementSettings": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "codeScanningEnabled": {
+          "description": "Code Scan enablement status set to False when disabled and True when enabled; Null is never explicitly set.",
+          "type": "boolean"
+        },
+        "codeScanningEnablementLastChangedDate": {
+          "description": "The last time the status of Code Scanning for this repository was updated",
+          "type": "string",
+          "format": "date-time"
+        },
+        "codeScanningFeatures": {
+          "description": "Includes code scanning features that can be enabled.",
+          "$ref": "#/definitions/CodeScanningFeatures"
+        },
+        "projectId": {
+          "description": "The project Id",
+          "type": "string",
+          "format": "uuid"
+        },
+        "repositoryId": {
+          "description": "The repository Id",
+          "type": "string",
+          "format": "uuid"
+        },
+        "secretScanningEnabled": {
+          "description": "Secret Scan enablement status set to False when disabled and True when enabled; Null is never explicitly set.",
+          "type": "boolean"
+        },
+        "secretScanningEnablementLastChangedDate": {
+          "description": "The last time the status of Secret Scanning for this repository was updated",
+          "type": "string",
+          "format": "date-time"
+        },
+        "secretScanningFeatures": {
+          "description": "Includes secret scanning features that can be enabled.",
+          "$ref": "#/definitions/SecretScanningFeatures"
+        }
+      }
+    },
+    "SecretScanningFeatures": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "blockPushes": {
+          "description": "When true, pushes containing secrets will be blocked. <br />When false, pushes are scanned for secrets and are not blocked. <br />If includeAllProperties in the request is false, this value will be null.",
+          "type": "boolean"
+        }
+      }
+    },
+    "SecretScanningMeterUsage": {
+      "description": "Information related to Secret Scanning meter usage",
+      "type": "object",
+      "properties": {
+        "isSecretScanningEnabled": {
+          "description": "True when Secret Scanning plan is enabled in this organization",
+          "type": "boolean"
+        },
+        "secretScanningBilledUsers": {
+          "description": "The identityRef of committers that contributed to repositories with Secret Scanning enabled",
+          "$ref": "#/definitions/BilledCommittersList"
         }
       }
     }
