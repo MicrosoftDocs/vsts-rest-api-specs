@@ -27,12 +27,20 @@
       "description": "Controller to handle Test Case REST calls"
     },
     {
+      "name": "Test  Plan  Recycle  Bin",
+      "description": "Recycle bin operations for test plans, including retrieving a list of deleted test plans and restoring deleted test plans."
+    },
+    {
       "name": "Test  Plans",
       "description": "Work with test plans programmatically using the REST APIs for Azure DevOps Services and Azure DevOps Server."
     },
     {
       "name": "Test  Suite  Entry",
       "description": "Reorder test suite entries (test cases and child test suites) in a given test suite."
+    },
+    {
+      "name": "Test  Suite  Recycle  Bin  Operations",
+      "description": "Recycle bin operations for test suites, including retrieving a list of deleted test suites within a test plan or project, and restoring deleted test plans."
     },
     {
       "name": "Test  Suites",
@@ -2005,6 +2013,425 @@
             ]
           }
         ]
+      }
+    },
+    "/{organization}/{project}/_apis/testplan/recycleBin/testplan": {
+      "get": {
+        "tags": [
+          "Test  Plan  Recycle  Bin"
+        ],
+        "x-ms-docs-override-version": "7.2-preview.1",
+        "x-ms-vss-resource": "testPlan",
+        "x-ms-vss-method": "GetDeletedTestPlans",
+        "x-ms-preview": true,
+        "description": "Get a list of deleted test plans",
+        "operationId": "Test  Plan  Recycle  Bin_List",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "continuationToken",
+            "description": "If the list of plans returned is not complete, a continuation token to query next batch of plans is included in the response header as \"x-ms-continuationtoken\". Omit this parameter to get the first batch of test plans.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/TestPlan"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.test"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "Get Deleted Test Plans": {
+            "$ref": "./httpExamples/TestPlan/GetDeletedTestPlan.json"
+          }
+        }
+      }
+    },
+    "/{organization}/{project}/_apis/testplan/recycleBin/testplan/{planId}": {
+      "patch": {
+        "tags": [
+          "Test  Plan  Recycle  Bin"
+        ],
+        "x-ms-docs-override-version": "7.2-preview.1",
+        "x-ms-vss-resource": "testPlan",
+        "x-ms-vss-method": "RestoreDeletedTestPlan",
+        "x-ms-preview": true,
+        "description": "Restores the deleted test plan",
+        "operationId": "Test  Plan  Recycle  Bin_Restore Deleted Test Plan",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "The model containing the restore information",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/TestPlanAndSuiteRestoreModel"
+            }
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "planId",
+            "description": "The ID of the test plan to restore",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.test_write"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "Restore test plan": {
+            "$ref": "./httpExamples/TestPlan/RestoreTestPlan.json"
+          }
+        }
+      }
+    },
+    "/{organization}/{project}/_apis/testplan/recycleBin/TestPlan/{planId}/testsuite": {
+      "get": {
+        "tags": [
+          "Test  Suite  Recycle  Bin  Operations"
+        ],
+        "x-ms-docs-override-version": "7.2-preview.1",
+        "x-ms-vss-resource": "testSuite",
+        "x-ms-vss-method": "GetDeletedTestSuitesForPlan",
+        "x-ms-preview": true,
+        "description": "Get Deleted Test Suites for a Test Plan.",
+        "operationId": "Test  Suite  Recycle  Bin  Operations_Get Deleted Test Suites For Plan",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "planId",
+            "description": "ID of the test plan for which suites are requested.",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "expand",
+            "description": "Include the children suites and testers details.",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "none",
+              "children",
+              "defaultTesters"
+            ],
+            "x-ms-enum": {
+              "name": "SuiteExpand",
+              "values": [
+                {
+                  "value": "none",
+                  "description": "Dont include any of the expansions in output."
+                },
+                {
+                  "value": "children",
+                  "description": "Include children in response."
+                },
+                {
+                  "value": "defaultTesters",
+                  "description": "Include default testers in response."
+                }
+              ]
+            }
+          },
+          {
+            "in": "query",
+            "name": "continuationToken",
+            "description": "If the list of suites returned is not complete, a continuation token to query next batch of suites is included in the response header as \"x-ms-continuationtoken\". Omit this parameter to get the first batch of test suites.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "asTreeView",
+            "description": "If the suites returned should be in a tree structure.",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/TestSuite"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.test"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "Get all Deleted Test Suites for a Test Plan.": {
+            "$ref": "./httpExamples/TestSuite/GetDeletedTestSuitesForPlan.json"
+          },
+          "Get Deleted Test Suites of a Test Plan in Tree View.": {
+            "$ref": "./httpExamples/TestSuite/GetDeletedTestSuitesForPlanAsTreeView.json"
+          }
+        }
+      }
+    },
+    "/{organization}/{project}/_apis/testplan/recycleBin/testsuite": {
+      "get": {
+        "tags": [
+          "Test  Suite  Recycle  Bin  Operations"
+        ],
+        "x-ms-docs-override-version": "7.2-preview.1",
+        "x-ms-vss-resource": "testSuite",
+        "x-ms-vss-method": "GetDeletedTestSuitesForProject",
+        "x-ms-preview": true,
+        "description": "Get Deleted Test Suites within a Project.",
+        "operationId": "Test  Suite  Recycle  Bin  Operations_Get Deleted Test Suites For Project",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "expand",
+            "description": "Include the children suites and testers details.",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "none",
+              "children",
+              "defaultTesters"
+            ],
+            "x-ms-enum": {
+              "name": "SuiteExpand",
+              "values": [
+                {
+                  "value": "none",
+                  "description": "Dont include any of the expansions in output."
+                },
+                {
+                  "value": "children",
+                  "description": "Include children in response."
+                },
+                {
+                  "value": "defaultTesters",
+                  "description": "Include default testers in response."
+                }
+              ]
+            }
+          },
+          {
+            "in": "query",
+            "name": "continuationToken",
+            "description": "If the list of suites returned is not complete, a continuation token to query next batch of suites is included in the response header as \"x-ms-continuationtoken\". Omit this parameter to get the first batch of test suites.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "asTreeView",
+            "description": "If the suites returned should be in a tree structure.",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/TestSuite"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.test"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "Get all Deleted Test Suites for a Project.": {
+            "$ref": "./httpExamples/TestSuite/GetDeletedTestSuitesForProject.json"
+          },
+          "Get Deleted Test Suites of a Project in Tree View.": {
+            "$ref": "./httpExamples/TestSuite/GetDeletedTestSuitesForProjectAsTreeView.json"
+          }
+        }
+      }
+    },
+    "/{organization}/{project}/_apis/testplan/recycleBin/testsuite/{suiteId}": {
+      "patch": {
+        "tags": [
+          "Test  Suite  Recycle  Bin  Operations"
+        ],
+        "x-ms-docs-override-version": "7.2-preview.1",
+        "x-ms-vss-resource": "testSuite",
+        "x-ms-vss-method": "RestoreDeletedTestSuite",
+        "x-ms-preview": true,
+        "description": "Restores the deleted test suite",
+        "operationId": "Test  Suite  Recycle  Bin  Operations_Restore Deleted Test Suite",
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "The model containing the restore information",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/TestPlanAndSuiteRestoreModel"
+            }
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "suiteId",
+            "description": "The ID of the test suite to restore",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.test_write"
+            ]
+          }
+        ],
+        "x-ms-examples": {
+          "Restore test suite": {
+            "$ref": "./httpExamples/TestSuite/RestoreTestSuite.json"
+          }
+        }
       }
     },
     "/{organization}/{project}/_apis/testplan/suiteentry/{suiteId}": {

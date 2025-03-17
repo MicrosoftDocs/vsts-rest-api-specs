@@ -51,7 +51,7 @@
           {
             "in": "query",
             "name": "criteria.alertTypes",
-            "description": "If provided, only return alerts of this type. Otherwise, return alerts of all types.",
+            "description": "If provided, only return summary data for alerts of this type. Otherwise, return summary data for alerts of all types.",
             "required": false,
             "type": "array",
             "items": {
@@ -69,7 +69,7 @@
           {
             "in": "query",
             "name": "criteria.period",
-            "description": "If provided, only return alerts from this time period. Otherwise, return all alerts.",
+            "description": "If provided, summary data will be scoped to this time period.",
             "required": false,
             "type": "string",
             "enum": [
@@ -112,8 +112,18 @@
           },
           {
             "in": "query",
+            "name": "criteria.projects",
+            "description": "If provided, only return summary data for these projects Otherwise, return summary data for all projects.",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
             "name": "criteria.severities",
-            "description": "If provided, only return alerts at these severities. <br />Otherwise, return alerts at any severity.",
+            "description": "If provided, only return summary data for alerts at these severities. <br />Otherwise, return summary data for alerts at any severity.",
             "required": false,
             "type": "array",
             "items": {
@@ -244,7 +254,7 @@
       "type": "object",
       "properties": {
         "alertTypes": {
-          "description": "If provided, only return alerts of this type. Otherwise, return alerts of all types.",
+          "description": "If provided, only return summary data for alerts of this type. Otherwise, return summary data for alerts of all types.",
           "type": "array",
           "items": {
             "enum": [
@@ -281,7 +291,7 @@
           "type": "string"
         },
         "period": {
-          "description": "If provided, only return alerts from this time period. Otherwise, return all alerts.",
+          "description": "If provided, summary data will be scoped to this time period.",
           "enum": [
             "undefined",
             "last24Hours",
@@ -320,8 +330,15 @@
             ]
           }
         },
+        "projects": {
+          "description": "If provided, only return summary data for these projects Otherwise, return summary data for all projects.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
         "severities": {
-          "description": "If provided, only return alerts at these severities. <br />Otherwise, return alerts at any severity.",
+          "description": "If provided, only return summary data for alerts at these severities. <br />Otherwise, return summary data for alerts at any severity.",
           "type": "array",
           "items": {
             "enum": [
@@ -408,6 +425,19 @@
           "items": {
             "$ref": "#/definitions/ProjectEnablementSummary"
           }
+        }
+      }
+    },
+    "Project": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "name": {
+          "type": "string"
         }
       }
     },
@@ -510,6 +540,19 @@
           "type": "object",
           "additionalProperties": {
             "$ref": "#/definitions/ScanTypeSummaryProperties"
+          }
+        }
+      }
+    },
+    "RiskUXComputedFilters": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "projects": {
+          "description": "Display alerts for specified projects. Show alerts for all projects if none are specified.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Project"
           }
         }
       }

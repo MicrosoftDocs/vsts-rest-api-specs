@@ -266,30 +266,12 @@
           {
             "in": "query",
             "name": "criteria.validity",
-            "description": "If provided, only return alerts with the validity specified here. If the validity status is Unknown, fetch alerts of all validity results. <br />Only applicable for secret alerts.",
+            "description": "If provided, only return alerts with the validity specified here. If the validity status is Unknown, fetch alerts of all validity results. <br />Only applicable for secret alerts. <br />Filtering by validity status may cause less alerts to be returned than requested with TOP parameter. <br />Due to this behavior, the ContinuationToken(<![CDATA[<header name>]]>) in the response header should be relied on to decide if another batch needs to be fetched.",
             "required": false,
-            "type": "string",
-            "enum": [
-              "unknown",
-              "active",
-              "inactive"
-            ],
-            "x-ms-enum": {
-              "name": "AlertValidityStatus",
-              "values": [
-                {
-                  "value": "unknown",
-                  "description": ""
-                },
-                {
-                  "value": "active",
-                  "description": ""
-                },
-                {
-                  "value": "inactive",
-                  "description": ""
-                }
-              ]
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "AlertValidityStatus"
             }
           },
           {
@@ -1136,6 +1118,7 @@
         },
         "validityStatus": {
           "enum": [
+            "none",
             "unknown",
             "active",
             "inactive"
@@ -1144,16 +1127,20 @@
             "name": "AlertValidityStatus",
             "values": [
               {
+                "value": "none",
+                "description": "When there are no validation fingerprints attached to the alert."
+              },
+              {
                 "value": "unknown",
-                "description": ""
+                "description": "When the validations for validation fingerprints associated to the alert have not been conclusive."
               },
               {
                 "value": "active",
-                "description": ""
+                "description": "When atleast one validation fingerprint associated to the alert is exploitable."
               },
               {
                 "value": "inactive",
-                "description": ""
+                "description": "When all validation fingerprints associated to the alert are not exploitable."
               }
             ]
           }
@@ -2340,28 +2327,36 @@
           "type": "string"
         },
         "validity": {
-          "description": "If provided, only return alerts with the validity specified here. If the validity status is Unknown, fetch alerts of all validity results. <br />Only applicable for secret alerts.",
-          "enum": [
-            "unknown",
-            "active",
-            "inactive"
-          ],
-          "x-ms-enum": {
-            "name": "AlertValidityStatus",
-            "values": [
-              {
-                "value": "unknown",
-                "description": ""
-              },
-              {
-                "value": "active",
-                "description": ""
-              },
-              {
-                "value": "inactive",
-                "description": ""
-              }
-            ]
+          "description": "If provided, only return alerts with the validity specified here. If the validity status is Unknown, fetch alerts of all validity results. <br />Only applicable for secret alerts. <br />Filtering by validity status may cause less alerts to be returned than requested with TOP parameter. <br />Due to this behavior, the ContinuationToken(<![CDATA[<header name>]]>) in the response header should be relied on to decide if another batch needs to be fetched.",
+          "type": "array",
+          "items": {
+            "enum": [
+              "none",
+              "unknown",
+              "active",
+              "inactive"
+            ],
+            "x-ms-enum": {
+              "name": "AlertValidityStatus",
+              "values": [
+                {
+                  "value": "none",
+                  "description": "When there are no validation fingerprints attached to the alert."
+                },
+                {
+                  "value": "unknown",
+                  "description": "When the validations for validation fingerprints associated to the alert have not been conclusive."
+                },
+                {
+                  "value": "active",
+                  "description": "When atleast one validation fingerprint associated to the alert is exploitable."
+                },
+                {
+                  "value": "inactive",
+                  "description": "When all validation fingerprints associated to the alert are not exploitable."
+                }
+              ]
+            }
           }
         }
       }
@@ -2559,6 +2554,7 @@
           "type": "array",
           "items": {
             "enum": [
+              "none",
               "unknown",
               "active",
               "inactive"
@@ -2567,16 +2563,20 @@
               "name": "AlertValidityStatus",
               "values": [
                 {
+                  "value": "none",
+                  "description": "When there are no validation fingerprints attached to the alert."
+                },
+                {
                   "value": "unknown",
-                  "description": ""
+                  "description": "When the validations for validation fingerprints associated to the alert have not been conclusive."
                 },
                 {
                   "value": "active",
-                  "description": ""
+                  "description": "When atleast one validation fingerprint associated to the alert is exploitable."
                 },
                 {
                   "value": "inactive",
-                  "description": ""
+                  "description": "When all validation fingerprints associated to the alert are not exploitable."
                 }
               ]
             }
@@ -2603,7 +2603,78 @@
         },
         "validityResult": {
           "description": "The result of the validation.",
-          "type": "string"
+          "enum": [
+            "none",
+            "exploitable",
+            "notExploitable",
+            "inconclusive"
+          ],
+          "x-ms-enum": {
+            "name": "ValidationResult",
+            "values": [
+              {
+                "value": "none",
+                "description": "Default value, no information about the secret can be inferred from this."
+              },
+              {
+                "value": "exploitable",
+                "description": "Represents a secret that can be used to connect to a resource."
+              },
+              {
+                "value": "notExploitable",
+                "description": "Represents a secret that can't be used to connect to a resource."
+              },
+              {
+                "value": "inconclusive",
+                "description": "Represents a secret where no determination can be made about its exploitability."
+              }
+            ]
+          }
+        }
+      }
+    },
+    "ValidationRequestInfo": {
+      "description": "Data associated to a validation request for an alert. Along with the request status, this includes the validity data that is part of Get Alert(s) response.",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/AlertValidityInfo"
+        }
+      ],
+      "properties": {
+        "alertValidationRequestStatus": {
+          "enum": [
+            "none",
+            "created",
+            "inProgress",
+            "completed",
+            "failed"
+          ],
+          "x-ms-enum": {
+            "name": "AlertValidationRequestStatus",
+            "values": [
+              {
+                "value": "none",
+                "description": "Default, when the request status is not set/applicable."
+              },
+              {
+                "value": "created",
+                "description": "First validation request for the alert's validation fingerprints, created when the sarif is submitted for processing."
+              },
+              {
+                "value": "inProgress",
+                "description": "The secret validation jobs for the alert's validation fingerprints have been manually queued and at least one is still in progress."
+              },
+              {
+                "value": "completed",
+                "description": "All the secret validation jobs for the alert's validation fingerprints have returned Completed or Failed."
+              },
+              {
+                "value": "failed",
+                "description": "This status is set only when there is an exception in the ValidationService."
+              }
+            ]
+          }
         }
       }
     },
