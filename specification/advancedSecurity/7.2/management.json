@@ -940,13 +940,27 @@
         }
       }
     },
-    "CodeScanningFeatures": {
+    "CodeSecurityFeatures": {
       "description": "",
       "type": "object",
       "properties": {
         "codeQLEnabled": {
           "description": "CodeQL enablement status set to False when disabled and True when enabled; Null is never explicitly set.",
           "type": "boolean"
+        },
+        "codeSecurityChangedBy": {
+          "description": "The VSID of the last user who modified the enablement status of Code Security.",
+          "type": "string",
+          "format": "uuid"
+        },
+        "codeSecurityEnabled": {
+          "description": "Code Security enablement status set to False when disabled and True when enabled; Null is never explicitly set.",
+          "type": "boolean"
+        },
+        "codeSecurityEnablementLastChangedDate": {
+          "description": "The last time the status of Code Security for this repository was updated",
+          "type": "string",
+          "format": "date-time"
         },
         "dependencyScanningInjectionEnabled": {
           "description": "Dependency Scanning Injection enablement status set to False when disabled and True when enabled; Null is never explicitly set. <br /> If Advanced Security is NOT already enabled, behavior will depend on if Advanced Security is to be enabled/disabled. DependencyScanningInjectionEnabled will not affect anything in this scenario. <br /> If Advanced Security is to be disabled, the value of DependencyScanningInjectionEnabled will have no effect. <br /> Setting Dependency Scanning enablement state is only supported for repo enablement and not org or project enablement at this time.",
@@ -965,39 +979,6 @@
         "enableSecretScanningOnCreate": {
           "description": "Automatically enable Secret Scanning on newly created repositories.",
           "type": "boolean"
-        }
-      }
-    },
-    "EnablementSettings": {
-      "description": "",
-      "type": "object",
-      "properties": {
-        "codeScanningEnabled": {
-          "description": "Code Scan enablement status set to False when disabled and True when enabled; Null is never explicitly set.",
-          "type": "boolean"
-        },
-        "codeScanningFeatures": {
-          "description": "Includes code scanning features that can be enabled.",
-          "$ref": "#/definitions/CodeScanningFeatures"
-        },
-        "enablementOnCreateSettings": {
-          "description": "Auto enablement setting for newly created repositories.",
-          "$ref": "#/definitions/EnablementOnCreateSettings"
-        },
-        "reposEnablementStatus": {
-          "description": "A list of enablement statuses for repositories within the specified organization or project.",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/RepoEnablementSettings"
-          }
-        },
-        "secretScanningEnabled": {
-          "description": "Secret Scan enablement status set to False when disabled and True when enabled; Null is never explicitly set.",
-          "type": "boolean"
-        },
-        "secretScanningFeatures": {
-          "description": "Includes secret scanning features that can be enabled.",
-          "$ref": "#/definitions/SecretScanningFeatures"
         }
       }
     },
@@ -1122,15 +1103,37 @@
       }
     },
     "MeterUsageEstimate": {
-      "description": "Information related to meter usage estimate for Code Scanning and Secret Scanning",
+      "description": "Information related to meter usage estimate for Code Security plan and/or Secret Protection plan",
       "type": "object",
       "properties": {
-        "codeScanningMeterUsageEstimate": {
-          "description": "Meter usage estimate when enabling Code Scanning",
+        "codeSecurityMeterUsageEstimate": {
+          "description": "Meter usage estimate when enabling Code Security plan",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "secretProtectionMeterUsageEstimate": {
+          "description": "Meter usage estimate when enabling Secret Protection plan",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      }
+    },
+    "MeterUsageEstimateDetails": {
+      "description": "Information related to meter usage estimate for Code Security plan and/or Secret Protection plan",
+      "type": "object",
+      "properties": {
+        "codeSecurityMeterUsageEstimate": {
+          "description": "Meter usage estimate when enabling Code Security plan",
           "$ref": "#/definitions/BilledCommittersList"
         },
-        "secretScanningMeterUsageEstimate": {
-          "description": "Meter usage estimate when enabling Secret Scanning",
+        "secretProtectionMeterUsageEstimate": {
+          "description": "Meter usage estimate when enabling Secret Protection plan",
           "$ref": "#/definitions/BilledCommittersList"
         }
       }
@@ -1171,22 +1174,52 @@
     "OrgEnablementSettings": {
       "description": "",
       "type": "object",
-      "allOf": [
-        {
-          "$ref": "#/definitions/EnablementSettings"
+      "properties": {
+        "codeSecurityFeatures": {
+          "description": "Includes code security features that can be enabled.",
+          "$ref": "#/definitions/CodeSecurityFeatures"
+        },
+        "enablementOnCreateSettings": {
+          "description": "Auto enablement setting for newly created repositories.",
+          "$ref": "#/definitions/EnablementOnCreateSettings"
+        },
+        "reposEnablementStatus": {
+          "description": "A list of enablement statuses for repositories within the specified organization or project.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/RepoEnablementSettings"
+          }
+        },
+        "secretProtectionFeatures": {
+          "description": "Includes secret protection features that can be enabled.",
+          "$ref": "#/definitions/SecretProtectionFeatures"
         }
-      ],
-      "properties": {}
+      }
     },
     "ProjectEnablementSettings": {
       "description": "",
       "type": "object",
-      "allOf": [
-        {
-          "$ref": "#/definitions/EnablementSettings"
+      "properties": {
+        "codeSecurityFeatures": {
+          "description": "Includes code security features that can be enabled.",
+          "$ref": "#/definitions/CodeSecurityFeatures"
+        },
+        "enablementOnCreateSettings": {
+          "description": "Auto enablement setting for newly created repositories.",
+          "$ref": "#/definitions/EnablementOnCreateSettings"
+        },
+        "reposEnablementStatus": {
+          "description": "A list of enablement statuses for repositories within the specified organization or project.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/RepoEnablementSettings"
+          }
+        },
+        "secretProtectionFeatures": {
+          "description": "Includes secret protection features that can be enabled.",
+          "$ref": "#/definitions/SecretProtectionFeatures"
         }
-      ],
-      "properties": {}
+      }
     },
     "ReferenceLinks": {
       "description": "The class to represent a collection of REST reference links.",
@@ -1205,18 +1238,9 @@
       "description": "",
       "type": "object",
       "properties": {
-        "codeScanningEnabled": {
-          "description": "Code Scan enablement status set to False when disabled and True when enabled; Null is never explicitly set.",
-          "type": "boolean"
-        },
-        "codeScanningEnablementLastChangedDate": {
-          "description": "The last time the status of Code Scanning for this repository was updated",
-          "type": "string",
-          "format": "date-time"
-        },
-        "codeScanningFeatures": {
-          "description": "Includes code scanning features that can be enabled.",
-          "$ref": "#/definitions/CodeScanningFeatures"
+        "codeSecurityFeatures": {
+          "description": "Includes Code Security features that can be enabled.",
+          "$ref": "#/definitions/CodeSecurityFeatures"
         },
         "projectId": {
           "description": "The project Id",
@@ -1228,28 +1252,33 @@
           "type": "string",
           "format": "uuid"
         },
-        "secretScanningEnabled": {
-          "description": "Secret Scan enablement status set to False when disabled and True when enabled; Null is never explicitly set.",
-          "type": "boolean"
-        },
-        "secretScanningEnablementLastChangedDate": {
-          "description": "The last time the status of Secret Scanning for this repository was updated",
-          "type": "string",
-          "format": "date-time"
-        },
-        "secretScanningFeatures": {
-          "description": "Includes secret scanning features that can be enabled.",
-          "$ref": "#/definitions/SecretScanningFeatures"
+        "secretProtectionFeatures": {
+          "description": "Includes Secret Protection features that can be enabled.",
+          "$ref": "#/definitions/SecretProtectionFeatures"
         }
       }
     },
-    "SecretScanningFeatures": {
+    "SecretProtectionFeatures": {
       "description": "",
       "type": "object",
       "properties": {
         "blockPushes": {
           "description": "When true, pushes containing secrets will be blocked. <br />When false, pushes are scanned for secrets and are not blocked. <br />If includeAllProperties in the request is false, this value will be null.",
           "type": "boolean"
+        },
+        "secretProtectionChangedBy": {
+          "description": "The VSID of the last user who modified the enablement status of Secret Protection.",
+          "type": "string",
+          "format": "uuid"
+        },
+        "secretProtectionEnabled": {
+          "description": "Secret Protection enablement status set to False when disabled and True when enabled; Null is never explicitly set.",
+          "type": "boolean"
+        },
+        "secretProtectionEnablementLastChangedDate": {
+          "description": "The last time the status of Secret Protection for this repository was updated",
+          "type": "string",
+          "format": "date-time"
         }
       }
     }
