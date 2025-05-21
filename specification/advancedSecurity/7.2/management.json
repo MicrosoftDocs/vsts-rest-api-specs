@@ -34,9 +34,6 @@
       "name": "Project Meter Usage Estimate"
     },
     {
-      "name": "Repo Enablement"
-    },
-    {
       "name": "Repo Meter Usage Estimate"
     }
   ],
@@ -49,9 +46,9 @@
         "tags": [
           "Org Enablement"
         ],
-        "x-ms-docs-override-version": "7.2-preview.1",
+        "x-ms-docs-override-version": "7.2-preview.2",
         "x-ms-vss-resource": "orgEnablement",
-        "x-ms-vss-method": "GetOrgEnablementStatus",
+        "x-ms-vss-method": "GetOrgEnablementStatus2",
         "x-ms-preview": true,
         "description": "Get the current status of Advanced Security for the organization",
         "operationId": "Org Enablement_Get",
@@ -74,14 +71,14 @@
             "type": "boolean"
           },
           {
-            "$ref": "#/parameters/api-Version-preview.1"
+            "$ref": "#/parameters/api-Version-preview.2"
           }
         ],
         "responses": {
           "200": {
             "description": "successful operation",
             "schema": {
-              "$ref": "#/definitions/AdvSecEnablementSettings"
+              "$ref": "#/definitions/OrgEnablementSettings"
             }
           }
         },
@@ -97,9 +94,9 @@
         "tags": [
           "Org Enablement"
         ],
-        "x-ms-docs-override-version": "7.2-preview.1",
+        "x-ms-docs-override-version": "7.2-preview.2",
         "x-ms-vss-resource": "orgEnablement",
-        "x-ms-vss-method": "UpdateOrgEnablementStatus",
+        "x-ms-vss-method": "UpdateOrgEnablementStatus2",
         "x-ms-preview": true,
         "description": "Update the status of Advanced Security for the organization",
         "operationId": "Org Enablement_Update",
@@ -120,11 +117,11 @@
             "description": "The new status",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/AdvSecEnablementSettingsUpdate"
+              "$ref": "#/definitions/OrgEnablementSettings"
             }
           },
           {
-            "$ref": "#/parameters/api-Version-preview.1"
+            "$ref": "#/parameters/api-Version-preview.2"
           }
         ],
         "responses": {
@@ -146,9 +143,9 @@
         "tags": [
           "Meter Usage"
         ],
-        "x-ms-docs-override-version": "7.2-preview.1",
+        "x-ms-docs-override-version": "7.2-preview.2",
         "x-ms-vss-resource": "meterUsage",
-        "x-ms-vss-method": "GetMeterUsage",
+        "x-ms-vss-method": "GetMeterUsage2",
         "x-ms-preview": true,
         "description": "Get commiters used when calculating billing information.",
         "operationId": "Meter Usage_Get",
@@ -165,6 +162,35 @@
           },
           {
             "in": "query",
+            "name": "plan",
+            "description": "The plan to query. Plans supported: CodeSecurity and SecretProtection. This is a mandatory parameter.",
+            "required": true,
+            "type": "string",
+            "enum": [
+              "codeSecurity",
+              "secretProtection",
+              "all"
+            ],
+            "x-ms-enum": {
+              "name": "Plan",
+              "values": [
+                {
+                  "value": "codeSecurity",
+                  "description": "The Code Security plan"
+                },
+                {
+                  "value": "secretProtection",
+                  "description": "The Secret Protection plan"
+                },
+                {
+                  "value": "all",
+                  "description": "Include all plans"
+                }
+              ]
+            }
+          },
+          {
+            "in": "query",
             "name": "billingDate",
             "description": "The date to query, or if not provided, today",
             "required": false,
@@ -172,14 +198,14 @@
             "format": "date-time"
           },
           {
-            "$ref": "#/parameters/api-Version-preview.1"
+            "$ref": "#/parameters/api-Version-preview.2"
           }
         ],
         "responses": {
           "200": {
             "description": "successful operation",
             "schema": {
-              "$ref": "#/definitions/MeterUsage"
+              "$ref": "#/definitions/MeterUsageForPlan"
             }
           }
         },
@@ -197,59 +223,12 @@
         "tags": [
           "Org Meter Usage Estimate"
         ],
-        "x-ms-docs-override-version": "7.2-preview.1",
+        "x-ms-docs-override-version": "7.2-preview.2",
         "x-ms-vss-resource": "orgMeterUsageEstimate",
-        "x-ms-vss-method": "GetEstimatedOrgBillablePushers",
-        "x-ms-preview": true,
-        "description": "Estimate the committers that would be added to the customer's usage if Advanced Security was enabled for this organization.",
-        "operationId": "Org Meter Usage Estimate_Get Estimated Org Billable Pushers",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "organization",
-            "description": "The name of the Azure DevOps organization.",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "$ref": "#/parameters/api-Version-preview.1"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string",
-                "format": "uuid"
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "oauth2": [
-              "vso.advsec"
-            ]
-          }
-        ]
-      }
-    },
-    "/{organization}/_apis/management/meterUsageEstimate/details": {
-      "get": {
-        "tags": [
-          "Org Meter Usage Estimate"
-        ],
-        "x-ms-docs-override-version": "7.2-preview.1",
-        "x-ms-vss-resource": "orgMeterUsageEstimate",
-        "x-ms-vss-method": "GetEstimatedBillablePushersDetailsForOrg",
+        "x-ms-vss-method": "GetEstimatedBillablePushersDetailsForOrg2",
         "x-ms-preview": true,
         "description": "Estimate the pushers that would be added to the customer's usage if Advanced Security was enabled for this organization.",
-        "operationId": "Org Meter Usage Estimate_Get Estimated Billable Pushers Details For Org",
+        "operationId": "Org Meter Usage Estimate_Get",
         "produces": [
           "application/json"
         ],
@@ -262,17 +241,43 @@
             "type": "string"
           },
           {
-            "$ref": "#/parameters/api-Version-preview.1"
+            "in": "query",
+            "name": "plan",
+            "description": "The plan to query.",
+            "required": true,
+            "type": "string",
+            "enum": [
+              "codeSecurity",
+              "secretProtection",
+              "all"
+            ],
+            "x-ms-enum": {
+              "name": "Plan",
+              "values": [
+                {
+                  "value": "codeSecurity",
+                  "description": "The Code Security plan"
+                },
+                {
+                  "value": "secretProtection",
+                  "description": "The Secret Protection plan"
+                },
+                {
+                  "value": "all",
+                  "description": "Include all plans"
+                }
+              ]
+            }
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.2"
           }
         ],
         "responses": {
           "200": {
             "description": "successful operation",
             "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/BilledCommitter"
-              }
+              "$ref": "#/definitions/MeterUsageEstimate"
             }
           }
         },
@@ -290,9 +295,9 @@
         "tags": [
           "Project Enablement"
         ],
-        "x-ms-docs-override-version": "7.2-preview.1",
+        "x-ms-docs-override-version": "7.2-preview.2",
         "x-ms-vss-resource": "projectEnablement",
-        "x-ms-vss-method": "GetProjectEnablementStatus",
+        "x-ms-vss-method": "GetProjectEnablementStatus2",
         "x-ms-preview": true,
         "description": "Get the current status of Advanced Security for a project",
         "operationId": "Project Enablement_Get",
@@ -322,14 +327,14 @@
             "type": "boolean"
           },
           {
-            "$ref": "#/parameters/api-Version-preview.1"
+            "$ref": "#/parameters/api-Version-preview.2"
           }
         ],
         "responses": {
           "200": {
             "description": "successful operation",
             "schema": {
-              "$ref": "#/definitions/AdvSecEnablementSettings"
+              "$ref": "#/definitions/ProjectEnablementSettings"
             }
           }
         },
@@ -345,9 +350,9 @@
         "tags": [
           "Project Enablement"
         ],
-        "x-ms-docs-override-version": "7.2-preview.1",
+        "x-ms-docs-override-version": "7.2-preview.2",
         "x-ms-vss-resource": "projectEnablement",
-        "x-ms-vss-method": "UpdateProjectEnablementStatus",
+        "x-ms-vss-method": "UpdateProjectEnablementStatus2",
         "x-ms-preview": true,
         "description": "Update the status of Advanced Security for the project",
         "operationId": "Project Enablement_Update",
@@ -368,7 +373,7 @@
             "description": "The new status",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/AdvSecEnablementSettingsUpdate"
+              "$ref": "#/definitions/ProjectEnablementSettings"
             }
           },
           {
@@ -379,7 +384,7 @@
             "type": "string"
           },
           {
-            "$ref": "#/parameters/api-Version-preview.1"
+            "$ref": "#/parameters/api-Version-preview.2"
           }
         ],
         "responses": {
@@ -401,66 +406,12 @@
         "tags": [
           "Project Meter Usage Estimate"
         ],
-        "x-ms-docs-override-version": "7.2-preview.1",
+        "x-ms-docs-override-version": "7.2-preview.2",
         "x-ms-vss-resource": "projectMeterUsageEstimate",
-        "x-ms-vss-method": "GetEstimatedBillablePushersForProject",
-        "x-ms-preview": true,
-        "description": "Estimate the number of committers that would be added to the customer's usage if Advanced Security was enabled for this project.",
-        "operationId": "Project Meter Usage Estimate_Get Estimated Billable Pushers For Project",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "organization",
-            "description": "The name of the Azure DevOps organization.",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "in": "path",
-            "name": "project",
-            "description": "Project ID or project name",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "$ref": "#/parameters/api-Version-preview.1"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string",
-                "format": "uuid"
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "oauth2": [
-              "vso.advsec"
-            ]
-          }
-        ]
-      }
-    },
-    "/{organization}/{project}/_apis/management/meterUsageEstimate/details": {
-      "get": {
-        "tags": [
-          "Project Meter Usage Estimate"
-        ],
-        "x-ms-docs-override-version": "7.2-preview.1",
-        "x-ms-vss-resource": "projectMeterUsageEstimate",
-        "x-ms-vss-method": "GetEstimatedBillablePushersDetailsForProject",
+        "x-ms-vss-method": "GetEstimatedBillablePushersDetailsForProject2",
         "x-ms-preview": true,
         "description": "Estimate the pushers that would be added to the customer's usage if Advanced Security was enabled for this project.",
-        "operationId": "Project Meter Usage Estimate_Get Estimated Billable Pushers Details For Project",
+        "operationId": "Project Meter Usage Estimate_Get",
         "produces": [
           "application/json"
         ],
@@ -480,17 +431,43 @@
             "type": "string"
           },
           {
-            "$ref": "#/parameters/api-Version-preview.1"
+            "in": "query",
+            "name": "plan",
+            "description": "",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "codeSecurity",
+              "secretProtection",
+              "all"
+            ],
+            "x-ms-enum": {
+              "name": "Plan",
+              "values": [
+                {
+                  "value": "codeSecurity",
+                  "description": "The Code Security plan"
+                },
+                {
+                  "value": "secretProtection",
+                  "description": "The Secret Protection plan"
+                },
+                {
+                  "value": "all",
+                  "description": "Include all plans"
+                }
+              ]
+            }
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.2"
           }
         ],
         "responses": {
           "200": {
             "description": "successful operation",
             "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/BilledCommitter"
-              }
+              "$ref": "#/definitions/MeterUsageEstimate"
             }
           }
         },
@@ -503,17 +480,17 @@
         ]
       }
     },
-    "/{organization}/{project}/_apis/management/repositories/{repository}/enablement": {
+    "/{organization}/{project}/_apis/management/repositories/{repository}/meterUsageEstimate/default": {
       "get": {
         "tags": [
-          "Repo Enablement"
+          "Repo Meter Usage Estimate"
         ],
-        "x-ms-docs-override-version": "7.2-preview.1",
-        "x-ms-vss-resource": "repoEnablement",
-        "x-ms-vss-method": "GetRepoEnablementStatus",
+        "x-ms-docs-override-version": "7.2-preview.2",
+        "x-ms-vss-resource": "repoMeterUsageEstimate",
+        "x-ms-vss-method": "GetEstimatedBillableCommittersDetailsForRepo2",
         "x-ms-preview": true,
-        "description": "Determine if Advanced Security is enabled for a repository",
-        "operationId": "Repo Enablement_Get",
+        "description": "Estimate the pushers that would be added to the customer's usage if Advanced Security was enabled for this repository.",
+        "operationId": "Repo Meter Usage Estimate_Get",
         "produces": [
           "application/json"
         ],
@@ -541,202 +518,42 @@
           },
           {
             "in": "query",
-            "name": "includeAllProperties",
-            "description": "When true, will also determine if pushes are blocked when secrets are detected",
+            "name": "plan",
+            "description": "The plan to query.",
             "required": false,
-            "type": "boolean"
+            "type": "string",
+            "enum": [
+              "codeSecurity",
+              "secretProtection",
+              "all"
+            ],
+            "x-ms-enum": {
+              "name": "Plan",
+              "values": [
+                {
+                  "value": "codeSecurity",
+                  "description": "The Code Security plan"
+                },
+                {
+                  "value": "secretProtection",
+                  "description": "The Secret Protection plan"
+                },
+                {
+                  "value": "all",
+                  "description": "Include all plans"
+                }
+              ]
+            }
           },
           {
-            "$ref": "#/parameters/api-Version-preview.1"
+            "$ref": "#/parameters/api-Version-preview.2"
           }
         ],
         "responses": {
           "200": {
             "description": "successful operation",
             "schema": {
-              "$ref": "#/definitions/AdvSecEnablementStatus"
-            }
-          }
-        },
-        "security": [
-          {
-            "oauth2": [
-              "vso.advsec"
-            ]
-          }
-        ]
-      },
-      "patch": {
-        "tags": [
-          "Repo Enablement"
-        ],
-        "x-ms-docs-override-version": "7.2-preview.1",
-        "x-ms-vss-resource": "repoEnablement",
-        "x-ms-vss-method": "UpdateRepoAdvSecEnablementStatus",
-        "x-ms-preview": true,
-        "description": "Update the enablement of Advanced Security for a repository",
-        "operationId": "Repo Enablement_Update",
-        "consumes": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "organization",
-            "description": "The name of the Azure DevOps organization.",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "in": "body",
-            "name": "body",
-            "description": "new status",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/AdvSecEnablementStatusUpdate"
-            }
-          },
-          {
-            "in": "path",
-            "name": "project",
-            "description": "Project ID or project name",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "in": "path",
-            "name": "repository",
-            "description": "Name or ID of the repository",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "$ref": "#/parameters/api-Version-preview.1"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation"
-          }
-        },
-        "security": [
-          {
-            "oauth2": [
-              "vso.advsec_manage"
-            ]
-          }
-        ]
-      }
-    },
-    "/{organization}/{project}/_apis/management/repositories/{repository}/meterUsageEstimate/default": {
-      "get": {
-        "tags": [
-          "Repo Meter Usage Estimate"
-        ],
-        "x-ms-docs-override-version": "7.2-preview.1",
-        "x-ms-vss-resource": "repoMeterUsageEstimate",
-        "x-ms-vss-method": "GetEstimatedBillableCommittersForRepo",
-        "x-ms-preview": true,
-        "description": "Estimate the committers that would be added to the customer's usage if Advanced Security was enabled for this repository.",
-        "operationId": "Repo Meter Usage Estimate_Get Estimated Billable Committers For Repo",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "organization",
-            "description": "The name of the Azure DevOps organization.",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "in": "path",
-            "name": "project",
-            "description": "Project ID or project name",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "in": "path",
-            "name": "repository",
-            "description": "The name or ID of the repository",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "$ref": "#/parameters/api-Version-preview.1"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "type": "array",
-              "items": {
-                "type": "string",
-                "format": "uuid"
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "oauth2": [
-              "vso.advsec"
-            ]
-          }
-        ]
-      }
-    },
-    "/{organization}/{project}/_apis/management/repositories/{repository}/meterUsageEstimate/details": {
-      "get": {
-        "tags": [
-          "Repo Meter Usage Estimate"
-        ],
-        "x-ms-docs-override-version": "7.2-preview.1",
-        "x-ms-vss-resource": "repoMeterUsageEstimate",
-        "x-ms-vss-method": "GetEstimatedBillableCommitersDetailsForRepo",
-        "x-ms-preview": true,
-        "description": "Estimate the committers that would be added to the customer's usage if Advanced Security was enabled for this repository.",
-        "operationId": "Repo Meter Usage Estimate_Get Estimated Billable Commiters Details For Repo",
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "organization",
-            "description": "The name of the Azure DevOps organization.",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "in": "path",
-            "name": "project",
-            "description": "Project ID or project name",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "in": "path",
-            "name": "repository",
-            "description": "",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "$ref": "#/parameters/api-Version-preview.1"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/BilledCommitter"
-              }
+              "$ref": "#/definitions/MeterUsageEstimate"
             }
           }
         },
@@ -751,93 +568,6 @@
     }
   },
   "definitions": {
-    "AdvSecEnablementFeatures": {
-      "description": "",
-      "type": "object",
-      "properties": {
-        "codeQLEnabled": {
-          "description": "CodeQL enablement status set to False when disabled and True when enabled; Null is never explicitly set.",
-          "type": "boolean"
-        },
-        "dependencyScanningInjectionEnabled": {
-          "description": "Dependency Scanning Injection enablement status set to False when disabled and True when enabled; Null is never explicitly set. <br /> If Advanced Security is NOT already enabled, behavior will depend on if Advanced Security is to be enabled/disabled. DependencyScanningInjectionEnabled will not affect anything in this scenario. <br /> If Advanced Security is to be disabled, the value of DependencyScanningInjectionEnabled will have no effect. <br /> Setting Dependency Scanning enablement state is only supported for repo enablement and not org or project enablement at this time.",
-          "type": "boolean"
-        }
-      }
-    },
-    "AdvSecEnablementSettings": {
-      "description": "",
-      "type": "object",
-      "properties": {
-        "enableOnCreate": {
-          "description": "Automatically enable Advanced Security on newly created repositories.",
-          "type": "boolean"
-        },
-        "reposEnablementStatus": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/AdvSecEnablementStatus"
-          }
-        }
-      }
-    },
-    "AdvSecEnablementSettingsUpdate": {
-      "description": "",
-      "type": "object",
-      "allOf": [
-        {
-          "$ref": "#/definitions/AdvSecEnablementStatusUpdate"
-        }
-      ],
-      "properties": {
-        "enableOnCreate": {
-          "description": "Automatically enable Advanced Security on newly created repositories.",
-          "type": "boolean"
-        }
-      }
-    },
-    "AdvSecEnablementStatus": {
-      "description": "",
-      "type": "object",
-      "allOf": [
-        {
-          "$ref": "#/definitions/AdvSecEnablementStatusUpdate"
-        }
-      ],
-      "properties": {
-        "advSecEnablementLastChangedDate": {
-          "description": "The last time the status of Advanced Security for this repository was updated",
-          "type": "string",
-          "format": "date-time"
-        },
-        "projectId": {
-          "type": "string",
-          "format": "uuid"
-        },
-        "repositoryId": {
-          "type": "string",
-          "format": "uuid"
-        }
-      }
-    },
-    "AdvSecEnablementStatusUpdate": {
-      "description": "",
-      "type": "object",
-      "properties": {
-        "advSecEnabled": {
-          "description": "Advanced Security enablement status set to False when disabled and True when enabled; Null is never explicitly set.",
-          "type": "boolean"
-        },
-        "advSecEnablementFeatures": {
-          "description": "Includes additional features that can be enabled alongside Advanced Security.",
-          "$ref": "#/definitions/AdvSecEnablementFeatures"
-        },
-        "blockPushes": {
-          "description": "When true, pushes containing secrets will be blocked. <br />When false, pushes are scanned for secrets and are not blocked. <br />If includeAllProperties in the request is false, this value will be null.",
-          "type": "boolean"
-        }
-      }
-    },
     "BillableCommitterDetails": {
       "description": "Billable Committers Details for Advanced Security Services",
       "type": "object",
@@ -1049,59 +779,6 @@
         }
       }
     },
-    "MeterUsage": {
-      "description": "Information related to billing for Advanced Security services",
-      "type": "object",
-      "properties": {
-        "accountId": {
-          "description": "The Azure DevOps account",
-          "type": "string",
-          "format": "uuid"
-        },
-        "azureSubscriptionId": {
-          "type": "string",
-          "format": "uuid"
-        },
-        "billedCommitters": {
-          "description": "Deprecated - use BilledCommittersIdentities instead A list of Cuids for the commiters to the repositories that have Advanced Security features enabled",
-          "type": "array",
-          "items": {
-            "type": "string",
-            "format": "uuid"
-          }
-        },
-        "billedUsers": {
-          "description": "A list of BilledCommitter objects that contain the identityRef of committers that have AdvSec enabled",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/BilledCommitter"
-          }
-        },
-        "billingDate": {
-          "description": "The date this billing information pertains to",
-          "type": "string",
-          "format": "date-time"
-        },
-        "isAdvSecBillable": {
-          "description": "True when a bill is generated for Advanced Security feature usage in this organziation",
-          "type": "boolean"
-        },
-        "isAdvSecEnabled": {
-          "description": "True when Advanced Security features are enabled in this organization",
-          "type": "boolean"
-        },
-        "tenantId": {
-          "description": "The Azure subscription",
-          "type": "string",
-          "format": "uuid"
-        },
-        "uniqueCommitterCount": {
-          "description": "The number of commiters to repositories that have Advanced Security features enabled",
-          "type": "integer",
-          "format": "int32"
-        }
-      }
-    },
     "MeterUsageEstimate": {
       "description": "Information related to meter usage estimate for Code Security plan and/or Secret Protection plan",
       "type": "object",
@@ -1262,10 +939,10 @@
     }
   },
   "parameters": {
-    "api-Version-preview.1": {
+    "api-Version-preview.2": {
       "name": "api-version",
       "in": "query",
-      "description": "Version of the API to use.  This should be set to '7.2-preview.1' to use this version of the api.",
+      "description": "Version of the API to use.  This should be set to '7.2-preview.2' to use this version of the api.",
       "required": true,
       "type": "string"
     }
