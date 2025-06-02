@@ -491,6 +491,32 @@
         }
       }
     },
+    "Chunk": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "embedding": {
+          "description": "The embedding will be missing if any errors are encountered while producing the embedding for the chunk, or if not requested.",
+          "$ref": "#/definitions/Embedding"
+        },
+        "hash": {
+          "description": "Hash of the chunk.",
+          "type": "string"
+        },
+        "line_range": {
+          "description": "The byte range in the source document that represented the primary content of this chunk.",
+          "$ref": "#/definitions/Range"
+        },
+        "range": {
+          "description": "The byte range in the source document that represented the primary content of this chunk.",
+          "$ref": "#/definitions/Range"
+        },
+        "text": {
+          "description": "Text of the chunk",
+          "type": "string"
+        }
+      }
+    },
     "CodeResult": {
       "description": "Defines the code result containing information of the searched files and its metadata.",
       "type": "object",
@@ -637,6 +663,20 @@
         "name": {
           "description": "Name of the indexed top level folder (depot).",
           "type": "string"
+        }
+      }
+    },
+    "Embedding": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "embedding": {
+          "description": "Array of floating-point values representing the embedding.",
+          "type": "array",
+          "items": {
+            "type": "number",
+            "format": "float"
+          }
         }
       }
     },
@@ -807,6 +847,48 @@
         }
       }
     },
+    "Language": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "color": {
+          "type": "string"
+        },
+        "id": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "Location": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "commit_sha": {
+          "description": "Hex encoded commit SHA.",
+          "type": "string"
+        },
+        "language": {
+          "description": "Pointer to commit.",
+          "$ref": "#/definitions/Language"
+        },
+        "path": {
+          "description": "File path in the repository.",
+          "type": "string"
+        },
+        "ref_name": {
+          "description": "Refname.",
+          "type": "string"
+        },
+        "repo": {
+          "description": "Repository.",
+          "$ref": "#/definitions/RepositoryContext"
+        }
+      }
+    },
     "PackageHit": {
       "description": "Defines the matched terms in the field of the package result.",
       "type": "object",
@@ -942,6 +1024,22 @@
         }
       }
     },
+    "Range": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "end": {
+          "description": "End of the range.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "start": {
+          "description": "Start of the range.",
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
     "Repository": {
       "description": "Defines the details of the repository.",
       "type": "object",
@@ -978,6 +1076,30 @@
               }
             ]
           }
+        }
+      }
+    },
+    "RepositoryContext": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "ID of the repository.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "nwo": {
+          "description": "Namespace with owner, e.g. \"microsoft/copilot\".",
+          "type": "string"
+        },
+        "owner_id": {
+          "description": "ID of the owner.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "url": {
+          "description": "URL of the repository.",
+          "type": "string"
         }
       }
     },
@@ -1020,6 +1142,64 @@
           "description": "Size of data to return for scroll search query. Min value is 201.",
           "type": "integer",
           "format": "int32"
+        }
+      }
+    },
+    "SemanticSearchRequest": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "include_embeddings": {
+          "description": "Set to true to include the embeddings in the response.",
+          "type": "boolean"
+        },
+        "limit": {
+          "description": "The maximum number of results to return.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "prompt": {
+          "description": "The semantic search query. This will be embedded and combined with the scoping query.",
+          "type": "string"
+        },
+        "scoping_query": {
+          "description": "Scoping Query",
+          "type": "string"
+        }
+      }
+    },
+    "SemanticSearchResponse": {
+      "description": "Defines the base contract for search response.",
+      "type": "object",
+      "properties": {
+        "embedding_model": {
+          "description": "The embeddings model used.",
+          "type": "string"
+        },
+        "results": {
+          "description": "The search results.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/SemanticSearchResult"
+          }
+        }
+      }
+    },
+    "SemanticSearchResult": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "chunk": {
+          "$ref": "#/definitions/Chunk"
+        },
+        "distance": {
+          "description": "The cosine similarity of the result (as related to the request prompt).",
+          "type": "number",
+          "format": "float"
+        },
+        "location": {
+          "description": "The location of a search result: the repository, commit, and file path.",
+          "$ref": "#/definitions/Location"
         }
       }
     },
