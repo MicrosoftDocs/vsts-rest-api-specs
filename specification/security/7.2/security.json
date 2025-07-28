@@ -117,7 +117,7 @@
         "x-ms-vss-resource": "accessControlEntries",
         "x-ms-vss-method": "SetAccessControlEntries",
         "x-ms-preview": true,
-        "description": "Add or update ACEs in the ACL for the provided token. The request body contains the target token, a list of [ACEs](https://docs.microsoft.com/en-us/rest/api/azure/devops/security/access-control-entries/set-access-control-entries?#accesscontrolentry) and a optional merge parameter. In the case of a collision (by identity descriptor) with an existing ACE in the ACL, the \"merge\" parameter determines the behavior. If set, the existing ACE has its allow and deny merged with the incoming ACE's allow and deny. If unset, the existing ACE is displaced.",
+        "description": "Add or update ACEs in the ACL for the provided token. The request body contains the target token, a list of [ACEs](https://docs.microsoft.com/en-us/rest/api/azure/devops/security/access-control-entries/set-access-control-entries?#accesscontrolentry) and a optional merge parameter. In the case of a collision (by identity descriptor) with an existing ACE in the ACL, the \"merge\" parameter determines the behavior. If set, the existing ACE has its allow and deny merged with the incoming ACE's allow and deny. If unset, the existing ACE is displaced. For optimal performance and reliability, it is strongly recommended to batch multiple ACEs in a single request rather than sending individual requests. Batching requests improves efficiency, reduces overhead, and helps ensure successful completion of your operations.",
         "operationId": "Access Control Entries_Set Access Control Entries",
         "consumes": [
           "application/json"
@@ -179,6 +179,9 @@
           },
           "Merge": {
             "$ref": "./httpExamples/AccessControlEntries/POST__accesscontrolentries__securityNamespaceId__merge.json"
+          },
+          "Batch": {
+            "$ref": "./httpExamples/AccessControlEntries/POST__accesscontrolentries__securityNamespaceId__batch.json"
           }
         }
       }
@@ -192,7 +195,7 @@
         "x-ms-vss-resource": "accessControlLists",
         "x-ms-vss-method": "QueryAccessControlLists",
         "x-ms-preview": true,
-        "description": "Return a list of access control lists for the specified security namespace and token. All ACLs in the security namespace will be retrieved if no optional parameters are provided.",
+        "description": "Return a list of access control lists for the specified security namespace and token. All ACLs in the security namespace will be retrieved if no optional parameters are provided.\n\nNote that the response will include all project IDs, including projects the current user does not have access to.",
         "operationId": "Access Control Lists_Query",
         "produces": [
           "application/json"

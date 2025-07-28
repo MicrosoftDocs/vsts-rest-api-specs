@@ -24,6 +24,10 @@
       "description": "Rest api for code search."
     },
     {
+      "name": "Commit Search Results",
+      "description": "REST API controller to retrieve the search result hits."
+    },
+    {
       "name": "Package Search Results",
       "description": "REST API for package search."
     },
@@ -179,6 +183,74 @@
             "$ref": "./httpExamples/codeSearchResults/POST__CodeSearchResults.json"
           }
         }
+      }
+    },
+    "/{organization}/{project}/_apis/search/commitsearchresults": {
+      "post": {
+        "tags": [
+          "Commit Search Results"
+        ],
+        "x-ms-docs-override-version": "7.2-preview.1",
+        "x-ms-vss-resource": "commitSearchResults",
+        "x-ms-vss-method": "FetchCommitSearchResults",
+        "x-ms-preview": true,
+        "description": "Provides a set of results which match the posted query. Returning HttpResponseMessage object so as to obtain the response headers in the auto generated rest client.",
+        "operationId": "Commit Search Results_Fetch Commit Search Results",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/CommitSearchRequest"
+            }
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "x-ms-required": false,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/CommitSearchResponse"
+            },
+            "headers": {
+              "ActivityId": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.code"
+            ]
+          }
+        ]
       }
     },
     "/{organization}/{project}/_apis/search/status/repositories/{repository}": {
@@ -609,6 +681,162 @@
         "name": {
           "description": "Name of the collection.",
           "type": "string"
+        }
+      }
+    },
+    "CommitHit": {
+      "description": "Defines the matched terms in the field of the commit result.",
+      "type": "object",
+      "properties": {
+        "fieldReferenceName": {
+          "description": "Reference name of the field highlighted.",
+          "type": "string"
+        },
+        "highlights": {
+          "description": "Highlighted snippets of the field.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "CommitResult": {
+      "description": "Defines the commit result that matches the commit search request.",
+      "type": "object",
+      "properties": {
+        "authorDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "authorEmail": {
+          "type": "string"
+        },
+        "authorName": {
+          "type": "string"
+        },
+        "branchName": {
+          "type": "string"
+        },
+        "branchNameOriginal": {
+          "type": "string"
+        },
+        "collectionId": {
+          "type": "string"
+        },
+        "collectionName": {
+          "type": "string"
+        },
+        "collectionNameOriginal": {
+          "type": "string"
+        },
+        "commitDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "commitDescription": {
+          "type": "string"
+        },
+        "commitId": {
+          "type": "string"
+        },
+        "committerEmail": {
+          "type": "string"
+        },
+        "committerName": {
+          "type": "string"
+        },
+        "commitTitle": {
+          "type": "string"
+        },
+        "hits": {
+          "description": "Highlighted snippets of fields that match the search request.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CommitHit"
+          }
+        },
+        "projectId": {
+          "type": "string"
+        },
+        "projectName": {
+          "type": "string"
+        },
+        "projectNameOriginal": {
+          "type": "string"
+        },
+        "pushedBy": {
+          "type": "string"
+        },
+        "pushedByEmail": {
+          "type": "string"
+        },
+        "pushedDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "repositoryName": {
+          "type": "string"
+        },
+        "repositoryNameOriginal": {
+          "type": "string"
+        },
+        "respositoryId": {
+          "type": "string"
+        }
+      }
+    },
+    "CommitSearchRequest": {
+      "description": "Defines the commit search request.",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/EntitySearchRequest"
+        }
+      ],
+      "properties": {}
+    },
+    "CommitSearchResponse": {
+      "description": "Defines commit search response.",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/EntitySearchResponse"
+        }
+      ],
+      "properties": {
+        "count": {
+          "description": "Total number of matched commit items.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "results": {
+          "description": "List of top matched commit items.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CommitResult"
+          }
+        },
+        "searchRequest": {
+          "description": "Represents the search request associated with the commit search response.",
+          "$ref": "#/definitions/CommitSearchRequest"
+        }
+      }
+    },
+    "CommitSearchResponseWithActivityId": {
+      "description": "Represents a response for a commit search that includes an activity ID.",
+      "type": "object",
+      "properties": {
+        "activityId": {
+          "description": "Gets or sets the activity ID associated with the response.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "response": {
+          "description": "Gets or sets the commit search response.",
+          "$ref": "#/definitions/CommitSearchResponse"
         }
       }
     },
@@ -1200,6 +1428,32 @@
         "location": {
           "description": "The location of a search result: the repository, commit, and file path.",
           "$ref": "#/definitions/Location"
+        }
+      }
+    },
+    "SemanticSearchStatusResponse": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "Repository Id.",
+          "type": "string",
+          "format": "uuid"
+        },
+        "indexedBranches": {
+          "description": "List of Indexed branches info.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/BranchInfo"
+          }
+        },
+        "name": {
+          "description": "Repository Name.",
+          "type": "string"
+        },
+        "semanticSearchEnabled": {
+          "description": "Indicates whether semantic search is enabled or not.",
+          "type": "boolean"
         }
       }
     },
