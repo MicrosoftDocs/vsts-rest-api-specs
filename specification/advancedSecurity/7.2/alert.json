@@ -156,6 +156,13 @@
           },
           {
             "in": "query",
+            "name": "criteria.hasLinkedWorkItems",
+            "description": "If provided, filters alerts based on whether they have linked work items. <br />Set to \"true\" to return only alerts with linked work items. <br />Set to \"false\" to return only alerts without linked work items. <br />If not provided, returns all alerts regardless of linked work items. <br />Not applicable for secret and dependency scanning alerts.",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "in": "query",
             "name": "criteria.keywords",
             "description": "If provided, only return alerts whose titles match this pattern.",
             "required": false,
@@ -2252,6 +2259,10 @@
           "type": "string",
           "format": "date-time"
         },
+        "hasLinkedWorkItems": {
+          "description": "If provided, filters alerts based on whether they have linked work items. <br />Set to \"true\" to return only alerts with linked work items. <br />Set to \"false\" to return only alerts without linked work items. <br />If not provided, returns all alerts regardless of linked work items. <br />Not applicable for secret and dependency scanning alerts.",
+          "type": "boolean"
+        },
         "keywords": {
           "description": "If provided, only return alerts whose titles match this pattern.",
           "type": "string"
@@ -2652,6 +2663,13 @@
       "description": "",
       "type": "object",
       "properties": {
+        "assetFingerprint": {
+          "description": "The key value representation of the asset fingerprint.",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
         "validationFingerprintHash": {
           "description": "The hash associated to the secret.",
           "type": "string"
@@ -2672,7 +2690,8 @@
             "exploitable",
             "notExploitable",
             "inconclusive",
-            "validationNotSupported"
+            "validationNotSupported",
+            "transientError"
           ],
           "x-ms-enum": {
             "name": "ValidationResult",
@@ -2696,6 +2715,10 @@
               {
                 "value": "validationNotSupported",
                 "description": "Represents a secret where we are unable to validate, e.g. dynamic validator missing."
+              },
+              {
+                "value": "transientError",
+                "description": "Represents a secret where the validation process failed due to a transient error, e.g. network issue. This result indicates that the validation process should be retried."
               }
             ]
           }
