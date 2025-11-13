@@ -885,6 +885,31 @@
         }
       }
     },
+    "BulkEnablementSettingsBase": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "codeSecurityFeatures": {
+          "description": "Includes code security features that can be enabled.",
+          "$ref": "#/definitions/CodeSecurityFeatures"
+        },
+        "enablementOnCreateSettings": {
+          "description": "Auto enablement setting for newly created repositories.",
+          "$ref": "#/definitions/EnablementOnCreateSettings"
+        },
+        "reposEnablementStatus": {
+          "description": "A list of enablement statuses for repositories within the specified organization or project.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/RepoEnablementSettings"
+          }
+        },
+        "secretProtectionFeatures": {
+          "description": "Includes secret protection features that can be enabled.",
+          "$ref": "#/definitions/SecretProtectionFeatures"
+        }
+      }
+    },
     "CodeSecurityFeatures": {
       "description": "",
       "type": "object",
@@ -917,8 +942,24 @@
       "description": "",
       "type": "object",
       "properties": {
+        "enableBlockPushesOnCreate": {
+          "description": "Automatically enable blocking of pushes that contain secrets when Secret Protection is auto-enabled. If EnableSecretProtectionOnCreate is not true this flag is ignored.",
+          "type": "boolean"
+        },
+        "enableCodeQLOnCreate": {
+          "description": "Automatically enable CodeQL when Code Security is auto-enabled. If EnableCodeSecurityOnCreate is not true this flag is ignored.",
+          "type": "boolean"
+        },
         "enableCodeSecurityOnCreate": {
           "description": "Automatically enable Code Security on newly created repositories.",
+          "type": "boolean"
+        },
+        "enableDependabotOnCreate": {
+          "description": "Automatically enable Dependabot when Code Security is auto-enabled. If EnableCodeSecurityOnCreate is not true this flag is ignored.",
+          "type": "boolean"
+        },
+        "enableDependencyScanningInjectionOnCreate": {
+          "description": "Automatically enable Dependency Scanning Injection when Code Security is auto-enabled. If EnableCodeSecurityOnCreate is not true this flag is ignored.",
           "type": "boolean"
         },
         "enableSecretProtectionOnCreate": {
@@ -1097,52 +1138,22 @@
     "OrgEnablementSettings": {
       "description": "",
       "type": "object",
-      "properties": {
-        "codeSecurityFeatures": {
-          "description": "Includes code security features that can be enabled.",
-          "$ref": "#/definitions/CodeSecurityFeatures"
-        },
-        "enablementOnCreateSettings": {
-          "description": "Auto enablement setting for newly created repositories.",
-          "$ref": "#/definitions/EnablementOnCreateSettings"
-        },
-        "reposEnablementStatus": {
-          "description": "A list of enablement statuses for repositories within the specified organization or project.",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/RepoEnablementSettings"
-          }
-        },
-        "secretProtectionFeatures": {
-          "description": "Includes secret protection features that can be enabled.",
-          "$ref": "#/definitions/SecretProtectionFeatures"
+      "allOf": [
+        {
+          "$ref": "#/definitions/BulkEnablementSettingsBase"
         }
-      }
+      ],
+      "properties": {}
     },
     "ProjectEnablementSettings": {
       "description": "",
       "type": "object",
-      "properties": {
-        "codeSecurityFeatures": {
-          "description": "Includes code security features that can be enabled.",
-          "$ref": "#/definitions/CodeSecurityFeatures"
-        },
-        "enablementOnCreateSettings": {
-          "description": "Auto enablement setting for newly created repositories.",
-          "$ref": "#/definitions/EnablementOnCreateSettings"
-        },
-        "reposEnablementStatus": {
-          "description": "A list of enablement statuses for repositories within the specified organization or project.",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/RepoEnablementSettings"
-          }
-        },
-        "secretProtectionFeatures": {
-          "description": "Includes secret protection features that can be enabled.",
-          "$ref": "#/definitions/SecretProtectionFeatures"
+      "allOf": [
+        {
+          "$ref": "#/definitions/BulkEnablementSettingsBase"
         }
-      }
+      ],
+      "properties": {}
     },
     "ReferenceLinks": {
       "description": "The class to represent a collection of REST reference links.",
