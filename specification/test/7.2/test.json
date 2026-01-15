@@ -3531,6 +3531,79 @@
         }
       }
     },
+    "AdvancedFlakyDetectionParameter": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "lookbackPeriod": {
+          "description": "Lookback period for the parameter in multiple of 24 hours",
+          "type": "integer",
+          "format": "int32"
+        },
+        "parameterType": {
+          "description": "Type of the parameter.",
+          "enum": [
+            "failureRate",
+            "passRate",
+            "timingVariability",
+            "rerunCount"
+          ],
+          "x-ms-enum": {
+            "name": "AdvancedFlakyDetectionParameterType",
+            "values": [
+              {
+                "value": "failureRate",
+                "description": "Failure rate parameter for flaky detection"
+              },
+              {
+                "value": "passRate",
+                "description": "Pass rate parameter for flaky detection"
+              },
+              {
+                "value": "timingVariability",
+                "description": "Timing variability parameter for flaky detection"
+              },
+              {
+                "value": "rerunCount",
+                "description": "Rerun count parameter for flaky detection"
+              }
+            ]
+          }
+        },
+        "weight": {
+          "description": "Weight for the parameter. Values between 0-100",
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "AdvancedFlakyDetectionSettings": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "filingBugThreshold": {
+          "description": "Threshold for filing a bug for a flaky test.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "flakyTestBugConfig": {
+          "description": "Configuration for flaky test bug",
+          "$ref": "#/definitions/FlakyTestBugConfig"
+        },
+        "markingFlakyThreshold": {
+          "description": "Threshold for marking a test as flaky.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "weightedScores": {
+          "description": "List of parameters with their weights for advanced flaky detection.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/AdvancedFlakyDetectionParameter"
+          }
+        }
+      }
+    },
     "AfnStrip": {
       "description": "",
       "type": "object",
@@ -5517,8 +5590,7 @@
           "description": "FlakyDetectionType defines Detection type i.e. 1. System or 2. Manual.",
           "enum": [
             "custom",
-            "system",
-            "advanceSystem"
+            "system"
           ],
           "x-ms-enum": {
             "name": "FlakyDetectionType",
@@ -5530,10 +5602,6 @@
               {
                 "value": "system",
                 "description": "Defines System detection type."
-              },
-              {
-                "value": "advanceSystem",
-                "description": "Defines Advanced System detection type."
               }
             ]
           }
@@ -5562,6 +5630,31 @@
       "description": "",
       "type": "object",
       "properties": {
+        "advancedSystemDetectionMode": {
+          "description": "Advanced flaky detection Mode",
+          "enum": [
+            "disabled",
+            "preview",
+            "enabled"
+          ],
+          "x-ms-enum": {
+            "name": "AdvancedFlakyDetectionMode",
+            "values": [
+              {
+                "value": "disabled",
+                "description": "Advanced Flaky Detection is Disabled Mode"
+              },
+              {
+                "value": "preview",
+                "description": "Advanced Flaky Detection is Preview Mode"
+              },
+              {
+                "value": "enabled",
+                "description": "Advanced Flaky Detection is Enabled Mode"
+              }
+            ]
+          }
+        },
         "flakyDetection": {
           "description": "FlakyDetection defines types of detection.",
           "$ref": "#/definitions/FlakyDetection"
@@ -5577,6 +5670,58 @@
         "manualMarkUnmarkFlaky": {
           "description": "ManualMarkUnmarkFlaky defines manual marking unmarking of flaky testcase.",
           "type": "boolean"
+        }
+      }
+    },
+    "FlakyTestBugConfig": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "bugMetadata": {
+          "description": "Metadata properties for flaky test bug.",
+          "type": "array",
+          "items": {
+            "enum": [
+              "errorMessage",
+              "stackTrace",
+              "testName",
+              "machine"
+            ],
+            "x-ms-enum": {
+              "name": "FlakyTestBugMetadata",
+              "values": [
+                {
+                  "value": "errorMessage",
+                  "description": "Error Message of the Test Result"
+                },
+                {
+                  "value": "stackTrace",
+                  "description": "Stack Trace of the Test Result"
+                },
+                {
+                  "value": "testName",
+                  "description": "Test Name"
+                },
+                {
+                  "value": "machine",
+                  "description": "Machine Name"
+                }
+              ]
+            }
+          }
+        },
+        "bugPriority": {
+          "description": "Bug Priority for flaky test bug.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "bugTemplateId": {
+          "description": "Bug Template Id for flaky test bug.",
+          "type": "string"
+        },
+        "teamId": {
+          "description": "Team Id for the bug template",
+          "type": "string"
         }
       }
     },
@@ -9374,6 +9519,35 @@
         }
       }
     },
+    "TestAgentCallbackRequest": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "success": {
+          "type": "boolean"
+        },
+        "task": {
+          "type": "string"
+        },
+        "workItemId": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "TestAgentTriggerRequest": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "task": {
+          "type": "string"
+        },
+        "workItemId": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
     "TestAnalysisFailureGroup": {
       "description": "Test analysis failure group object",
       "type": "object",
@@ -12642,6 +12816,10 @@
       "description": "",
       "type": "object",
       "properties": {
+        "advancedFlakyDetectionSettings": {
+          "description": "Advanced system flaky detection settings Contains parameter configurations for failure rate, pass rate, timing variability, and rerun count",
+          "$ref": "#/definitions/AdvancedFlakyDetectionSettings"
+        },
         "flakySettings": {
           "description": "IsRequired and EmitDefaultValue are passed as false as if users doesn't pass anything, should not come for serialisation and deserialisation.",
           "$ref": "#/definitions/FlakySettings"
@@ -12681,6 +12859,10 @@
       "description": "",
       "type": "object",
       "properties": {
+        "advancedFlakyDetectionSettings": {
+          "description": "Advanced system flaky detection settings Contains parameter configurations for failure rate, pass rate, timing variability, and rerun count",
+          "$ref": "#/definitions/AdvancedFlakyDetectionSettings"
+        },
         "flakySettings": {
           "description": "FlakySettings defines Flaky Settings Data.",
           "$ref": "#/definitions/FlakySettings"

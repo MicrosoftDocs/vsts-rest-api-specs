@@ -152,6 +152,98 @@
         ]
       }
     },
+    "/{organization}/_apis/reporting/summary/alertsbatch": {
+      "get": {
+        "tags": [
+          "Summary Dashboard"
+        ],
+        "x-ms-docs-override-version": "7.2-preview.1",
+        "x-ms-vss-resource": "summaryDashboard",
+        "x-ms-vss-method": "GetCombinedAlertsForOrg",
+        "x-ms-preview": true,
+        "description": "Get Combined Alerts for the org",
+        "operationId": "Summary Dashboard_List",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "criteria.keywords",
+            "description": "If provided, only return alerts whose titles match this pattern.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "criteria.state",
+            "description": "If provided, return alerts that are active or inactive based on this value. <br />Otherwise, return alerts in any state.",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "open",
+              "closed"
+            ],
+            "x-ms-enum": {
+              "name": "DashboardAlertState",
+              "values": [
+                {
+                  "value": "open",
+                  "description": "Alert has been detected in the code and corresponds to 'Active' state."
+                },
+                {
+                  "value": "closed",
+                  "description": "Alert corresponds to 'Unknown', 'Dismissed', 'Fixed' or 'AutoDismissed' states."
+                }
+              ]
+            }
+          },
+          {
+            "in": "query",
+            "name": "top",
+            "description": "The maximum number of alerts to return",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "in": "query",
+            "name": "continuationToken",
+            "description": "If there are more alerts than can be returned, a continuation token is placed in the \"x-ms-continuationtoken\" header.  Use that token here to get the next page of alerts",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/DashboardAlert"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.advsec"
+            ]
+          }
+        ]
+      }
+    },
     "/{organization}/_apis/reporting/summary/enablement": {
       "get": {
         "tags": [
@@ -161,7 +253,7 @@
         "x-ms-vss-resource": "summaryDashboard",
         "x-ms-vss-method": "getEnablementSummaryForOrg",
         "x-ms-preview": true,
-        "description": "",
+        "description": "Get Enablement summary for the org",
         "operationId": "Summary Dashboard_Get Enablement Summary For Org",
         "produces": [
           "application/json"
@@ -312,6 +404,238 @@
           "description": "Total New state alerts.",
           "type": "integer",
           "format": "int32"
+        }
+      }
+    },
+    "CombinedAlertFilterCriteria": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "keywords": {
+          "description": "If provided, only return alerts whose titles match this pattern.",
+          "type": "string"
+        },
+        "state": {
+          "description": "If provided, return alerts that are active or inactive based on this value. <br />Otherwise, return alerts in any state.",
+          "enum": [
+            "open",
+            "closed"
+          ],
+          "x-ms-enum": {
+            "name": "DashboardAlertState",
+            "values": [
+              {
+                "value": "open",
+                "description": "Alert has been detected in the code and corresponds to 'Active' state."
+              },
+              {
+                "value": "closed",
+                "description": "Alert corresponds to 'Unknown', 'Dismissed', 'Fixed' or 'AutoDismissed' states."
+              }
+            ]
+          }
+        }
+      }
+    },
+    "DashboardAlert": {
+      "description": "An alert entity used in the dashboard for combined alerts.",
+      "type": "object",
+      "properties": {
+        "alertId": {
+          "description": "Identifier for the alert. It is unique within Azure DevOps organization.",
+          "type": "integer",
+          "format": "int64"
+        },
+        "alertType": {
+          "description": "Type of the alert. E.g. secret, code, etc.",
+          "enum": [
+            "unknown",
+            "dependency",
+            "secret",
+            "code"
+          ],
+          "x-ms-enum": {
+            "name": "AlertType",
+            "values": [
+              {
+                "value": "unknown",
+                "description": "The code has an unspecified vulnerability type"
+              },
+              {
+                "value": "dependency",
+                "description": "The code uses a dependency with a known vulnerability."
+              },
+              {
+                "value": "secret",
+                "description": "The code contains a secret that has now been compromised and must be revoked."
+              },
+              {
+                "value": "code",
+                "description": "The code contains a weakness determined by static analysis."
+              }
+            ]
+          }
+        },
+        "introducedDate": {
+          "description": "This value is computed and returned by the service. This value represents the first time the vulnerability was introduced.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "locations": {
+          "description": "This value is computed and returned by the service. It is a value based on the results from all analysis configurations. An example of a physical location is a file location.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/DashboardAlertPhysicalLocation"
+          }
+        },
+        "projectName": {
+          "description": "Name of the project where the alert was detected.",
+          "type": "string"
+        },
+        "repositoryName": {
+          "description": "Name of the repository where the alert was detected.",
+          "type": "string"
+        },
+        "severity": {
+          "description": "Severity of the alert.",
+          "enum": [
+            "low",
+            "medium",
+            "high",
+            "critical",
+            "note",
+            "warning",
+            "error",
+            "undefined"
+          ],
+          "x-ms-enum": {
+            "name": "Severity",
+            "values": [
+              {
+                "value": "low",
+                "description": ""
+              },
+              {
+                "value": "medium",
+                "description": ""
+              },
+              {
+                "value": "high",
+                "description": ""
+              },
+              {
+                "value": "critical",
+                "description": ""
+              },
+              {
+                "value": "note",
+                "description": ""
+              },
+              {
+                "value": "warning",
+                "description": ""
+              },
+              {
+                "value": "error",
+                "description": ""
+              },
+              {
+                "value": "undefined",
+                "description": ""
+              }
+            ]
+          }
+        },
+        "state": {
+          "description": "This value is computed and returned by the service. It is a value based on the results from all analysis configurations.",
+          "enum": [
+            "unknown",
+            "active",
+            "dismissed",
+            "fixed",
+            "autoDismissed"
+          ],
+          "x-ms-enum": {
+            "name": "State",
+            "values": [
+              {
+                "value": "unknown",
+                "description": "Alert is in an indeterminate state"
+              },
+              {
+                "value": "active",
+                "description": "Alert has been detected in the code"
+              },
+              {
+                "value": "dismissed",
+                "description": "Alert was dismissed by a user"
+              },
+              {
+                "value": "fixed",
+                "description": "The issue is no longer detected in the code"
+              },
+              {
+                "value": "autoDismissed",
+                "description": "The tool has determined that the issue is no longer a risk"
+              }
+            ]
+          }
+        },
+        "title": {
+          "description": "Title will only be rendered as text and does not support markdown formatting. There is a maximum character limit of 256.",
+          "type": "string"
+        },
+        "truncatedSecret": {
+          "description": "A truncated/obfuscated version of the secret pertaining to the alert (if applicable).",
+          "type": "string"
+        },
+        "validityStatus": {
+          "description": "Validity status of an alert. Currently, this is only applicable to secret alerts. In case of secret alerts, the validity status is computed by looking at the liveness results for validation fingerprints associated to an alert.",
+          "enum": [
+            "none",
+            "unknown",
+            "active",
+            "inactive"
+          ],
+          "x-ms-enum": {
+            "name": "AlertValidityStatus",
+            "values": [
+              {
+                "value": "none",
+                "description": "When there are no validation fingerprints attached to the alert."
+              },
+              {
+                "value": "unknown",
+                "description": "When the validations for validation fingerprints associated to the alert have not been conclusive."
+              },
+              {
+                "value": "active",
+                "description": "When at least one validation fingerprint associated to the alert is exploitable."
+              },
+              {
+                "value": "inactive",
+                "description": "When all validation fingerprints associated to the alert are not exploitable."
+              }
+            ]
+          }
+        }
+      }
+    },
+    "DashboardAlertPhysicalLocation": {
+      "description": "Location in the source control system where the issue was found",
+      "type": "object",
+      "properties": {
+        "alertId": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "filePath": {
+          "description": "Path of the file where the issue was found",
+          "type": "string"
+        },
+        "region": {
+          "description": "Details about the location where the issue was found including a snippet",
+          "$ref": "#/definitions/Region"
         }
       }
     },
@@ -606,6 +930,32 @@
         }
       }
     },
+    "Region": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "columnEnd": {
+          "description": "The column where the code snippet ends",
+          "type": "integer",
+          "format": "int32"
+        },
+        "columnStart": {
+          "description": "The column where the code snippet starts",
+          "type": "integer",
+          "format": "int32"
+        },
+        "lineEnd": {
+          "description": "The line number where the code snippet ends",
+          "type": "integer",
+          "format": "int32"
+        },
+        "lineStart": {
+          "description": "The line number where the code snippet starts",
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
     "RepoAlertSummary": {
       "description": "Repo Alert Summary.",
       "type": "object",
@@ -660,6 +1010,13 @@
           "description": "Repo Name.",
           "type": "string"
         },
+        "scanTypeMetadata": {
+          "description": "Repo scan type metadata for different scan types.",
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/ScanTypeSummaryMetadata"
+          }
+        },
         "scanTypeSummary": {
           "description": "Repo enablement summary for different scan types.",
           "type": "object",
@@ -683,6 +1040,17 @@
           "items": {
             "$ref": "#/definitions/Project"
           }
+        }
+      }
+    },
+    "ScanTypeSummaryMetadata": {
+      "description": "Metadata for a scan type.",
+      "type": "object",
+      "properties": {
+        "lastScanDate": {
+          "description": "The date and time of the last scan for the associated alert type/repo combination. Null if no scan has been performed.",
+          "type": "string",
+          "format": "date-time"
         }
       }
     },
@@ -711,6 +1079,33 @@
         "enabled": {
           "description": "Represents the state of the scan type summary property.",
           "type": "boolean"
+        }
+      }
+    },
+    "VssJsonCollectionWrapper": {
+      "description": "This class is used to serialize collections as a single JSON object on the wire.",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/VssJsonCollectionWrapperBase"
+        }
+      ],
+      "properties": {
+        "value": {
+          "description": "The serialized item.",
+          "type": "string",
+          "format": "T"
+        }
+      }
+    },
+    "VssJsonCollectionWrapperBase": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "count": {
+          "description": "The number of serialized items.",
+          "type": "integer",
+          "format": "int32"
         }
       }
     }

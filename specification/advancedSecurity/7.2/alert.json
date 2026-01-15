@@ -22,10 +22,19 @@
       "name": "Alerts"
     },
     {
+      "name": "Alerts Batch"
+    },
+    {
       "name": "Analysis"
     },
     {
       "name": "Instances"
+    },
+    {
+      "name": "Metadata2"
+    },
+    {
+      "name": "Metadata Batch"
     }
   ],
   "schemes": [
@@ -582,6 +591,215 @@
         ]
       }
     },
+    "/{organization}/{project}/_apis/alert/repositories/{repository}/alerts/{alertId}/metadata": {
+      "get": {
+        "tags": [
+          "Metadata2"
+        ],
+        "x-ms-docs-override-version": "7.2-preview.1",
+        "x-ms-vss-resource": "metadata2",
+        "x-ms-vss-method": "GetAlertMetadataAsync",
+        "x-ms-preview": true,
+        "description": "Get an alert metadata.",
+        "operationId": "Metadata2_Get",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "alertId",
+            "description": "ID of alert to retrieve",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "in": "path",
+            "name": "repository",
+            "description": "Name or id  of a repository that alert is part of",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/AlertMetadata"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.advsec"
+            ]
+          }
+        ]
+      }
+    },
+    "/{organization}/{project}/_apis/alert/repositories/{repository}/alerts/metadatabatch": {
+      "post": {
+        "tags": [
+          "Metadata Batch"
+        ],
+        "x-ms-docs-override-version": "7.2-preview.1",
+        "x-ms-vss-resource": "metadataBatch",
+        "x-ms-vss-method": "GetAlertMetadataBatchAsync",
+        "x-ms-preview": true,
+        "description": "Get alerts metadata.",
+        "operationId": "Metadata Batch_List",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/AlertMetadataBatchRequest"
+            }
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "repository",
+            "description": "Name or id  of a repository that alert is part of",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/AlertMetadata"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.advsec"
+            ]
+          }
+        ]
+      }
+    },
+    "/{organization}/{project}/_apis/alert/repositories/{repository}/AlertsBatch": {
+      "post": {
+        "tags": [
+          "Alerts Batch"
+        ],
+        "x-ms-docs-override-version": "7.2-preview.1",
+        "x-ms-vss-resource": "alertsBatch",
+        "x-ms-vss-method": "GetAlertsByIdsAsync",
+        "x-ms-preview": true,
+        "description": "Get alerts by alert IDs Currently supports fetching secret alerts only.",
+        "operationId": "Alerts Batch_List",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Request containing alert IDs and optional alert type filter",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/AlertBatchRequest"
+            }
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "repository",
+            "description": "The name or ID of the repository",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Alert"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.advsec"
+            ]
+          }
+        ]
+      }
+    },
     "/{organization}/{project}/_apis/alert/repositories/{repository}/filters/branches": {
       "get": {
         "tags": [
@@ -790,6 +1008,10 @@
         "gitRef": {
           "description": "Reference to a git object, e.g. branch ref.",
           "type": "string"
+        },
+        "hasTrustedSourceOrigin": {
+          "description": "Value indicates whether the alert comes from a SARIF uploaded by a trusted source.",
+          "type": "boolean"
         },
         "introducedDate": {
           "description": "This value is computed and returned by the service. This value represents the first time the vulnerability was introduced.",
@@ -1009,6 +1231,50 @@
         }
       }
     },
+    "AlertBatchRequest": {
+      "description": "Request model for getting alerts by IDs with optional alert type filter.",
+      "type": "object",
+      "properties": {
+        "alertIds": {
+          "description": "List of alert IDs to retrieve.",
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "format": "int64"
+          }
+        },
+        "alertType": {
+          "description": "Alert type of the alert IDs.",
+          "enum": [
+            "unknown",
+            "dependency",
+            "secret",
+            "code"
+          ],
+          "x-ms-enum": {
+            "name": "AlertType",
+            "values": [
+              {
+                "value": "unknown",
+                "description": "The code has an unspecified vulnerability type"
+              },
+              {
+                "value": "dependency",
+                "description": "The code uses a dependency with a known vulnerability."
+              },
+              {
+                "value": "secret",
+                "description": "The code contains a secret that has now been compromised and must be revoked."
+              },
+              {
+                "value": "code",
+                "description": "The code contains a weakness determined by static analysis."
+              }
+            ]
+          }
+        }
+      }
+    },
     "AlertMetadata": {
       "description": "Alert metadata.",
       "type": "object",
@@ -1023,6 +1289,40 @@
           "type": "array",
           "items": {
             "$ref": "#/definitions/Metadata"
+          }
+        }
+      }
+    },
+    "AlertMetadataBatchRequest": {
+      "description": "Alert metadata.",
+      "type": "object",
+      "properties": {
+        "alertIds": {
+          "description": "List of alert IDs.",
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "format": "int64"
+          }
+        },
+        "errorPolicy": {
+          "description": "The flag to control error policy in a bulk get work items request. Possible options are {Fail, Omit}.",
+          "enum": [
+            "fail",
+            "omit"
+          ],
+          "x-ms-enum": {
+            "name": "AlertMetadataErrorPolicy",
+            "values": [
+              {
+                "value": "fail",
+                "description": "Fail error policy: if an alert id is not found, the whole request fails."
+              },
+              {
+                "value": "omit",
+                "description": "Omit error policy: if an alert id is not found, it will be omitted from the results."
+              }
+            ]
           }
         }
       }
@@ -1294,19 +1594,19 @@
         },
         "firstIntroducedInstanceId": {
           "type": "integer",
-          "format": "int32"
+          "format": "int64"
         },
         "fixedInstanceId": {
           "type": "integer",
-          "format": "int32"
+          "format": "int64"
         },
         "introducedInstanceId": {
           "type": "integer",
-          "format": "int32"
+          "format": "int64"
         },
         "lastSeenInstanceId": {
           "type": "integer",
-          "format": "int32"
+          "format": "int64"
         },
         "result": {
           "$ref": "#/definitions/Result"
@@ -2669,6 +2969,10 @@
           "additionalProperties": {
             "type": "string"
           }
+        },
+        "c3Id": {
+          "description": "Represents the CrossCompanyCorrelatingId for the secret in the ValidationFingerprintJson.",
+          "type": "string"
         },
         "validationFingerprintHash": {
           "description": "The hash associated to the secret.",
