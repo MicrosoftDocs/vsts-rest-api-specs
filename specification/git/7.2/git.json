@@ -11189,6 +11189,38 @@
         }
       }
     },
+    "GetAccessibleRepositoriesRequest": {
+      "description": "Request to get accessible repositories based on permission.",
+      "type": "object",
+      "properties": {
+        "permission": {
+          "description": "Permission being requested, must be \"viewAlert\" \"dismissAlert\" \"manage\" \"viewEnablement\" \"repoRead\" or \"repoContribute\"",
+          "type": "string"
+        },
+        "repositoryIds": {
+          "description": "List of repository IDs to check permissions for",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      }
+    },
+    "GetAccessibleRepositoriesResponse": {
+      "description": "Response containing accessible repository IDs.",
+      "type": "object",
+      "properties": {
+        "accessibleRepositoryIds": {
+          "description": "List of repository IDs where the user has the requested permission",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      }
+    },
     "GitAnnotatedTag": {
       "description": "A Git annotated tag.",
       "type": "object",
@@ -13438,7 +13470,7 @@
           "type": "string"
         },
         "mergeStrategy": {
-          "description": "Specify the strategy used to merge the pull request during completion. If MergeStrategy is not set to any value, a no-FF merge will be created if SquashMerge == false. If MergeStrategy is not set to any value, the pull request commits will be squashed if SquashMerge == true. The SquashMerge property is deprecated. It is recommended that you explicitly set MergeStrategy in all cases. If an explicit value is provided for MergeStrategy, the SquashMerge property will be ignored.",
+          "description": "Specify the strategy used to merge the pull request during completion. If MergeStrategy is not set to any value, the service selects the first merge strategy not prohibited by the target branch’s policy. If the limit merge type policy is not configured, the default is noFastForward unless the deprecated SquashMerge is true, in which case the default is squash. If an explicit value is provided for MergeStrategy, the SquashMerge property will be ignored.",
           "enum": [
             "noFastForward",
             "squash",
@@ -13468,7 +13500,7 @@
           }
         },
         "squashMerge": {
-          "description": "SquashMerge is deprecated. You should explicitly set the value of MergeStrategy. If MergeStrategy is set to any value, the SquashMerge value will be ignored. If MergeStrategy is not set, the merge strategy will be no-fast-forward if this flag is false, or squash if true.",
+          "description": "SquashMerge is deprecated. You should explicitly set the value of MergeStrategy. This flag is only used when MergeStrategy is not specified and the target branch has no merge-strategy policy configured. In all other cases it is ignored.",
           "type": "boolean"
         },
         "transitionWorkItems": {
