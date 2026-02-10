@@ -244,114 +244,29 @@
           },
           {
             "in": "query",
-            "name": "criteria.componentName",
-            "description": "If provided, only return dependency alerts for the specified package name.",
+            "name": "criteria.componentNames",
+            "description": "If provided, only return dependency alerts for the specified package names.",
             "required": false,
-            "type": "string"
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           },
           {
             "in": "query",
-            "name": "criteria.componentType",
-            "description": "If provided, only return dependency alerts for the specified ecosystem (e.g., NuGet, Npm, Maven).",
+            "name": "criteria.componentTypes",
+            "description": "If provided, only return dependency alerts for the specified ecosystems (e.g., NuGet, Npm, Maven).",
             "required": false,
-            "type": "string",
-            "enum": [
-              "unknown",
-              "nuGet",
-              "npm",
-              "maven",
-              "git",
-              "other",
-              "rubyGems",
-              "cargo",
-              "pip",
-              "file",
-              "go",
-              "dockerImage",
-              "pod",
-              "linux",
-              "conda",
-              "dockerReference",
-              "vcpkg"
-            ],
-            "x-ms-enum": {
-              "name": "ComponentType",
-              "values": [
-                {
-                  "value": "unknown",
-                  "description": ""
-                },
-                {
-                  "value": "nuGet",
-                  "description": ""
-                },
-                {
-                  "value": "npm",
-                  "description": "Indicates the component is an Npm package."
-                },
-                {
-                  "value": "maven",
-                  "description": "Indicates the component is a Maven artifact."
-                },
-                {
-                  "value": "git",
-                  "description": "Indicates the component is a Git repository."
-                },
-                {
-                  "value": "other",
-                  "description": "Indicates the component is not any of the supported component types by Governance."
-                },
-                {
-                  "value": "rubyGems",
-                  "description": "Indicates the component is a Ruby gem."
-                },
-                {
-                  "value": "cargo",
-                  "description": "Indicates the component is a Cargo package."
-                },
-                {
-                  "value": "pip",
-                  "description": "Indicates the component is a Pip package."
-                },
-                {
-                  "value": "file",
-                  "description": "Indicates the component is a loose file. Not a package as understood by different package managers."
-                },
-                {
-                  "value": "go",
-                  "description": "Indicates the component is a Go package."
-                },
-                {
-                  "value": "dockerImage",
-                  "description": "Indicates the component is a Docker Image"
-                },
-                {
-                  "value": "pod",
-                  "description": "Indicates the component is a CocoaPods pod."
-                },
-                {
-                  "value": "linux",
-                  "description": "Indicates the component is found in a linux environment. A package understood by linux based package managers like apt and rpm."
-                },
-                {
-                  "value": "conda",
-                  "description": "Indicates the component is a Conda package."
-                },
-                {
-                  "value": "dockerReference",
-                  "description": "Indicates the component is a Docker Reference."
-                },
-                {
-                  "value": "vcpkg",
-                  "description": "Indicates the component is a Vcpkg Package."
-                }
-              ]
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "ComponentType"
             }
           },
           {
             "in": "query",
             "name": "criteria.dismissalTypes",
-            "description": "If provided, only return alerts with the specified dismissal type (closure reason). Applicable only when filtering for closed/dismissed alerts.",
+            "description": "If provided, only return alerts with one of the specified dismissal types (closure reasons). Applicable only when filtering for closed/dismissed alerts.",
             "required": false,
             "type": "array",
             "items": {
@@ -420,17 +335,34 @@
           },
           {
             "in": "query",
-            "name": "criteria.ruleName",
-            "description": "If provided, only return code scanning alerts or secret alerts matching the specified rule name.",
+            "name": "criteria.repositoryIds",
+            "description": "If provided, only return alerts for repositories whose IDs (GitRepositoryId) are in this list.",
             "required": false,
-            "type": "string"
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            }
           },
           {
             "in": "query",
-            "name": "criteria.secretType",
-            "description": "If provided, only return secret alerts matching the specified secret type (rule friendly name or opaque ID).",
+            "name": "criteria.ruleNames",
+            "description": "If provided, only return code scanning alerts or secret alerts matching the specified rule names.",
             "required": false,
-            "type": "string"
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "criteria.secretTypes",
+            "description": "If provided, only return secret alerts matching the specified secret types (rule friendly name or opaque ID).",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           },
           {
             "in": "query",
@@ -469,10 +401,13 @@
           },
           {
             "in": "query",
-            "name": "criteria.toolName",
-            "description": "If provided, only return code scanning alerts detected by the specified tool.",
+            "name": "criteria.toolNames",
+            "description": "If provided, only return code scanning alerts detected by the specified tools.",
             "required": false,
-            "type": "string"
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           },
           {
             "in": "query",
@@ -748,6 +683,24 @@
         }
       }
     },
+    "CodeScanningRuleInfo": {
+      "description": "Represents code scanning rule information for filtering purposes.",
+      "type": "object",
+      "properties": {
+        "friendlyName": {
+          "description": "The human-readable name of the rule.",
+          "type": "string"
+        },
+        "opaqueId": {
+          "description": "The opaque identifier of the rule (e.g., SARIF rule ID).",
+          "type": "string"
+        },
+        "toolName": {
+          "description": "The name of the tool that defines this rule.",
+          "type": "string"
+        }
+      }
+    },
     "CombinedAlertFilterCriteria": {
       "description": "",
       "type": "object",
@@ -812,107 +765,113 @@
             ]
           }
         },
-        "componentName": {
-          "description": "If provided, only return dependency alerts for the specified package name.",
-          "type": "string"
+        "componentNames": {
+          "description": "If provided, only return dependency alerts for the specified package names.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
         },
-        "componentType": {
-          "description": "If provided, only return dependency alerts for the specified ecosystem (e.g., NuGet, Npm, Maven).",
-          "enum": [
-            "unknown",
-            "nuGet",
-            "npm",
-            "maven",
-            "git",
-            "other",
-            "rubyGems",
-            "cargo",
-            "pip",
-            "file",
-            "go",
-            "dockerImage",
-            "pod",
-            "linux",
-            "conda",
-            "dockerReference",
-            "vcpkg"
-          ],
-          "x-ms-enum": {
-            "name": "ComponentType",
-            "values": [
-              {
-                "value": "unknown",
-                "description": ""
-              },
-              {
-                "value": "nuGet",
-                "description": ""
-              },
-              {
-                "value": "npm",
-                "description": "Indicates the component is an Npm package."
-              },
-              {
-                "value": "maven",
-                "description": "Indicates the component is a Maven artifact."
-              },
-              {
-                "value": "git",
-                "description": "Indicates the component is a Git repository."
-              },
-              {
-                "value": "other",
-                "description": "Indicates the component is not any of the supported component types by Governance."
-              },
-              {
-                "value": "rubyGems",
-                "description": "Indicates the component is a Ruby gem."
-              },
-              {
-                "value": "cargo",
-                "description": "Indicates the component is a Cargo package."
-              },
-              {
-                "value": "pip",
-                "description": "Indicates the component is a Pip package."
-              },
-              {
-                "value": "file",
-                "description": "Indicates the component is a loose file. Not a package as understood by different package managers."
-              },
-              {
-                "value": "go",
-                "description": "Indicates the component is a Go package."
-              },
-              {
-                "value": "dockerImage",
-                "description": "Indicates the component is a Docker Image"
-              },
-              {
-                "value": "pod",
-                "description": "Indicates the component is a CocoaPods pod."
-              },
-              {
-                "value": "linux",
-                "description": "Indicates the component is found in a linux environment. A package understood by linux based package managers like apt and rpm."
-              },
-              {
-                "value": "conda",
-                "description": "Indicates the component is a Conda package."
-              },
-              {
-                "value": "dockerReference",
-                "description": "Indicates the component is a Docker Reference."
-              },
-              {
-                "value": "vcpkg",
-                "description": "Indicates the component is a Vcpkg Package."
-              }
-            ]
+        "componentTypes": {
+          "description": "If provided, only return dependency alerts for the specified ecosystems (e.g., NuGet, Npm, Maven).",
+          "type": "array",
+          "items": {
+            "enum": [
+              "unknown",
+              "nuGet",
+              "npm",
+              "maven",
+              "git",
+              "other",
+              "rubyGems",
+              "cargo",
+              "pip",
+              "file",
+              "go",
+              "dockerImage",
+              "pod",
+              "linux",
+              "conda",
+              "dockerReference",
+              "vcpkg"
+            ],
+            "x-ms-enum": {
+              "name": "ComponentType",
+              "values": [
+                {
+                  "value": "unknown",
+                  "description": ""
+                },
+                {
+                  "value": "nuGet",
+                  "description": ""
+                },
+                {
+                  "value": "npm",
+                  "description": "Indicates the component is an Npm package."
+                },
+                {
+                  "value": "maven",
+                  "description": "Indicates the component is a Maven artifact."
+                },
+                {
+                  "value": "git",
+                  "description": "Indicates the component is a Git repository."
+                },
+                {
+                  "value": "other",
+                  "description": "Indicates the component is not any of the supported component types by Governance."
+                },
+                {
+                  "value": "rubyGems",
+                  "description": "Indicates the component is a Ruby gem."
+                },
+                {
+                  "value": "cargo",
+                  "description": "Indicates the component is a Cargo package."
+                },
+                {
+                  "value": "pip",
+                  "description": "Indicates the component is a Pip package."
+                },
+                {
+                  "value": "file",
+                  "description": "Indicates the component is a loose file. Not a package as understood by different package managers."
+                },
+                {
+                  "value": "go",
+                  "description": "Indicates the component is a Go package."
+                },
+                {
+                  "value": "dockerImage",
+                  "description": "Indicates the component is a Docker Image"
+                },
+                {
+                  "value": "pod",
+                  "description": "Indicates the component is a CocoaPods pod."
+                },
+                {
+                  "value": "linux",
+                  "description": "Indicates the component is found in a linux environment. A package understood by linux based package managers like apt and rpm."
+                },
+                {
+                  "value": "conda",
+                  "description": "Indicates the component is a Conda package."
+                },
+                {
+                  "value": "dockerReference",
+                  "description": "Indicates the component is a Docker Reference."
+                },
+                {
+                  "value": "vcpkg",
+                  "description": "Indicates the component is a Vcpkg Package."
+                }
+              ]
+            }
           }
         },
         "dismissalTypes": {
-          "description": "If provided, only return alerts with the specified dismissal type (closure reason). Applicable only when filtering for closed/dismissed alerts.",
+          "description": "If provided, only return alerts with one of the specified dismissal types (closure reasons). Applicable only when filtering for closed/dismissed alerts.",
           "type": "array",
           "items": {
             "enum": [
@@ -997,13 +956,27 @@
             "type": "string"
           }
         },
-        "ruleName": {
-          "description": "If provided, only return code scanning alerts or secret alerts matching the specified rule name.",
-          "type": "string"
+        "repositoryIds": {
+          "description": "If provided, only return alerts for repositories whose IDs (GitRepositoryId) are in this list.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uuid"
+          }
         },
-        "secretType": {
-          "description": "If provided, only return secret alerts matching the specified secret type (rule friendly name or opaque ID).",
-          "type": "string"
+        "ruleNames": {
+          "description": "If provided, only return code scanning alerts or secret alerts matching the specified rule names.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "secretTypes": {
+          "description": "If provided, only return secret alerts matching the specified secret types (rule friendly name or opaque ID).",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
         },
         "severities": {
           "description": "If provided, only return alerts with the specified severities. Otherwise, return alerts at any severity.",
@@ -1078,9 +1051,12 @@
             ]
           }
         },
-        "toolName": {
-          "description": "If provided, only return code scanning alerts detected by the specified tool.",
-          "type": "string"
+        "toolNames": {
+          "description": "If provided, only return code scanning alerts detected by the specified tools.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
         }
       }
     },
@@ -1552,6 +1528,30 @@
           "items": {
             "$ref": "#/definitions/RepoAlertSummary"
           }
+        }
+      }
+    },
+    "ProjectAndRepoInfo": {
+      "description": "Represents project and repository information for filtering purposes.",
+      "type": "object",
+      "properties": {
+        "projectId": {
+          "description": "The unique identifier of the project.",
+          "type": "string",
+          "format": "uuid"
+        },
+        "projectName": {
+          "description": "The name of the project.",
+          "type": "string"
+        },
+        "repositoryId": {
+          "description": "The unique identifier of the repository.",
+          "type": "string",
+          "format": "uuid"
+        },
+        "repositoryName": {
+          "description": "The name of the repository.",
+          "type": "string"
         }
       }
     },
