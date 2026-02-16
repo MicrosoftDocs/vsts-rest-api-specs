@@ -524,7 +524,7 @@
         "x-ms-vss-resource": "policyConfigurations",
         "x-ms-vss-method": "GetPolicyConfigurations",
         "x-ms-preview": true,
-        "description": "Retrieve a list of policy configurations by a given set of scope/filtering criteria.\n\nBelow is a short description of how all of the query parameters interact with each other:\n- repositoryId set, refName set: returns all policy configurations that *apply* to a particular branch in a repository\n- repositoryId set, refName unset: returns all policy configurations that *apply* to a particular repository\n- repositoryId unset, refName unset: returns all policy configurations that are *defined* at the project level\n- repositoryId unset, refName set: returns all project-level branch policies, plus the project level configurations\nFor all of the examples above, when policyType is set, it'll restrict results to the given policy type",
+        "description": "Retrieve a list of policy configurations by a given set of scope/filtering criteria.\n\nAzure Repos uses two types of policies to protect your code:\n\n **Repository policies (push policies)** check every push to your repository. They validate things like file size limits, path restrictions, or commit requirements.  When someone pushes code that violates these rules, the push gets rejected - no matter which branch they're pushing to.\n\n **Branch policies (PR policies)** protect specific branches by requiring pull requests.  When you set a branch policy on `main`, for example, nobody can push directly to `main` anymore. They must create a pull request instead, which can then require reviews, builds, or other checks to pass first.\n\n ## How Policies Work with Your Project Structure\n\n Both types of policies can be defined at different levels in your project hierarchy.  A policy defined at the project level affects all repositories in that project.  A policy defined at the repository level affects just that repository. A branch policy can even be defined at the project level to protect all branches with the same name - like protecting all `main` branches across your entire project with one policy.\n\n ### Branch Patterns and Wildcards\n\n Branches in Git follow a folder-like structure. You might have branches like:\n\n - `refs/heads/main`\n - `refs/heads/releases/1.0.0`\n - `refs/heads/releases/2.0.0`\n - `refs/heads/features/new-login`\n\n You can create policies for specific branches or for groups of branches using wildcards. When you create a policy for `refs/heads/releases/*`, it protects all branches in the `releases` \"folder\" - both the ones that exist now and any new release branches you create later.  This pattern matching works recursively, so `refs/heads/releases/*` also covers branches like `refs/heads/releases/v1/hotfix`.\n\n This helps you set up consistent protection without creating the same policy over and over. For example, you can require two reviewers for all release branches with just one policy.\n\n ## Understanding Policy Inheritance\n\n When you query for policies, this endpoint shows you what policies are actually enforcing rules at your specified scope. This includes policies inherited from higher levels. For example, if you query for policies on a specific branch, you get:\n\n - Branch policies for that exact branch\n - Branch policies with wildcards that match your branch\n - Repository policies for that repo\n - Any applicable project-level policies\n\n Everything that protects that branch shows up in your results.\n\n ## How to Query for Policies\n\n The `repositoryId` and `refName` parameters let you focus on specific parts of your project. Here's what you get with different combinations:\n\n **Both `repositoryId` and `refName` specified:**\n\n - When `refName` is a specific branch name: You see all policies affecting that specific branch.  This includes exact branch policies, wildcard branch policies that match, repository policies for that repo, and any project-level policies.\n - When `refName` is `~all`: You see every policy that affects any branch in that repository. This special value gives you the same results as if you called this API once for every single branch in the repo and then combined all the results (removing duplicates). You get all branch-specific policies, all wildcard policies, all repository policies, and all inherited project-level policies that apply to this repository.  This helps you see the complete picture of what protects all your branches without making multiple API calls.\n\n **Only `repositoryId` specified:** You see policies that apply to the repository as a whole - repository policies and inherited project-level repository policies. Branch policies aren't included because they don't affect the whole repository.\n\n **Neither parameter specified:** You see only project-level repository policies. Branch policies defined at the project level aren't included, even though they exist at the project level. This happens because branch policies need a branch context to be meaningful - without specifying a repository or branch name, the API only returns policies that apply to repositories as a whole.\n\n **Only `refName` specified:** You see project-level branch policies for branches with that name (like all `main` branch policies defined at project level), plus project-level repository policies.\n\n You can add the `policyType` parameter to filter for a specific type of policy, such as \"Minimum number of reviewers\" or \"File size restriction\". This parameter accepts the policy type ID and filters the results to show only that specific policy type.\n\n ## Common Scenarios\n\n - **\"What protects my main branch?\"** - Use `repositoryId` + `refName=refs/heads/main`\n - **\"What protects all my release branches?\"** - Use `repositoryId` + `refName=refs/heads/releases/*`\n - **\"Show me every policy that affects any branch in this repository\"** - Use `repositoryId` + `refName=~all`\n - **\"What repository policies apply to this repo?\"** - Use `repositoryId` only\n - **\"What file size limits apply to this repository?\"** - Use `repositoryId` with the `policyType` for file size restrictions\n - **\"What project-wide repository policies do we have?\"** - Don't specify `repositoryId` or `refName`\n - **\"Which policies apply to develop branches across all repositories?\"** - Use `refName=refs/heads/develop`",
         "operationId": "Policy Configurations_Get",
         "produces": [
           "application/json"
@@ -547,7 +547,7 @@
           {
             "in": "query",
             "name": "repositoryId",
-            "description": "The repository id.",
+            "description": "The unique identifier of a specific repository to query policies for - when provided, returns policies that apply to this repository including inherited project-level policies.",
             "required": false,
             "type": "string",
             "format": "uuid"
@@ -555,14 +555,14 @@
           {
             "in": "query",
             "name": "refName",
-            "description": "The fully-qualified Git ref name (e.g. refs/heads/master).",
+            "description": "The branch reference to query policies for (e.g., \"refs/heads/main\" for a specific branch or \"~all\" to get all policies affecting any branch in the repository) - determines which branch-specific policies are included in the results.",
             "required": false,
             "type": "string"
           },
           {
             "in": "query",
             "name": "policyType",
-            "description": "The policy type filter.",
+            "description": "The type ID of a specific policy to filter by (e.g., \"Minimum number of reviewers\" or \"File size restriction\") - when specified, returns only policies of this particular type rather than all policy types.",
             "required": false,
             "type": "string",
             "format": "uuid"
@@ -570,7 +570,7 @@
           {
             "in": "query",
             "name": "$top",
-            "description": "Maximum number of policies to return.",
+            "description": "The maximum number of policy configurations to return in a single response - useful for limiting result size when dealing with projects that have many policies.",
             "required": false,
             "type": "integer",
             "format": "int32"
@@ -578,7 +578,7 @@
           {
             "in": "query",
             "name": "continuationToken",
-            "description": "Pass a policy configuration ID to fetch the next page of results, up to top number of results, for this endpoint.",
+            "description": "A token returned in the x-ms-continuationtoken response header from a previous request when not all results were returned - use this token to retrieve the next page of results in the dataset.",
             "required": false,
             "type": "string"
           },
