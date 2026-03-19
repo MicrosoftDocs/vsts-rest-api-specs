@@ -27,6 +27,61 @@
     "https"
   ],
   "paths": {
+    "/{organization}/_apis/packaging/npm/validateupstream": {
+      "post": {
+        "tags": [
+          "Npm"
+        ],
+        "x-ms-docs-override-version": "7.2-preview.1",
+        "x-ms-vss-resource": "validateUpstream",
+        "x-ms-vss-method": "ValidateCustomPublicUpstreamSource",
+        "x-ms-preview": true,
+        "description": "Validates whether the given upstream is valid to add as a custom upstream using the given package name.",
+        "operationId": "Npm_Validate Custom Public Upstream Source",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "The upstream location (https URI) and package name to validate",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ValidateCustomPublicUpstreamSourceRequest"
+            }
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/ValidateCustomPublicUpstreamSourceResponse"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.packaging_write"
+            ]
+          }
+        ]
+      }
+    },
     "/{organization}/{project}/_apis/packaging/feeds/{feedId}/npm/@{packageScope}/{unscopedPackageName}/versions/{packageVersion}": {
       "get": {
         "tags": [
@@ -1973,6 +2028,30 @@
               }
             ]
           }
+        }
+      }
+    },
+    "ValidateCustomPublicUpstreamSourceRequest": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "packageName": {
+          "type": "string"
+        },
+        "upstreamLocation": {
+          "type": "string"
+        }
+      }
+    },
+    "ValidateCustomPublicUpstreamSourceResponse": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string"
+        },
+        "validatedSuccessfully": {
+          "type": "boolean"
         }
       }
     }

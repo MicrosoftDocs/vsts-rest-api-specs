@@ -1532,6 +1532,36 @@
         }
       }
     },
+    "VectorResult": {
+      "description": "",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/SemanticSearchResult"
+        }
+      ],
+      "properties": {
+        "contentId": {
+          "description": "contentId of the file.",
+          "type": "string"
+        },
+        "fields": {
+          "description": "Parsed fields from the chunk text (for work items). Key = field reference name (e.g., \"system.title\"), Value = field value. Only populated for workitem entity type.",
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "projectId": {
+          "description": "repoId of the repository.",
+          "type": "string"
+        },
+        "repoId": {
+          "description": "projectid of the repository project.",
+          "type": "string"
+        }
+      }
+    },
     "VectorSearchRequest": {
       "description": "",
       "type": "object",
@@ -1541,6 +1571,10 @@
         }
       ],
       "properties": {
+        "documentType": {
+          "description": "Document Type - code, workitem, wiki etc.",
+          "type": "string"
+        },
         "include_embeddings": {
           "description": "Note: This aligns with SemanticSearchRequest. Set to true to include the embeddings in the response.",
           "type": "boolean"
@@ -1573,6 +1607,11 @@
         }
       ],
       "properties": {
+        "count": {
+          "description": "Total number of matched files.",
+          "type": "integer",
+          "format": "int32"
+        },
         "embedding_model": {
           "description": "Note: This aligns with SemanticSearchResponse. The embeddings model used.",
           "type": "string"
@@ -1581,12 +1620,29 @@
           "description": "Note: This aligns with SemanticSearchResponse. The search results.",
           "type": "array",
           "items": {
-            "$ref": "#/definitions/SemanticSearchResult"
+            "$ref": "#/definitions/VectorResult"
           }
         },
         "summarization": {
           "description": "Result summarization. Chunk won't be populated when summarization is done.",
           "type": "string"
+        }
+      }
+    },
+    "VectorSearchResponseWithActivityId": {
+      "description": "Represents a response for a vector search that includes an activity ID.",
+      "type": "object",
+      "properties": {
+        "activityId": {
+          "description": "Gets or sets the activity ID associated with the response.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "response": {
+          "description": "Gets or sets the vector search response.",
+          "$ref": "#/definitions/VectorSearchResponse"
         }
       }
     },

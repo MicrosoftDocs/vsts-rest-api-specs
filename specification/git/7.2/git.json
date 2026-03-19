@@ -11095,6 +11095,29 @@
         }
       }
     },
+    "CreateMigrationRequest": {
+      "description": "Request to create an Enterprise Live Migration.",
+      "type": "object",
+      "properties": {
+        "scheduledCutoverDate": {
+          "description": "The UTC date/time representing when the cutover is to occur.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "targetOwnerUserId": {
+          "description": "The ID of the user that will end up owning the migrated repository.",
+          "type": "string"
+        },
+        "targetRepository": {
+          "description": "URL identifying the destination respository of migration.",
+          "type": "string"
+        },
+        "validateOnly": {
+          "description": "True if the migration should only perform pre-migration validation.",
+          "type": "boolean"
+        }
+      }
+    },
     "DiscussionsUpdatedEvent": {
       "description": "Real time event (SignalR) for a discussions update on a pull request",
       "type": "object",
@@ -11142,6 +11165,27 @@
           "type": "array",
           "items": {
             "$ref": "#/definitions/LineDiffBlock"
+          }
+        },
+        "originalPath": {
+          "description": "Original path of item if different from current path.",
+          "type": "string"
+        },
+        "path": {
+          "description": "Current path of item",
+          "type": "string"
+        }
+      }
+    },
+    "FileDiffDetail": {
+      "description": "Provides properties that describe detailed file differences including line content",
+      "type": "object",
+      "properties": {
+        "lineDiffBlocks": {
+          "description": "The collection of detailed line diff blocks",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/LineDiffBlockDetail"
           }
         },
         "originalPath": {
@@ -13513,6 +13557,27 @@
         }
       }
     },
+    "GitPullRequestFilesDiff": {
+      "description": "Collection of file diffs for a pull request.",
+      "type": "object",
+      "properties": {
+        "fileDiffs": {
+          "description": "File diffs for all changed files in the pull request.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/FileDiffDetail"
+          }
+        },
+        "pullRequestDescription": {
+          "description": "Description of the pull request.",
+          "type": "string"
+        },
+        "pullRequestTitle": {
+          "description": "Title of the pull request.",
+          "type": "string"
+        }
+      }
+    },
     "GitPullRequestIteration": {
       "description": "Provides properties that describe a Git pull request iteration. Iterations are created as a result of creating and pushing updates to a pull request.",
       "type": "object",
@@ -15853,6 +15918,76 @@
         }
       }
     },
+    "LineDiffBlockDetail": {
+      "description": "The class to represent a detailed line diff block with line content",
+      "type": "object",
+      "properties": {
+        "changeType": {
+          "description": "Type of change that was made to the block.",
+          "enum": [
+            "none",
+            "add",
+            "delete",
+            "edit"
+          ],
+          "x-ms-enum": {
+            "name": "LineDiffBlockChangeType",
+            "values": [
+              {
+                "value": "none",
+                "description": "No change - both the blocks are identical"
+              },
+              {
+                "value": "add",
+                "description": "Lines were added to the block in the modified file"
+              },
+              {
+                "value": "delete",
+                "description": "Lines were deleted from the block in the original file"
+              },
+              {
+                "value": "edit",
+                "description": "Lines were modified"
+              }
+            ]
+          }
+        },
+        "modifiedLineNumberStart": {
+          "description": "Line number where this block starts in modified file.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "modifiedLines": {
+          "description": "Modified lines of content in this block.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "modifiedLinesCount": {
+          "description": "Count of lines in this block in modified file.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "originalLineNumberStart": {
+          "description": "Line number where this block starts in original file.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "originalLines": {
+          "description": "Original lines of content in this block.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "originalLinesCount": {
+          "description": "Count of lines in this block in original file.",
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
     "MergeCompletedEvent": {
       "description": "Real time event (SignalR) for a merge completed on a pull request",
       "type": "object",
@@ -15862,6 +15997,100 @@
         }
       ],
       "properties": {}
+    },
+    "Migration": {
+      "description": "An Enterprise Live Migration",
+      "type": "object",
+      "properties": {
+        "changedBy": {
+          "description": "The identity that last changed this migration.",
+          "$ref": "#/definitions/IdentityRef"
+        },
+        "changedDate": {
+          "description": "The UTC date/time this migration was last changed.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "createdBy": {
+          "description": "The identity that created this migration.",
+          "$ref": "#/definitions/IdentityRef"
+        },
+        "createdDate": {
+          "description": "The UTC date/time this migration was created.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "errorMessage": {
+          "description": "The error that caused this migration to fail.",
+          "type": "string"
+        },
+        "repositoryId": {
+          "description": "RepositoryId",
+          "type": "string",
+          "format": "uuid"
+        },
+        "scheduledCutoverDate": {
+          "description": "The UTC date/time representing when the cutover is to occur.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "status": {
+          "description": "If the migration is 'active', 'complete', or 'failed'.",
+          "enum": [
+            "active",
+            "succeeded",
+            "failed",
+            "suspended"
+          ],
+          "x-ms-enum": {
+            "name": "MigrationStatus",
+            "values": [
+              {
+                "value": "active",
+                "description": "The migration is active."
+              },
+              {
+                "value": "succeeded",
+                "description": "The migration has completed successfully."
+              },
+              {
+                "value": "failed",
+                "description": "The migration has completed with a failure. The error details can be found in the Migration.Error property."
+              },
+              {
+                "value": "suspended",
+                "description": "The migration was suspended."
+              }
+            ]
+          }
+        },
+        "targetOwnerUserId": {
+          "description": "The ID of the user that will end up owning the migrated repository.",
+          "type": "string"
+        },
+        "targetRepository": {
+          "description": "URL identifying the destination respository of migration.",
+          "type": "string"
+        },
+        "validateOnly": {
+          "description": "True if the migration should only perform pre-migration validation.",
+          "type": "boolean"
+        },
+        "validationIssues": {
+          "description": "A list of any issues found during pre-migration checks.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "validationWarnings": {
+          "description": "A list of any warnings found during pre-migration checks.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
     },
     "PolicyConfiguration": {
       "description": "The full policy configuration with settings.",
@@ -17285,6 +17514,51 @@
         }
       ],
       "properties": {}
+    },
+    "UpdateMigrationRequest": {
+      "description": "Request to update an Enterprise Live Migration.",
+      "type": "object",
+      "properties": {
+        "scheduledCutoverDate": {
+          "description": "The UTC date/time representing when the cutover is to occur.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "statusRequested": {
+          "description": "The status requested for the migration. Allowed values are \"Active\" and \"Suspended\".",
+          "enum": [
+            "active",
+            "succeeded",
+            "failed",
+            "suspended"
+          ],
+          "x-ms-enum": {
+            "name": "MigrationStatus",
+            "values": [
+              {
+                "value": "active",
+                "description": "The migration is active."
+              },
+              {
+                "value": "succeeded",
+                "description": "The migration has completed successfully."
+              },
+              {
+                "value": "failed",
+                "description": "The migration has completed with a failure. The error details can be found in the Migration.Error property."
+              },
+              {
+                "value": "suspended",
+                "description": "The migration was suspended."
+              }
+            ]
+          }
+        },
+        "validateOnly": {
+          "description": "True if the migration should only perform pre-migration validation.",
+          "type": "boolean"
+        }
+      }
     },
     "UpdateRefsRequest": {
       "description": "",
