@@ -47,6 +47,9 @@
       "name": "Requests"
     },
     {
+      "name": "Securefiles"
+    },
+    {
       "name": "Targets"
     },
     {
@@ -2773,6 +2776,451 @@
         ]
       }
     },
+    "/{organization}/{project}/_apis/distributedtask/securefiles": {
+      "get": {
+        "tags": [
+          "Securefiles"
+        ],
+        "x-ms-docs-override-version": "7.2-preview.1",
+        "x-ms-vss-resource": "securefiles",
+        "x-ms-vss-method": "GetSecureFilesByNames",
+        "x-ms-preview": true,
+        "description": "Get secure files",
+        "operationId": "Securefiles_Get Secure Files By Names",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "secureFileNames",
+            "description": "A list of secure file Ids",
+            "required": true,
+            "type": "string",
+            "format": "array (string)"
+          },
+          {
+            "in": "query",
+            "name": "includeDownloadTickets",
+            "description": "If includeDownloadTickets is true and the caller has permissions, a download ticket for each secure file is included in the response.",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "actionFilter",
+            "description": "",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "none",
+              "manage",
+              "use"
+            ],
+            "x-ms-enum": {
+              "name": "SecureFileActionFilter",
+              "values": [
+                {
+                  "value": "none",
+                  "description": ""
+                },
+                {
+                  "value": "manage",
+                  "description": ""
+                },
+                {
+                  "value": "use",
+                  "description": ""
+                }
+              ]
+            }
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/SecureFile"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.securefiles_read"
+            ]
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Securefiles"
+        ],
+        "x-ms-docs-override-version": "7.2-preview.1",
+        "x-ms-vss-resource": "securefiles",
+        "x-ms-vss-method": "QuerySecureFilesByProperties",
+        "x-ms-preview": true,
+        "description": "Query secure files using a name pattern and a condition on file properties.",
+        "operationId": "Securefiles_Query",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "The main condition syntax is described [here](https://go.microsoft.com/fwlink/?linkid=842996). Use the *property('property-name')* function to access the value of the specified property of a secure file. It returns null if the property is not set. E.g. ``` and( eq( property('devices'), '2' ), in( property('provisioning profile type'), 'ad hoc', 'development' ) ) ```",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "namePattern",
+            "description": "Name of the secure file to match. Can include wildcards to match multiple files.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/SecureFile"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.securefiles_write"
+            ]
+          }
+        ]
+      },
+      "patch": {
+        "tags": [
+          "Securefiles"
+        ],
+        "x-ms-docs-override-version": "7.2-preview.1",
+        "x-ms-vss-resource": "securefiles",
+        "x-ms-vss-method": "UpdateSecureFiles",
+        "x-ms-preview": true,
+        "description": "Update properties and/or names of a set of secure files. Files are identified by their IDs. Properties provided override the existing one entirely, i.e. do not merge.",
+        "operationId": "Securefiles_Update Secure Files",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "A list of secure file objects. Only three field must be populated Id, Name, and Properties. The rest of fields in the object are ignored.",
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/SecureFile"
+              }
+            }
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/SecureFile"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.securefiles_manage"
+            ]
+          }
+        ]
+      }
+    },
+    "/{organization}/{project}/_apis/distributedtask/securefiles/{secureFileId}": {
+      "delete": {
+        "tags": [
+          "Securefiles"
+        ],
+        "x-ms-docs-override-version": "7.2-preview.1",
+        "x-ms-vss-resource": "securefiles",
+        "x-ms-vss-method": "DeleteSecureFile",
+        "x-ms-preview": true,
+        "description": "Delete a secure file",
+        "operationId": "Securefiles_Delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "secureFileId",
+            "description": "The unique secure file Id",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.securefiles_manage"
+            ]
+          }
+        ]
+      },
+      "get": {
+        "tags": [
+          "Securefiles"
+        ],
+        "x-ms-docs-override-version": "7.2-preview.1",
+        "x-ms-vss-resource": "securefiles",
+        "x-ms-vss-method": "GetSecureFile",
+        "x-ms-preview": true,
+        "description": "Get a secure file",
+        "operationId": "Securefiles_Get",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "secureFileId",
+            "description": "The unique secure file Id",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "query",
+            "name": "includeDownloadTicket",
+            "description": "If includeDownloadTicket is true and the caller has permissions, a download ticket is included in the response.",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "actionFilter",
+            "description": "",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "none",
+              "manage",
+              "use"
+            ],
+            "x-ms-enum": {
+              "name": "SecureFileActionFilter",
+              "values": [
+                {
+                  "value": "none",
+                  "description": ""
+                },
+                {
+                  "value": "manage",
+                  "description": ""
+                },
+                {
+                  "value": "use",
+                  "description": ""
+                }
+              ]
+            }
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/SecureFile"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.securefiles_read"
+            ]
+          }
+        ]
+      },
+      "patch": {
+        "tags": [
+          "Securefiles"
+        ],
+        "x-ms-docs-override-version": "7.2-preview.1",
+        "x-ms-vss-resource": "securefiles",
+        "x-ms-vss-method": "UpdateSecureFile",
+        "x-ms-preview": true,
+        "description": "Update the name or properties of an existing secure file",
+        "operationId": "Securefiles_Update Secure File",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "The secure file with updated name and/or properties",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/SecureFile"
+            }
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "secureFileId",
+            "description": "The unique secure file Id",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/SecureFile"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.securefiles_manage"
+            ]
+          }
+        ]
+      }
+    },
     "/{organization}/{project}/_apis/distributedtask/taskgroups": {
       "post": {
         "tags": [
@@ -3627,6 +4075,349 @@
           {
             "oauth2": [
               "vso.agentpools"
+            ]
+          }
+        ]
+      }
+    },
+    "/{organization}/{project}/_apis/distributedtask/securefiles?name={name}": {
+      "post": {
+        "tags": [
+          "Securefiles"
+        ],
+        "x-ms-docs-override-version": "7.2-preview.1",
+        "x-ms-vss-resource": "securefiles",
+        "x-ms-vss-method": "UploadSecureFile",
+        "x-ms-preview": true,
+        "description": "Upload a secure file, include the file stream in the request body",
+        "operationId": "Securefiles_Upload Secure File",
+        "consumes": [
+          "application/octet-stream"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Stream to upload",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "Stream"
+            }
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "name",
+            "description": "Name of the file to upload",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "authorizePipelines",
+            "description": "If authorizePipelines is true, then the secure file is authorized for use by all pipelines in the project.",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/definitions/SecureFile"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.securefiles_write"
+            ]
+          }
+        ]
+      }
+    },
+    "/{organization}/{project}/_apis/distributedtask/securefiles?secureFileIds={secureFileIds}": {
+      "get": {
+        "tags": [
+          "Securefiles"
+        ],
+        "x-ms-docs-override-version": "7.2-preview.1",
+        "x-ms-vss-resource": "securefiles",
+        "x-ms-vss-method": "GetSecureFilesByIds",
+        "x-ms-preview": true,
+        "description": "Get secure files",
+        "operationId": "Securefiles_Get Secure Files By Ids",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "secureFileIds",
+            "description": "A list of secure file Ids",
+            "required": true,
+            "type": "string",
+            "format": "array (uuid)"
+          },
+          {
+            "in": "query",
+            "name": "includeDownloadTickets",
+            "description": "If includeDownloadTickets is true and the caller has permissions, a download ticket for each secure file is included in the response.",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "actionFilter",
+            "description": "",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "none",
+              "manage",
+              "use"
+            ],
+            "x-ms-enum": {
+              "name": "SecureFileActionFilter",
+              "values": [
+                {
+                  "value": "none",
+                  "description": ""
+                },
+                {
+                  "value": "manage",
+                  "description": ""
+                },
+                {
+                  "value": "use",
+                  "description": ""
+                }
+              ]
+            }
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/SecureFile"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.securefiles_read"
+            ]
+          }
+        ]
+      }
+    },
+    "/{organization}/{project}/_apis/distributedtask/securefiles?": {
+      "get": {
+        "tags": [
+          "Securefiles"
+        ],
+        "x-ms-docs-override-version": "7.2-preview.1",
+        "x-ms-vss-resource": "securefiles",
+        "x-ms-vss-method": "GetSecureFiles",
+        "x-ms-preview": true,
+        "description": "Get secure files",
+        "operationId": "Securefiles_Get Secure Files",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "namePattern",
+            "description": "Name of the secure file to match. Can include wildcards to match multiple files.",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "includeDownloadTickets",
+            "description": "If includeDownloadTickets is true and the caller has permissions, a download ticket for each secure file is included in the response.",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "in": "query",
+            "name": "actionFilter",
+            "description": "Filter by secure file permissions for View, Manage or Use action. Defaults to View.",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "none",
+              "manage",
+              "use"
+            ],
+            "x-ms-enum": {
+              "name": "SecureFileActionFilter",
+              "values": [
+                {
+                  "value": "none",
+                  "description": ""
+                },
+                {
+                  "value": "manage",
+                  "description": ""
+                },
+                {
+                  "value": "use",
+                  "description": ""
+                }
+              ]
+            }
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/SecureFile"
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.securefiles_read"
+            ]
+          }
+        ]
+      }
+    },
+    "/{organization}/{project}/_apis/distributedtask/securefiles/{secureFileId}?ticket={ticket}": {
+      "get": {
+        "tags": [
+          "Securefiles"
+        ],
+        "x-ms-docs-override-version": "7.2-preview.1",
+        "x-ms-vss-resource": "securefiles",
+        "x-ms-vss-method": "DownloadSecureFile",
+        "x-ms-preview": true,
+        "description": "Download a secure file by Id",
+        "operationId": "Securefiles_Download Secure File",
+        "produces": [
+          "application/octet-stream"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "organization",
+            "description": "The name of the Azure DevOps organization.",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "project",
+            "description": "Project ID or project name",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "path",
+            "name": "secureFileId",
+            "description": "The unique secure file Id",
+            "required": true,
+            "type": "string",
+            "format": "uuid"
+          },
+          {
+            "in": "query",
+            "name": "ticket",
+            "description": "A valid download ticket",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "download",
+            "description": "If download is true, the file is sent as attachement in the response body. If download is false, the response body contains the file stream.",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "$ref": "#/parameters/api-Version-preview.1"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "type": "string",
+              "format": "Stream"
+            }
+          }
+        },
+        "security": [
+          {
+            "oauth2": [
+              "vso.securefiles_read"
             ]
           }
         ]

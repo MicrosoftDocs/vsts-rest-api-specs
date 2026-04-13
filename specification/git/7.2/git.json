@@ -657,6 +657,16 @@
           },
           {
             "in": "query",
+            "name": "searchCriteria.labels",
+            "description": "If set, filters pull requests that have labels matching the specified label names.",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
             "name": "searchCriteria.maxTime",
             "description": "If specified, filters pull requests that created/closed before this date based on the queryTimeRangeType specified.",
             "required": false,
@@ -761,6 +771,30 @@
                 {
                   "value": "all",
                   "description": "Used in pull request search criteria to include all statuses."
+                }
+              ]
+            }
+          },
+          {
+            "in": "query",
+            "name": "searchCriteria.tagsFilterOperator",
+            "description": "The operator used for filtering by labels. Defaults to And if unset. When And is used, pull requests must have all specified labels. When Or is used, pull requests must have at least one of the specified labels.",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "and",
+              "or"
+            ],
+            "x-ms-enum": {
+              "name": "TagsFilterOperator",
+              "values": [
+                {
+                  "value": "and",
+                  "description": "Pull request must have ALL specified tags."
+                },
+                {
+                  "value": "or",
+                  "description": "Pull request must have AT LEAST ONE of the specified tags."
                 }
               ]
             }
@@ -3517,6 +3551,16 @@
           },
           {
             "in": "query",
+            "name": "searchCriteria.labels",
+            "description": "If set, filters pull requests that have labels matching the specified label names.",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
             "name": "searchCriteria.maxTime",
             "description": "If specified, filters pull requests that created/closed before this date based on the queryTimeRangeType specified.",
             "required": false,
@@ -3621,6 +3665,30 @@
                 {
                   "value": "all",
                   "description": "Used in pull request search criteria to include all statuses."
+                }
+              ]
+            }
+          },
+          {
+            "in": "query",
+            "name": "searchCriteria.tagsFilterOperator",
+            "description": "The operator used for filtering by labels. Defaults to And if unset. When And is used, pull requests must have all specified labels. When Or is used, pull requests must have at least one of the specified labels.",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "and",
+              "or"
+            ],
+            "x-ms-enum": {
+              "name": "TagsFilterOperator",
+              "values": [
+                {
+                  "value": "and",
+                  "description": "Pull request must have ALL specified tags."
+                },
+                {
+                  "value": "or",
+                  "description": "Pull request must have AT LEAST ONE of the specified tags."
                 }
               ]
             }
@@ -11099,10 +11167,49 @@
       "description": "Request to create an Enterprise Live Migration.",
       "type": "object",
       "properties": {
+        "agentPoolName": {
+          "description": "Optional name of the agent pool to run the migration pipeline. When not specified, the pool is determined by region.",
+          "type": "string"
+        },
         "scheduledCutoverDate": {
           "description": "The UTC date/time representing when the cutover is to occur.",
           "type": "string",
           "format": "date-time"
+        },
+        "skipValidation": {
+          "description": "Optional. The set of pre-migration validation policies to skip.",
+          "enum": [
+            "none",
+            "activePullRequestCount",
+            "pullRequestDeltaSize",
+            "targetRepoMigration",
+            "all"
+          ],
+          "x-ms-enum": {
+            "name": "SkipValidationPolicy",
+            "values": [
+              {
+                "value": "none",
+                "description": "Do not skip any validation policies."
+              },
+              {
+                "value": "activePullRequestCount",
+                "description": "Skip the active pull request count policy."
+              },
+              {
+                "value": "pullRequestDeltaSize",
+                "description": "Skip the pull request delta size policy."
+              },
+              {
+                "value": "targetRepoMigration",
+                "description": "Skip the target repository migration policy."
+              },
+              {
+                "value": "all",
+                "description": "Skip all validation policies."
+              }
+            ]
+          }
         },
         "targetOwnerUserId": {
           "description": "The ID of the user that will end up owning the migrated repository.",
@@ -13557,6 +13664,58 @@
         }
       }
     },
+    "GitPullRequestCopilotReview": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "completedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "pullRequestId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "requestedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "status": {
+          "enum": [
+            "requested",
+            "inProgress",
+            "completed",
+            "failed",
+            "canceled"
+          ],
+          "x-ms-enum": {
+            "name": "CopilotReviewStatus",
+            "values": [
+              {
+                "value": "requested",
+                "description": ""
+              },
+              {
+                "value": "inProgress",
+                "description": ""
+              },
+              {
+                "value": "completed",
+                "description": ""
+              },
+              {
+                "value": "failed",
+                "description": ""
+              },
+              {
+                "value": "canceled",
+                "description": ""
+              }
+            ]
+          }
+        }
+      }
+    },
     "GitPullRequestFilesDiff": {
       "description": "Collection of file diffs for a pull request.",
       "type": "object",
@@ -13853,6 +14012,13 @@
           "description": "Whether to include the _links field on the shallow references",
           "type": "boolean"
         },
+        "labels": {
+          "description": "If set, filters pull requests that have labels matching the specified label names.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
         "maxTime": {
           "description": "If specified, filters pull requests that created/closed before this date based on the queryTimeRangeType specified.",
           "type": "string",
@@ -13933,6 +14099,26 @@
               {
                 "value": "all",
                 "description": "Used in pull request search criteria to include all statuses."
+              }
+            ]
+          }
+        },
+        "tagsFilterOperator": {
+          "description": "The operator used for filtering by labels. Defaults to And if unset. When And is used, pull requests must have all specified labels. When Or is used, pull requests must have at least one of the specified labels.",
+          "enum": [
+            "and",
+            "or"
+          ],
+          "x-ms-enum": {
+            "name": "TagsFilterOperator",
+            "values": [
+              {
+                "value": "and",
+                "description": "Pull request must have ALL specified tags."
+              },
+              {
+                "value": "or",
+                "description": "Pull request must have AT LEAST ONE of the specified tags."
               }
             ]
           }
@@ -16002,12 +16188,21 @@
       "description": "An Enterprise Live Migration",
       "type": "object",
       "properties": {
+        "agentPoolName": {
+          "description": "The name of the agent pool used to run the migration pipeline.",
+          "type": "string"
+        },
         "changedBy": {
           "description": "The identity that last changed this migration.",
           "$ref": "#/definitions/IdentityRef"
         },
         "changedDate": {
           "description": "The UTC date/time this migration was last changed.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "codeSyncDate": {
+          "description": "The UTC date/time of the last successful code synchronization pass.",
           "type": "string",
           "format": "date-time"
         },
@@ -16024,6 +16219,11 @@
           "description": "The error that caused this migration to fail.",
           "type": "string"
         },
+        "pullRequestSyncDate": {
+          "description": "The UTC date/time of the last successful pull request synchronization pass.",
+          "type": "string",
+          "format": "date-time"
+        },
         "repositoryId": {
           "description": "RepositoryId",
           "type": "string",
@@ -16033,6 +16233,76 @@
           "description": "The UTC date/time representing when the cutover is to occur.",
           "type": "string",
           "format": "date-time"
+        },
+        "skipValidation": {
+          "description": "The pre-migration validation policies that are being skipped.",
+          "enum": [
+            "none",
+            "activePullRequestCount",
+            "pullRequestDeltaSize",
+            "targetRepoMigration",
+            "all"
+          ],
+          "x-ms-enum": {
+            "name": "SkipValidationPolicy",
+            "values": [
+              {
+                "value": "none",
+                "description": "Do not skip any validation policies."
+              },
+              {
+                "value": "activePullRequestCount",
+                "description": "Skip the active pull request count policy."
+              },
+              {
+                "value": "pullRequestDeltaSize",
+                "description": "Skip the pull request delta size policy."
+              },
+              {
+                "value": "targetRepoMigration",
+                "description": "Skip the target repository migration policy."
+              },
+              {
+                "value": "all",
+                "description": "Skip all validation policies."
+              }
+            ]
+          }
+        },
+        "stage": {
+          "description": "The current stage of the migration (Queued, Validation, Synchronization, Cutover, Migrated).",
+          "enum": [
+            "queued",
+            "validation",
+            "synchronization",
+            "cutover",
+            "migrated"
+          ],
+          "x-ms-enum": {
+            "name": "MigrationStage",
+            "values": [
+              {
+                "value": "queued",
+                "description": "The migration has been created but pre-check validation has not started yet."
+              },
+              {
+                "value": "validation",
+                "description": "Pre-check validation is in progress."
+              },
+              {
+                "value": "synchronization",
+                "description": "Code and PR synchronization is in progress."
+              },
+              {
+                "value": "cutover",
+                "description": "The migration is in the cutover phase."
+              },
+              {
+                "value": "migrated",
+                "description": "The migration has been fully migrated."
+              }
+            ]
+          }
         },
         "status": {
           "description": "If the migration is 'active', 'complete', or 'failed'.",
@@ -17514,6 +17784,99 @@
         }
       ],
       "properties": {}
+    },
+    "UpdateMigrationInternalRequest": {
+      "description": "Request for internal (agent/pipeline) updates to an Enterprise Live Migration. Used by the migration pipeline to report progress back to AzDO.",
+      "type": "object",
+      "properties": {
+        "codeSyncDate": {
+          "description": "The UTC date/time of the last successful code synchronization pass.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "gitHubMigrationId": {
+          "description": "The GitHub migration ID returned by the GitHub ELM API.",
+          "type": "string"
+        },
+        "pipelineCompleted": {
+          "description": "When set to <c>true</c>, signals that the pipeline run is complete and all pipeline plans for this migration should be deactivated.  Pipelines may send this alongside a terminal status transition <em>or</em> on its own when no status change is required.",
+          "type": "boolean"
+        },
+        "pullRequestSyncDate": {
+          "description": "The UTC date/time of the last successful pull request synchronization pass.",
+          "type": "string",
+          "format": "date-time"
+        },
+        "resultMessage": {
+          "description": "A result or error message describing the outcome of a pipeline stage. When the pipeline reaches a terminal state (Failed or Succeeded), this message is persisted as a migration history entry.",
+          "type": "string"
+        },
+        "stage": {
+          "description": "The current migration stage (e.g. Validate, Sync, Cutover, Migrated).",
+          "enum": [
+            "queued",
+            "validation",
+            "synchronization",
+            "cutover",
+            "migrated"
+          ],
+          "x-ms-enum": {
+            "name": "MigrationStage",
+            "values": [
+              {
+                "value": "queued",
+                "description": "The migration has been created but pre-check validation has not started yet."
+              },
+              {
+                "value": "validation",
+                "description": "Pre-check validation is in progress."
+              },
+              {
+                "value": "synchronization",
+                "description": "Code and PR synchronization is in progress."
+              },
+              {
+                "value": "cutover",
+                "description": "The migration is in the cutover phase."
+              },
+              {
+                "value": "migrated",
+                "description": "The migration has been fully migrated."
+              }
+            ]
+          }
+        },
+        "status": {
+          "description": "The migration status. Unlike the user-facing endpoint, the agent can set any status including Failed and Succeeded.",
+          "enum": [
+            "active",
+            "succeeded",
+            "failed",
+            "suspended"
+          ],
+          "x-ms-enum": {
+            "name": "MigrationStatus",
+            "values": [
+              {
+                "value": "active",
+                "description": "The migration is active."
+              },
+              {
+                "value": "succeeded",
+                "description": "The migration has completed successfully."
+              },
+              {
+                "value": "failed",
+                "description": "The migration has completed with a failure. The error details can be found in the Migration.Error property."
+              },
+              {
+                "value": "suspended",
+                "description": "The migration was suspended."
+              }
+            ]
+          }
+        }
+      }
     },
     "UpdateMigrationRequest": {
       "description": "Request to update an Enterprise Live Migration.",
