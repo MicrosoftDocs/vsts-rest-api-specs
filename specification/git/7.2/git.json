@@ -11163,6 +11163,56 @@
         }
       }
     },
+    "CopilotReviewUpdatedEvent": {
+      "description": "Real time event (SignalR) for a copilot code review status update on a pull request",
+      "type": "object",
+      "allOf": [
+        {
+          "$ref": "#/definitions/RealTimePullRequestEvent"
+        }
+      ],
+      "properties": {
+        "failureReason": {
+          "description": "If the review failed, the reason for the failure.",
+          "type": "string"
+        },
+        "status": {
+          "description": "The updated status of the copilot code review.",
+          "enum": [
+            "requested",
+            "inProgress",
+            "completed",
+            "failed",
+            "canceled"
+          ],
+          "x-ms-enum": {
+            "name": "CopilotReviewStatus",
+            "values": [
+              {
+                "value": "requested",
+                "description": ""
+              },
+              {
+                "value": "inProgress",
+                "description": ""
+              },
+              {
+                "value": "completed",
+                "description": ""
+              },
+              {
+                "value": "failed",
+                "description": ""
+              },
+              {
+                "value": "canceled",
+                "description": ""
+              }
+            ]
+          }
+        }
+      }
+    },
     "CreateMigrationRequest": {
       "description": "Request to create an Enterprise Live Migration.",
       "type": "object",
@@ -11182,7 +11232,12 @@
             "none",
             "activePullRequestCount",
             "pullRequestDeltaSize",
-            "targetRepoMigration",
+            "agentPoolExists",
+            "maxFileSize",
+            "maxPullRequestSize",
+            "maxPushPackSize",
+            "maxReferenceNameLength",
+            "maxRepoSize",
             "all"
           ],
           "x-ms-enum": {
@@ -11201,8 +11256,28 @@
                 "description": "Skip the pull request delta size policy."
               },
               {
-                "value": "targetRepoMigration",
-                "description": "Skip the target repository migration policy."
+                "value": "agentPoolExists",
+                "description": "Skip the agent pool exists policy."
+              },
+              {
+                "value": "maxFileSize",
+                "description": "Skip the max file size policy."
+              },
+              {
+                "value": "maxPullRequestSize",
+                "description": "Skip the max pull request size policy."
+              },
+              {
+                "value": "maxPushPackSize",
+                "description": "Skip the max push pack size policy."
+              },
+              {
+                "value": "maxReferenceNameLength",
+                "description": "Skip the max reference name length policy."
+              },
+              {
+                "value": "maxRepoSize",
+                "description": "Skip the max repo size policy."
               },
               {
                 "value": "all",
@@ -13672,11 +13747,25 @@
           "type": "string",
           "format": "date-time"
         },
+        "copilotReviewId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "failureReason": {
+          "type": "string"
+        },
         "pullRequestId": {
           "type": "integer",
           "format": "int32"
         },
         "requestedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "requestedForCommit": {
+          "$ref": "#/definitions/GitCommitRef"
+        },
+        "startedAt": {
           "type": "string",
           "format": "date-time"
         },
@@ -16240,7 +16329,12 @@
             "none",
             "activePullRequestCount",
             "pullRequestDeltaSize",
-            "targetRepoMigration",
+            "agentPoolExists",
+            "maxFileSize",
+            "maxPullRequestSize",
+            "maxPushPackSize",
+            "maxReferenceNameLength",
+            "maxRepoSize",
             "all"
           ],
           "x-ms-enum": {
@@ -16259,8 +16353,28 @@
                 "description": "Skip the pull request delta size policy."
               },
               {
-                "value": "targetRepoMigration",
-                "description": "Skip the target repository migration policy."
+                "value": "agentPoolExists",
+                "description": "Skip the agent pool exists policy."
+              },
+              {
+                "value": "maxFileSize",
+                "description": "Skip the max file size policy."
+              },
+              {
+                "value": "maxPullRequestSize",
+                "description": "Skip the max pull request size policy."
+              },
+              {
+                "value": "maxPushPackSize",
+                "description": "Skip the max push pack size policy."
+              },
+              {
+                "value": "maxReferenceNameLength",
+                "description": "Skip the max reference name length policy."
+              },
+              {
+                "value": "maxRepoSize",
+                "description": "Skip the max repo size policy."
               },
               {
                 "value": "all",
@@ -16276,7 +16390,9 @@
             "validation",
             "synchronization",
             "cutover",
-            "migrated"
+            "migrated",
+            "readyForCutover",
+            "degraded"
           ],
           "x-ms-enum": {
             "name": "MigrationStage",
@@ -16300,6 +16416,14 @@
               {
                 "value": "migrated",
                 "description": "The migration has been fully migrated."
+              },
+              {
+                "value": "readyForCutover",
+                "description": "Initial backfill is complete. Delta synchronization continues until cutover is scheduled."
+              },
+              {
+                "value": "degraded",
+                "description": "GitHub migration provisioning failed; the migration will retry synchronization on the next job run without re-running validation."
               }
             ]
           }
@@ -16348,13 +16472,6 @@
         },
         "validationIssues": {
           "description": "A list of any issues found during pre-migration checks.",
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        },
-        "validationWarnings": {
-          "description": "A list of any warnings found during pre-migration checks.",
           "type": "array",
           "items": {
             "type": "string"
@@ -17784,99 +17901,6 @@
         }
       ],
       "properties": {}
-    },
-    "UpdateMigrationInternalRequest": {
-      "description": "Request for internal (agent/pipeline) updates to an Enterprise Live Migration. Used by the migration pipeline to report progress back to AzDO.",
-      "type": "object",
-      "properties": {
-        "codeSyncDate": {
-          "description": "The UTC date/time of the last successful code synchronization pass.",
-          "type": "string",
-          "format": "date-time"
-        },
-        "gitHubMigrationId": {
-          "description": "The GitHub migration ID returned by the GitHub ELM API.",
-          "type": "string"
-        },
-        "pipelineCompleted": {
-          "description": "When set to <c>true</c>, signals that the pipeline run is complete and all pipeline plans for this migration should be deactivated.  Pipelines may send this alongside a terminal status transition <em>or</em> on its own when no status change is required.",
-          "type": "boolean"
-        },
-        "pullRequestSyncDate": {
-          "description": "The UTC date/time of the last successful pull request synchronization pass.",
-          "type": "string",
-          "format": "date-time"
-        },
-        "resultMessage": {
-          "description": "A result or error message describing the outcome of a pipeline stage. When the pipeline reaches a terminal state (Failed or Succeeded), this message is persisted as a migration history entry.",
-          "type": "string"
-        },
-        "stage": {
-          "description": "The current migration stage (e.g. Validate, Sync, Cutover, Migrated).",
-          "enum": [
-            "queued",
-            "validation",
-            "synchronization",
-            "cutover",
-            "migrated"
-          ],
-          "x-ms-enum": {
-            "name": "MigrationStage",
-            "values": [
-              {
-                "value": "queued",
-                "description": "The migration has been created but pre-check validation has not started yet."
-              },
-              {
-                "value": "validation",
-                "description": "Pre-check validation is in progress."
-              },
-              {
-                "value": "synchronization",
-                "description": "Code and PR synchronization is in progress."
-              },
-              {
-                "value": "cutover",
-                "description": "The migration is in the cutover phase."
-              },
-              {
-                "value": "migrated",
-                "description": "The migration has been fully migrated."
-              }
-            ]
-          }
-        },
-        "status": {
-          "description": "The migration status. Unlike the user-facing endpoint, the agent can set any status including Failed and Succeeded.",
-          "enum": [
-            "active",
-            "succeeded",
-            "failed",
-            "suspended"
-          ],
-          "x-ms-enum": {
-            "name": "MigrationStatus",
-            "values": [
-              {
-                "value": "active",
-                "description": "The migration is active."
-              },
-              {
-                "value": "succeeded",
-                "description": "The migration has completed successfully."
-              },
-              {
-                "value": "failed",
-                "description": "The migration has completed with a failure. The error details can be found in the Migration.Error property."
-              },
-              {
-                "value": "suspended",
-                "description": "The migration was suspended."
-              }
-            ]
-          }
-        }
-      }
     },
     "UpdateMigrationRequest": {
       "description": "Request to update an Enterprise Live Migration.",
