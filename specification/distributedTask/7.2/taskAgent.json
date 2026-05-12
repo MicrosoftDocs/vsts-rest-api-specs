@@ -10210,6 +10210,19 @@
         }
       }
     },
+    "TaskAgentQueueRestrictions": {
+      "description": "Restrictions applied to an agent queue",
+      "type": "object",
+      "properties": {
+        "restrictedImageLabels": {
+          "description": "The restricted image labels.",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
     "TaskAgentReference": {
       "description": "A reference to an agent.",
       "type": "object",
@@ -10320,6 +10333,202 @@
             "type": "string",
             "format": "byte"
           }
+        }
+      }
+    },
+    "TaskAgentSkuUsage": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "meterId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "skuName": {
+          "type": "string"
+        },
+        "value": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "TaskAgentSkuUsageRow": {
+      "description": "A single ranked usage entry for one dimension value within one SKU.",
+      "type": "object",
+      "properties": {
+        "dimensionValue": {
+          "description": "The value of the grouped dimension for this row (e.g. a project GUID string, a definition ID string).",
+          "type": "string"
+        },
+        "rank": {
+          "description": "Rank within its SKU (1 = highest usage).",
+          "type": "integer",
+          "format": "int32"
+        },
+        "usage": {
+          "description": "The usage data: MeterId, SkuName, unit, and total value.",
+          "$ref": "#/definitions/TaskAgentSkuUsage"
+        }
+      }
+    },
+    "TaskAgentSkuUsageSummaryQuery": {
+      "description": "Query for SKU usage statistics on an agent cloud pool. Groups billing data by a specified dimension and returns the top N consumers per SKU, ranked by total billed minutes.",
+      "type": "object",
+      "properties": {
+        "endTimeExclusive": {
+          "description": "End of the time range (exclusive).",
+          "type": "string",
+          "format": "date-time"
+        },
+        "groupBy": {
+          "description": "The billing dimension to group and rank results by.",
+          "enum": [
+            "scopeIdentifier",
+            "queueId",
+            "definitionId"
+          ],
+          "x-ms-enum": {
+            "name": "TaskAgentSkuUsageDimension",
+            "values": [
+              {
+                "value": "scopeIdentifier",
+                "description": "Group by project (scope identifier GUID)."
+              },
+              {
+                "value": "queueId",
+                "description": "Group by agent queue."
+              },
+              {
+                "value": "definitionId",
+                "description": "Group by pipeline definition."
+              }
+            ]
+          }
+        },
+        "meterIds": {
+          "description": "Optional: restrict to specific SKUs. Null or empty means all SKUs. When multiple MeterIds are provided, results are ranked independently per SKU.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "poolId": {
+          "description": "The pool to query usage for.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "queueId": {
+          "description": "Optional: narrow results to a specific queue before grouping. Only valid when GroupBy is DefinitionId. The queue implicitly identifies the project.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "scopeIdentifier": {
+          "description": "Optional: narrow results to a specific project before grouping. Typically used when drilling down from pool → project, with GroupBy set to DefinitionId to see pipelines within that project.",
+          "type": "string",
+          "format": "uuid"
+        },
+        "startTimeInclusive": {
+          "description": "Start of the time range (inclusive).",
+          "type": "string",
+          "format": "date-time"
+        },
+        "topN": {
+          "description": "Maximum results per SKU. Defaults to 5 server-side.",
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "TaskAgentSkuUsageSummaryResult": {
+      "description": "Result of a SKU usage query. Contains the original query and the ranked usage rows.",
+      "type": "object",
+      "properties": {
+        "query": {
+          "description": "The query that produced this result.",
+          "$ref": "#/definitions/TaskAgentSkuUsageSummaryQuery"
+        },
+        "usages": {
+          "description": "Ranked usage rows, ordered by MeterId then rank. Each SKU has its own independent top-N ranking.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TaskAgentSkuUsageRow"
+          }
+        }
+      }
+    },
+    "TaskAgentSkuUsageTrendPoint": {
+      "description": "A single time bucket's total billed minutes for a SKU.",
+      "type": "object",
+      "properties": {
+        "meterId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "totalMinutes": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "usageDate": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "TaskAgentSkuUsageTrendQuery": {
+      "description": "Query for daily SKU usage trend data on an agent cloud pool. Returns one row per day per meter with total billed minutes.",
+      "type": "object",
+      "properties": {
+        "endTimeExclusive": {
+          "description": "End of the time range (exclusive).",
+          "type": "string",
+          "format": "date-time"
+        },
+        "meterIds": {
+          "description": "Optional list of SKU meter IDs to get trend data for. When empty, all meters are returned.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "poolId": {
+          "description": "The pool to query usage for.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "queueId": {
+          "description": "Optional: restrict to a specific queue.",
+          "type": "integer",
+          "format": "int32"
+        },
+        "resolutionMinutes": {
+          "description": "Time bucket size in minutes. 60=hourly, 360=6h, 720=12h, 1440=daily. Defaults to 1440 (daily).",
+          "type": "integer",
+          "format": "int32"
+        },
+        "startTimeInclusive": {
+          "description": "Start of the time range (inclusive).",
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "TaskAgentSkuUsageTrendResult": {
+      "description": "Result of a SKU usage trend query. Contains the original query and the daily usage data points.",
+      "type": "object",
+      "properties": {
+        "points": {
+          "description": "Usage data points, ordered by date ascending. Buckets with no usage are not included.",
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/TaskAgentSkuUsageTrendPoint"
+          }
+        },
+        "query": {
+          "description": "The query that produced this result.",
+          "$ref": "#/definitions/TaskAgentSkuUsageTrendQuery"
         }
       }
     },
@@ -11189,6 +11398,15 @@
       "properties": {
         "comment": {
           "description": "Comment for this update request",
+          "type": "string"
+        }
+      }
+    },
+    "TaskHubAccessToken": {
+      "description": "",
+      "type": "object",
+      "properties": {
+        "accessToken": {
           "type": "string"
         }
       }

@@ -319,7 +319,8 @@
             "type": "string",
             "enum": [
               "none",
-              "minimal"
+              "minimal",
+              "count"
             ],
             "x-ms-enum": {
               "name": "AlertListExpandOption",
@@ -331,6 +332,10 @@
                 {
                   "value": "minimal",
                   "description": "Return a minimal representation of an alert."
+                },
+                {
+                  "value": "count",
+                  "description": "Return only the count of active alerts grouped by alert type."
                 }
               ]
             }
@@ -1149,6 +1154,10 @@
           "type": "string",
           "format": "date-time"
         },
+        "isAutoFixable": {
+          "description": "Value indicates whether the alert can be auto-fixed by Copilot Autofix. True when the alert is a code scanning alert detected by CodeQL with a supported rule. Null when the value has not been computed for this code path.",
+          "type": "boolean"
+        },
         "lastSeenDate": {
           "description": "This value is computed and returned by the service. This value represents the last time the service has seen this issue reported in an analysis instance.",
           "type": "string",
@@ -1778,6 +1787,40 @@
         }
       }
     },
+    "AutofixCallbackRequest": {
+      "description": "Payload sent by the autofix pipeline to report the outcome of a run.",
+      "type": "object",
+      "properties": {
+        "pullRequestId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "requestId": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "status": {
+          "description": "Terminal status reported by the pipeline.",
+          "enum": [
+            "done",
+            "failed"
+          ],
+          "x-ms-enum": {
+            "name": "AutofixCallbackStatus",
+            "values": [
+              {
+                "value": "done",
+                "description": "The pipeline completed successfully and a pull request was created."
+              },
+              {
+                "value": "failed",
+                "description": "The pipeline or post-processing failed."
+              }
+            ]
+          }
+        }
+      }
+    },
     "AutofixRequest": {
       "description": "Represents an autofix request resource.",
       "type": "object",
@@ -1789,6 +1832,40 @@
         "requestId": {
           "type": "integer",
           "format": "int64"
+        },
+        "status": {
+          "enum": [
+            "none",
+            "pending",
+            "pipelineRunning",
+            "done",
+            "failed"
+          ],
+          "x-ms-enum": {
+            "name": "AutofixRequestStatus",
+            "values": [
+              {
+                "value": "none",
+                "description": "Default sentinel value; not a valid operational status."
+              },
+              {
+                "value": "pending",
+                "description": "The request has been created and is waiting for a pipeline to be triggered."
+              },
+              {
+                "value": "pipelineRunning",
+                "description": "The pipeline has been triggered and is currently running."
+              },
+              {
+                "value": "done",
+                "description": "The pipeline completed successfully and a pull request was created."
+              },
+              {
+                "value": "failed",
+                "description": "The pipeline or post-processing failed."
+              }
+            ]
+          }
         }
       }
     },
@@ -2922,6 +2999,10 @@
           "items": {
             "$ref": "#/definitions/Rule"
           }
+        },
+        "toolVersion": {
+          "description": "String representation of the tool version",
+          "type": "string"
         }
       }
     },
@@ -3145,6 +3226,11 @@
         "c3Id": {
           "description": "Represents the CrossCompanyCorrelatingId for the secret in the ValidationFingerprintJson.",
           "type": "string"
+        },
+        "normalizedValidationToolVersion": {
+          "description": "A normalized string representation of the validation tool version.",
+          "type": "integer",
+          "format": "int32"
         },
         "validationFingerprintHash": {
           "description": "The hash associated to the secret.",
